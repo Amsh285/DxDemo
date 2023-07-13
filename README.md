@@ -1,4 +1,5 @@
 <p>Exploring DirectX and WinApi</p>
 
-Current Features:
+<p>Current Features:
 *Window class
+</p>
