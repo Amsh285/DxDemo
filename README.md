@@ -1,5 +1,5 @@
-<p>Exploring DirectX and WinApi</p>
+Exploring DirectX and WinApi
 
-<p>Current Features:
-*Window class
-</p>
+Current Features:
+* Simple Window Class
+
