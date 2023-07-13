@@ -1,4 +1,4 @@
-Exploring DirectX and WinApi
+<p>Exploring DirectX and WinApi</p>
 
-Current Feature:
+Current Features:
 *Window class
