@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Window", "Window\Window.vcx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Dsr", "Dsr\Dsr.vcxproj", "{347FB692-6385-4A6A-9D84-5D07E960A9A2}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "InitDirectX", "InitDirectX\InitDirectX.vcxproj", "{D0D25814-122E-4CAE-8034-4C492F4E9292}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,10 @@ Global
 		{347FB692-6385-4A6A-9D84-5D07E960A9A2}.Debug|x64.Build.0 = Debug|x64
 		{347FB692-6385-4A6A-9D84-5D07E960A9A2}.Release|x64.ActiveCfg = Release|x64
 		{347FB692-6385-4A6A-9D84-5D07E960A9A2}.Release|x64.Build.0 = Release|x64
+		{D0D25814-122E-4CAE-8034-4C492F4E9292}.Debug|x64.ActiveCfg = Debug|x64
+		{D0D25814-122E-4CAE-8034-4C492F4E9292}.Debug|x64.Build.0 = Debug|x64
+		{D0D25814-122E-4CAE-8034-4C492F4E9292}.Release|x64.ActiveCfg = Release|x64
+		{D0D25814-122E-4CAE-8034-4C492F4E9292}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

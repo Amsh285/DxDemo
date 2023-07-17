@@ -25,6 +25,8 @@ namespace dsr
 		class Window
 		{
 		public:
+			HWND GetWindowHandle() const { return m_windowHandle; }
+
 			Window(const WindowData& data);
 			Window(const Window& other) = delete;
 			Window& operator=(const Window& other) = delete;
