@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include <string>
 #include <variant>
+#include <vector>
 #include <Windows.h>
 #include <windowsx.h>
 #include <wrl/client.h>

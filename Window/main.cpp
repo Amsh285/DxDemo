@@ -20,7 +20,7 @@ int main(int argc, char* argv[])
 {
     std::cout << "hello window" << std::endl;
 
-    dsr::windows::WindowData data(L"DemoWindow", L"DemoWindow");
+    dsr::windows::WindowData data(L"DemoWindow");
     dsr::windows::Window window(data);
     window.Show();
 }
