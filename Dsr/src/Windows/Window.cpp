@@ -12,6 +12,11 @@ namespace dsr
 
 			switch (message)
 			{
+			case WM_LBUTTONDOWN:
+			{
+				std::cout << "ka" << std::endl;
+				break;
+			}
 			case WM_DESTROY:
 			{
 				PostQuitMessage(0);
@@ -24,8 +29,16 @@ namespace dsr
 			return DefWindowProc(windowHandle, message, wParam, lParam);
 		}
 
+		int Window::GetNextClassId()
+		{
+			static int nextId = 0;
+			return ++nextId;
+		}
+
 		Window::Window(const WindowData& data)
 		{
+			m_className = m_className + std::to_wstring(GetNextClassId());
+
 			m_data = std::make_unique<WindowData>(data);
 
 			WNDCLASSEX windowClass;
@@ -37,7 +50,7 @@ namespace dsr
 			windowClass.hInstance = GetModuleHandle(NULL);
 			windowClass.hCursor = data.cursor;
 			windowClass.hbrBackground = data.background;
-			windowClass.lpszClassName = data.className.c_str();
+			windowClass.lpszClassName = m_className.c_str();
 
 			RECT cr = { 0, 0, data.clientWidth, data.clientHeight };
 			AdjustWindowRect(&cr, WS_OVERLAPPEDWINDOW, FALSE);
@@ -49,7 +62,7 @@ namespace dsr
 
 			m_windowHandle = CreateWindowEx(
 				NULL,
-				data.className.c_str(),
+				m_className.c_str(),
 				data.title.c_str(),
 				WS_OVERLAPPEDWINDOW,
 				data.x,
@@ -64,7 +77,7 @@ namespace dsr
 
 			if (!m_windowHandle)
 			{
-				UnregisterClass(m_data->className.c_str(), GetModuleHandle(NULL));
+				UnregisterClass(m_className.c_str(), GetModuleHandle(NULL));
 				throw std::runtime_error("Error Creating window.");
 			}
 
@@ -73,31 +86,13 @@ namespace dsr
 
 		Window::~Window()
 		{
-			UnregisterClass(m_data->className.c_str(), GetModuleHandle(NULL));
+			UnregisterClass(m_className.c_str(), GetModuleHandle(NULL));
 			DestroyWindow(m_windowHandle);
 		}
 
 		void Window::Show()
 		{
 			ShowWindow(m_windowHandle, m_data->cmdShow);
-
-			MSG message = { 0 };
-
-			while (true)
-			{
-				if (PeekMessage(&message, NULL, 0, 0, PM_REMOVE))
-				{
-					TranslateMessage(&message);
-					DispatchMessage(&message);
-
-					if (message.message == WM_QUIT)
-						break;
-				}
-				else
-				{
-
-				}
-			}
 		}
 	}
 }

@@ -1,8 +1,8 @@
 
 #include "dsrpch.h"
 #include "Windows/Window.h"
+#include "Windows/WindowApplication.h"
 
-#include <iostream>
 
 //linker/system/subsystem -> Windows
 //int WINAPI WinMain(
@@ -20,7 +20,16 @@ int main(int argc, char* argv[])
 {
     std::cout << "hello window" << std::endl;
 
-    dsr::windows::WindowData data(L"DemoWindow", L"DemoWindow");
+    dsr::windows::WindowData data(L"DemoWindow", 100, 100, 500, 500);
     dsr::windows::Window window(data);
     window.Show();
+
+    dsr::windows::WindowData d2(L"yeeeee", 800, 100, 200, 500);
+    dsr::windows::Window w2(d2);
+    w2.Show();
+
+    std::shared_ptr<dsr::windows::WindowApplication> app = dsr::windows::WindowApplication
+        ::Get();
+
+    app->PeekMessages();
 }

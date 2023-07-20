@@ -15,6 +15,8 @@
     <ClInclude Include="src\dsrpch.h" />
     <ClInclude Include="src\ErrorHandling\createdirecd3ddevice_error.h" />
     <ClInclude Include="src\Windows\Window.h" />
+    <ClInclude Include="src\Windows\WindowData.h" />
+    <ClInclude Include="src\Windows\WindowApplication.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\DirectX\Direct3dDevice.cpp">
@@ -32,6 +34,14 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="src\Windows\Window.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="src\Windows\WindowData.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="src\Windows\WindowApplication.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
