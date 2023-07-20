@@ -12,6 +12,11 @@ namespace dsr
 
 			switch (message)
 			{
+			case WM_LBUTTONDOWN:
+			{
+				std::cout << "ka" << std::endl;
+				break;
+			}
 			case WM_DESTROY:
 			{
 				PostQuitMessage(0);
@@ -88,24 +93,6 @@ namespace dsr
 		void Window::Show()
 		{
 			ShowWindow(m_windowHandle, m_data->cmdShow);
-
-			MSG message = { 0 };
-
-			while (true)
-			{
-				if (PeekMessage(&message, NULL, 0, 0, PM_REMOVE))
-				{
-					TranslateMessage(&message);
-					DispatchMessage(&message);
-
-					if (message.message == WM_QUIT)
-						break;
-				}
-				else
-				{
-
-				}
-			}
 		}
 	}
 }
