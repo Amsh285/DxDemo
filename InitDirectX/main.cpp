@@ -9,7 +9,7 @@
 
 int main(int argc, char* argv[])
 {
-    dsr::windows::WindowData data(L"DemoWindow", L"DemoWindow");
+    dsr::windows::WindowData data(L"DemoWindow", 100, 100, 500, 300);
     std::shared_ptr<dsr::windows::Window> window =
         std::make_shared<dsr::windows::Window>(data);
     
