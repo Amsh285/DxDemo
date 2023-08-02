@@ -2,8 +2,11 @@
 
 namespace dsr
 {
-	//Marker-class for Events
-	class IEvent
+	namespace events
 	{
-	};
+		//Marker-class for Events
+		class IEvent
+		{
+		};
+	}
 }

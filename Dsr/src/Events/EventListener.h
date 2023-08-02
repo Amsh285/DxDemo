@@ -2,8 +2,11 @@
 
 namespace dsr
 {
-	//Marker-class for types subscribing to EventEmitters
-	class EventListener
+	namespace events
 	{
-	};
+		//Marker-class for types subscribing to EventEmitters
+		class EventListener
+		{
+		};
+	}
 }
