@@ -17,6 +17,9 @@ namespace dsr
 		public:
 			static DevicePtr Create(const WindowPtr& window);
 
+			void Clear();
+			void SwapBuffers();
+
 			Direct3dDevice(const Direct3dDevice& other) = delete;
 			Direct3dDevice& operator=(const Direct3dDevice& other) = delete;
 		private:
@@ -25,6 +28,7 @@ namespace dsr
 			ComPtr<ID3D11Device> m_device;
 			ComPtr<ID3D11DeviceContext> m_deviceContext;
 			ComPtr<IDXGISwapChain> m_swapChain;
+			ComPtr<ID3D11RenderTargetView> m_renderTargetView;
 
 			std::shared_ptr<dsr::windows::Window> m_window;
 		};

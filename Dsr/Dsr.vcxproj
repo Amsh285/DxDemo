@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\DirectX\Direct3dRenderer.h" />
     <ClInclude Include="src\Events\Application\WindowEvents.h" />
     <ClInclude Include="src\Events\EventListener.h" />
     <ClInclude Include="src\Events\IEvent.h" />
@@ -25,6 +26,10 @@
     <ClInclude Include="src\Windows\EventListeners\WindowEventListener.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\DirectX\Direct3dRenderer.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="src\Events\EventListener.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>

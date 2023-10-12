@@ -1,5 +1,7 @@
 #pragma once
 
+#include "EventListener.h"
+
 namespace dsr
 {
 	namespace events
@@ -80,3 +82,6 @@ namespace dsr
 		};
 	}
 }
+
+template<class TEvent>
+using EventRegisterType = dsr::events::EventRegister<dsr::events::EventListener, TEvent>;

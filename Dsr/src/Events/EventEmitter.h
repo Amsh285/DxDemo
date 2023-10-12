@@ -1,5 +1,6 @@
 #pragma once
 
+#include "EventListener.h"
 #include "EventRegister.h"
 
 namespace dsr
@@ -16,5 +17,10 @@ namespace dsr
 					(callback.first.get()->*(callback.second))(e);
 			}
 		};
+
+		
 	}
 }
+
+template<class TEvent>
+using EventEmitterType = dsr::events::EventEmitter<dsr::events::EventListener, TEvent>;

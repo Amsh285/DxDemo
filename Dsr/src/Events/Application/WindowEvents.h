@@ -13,5 +13,9 @@ namespace dsr
 		class WindowDestroyEvent : public IEvent
 		{
 		};
+
+		class UpdateFrameEvent : public IEvent
+		{
+		};
 	}
 }

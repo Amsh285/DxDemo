@@ -13,13 +13,15 @@ namespace dsr
 		class Window
 		{
 		public:
-			template<class TEvent>
-			using EventRegisterType = dsr::events::EventRegister<dsr::events::EventListener, TEvent>;
+			
 
 			HWND GetWindowHandle() const { return m_windowHandle; }
 
 			EventRegisterType<const dsr::events::WindowCloseEvent&>& GetCloseEventRegister() { return m_windowCloseEventEmitter; }
 			EventRegisterType<const dsr::events::WindowDestroyEvent&>& GetDestroyEventRegister() { return m_windowDestroyEmitter; }
+
+			int GetClientWidth() const { return m_data->clientWidth; }
+			int GetClientHeight() const { return m_data->clientHeight; }
 
 			Window(const WindowData& data);
 			Window(const Window& other) = delete;
@@ -29,9 +31,6 @@ namespace dsr
 			void Show();
 			void Close();
 		private:
-			template<class TEvent>
-			using EventEmitterType = dsr::events::EventEmitter < dsr::events::EventListener, TEvent>;
-
 			static LRESULT CALLBACK WndProc(HWND windowHandle, UINT message, WPARAM wParam, LPARAM lParam);
 
 			HWND m_windowHandle;

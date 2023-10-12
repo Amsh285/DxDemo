@@ -18,9 +18,8 @@ namespace dsr
 			swapChainData.SampleDesc.Count = 4;
 			swapChainData.Windowed = TRUE;
 
-			ComPtr<ID3D11Device> d3device;
-			ComPtr<ID3D11DeviceContext> d3deviceContext;
-			ComPtr<IDXGISwapChain> d3swapChain;
+			std::shared_ptr<Direct3dDevice> device(new Direct3dDevice());
+			device->m_window = window;
 
 			HRESULT result = D3D11CreateDeviceAndSwapChain(
 				NULL,
@@ -31,22 +30,54 @@ namespace dsr
 				NULL,
 				D3D11_SDK_VERSION,
 				&swapChainData,
-				&d3swapChain,
-				&d3device,
+				&device->m_swapChain,
+				&device->m_device,
 				NULL,
-				&d3deviceContext
+				&device->m_deviceContext
 			);
 
 			if (FAILED(result))
 				throw createdirecd3ddevice_error("Failed to create Device and Swapchain.", result);
 
-			std::shared_ptr<Direct3dDevice> ptr(new Direct3dDevice());
-			ptr->m_device = d3device;
-			ptr->m_deviceContext = d3deviceContext;
-			ptr->m_swapChain = d3swapChain;
-			ptr->m_window = window;
+			// set BackBuffer as Rendertarget
+			ID3D11Texture2D* pBackBuffer;
+			HRESULT getBackBufferFromSwapChainResult = device->m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
 
-			return ptr;
+			if (FAILED(getBackBufferFromSwapChainResult) || !pBackBuffer)
+				throw createdirecd3ddevice_error("Failed to access the BackBuffer of the Swapchain.", getBackBufferFromSwapChainResult);
+
+			HRESULT createRenderTargetViewResult =  device->m_device->CreateRenderTargetView(pBackBuffer, NULL, &device->m_renderTargetView);
+			pBackBuffer->Release();
+
+			if (FAILED(createRenderTargetViewResult))
+				throw createdirecd3ddevice_error("Failed to Create the RenderTargetView.", createRenderTargetViewResult);
+
+			// set render target for deviceContext.
+			device->m_deviceContext->OMSetRenderTargets(1, &device->m_renderTargetView, NULL);
+			
+			D3D11_VIEWPORT viewport;
+			ZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));
+
+			viewport.TopLeftX = 0;
+			viewport.TopLeftY = 0;
+			viewport.Width = device->m_window->GetClientWidth();
+			viewport.Height = device->m_window->GetClientHeight();
+
+			device->m_deviceContext->RSSetViewports(1, &viewport);
+
+			return device;
+		}
+
+		void Direct3dDevice::Clear()
+		{
+			//Todo: add parameter
+			float clearColor[4] = { 0.0f, 0.2f, 0.4f, 1.0f };
+			m_deviceContext->ClearRenderTargetView(m_renderTargetView.Get(), clearColor);
+		}
+
+		void Direct3dDevice::SwapBuffers()
+		{
+			m_swapChain->Present(0, 0);
 		}
 	}
 }
