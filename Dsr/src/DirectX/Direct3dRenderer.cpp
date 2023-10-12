@@ -14,7 +14,7 @@ namespace dsr
 		void Direct3dRenderer::OnUpdate(const dsr::events::UpdateFrameEvent& updateEvent)
 		{
 			// not working check later
-			//m_device->Clear();
+			m_device->Clear();
 
 			// do 3D rendering on the back buffer here
 

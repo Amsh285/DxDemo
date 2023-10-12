@@ -36,6 +36,9 @@ namespace dsr
 				&device->m_deviceContext
 			);
 
+			// has to be setup like this. direct member access will result in nullptr.
+			ID3D11RenderTargetView* renderTargetView;
+
 			if (FAILED(result))
 				throw createdirecd3ddevice_error("Failed to create Device and Swapchain.", result);
 
@@ -46,16 +49,16 @@ namespace dsr
 			if (FAILED(getBackBufferFromSwapChainResult) || !pBackBuffer)
 				throw createdirecd3ddevice_error("Failed to access the BackBuffer of the Swapchain.", getBackBufferFromSwapChainResult);
 
-			// rendertargetview null.. error is probably here...
-			HRESULT createRenderTargetViewResult =  device->m_device->CreateRenderTargetView(pBackBuffer, NULL, &device->m_renderTargetView);
+			HRESULT createRenderTargetViewResult =  device->m_device->CreateRenderTargetView(pBackBuffer, NULL, &renderTargetView);
 			pBackBuffer->Release();
 
 			if (FAILED(createRenderTargetViewResult))
 				throw createdirecd3ddevice_error("Failed to Create the RenderTargetView.", createRenderTargetViewResult);
 
 			// set render target for deviceContext.
-			device->m_deviceContext->OMSetRenderTargets(1, &device->m_renderTargetView, NULL);
-			
+			device->m_deviceContext->OMSetRenderTargets(1, &renderTargetView, NULL);
+			device->m_renderTargetView = renderTargetView;
+
 			D3D11_VIEWPORT viewport;
 			ZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));
 
