@@ -46,6 +46,7 @@ namespace dsr
 			if (FAILED(getBackBufferFromSwapChainResult) || !pBackBuffer)
 				throw createdirecd3ddevice_error("Failed to access the BackBuffer of the Swapchain.", getBackBufferFromSwapChainResult);
 
+			// rendertargetview null.. error is probably here...
 			HRESULT createRenderTargetViewResult =  device->m_device->CreateRenderTargetView(pBackBuffer, NULL, &device->m_renderTargetView);
 			pBackBuffer->Release();
 
