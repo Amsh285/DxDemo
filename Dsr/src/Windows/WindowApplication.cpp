@@ -33,10 +33,9 @@ namespace dsr
 					if (message.message == WM_QUIT)
 						break;
 				}
-				else
-				{
-
-				}
+				
+				dsr::events::UpdateFrameEvent event;
+				m_updateFrameEvent.operator()(event);
 			}
 		}
 

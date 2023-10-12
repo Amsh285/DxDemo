@@ -1,6 +1,10 @@
 #pragma once
 
 #include "WindowData.h"
+#include "Events/EventEmitter.h"
+#include "Events/EventListener.h"
+#include "Events/IEvent.h"
+#include "Events/Application/WindowEvents.h"
 
 namespace dsr
 {
@@ -9,7 +13,15 @@ namespace dsr
 		class Window
 		{
 		public:
+			
+
 			HWND GetWindowHandle() const { return m_windowHandle; }
+
+			EventRegisterType<const dsr::events::WindowCloseEvent&>& GetCloseEventRegister() { return m_windowCloseEventEmitter; }
+			EventRegisterType<const dsr::events::WindowDestroyEvent&>& GetDestroyEventRegister() { return m_windowDestroyEmitter; }
+
+			int GetClientWidth() const { return m_data->clientWidth; }
+			int GetClientHeight() const { return m_data->clientHeight; }
 
 			Window(const WindowData& data);
 			Window(const Window& other) = delete;
@@ -17,6 +29,7 @@ namespace dsr
 			~Window();
 
 			void Show();
+			void Close();
 		private:
 			static LRESULT CALLBACK WndProc(HWND windowHandle, UINT message, WPARAM wParam, LPARAM lParam);
 
@@ -26,6 +39,9 @@ namespace dsr
 			std::unique_ptr<WindowData> m_data;
 
 			int GetNextClassId();
+
+			EventEmitterType<const dsr::events::WindowCloseEvent&> m_windowCloseEventEmitter;
+			EventEmitterType<const dsr::events::WindowDestroyEvent&> m_windowDestroyEmitter;
 		};
 	}
 }

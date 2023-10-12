@@ -17,9 +17,16 @@ namespace dsr
 				std::cout << "ka" << std::endl;
 				break;
 			}
+			case WM_CLOSE:
+			{
+				dsr::events::WindowCloseEvent closeEvent;
+				pWnd->m_windowCloseEventEmitter.operator()(closeEvent);
+				break;
+			}
 			case WM_DESTROY:
 			{
-				PostQuitMessage(0);
+				dsr::events::WindowDestroyEvent destroyEvent;
+				pWnd->m_windowDestroyEmitter.operator()(destroyEvent);
 				return 0;
 			}
 			default:
@@ -93,6 +100,11 @@ namespace dsr
 		void Window::Show()
 		{
 			ShowWindow(m_windowHandle, m_data->cmdShow);
+		}
+
+		void Window::Close()
+		{
+			CloseWindow(m_windowHandle);
 		}
 	}
 }
