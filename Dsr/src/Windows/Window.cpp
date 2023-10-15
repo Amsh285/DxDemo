@@ -102,14 +102,6 @@ namespace dsr
 
 			m_windowHandle = SetupWindow(windowClass);
 
-			std::cout << "Width: " << m_data->width << std::endl;
-			std::cout << "Height: " << m_data->height << std::endl;
-
-			RECT rec;
-			GetClientRect(m_windowHandle, &rec);
-			std::cout << "ClientWidth: " << m_data->clientWidth << std::endl;
-			std::cout << "ClientHeight: " << m_data->clientHeight << std::endl;
-
 			if (!m_windowHandle)
 			{
 				UnregisterClass(m_className.c_str(), GetModuleHandle(NULL));
