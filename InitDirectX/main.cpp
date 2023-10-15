@@ -12,7 +12,12 @@
 
 int main(int argc, char* argv[])
 {
-	dsr::windows::WindowData data(L"DemoWindow", 100, 100, 500, 300);
+	// use client rectangle
+	//dsr::windows::WindowData data(L"DemoWindow", 100, 100, 500, 300);
+
+	// use normal window rectangle
+	dsr::windows::WindowData data(L"DemoWindow", 100, 100, 516, 339, false);
+
 	std::shared_ptr<dsr::windows::Window> window =
 		std::make_shared<dsr::windows::Window>(data);
 

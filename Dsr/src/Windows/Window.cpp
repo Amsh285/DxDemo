@@ -42,6 +42,42 @@ namespace dsr
 			return ++nextId;
 		}
 
+		HWND Window::SetupWindow(const WNDCLASSEX& windowClass)
+		{
+			if (m_data->useClientHeight)
+			{
+				RECT windowArea = { 0, 0, m_data->clientWidth, m_data->clientHeight };
+				AdjustWindowRect(&windowArea, WS_OVERLAPPEDWINDOW, FALSE);
+
+				m_data->width = windowArea.right - windowArea.left;
+				m_data->height = windowArea.bottom - windowArea.top;
+			}
+
+			HWND handle = CreateWindowEx(
+				NULL,
+				m_className.c_str(),
+				m_data->title.c_str(),
+				WS_OVERLAPPEDWINDOW,
+				m_data->x,
+				m_data->y,
+				m_data->width,
+				m_data->height,
+				NULL,
+				NULL,
+				windowClass.hInstance,
+				NULL
+			);
+
+			RECT clientArea;
+			GetClientRect(handle, &clientArea);
+
+			m_data->clientWidth = clientArea.right - clientArea.left;
+			m_data->clientHeight = clientArea.bottom - clientArea.top;
+
+			return handle;
+		}
+
+
 		Window::Window(const WindowData& data)
 		{
 			m_className = m_className + std::to_wstring(GetNextClassId());
@@ -59,28 +95,20 @@ namespace dsr
 			windowClass.hbrBackground = data.background;
 			windowClass.lpszClassName = m_className.c_str();
 
-			RECT cr = { 0, 0, data.clientWidth, data.clientHeight };
-			AdjustWindowRect(&cr, WS_OVERLAPPEDWINDOW, FALSE);
-
 			WORD register_status = RegisterClassEx(&windowClass);
 
 			if (!register_status)
 				throw std::runtime_error("Error registering windowclass. Error Code:" + register_status);
 
-			m_windowHandle = CreateWindowEx(
-				NULL,
-				m_className.c_str(),
-				data.title.c_str(),
-				WS_OVERLAPPEDWINDOW,
-				data.x,
-				data.y,
-				cr.right - cr.left,
-				cr.bottom - cr.top,
-				NULL,
-				NULL,
-				windowClass.hInstance,
-				NULL
-			);
+			m_windowHandle = SetupWindow(windowClass);
+
+			std::cout << "Width: " << m_data->width << std::endl;
+			std::cout << "Height: " << m_data->height << std::endl;
+
+			RECT rec;
+			GetClientRect(m_windowHandle, &rec);
+			std::cout << "ClientWidth: " << m_data->clientWidth << std::endl;
+			std::cout << "ClientHeight: " << m_data->clientHeight << std::endl;
 
 			if (!m_windowHandle)
 			{

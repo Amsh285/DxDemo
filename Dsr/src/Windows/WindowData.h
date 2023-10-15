@@ -11,22 +11,36 @@ namespace dsr
 			UINT style = CS_HREDRAW | CS_VREDRAW;
 
 			std::wstring title;
-			int x = 100, y = 100;
-			int clientWidth = 500, clientHeight = 400;
+
+			int x = 0, y = 0;
+			int width = 0, height = 0;
+			int clientWidth = 0, clientHeight = 0;
+			bool useClientHeight;
+
 			int cmdShow = SW_SHOWNORMAL;
 
 			WindowData(const std::wstring& title)
+				: WindowData(title, 100, 100, 500, 400)
 			{
-				this->title = title;
 			}
 
-			WindowData(const std::wstring& title, const int& x, const int& y, const int& clientWidth, const int& clientHeight)
+			WindowData(const std::wstring& title, const int& x, const int& y, const int& width, const int& height, const bool& useClientHeight = true)
 			{
 				this->title = title;
 				this->x = x;
 				this->y = y;
-				this->clientWidth = clientWidth;
-				this->clientHeight = clientHeight;
+				this->useClientHeight = useClientHeight;
+
+				if (useClientHeight)
+				{
+					this->clientWidth = width;
+					this->clientHeight = height;
+				}
+				else
+				{
+					this->width = width;
+					this->height = height;
+				}
 			}
 		};
 	}

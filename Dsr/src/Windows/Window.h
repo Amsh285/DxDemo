@@ -13,8 +13,6 @@ namespace dsr
 		class Window
 		{
 		public:
-			
-
 			HWND GetWindowHandle() const { return m_windowHandle; }
 
 			EventRegisterType<const dsr::events::WindowCloseEvent&>& GetCloseEventRegister() { return m_windowCloseEventEmitter; }
@@ -34,11 +32,11 @@ namespace dsr
 			static LRESULT CALLBACK WndProc(HWND windowHandle, UINT message, WPARAM wParam, LPARAM lParam);
 
 			HWND m_windowHandle;
-
 			std::wstring m_className = L"Window_";
 			std::unique_ptr<WindowData> m_data;
 
 			int GetNextClassId();
+			HWND SetupWindow(const WNDCLASSEX& windowClass);
 
 			EventEmitterType<const dsr::events::WindowCloseEvent&> m_windowCloseEventEmitter;
 			EventEmitterType<const dsr::events::WindowDestroyEvent&> m_windowDestroyEmitter;
