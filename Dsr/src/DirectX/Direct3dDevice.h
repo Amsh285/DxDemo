@@ -29,6 +29,9 @@ namespace dsr
 			ComPtr<ID3D11DeviceContext> m_deviceContext;
 			ComPtr<IDXGISwapChain> m_swapChain;
 			ComPtr<ID3D11RenderTargetView> m_renderTargetView;
+			ComPtr<ID3D11DepthStencilView> m_depthStencilView;
+			ComPtr<ID3D11DepthStencilState> m_depthStencilState;
+			ComPtr<ID3D11RasterizerState> m_rasterizerState;
 
 			std::shared_ptr<dsr::windows::Window> m_window;
 		};
