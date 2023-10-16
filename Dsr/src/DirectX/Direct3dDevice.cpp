@@ -23,24 +23,29 @@ namespace dsr
 			std::shared_ptr<Direct3dDevice> device(new Direct3dDevice());
 			device->m_window = window;
 
+			UINT createDeviceAndSwapChainFlags = 0;
+#if _DEBUG
+			createDeviceAndSwapChainFlags = D3D11_CREATE_DEVICE_DEBUG;
+#endif // _DEBUG
+
 			// Todo: Check against https://www.3dgep.com/introduction-to-directx-11/#Create_a_Depth-Stencil_Buffer
-			HRESULT createDeviceAndSwapChainResult = D3D11CreateDeviceAndSwapChain(
+			HRESULT hr = D3D11CreateDeviceAndSwapChain(
 				nullptr,
 				D3D_DRIVER_TYPE_HARDWARE,
 				nullptr,
-				0,
-				nullptr,
-				0,
+				createDeviceAndSwapChainFlags,
+				device->m_requestedFeatureLevels.data(),
+				device->m_requestedFeatureLevels.size(),
 				D3D11_SDK_VERSION,
 				&swapChainData,
 				&device->m_swapChain,
 				&device->m_device,
-				nullptr,
+				&device->m_featureLevel,
 				&device->m_deviceContext
 			);
 
-			if (FAILED(createDeviceAndSwapChainResult))
-				throw createdirecd3ddevice_error("Failed to create Device and Swapchain.", createDeviceAndSwapChainResult);
+			if (FAILED(hr))
+				throw createdirecd3ddevice_error("Failed to create Device and Swapchain.", hr);
 
 #pragma region setup renderTargetView
 			// has to be setup like this. direct member access will result in nullptr.

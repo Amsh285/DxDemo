@@ -34,6 +34,13 @@ namespace dsr
 			ComPtr<ID3D11RasterizerState> m_rasterizerState;
 
 			std::shared_ptr<dsr::windows::Window> m_window;
+
+			std::vector<D3D_FEATURE_LEVEL> m_requestedFeatureLevels = {
+				D3D_FEATURE_LEVEL_11_1,
+				D3D_FEATURE_LEVEL_11_0
+			};
+
+			D3D_FEATURE_LEVEL m_featureLevel;
 		};
 	}
 }
