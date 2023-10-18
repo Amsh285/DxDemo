@@ -14,3 +14,14 @@
 #include <wrl/client.h>
 
 #include <d3d11.h>
+
+
+template<typename T>
+inline void SafeRelease(T& ptr)
+{
+    if (ptr != NULL)
+    {
+        ptr->Release();
+        ptr = NULL;
+    }
+}

@@ -17,6 +17,60 @@ namespace dsr
 		public:
 			static DevicePtr Create(const WindowPtr& window);
 
+			template<class ShaderType>
+			ShaderType* CreateShader(ID3DBlob* pShaderBlob, ID3D11ClassLinkage* classLinkage);
+
+			template<>
+			ID3D11VertexShader* CreateShader<ID3D11VertexShader>(ID3DBlob* pShaderBlob, ID3D11ClassLinkage* pClassLinkage)
+			{
+				assert(pShaderBlob);
+
+				ID3D11VertexShader* pVertexShader = nullptr;
+				HRESULT result = m_device->CreateVertexShader(pShaderBlob->GetBufferPointer(), pShaderBlob->GetBufferSize(), pClassLinkage, &pVertexShader);
+
+				if (FAILED(result))
+				{
+					SafeRelease(pVertexShader);
+					return nullptr;
+				}
+
+				return pVertexShader;
+			}
+
+			template<>
+			ID3D11PixelShader* CreateShader<ID3D11PixelShader>(ID3DBlob* pShaderBlob, ID3D11ClassLinkage* pClassLinkage)
+			{
+				assert(pShaderBlob);
+
+				ID3D11PixelShader* pPixelShader = nullptr;
+				HRESULT result = m_device->CreatePixelShader(pShaderBlob->GetBufferPointer(), pShaderBlob->GetBufferSize(), pClassLinkage, &pPixelShader);
+
+				if (FAILED(result))
+				{
+					SafeRelease(pPixelShader);
+					return nullptr;
+				}
+
+				return pPixelShader;
+			}
+
+			template<class ShaderType>
+			void UseShader(ShaderType* pShader, ID3D11ClassInstance* const* ppClassInstances, UINT NumClassInstances);
+			
+			template<>
+			void UseShader<ID3D11VertexShader>(ID3D11VertexShader* pShader, ID3D11ClassInstance* const* ppClassInstances, UINT NumClassInstances)
+			{
+				assert(pShader);
+				m_deviceContext->VSSetShader(pShader, ppClassInstances, NumClassInstances);
+			}
+
+			template<>
+			void UseShader<ID3D11PixelShader>(ID3D11PixelShader* pShader, ID3D11ClassInstance* const* ppClassInstances, UINT NumClassInstances)
+			{
+				assert(pShader);
+				m_deviceContext->PSSetShader(pShader, ppClassInstances, NumClassInstances);
+			}
+
 			void Clear();
 			void SwapBuffers();
 
@@ -40,7 +94,7 @@ namespace dsr
 				D3D_FEATURE_LEVEL_11_0
 			};
 
-			D3D_FEATURE_LEVEL m_featureLevel;
+			std::unique_ptr<D3D_FEATURE_LEVEL> m_featureLevel;
 		};
 	}
 }

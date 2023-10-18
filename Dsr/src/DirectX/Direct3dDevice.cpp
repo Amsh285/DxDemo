@@ -28,7 +28,8 @@ namespace dsr
 			createDeviceAndSwapChainFlags = D3D11_CREATE_DEVICE_DEBUG;
 #endif // _DEBUG
 
-			// Todo: Check against https://www.3dgep.com/introduction-to-directx-11/#Create_a_Depth-Stencil_Buffer
+			D3D_FEATURE_LEVEL featureLevel;
+
 			HRESULT hr = D3D11CreateDeviceAndSwapChain(
 				nullptr,
 				D3D_DRIVER_TYPE_HARDWARE,
@@ -40,12 +41,14 @@ namespace dsr
 				&swapChainData,
 				&device->m_swapChain,
 				&device->m_device,
-				&device->m_featureLevel,
+				&featureLevel,
 				&device->m_deviceContext
 			);
 
 			if (FAILED(hr))
 				throw createdirecd3ddevice_error("Failed to create Device and Swapchain.", hr);
+
+			device->m_featureLevel = std::make_unique<D3D_FEATURE_LEVEL>(featureLevel);
 
 #pragma region setup renderTargetView
 			// has to be setup like this. direct member access will result in nullptr.
