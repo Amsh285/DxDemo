@@ -5,6 +5,7 @@
 #include "Windows/EventListeners/WindowEventListener.h"
 #include "DirectX/Direct3dDevice.h"
 #include "DirectX/Direct3dRenderer.h"
+#include "DirectX/Direct3dShader.h"
 
 #include <iostream>
 
@@ -23,6 +24,8 @@ int main(int argc, char* argv[])
 
 	std::shared_ptr<dsr::directX::Direct3dRenderer> renderer =
 		std::make_shared<dsr::directX::Direct3dRenderer>(device);
+
+	dsr::directX::LoadShaderFromFile<ID3D11VertexShader>(device, L"", "");
 
 	window->Show();
 

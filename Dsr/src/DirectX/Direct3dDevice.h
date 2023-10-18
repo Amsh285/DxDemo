@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ErrorHandling/createdirecd3ddevice_error.h"
+#include "ErrorHandling/dsr_error.h"
 #include "Windows/Window.h"
 
 namespace dsr
@@ -9,19 +9,16 @@ namespace dsr
 	{
 		class Direct3dDevice
 		{
-			template<class T>
-			using ComPtr = Microsoft::WRL::ComPtr<T>;
-			
 			using DevicePtr = std::shared_ptr<Direct3dDevice>;
 			using WindowPtr = std::shared_ptr<dsr::windows::Window>;
 		public:
 			static DevicePtr Create(const WindowPtr& window);
 
 			template<class ShaderType>
-			ShaderType* CreateShader(ID3DBlob* pShaderBlob, ID3D11ClassLinkage* classLinkage);
+			ShaderType* CreateShader(ID3DBlob* pShaderBlob, ID3D11ClassLinkage* classLinkage) const;
 
 			template<>
-			ID3D11VertexShader* CreateShader<ID3D11VertexShader>(ID3DBlob* pShaderBlob, ID3D11ClassLinkage* pClassLinkage)
+			ID3D11VertexShader* CreateShader<ID3D11VertexShader>(ID3DBlob* pShaderBlob, ID3D11ClassLinkage* pClassLinkage) const
 			{
 				assert(pShaderBlob);
 
@@ -31,14 +28,14 @@ namespace dsr
 				if (FAILED(result))
 				{
 					SafeRelease(pVertexShader);
-					return nullptr;
+					throw dsr_error("Error device was unable to create the Vertexshader.", result);
 				}
 
 				return pVertexShader;
 			}
 
 			template<>
-			ID3D11PixelShader* CreateShader<ID3D11PixelShader>(ID3DBlob* pShaderBlob, ID3D11ClassLinkage* pClassLinkage)
+			ID3D11PixelShader* CreateShader<ID3D11PixelShader>(ID3DBlob* pShaderBlob, ID3D11ClassLinkage* pClassLinkage) const
 			{
 				assert(pShaderBlob);
 
@@ -48,7 +45,7 @@ namespace dsr
 				if (FAILED(result))
 				{
 					SafeRelease(pPixelShader);
-					return nullptr;
+					throw dsr_error("Error device was unable to create the Pixelshader.", result);
 				}
 
 				return pPixelShader;
@@ -71,7 +68,7 @@ namespace dsr
 				m_deviceContext->PSSetShader(pShader, ppClassInstances, NumClassInstances);
 			}
 
-			void Clear();
+			void Clear(const float& r, const float& g, const float& b, const float& a);
 			void SwapBuffers();
 
 			Direct3dDevice(const Direct3dDevice& other) = delete;

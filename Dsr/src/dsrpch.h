@@ -14,7 +14,10 @@
 #include <wrl/client.h>
 
 #include <d3d11.h>
+#include <d3dcompiler.h>
 
+template<class T>
+using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 template<typename T>
 inline void SafeRelease(T& ptr)

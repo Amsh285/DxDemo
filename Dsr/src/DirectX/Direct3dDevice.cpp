@@ -46,7 +46,7 @@ namespace dsr
 			);
 
 			if (FAILED(hr))
-				throw createdirecd3ddevice_error("Failed to create Device and Swapchain.", hr);
+				throw dsr_error("Failed to create Device and Swapchain.", hr);
 
 			device->m_featureLevel = std::make_unique<D3D_FEATURE_LEVEL>(featureLevel);
 
@@ -57,13 +57,13 @@ namespace dsr
 			HRESULT getBackBufferFromSwapChainResult = device->m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
 
 			if (FAILED(getBackBufferFromSwapChainResult) || !pBackBuffer)
-				throw createdirecd3ddevice_error("Failed to access the BackBuffer of the Swapchain.", getBackBufferFromSwapChainResult);
+				throw dsr_error("Failed to access the BackBuffer of the Swapchain.", getBackBufferFromSwapChainResult);
 
 			HRESULT createRenderTargetViewResult = device->m_device->CreateRenderTargetView(pBackBuffer, NULL, &renderTargetView);
 			pBackBuffer->Release();
 
 			if (FAILED(createRenderTargetViewResult))
-				throw createdirecd3ddevice_error("Failed to Create the RenderTargetView.", createRenderTargetViewResult);
+				throw dsr_error("Failed to Create the RenderTargetView.", createRenderTargetViewResult);
 
 			device->m_renderTargetView = renderTargetView;
 #pragma endregion
@@ -87,13 +87,13 @@ namespace dsr
 			HRESULT createDepthStenciBufferResult = device->m_device->CreateTexture2D(&depthStencilBufferDescrition, nullptr, &depthStencilBuffer);
 
 			if(FAILED(createDepthStenciBufferResult))
-				throw createdirecd3ddevice_error("Failed to Create the DepthStencilBuffer.", createDepthStenciBufferResult);
+				throw dsr_error("Failed to Create the DepthStencilBuffer.", createDepthStenciBufferResult);
 
 			HRESULT createDepthStencilViewResult = device->m_device->CreateDepthStencilView(depthStencilBuffer, nullptr, &device->m_depthStencilView);
 			depthStencilBuffer->Release();
 
 			if(FAILED(createDepthStencilViewResult))
-				throw createdirecd3ddevice_error("Failed to Create the DepthStencilView.", createDepthStencilViewResult);
+				throw dsr_error("Failed to Create the DepthStencilView.", createDepthStencilViewResult);
 #pragma endregion
 
 #pragma region setup depth and stencil testing options
@@ -126,7 +126,7 @@ namespace dsr
 			HRESULT createRasterizerStateResult = device->m_device->CreateRasterizerState(&rasterizerDescription, &device->m_rasterizerState);
 
 			if(FAILED(createRasterizerStateResult))
-				throw createdirecd3ddevice_error("Failed to Create the RasterizerState.", createRasterizerStateResult);
+				throw dsr_error("Failed to Create the RasterizerState.", createRasterizerStateResult);
 #pragma endregion
 
 			D3D11_VIEWPORT viewport;
@@ -147,10 +147,9 @@ namespace dsr
 			return device;
 		}
 
-		void Direct3dDevice::Clear()
+		void Direct3dDevice::Clear(const float& r, const float& g, const float& b, const float& a)
 		{
-			//Todo: add parameter
-			float clearColor[4] = { 0.0f, 0.2f, 0.4f, 1.0f };
+			const float clearColor[4] = { r, g, b, a };
 			m_deviceContext->ClearRenderTargetView(m_renderTargetView.Get(), clearColor);
 		}
 

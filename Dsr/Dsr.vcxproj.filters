@@ -24,7 +24,7 @@
     <ClInclude Include="src\DirectX\Direct3dDevice.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ErrorHandling\createdirecd3ddevice_error.h">
+    <ClInclude Include="src\ErrorHandling\dsr_error.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Windows\WindowData.h">
@@ -54,6 +54,9 @@
     <ClInclude Include="src\DirectX\Direct3dRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\DirectX\Direct3dShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Windows\Window.cpp">
@@ -65,7 +68,7 @@
     <ClCompile Include="src\DirectX\Direct3dDevice.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ErrorHandling\createdirecd3ddevice_error.cpp">
+    <ClCompile Include="src\ErrorHandling\dsr_error.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Windows\WindowData.cpp">
@@ -90,6 +93,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\DirectX\Direct3dRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DirectX\Direct3dShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

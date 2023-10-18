@@ -2,12 +2,12 @@
 
 namespace dsr
 {
-	class createdirecd3ddevice_error : public std::exception
+	class dsr_error : public std::exception
 	{
 	public:
 		HRESULT GetResult() const { return m_result; }
 
-		createdirecd3ddevice_error(
+		dsr_error(
 			const std::string& message,
 			const HRESULT& result)
 			: exception(message.c_str()), m_result(result)
