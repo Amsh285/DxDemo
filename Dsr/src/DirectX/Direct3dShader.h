@@ -10,9 +10,10 @@ namespace dsr
 		class Direct3dShader
 		{
 		public:
+			std::shared_ptr<TShader> GetShaderPtr() const{ return m_shader; }
 
+			Direct3dShader(const std::shared_ptr<TShader>& shader) : m_shader(shader){}
 		private:
-			Direct3dShader() {};
 			std::shared_ptr<TShader> m_shader;
 		};
 
@@ -66,8 +67,8 @@ namespace dsr
 				pShader = device->CreateShader<TShader>(pShaderBlob, nullptr);
 				assert(pShader);
 
-				Direct3dShader<TShader> shader;
-				shader.m_shader = std::shared_ptr<TShader>(pShader, [](TShader* ptr) { SafeRelease(ptr); });
+				std::shared_ptr<TShader> shaderPtr = std::shared_ptr<TShader>(pShader, [](TShader* ptr) { SafeRelease(ptr); });
+				Direct3dShader<TShader> shader(shaderPtr);
 				return shader;
 			}
 			catch (const std::exception& e)
