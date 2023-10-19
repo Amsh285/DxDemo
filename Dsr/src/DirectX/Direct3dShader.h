@@ -61,10 +61,10 @@ namespace dsr
 
 			try
 			{
-				SafeRelease(pShaderBlob);
 				SafeRelease(pErrorBlob);
 
 				pShader = device->CreateShader<TShader>(pShaderBlob, nullptr);
+				SafeRelease(pShaderBlob);
 				assert(pShader);
 
 				std::shared_ptr<TShader> shaderPtr = std::shared_ptr<TShader>(pShader, [](TShader* ptr) { SafeRelease(ptr); });
@@ -73,6 +73,7 @@ namespace dsr
 			}
 			catch (const std::exception& e)
 			{
+				SafeRelease(pShaderBlob);
 				SafeRelease(pShader);
 				std::string msg = "error creating shader: " + std::string(fileName.begin(), fileName.end()) + ". " + e.what();
 				throw dsr::dsr_error(msg, E_FAIL);

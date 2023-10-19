@@ -1,6 +1,7 @@
 #pragma once
 
 #include "WindowData.h"
+#include "ErrorHandling/dsr_error.h"
 #include "Events/EventEmitter.h"
 #include "Events/EventListener.h"
 #include "Events/IEvent.h"
