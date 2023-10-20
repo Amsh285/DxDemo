@@ -10,9 +10,9 @@ namespace dsr
 		class Direct3dShader
 		{
 		public:
-			std::shared_ptr<TShader> GetShaderPtr() const{ return m_shader; }
+			std::shared_ptr<TShader> GetShaderPtr() const { return m_shader; }
 
-			Direct3dShader(const std::shared_ptr<TShader>& shader) : m_shader(shader){}
+			Direct3dShader(const std::shared_ptr<TShader>& shader) : m_shader(shader) {}
 		private:
 			std::shared_ptr<TShader> m_shader;
 		};
@@ -24,12 +24,12 @@ namespace dsr
 #endif // DEBUG
 
 		template<class TShader>
-		Direct3dShader<TShader> LoadShaderFromFile(
+		std::variant<Direct3dShader<TShader>, dsr_error> LoadShaderFromFile(
 			const std::shared_ptr<Direct3dDevice> device,
 			const std::wstring& fileName,
 			const std::string& profile,
 			const std::string& entryPoint = "main"
-			)
+		)
 		{
 			ID3DBlob* pShaderBlob = nullptr;
 			ID3DBlob* pErrorBlob = nullptr;
@@ -54,30 +54,30 @@ namespace dsr
 				SafeRelease(pErrorBlob);
 
 				std::string msg = "error compiling shader: " + std::string(fileName.begin(), fileName.end()) + ". " + errorMessage;
-				throw dsr_error(msg, hr);
+				return dsr_error(msg, hr);
 			}
 
-			TShader* pShader;
+			SafeRelease(pErrorBlob);
 
-			try
+			std::variant<TShader*, dsr_error> createShaderResult = device->CreateShader<TShader>(pShaderBlob, nullptr);
+			SafeRelease(pShaderBlob);
+
+			if (std::holds_alternative<dsr_error>(createShaderResult))
 			{
-				SafeRelease(pErrorBlob);
+				dsr_error createShaderError = std::get<dsr_error>(createShaderResult);
 
-				pShader = device->CreateShader<TShader>(pShaderBlob, nullptr);
-				SafeRelease(pShaderBlob);
-				assert(pShader);
+				return dsr_error::Attach(
+					"error creating shader: " + std::string(fileName.begin(), fileName.end()) + ". ",
+					createShaderError
+				);
+			}
 
-				std::shared_ptr<TShader> shaderPtr = std::shared_ptr<TShader>(pShader, [](TShader* ptr) { SafeRelease(ptr); });
-				Direct3dShader<TShader> shader(shaderPtr);
-				return shader;
-			}
-			catch (const std::exception& e)
-			{
-				SafeRelease(pShaderBlob);
-				SafeRelease(pShader);
-				std::string msg = "error creating shader: " + std::string(fileName.begin(), fileName.end()) + ". " + e.what();
-				throw dsr::dsr_error(msg, E_FAIL);
-			}
+			TShader* pShader = std::get<TShader*>(createShaderResult);
+			assert(pShader);
+
+			std::shared_ptr<TShader> shaderPtr = std::shared_ptr<TShader>(pShader, [](TShader* ptr) { SafeRelease(ptr); });
+			Direct3dShader<TShader> shader(shaderPtr);
+			return shader;
 		}
 	}
 }

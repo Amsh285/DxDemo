@@ -27,7 +27,31 @@ int main(int argc, char* argv[])
 		std::shared_ptr<dsr::directX::Direct3dRenderer> renderer =
 			std::make_shared<dsr::directX::Direct3dRenderer>(device);
 
-		dsr::directX::LoadShaderFromFile<ID3D11VertexShader>(device, L"Assets/VertexShader.hlsl", "vs_5_0");
+		std::variant<dsr::directX::Direct3dShader<ID3D11VertexShader>, dsr::dsr_error> loadVertexShader =
+			dsr::directX::LoadShaderFromFile<ID3D11VertexShader>(device, L"Assets/VertexShader.hlsl", "vs_5_0");
+
+		std::variant<dsr::directX::Direct3dShader<ID3D11PixelShader>, dsr::dsr_error> loadPixelShader =
+			dsr::directX::LoadShaderFromFile<ID3D11PixelShader>(device, L"Assets/PixelShader.hlsl", "ps_5_0");
+
+		if (std::holds_alternative<dsr::dsr_error>(loadVertexShader))
+		{
+			dsr::dsr_error error = std::get<dsr::dsr_error>(loadVertexShader);
+			std::cout << "Could not load VertexShader. " << error.what() << std::endl;
+			return EXIT_FAILURE;
+		}
+
+		if (std::holds_alternative<dsr::dsr_error>(loadPixelShader))
+		{
+			dsr::dsr_error error = std::get<dsr::dsr_error>(loadPixelShader);
+			std::cout << "Could not load PixelShader. " << error.what() << std::endl;
+			return EXIT_FAILURE;
+		}
+
+		dsr::directX::Direct3dShader<ID3D11VertexShader> vertexShader =
+			std::get<dsr::directX::Direct3dShader<ID3D11VertexShader>>(loadVertexShader);
+
+		dsr::directX::Direct3dShader<ID3D11PixelShader> pixelShader =
+			std::get<dsr::directX::Direct3dShader<ID3D11PixelShader>>(loadPixelShader);
 
 		window->Show();
 

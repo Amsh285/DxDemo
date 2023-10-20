@@ -15,10 +15,10 @@ namespace dsr
 			static DevicePtr Create(const WindowPtr& window);
 
 			template<class ShaderType>
-			ShaderType* CreateShader(ID3DBlob* pShaderBlob, ID3D11ClassLinkage* classLinkage) const;
+			std::variant<ShaderType*, dsr_error> CreateShader(ID3DBlob* pShaderBlob, ID3D11ClassLinkage* classLinkage) const;
 
 			template<>
-			ID3D11VertexShader* CreateShader<ID3D11VertexShader>(ID3DBlob* pShaderBlob, ID3D11ClassLinkage* pClassLinkage) const
+			std::variant<ID3D11VertexShader*, dsr_error> CreateShader<ID3D11VertexShader>(ID3DBlob* pShaderBlob, ID3D11ClassLinkage* pClassLinkage) const
 			{
 				assert(pShaderBlob);
 
@@ -28,14 +28,14 @@ namespace dsr
 				if (FAILED(result))
 				{
 					SafeRelease(pVertexShader);
-					throw dsr_error("Error device was unable to create the Vertexshader.", result);
+					return dsr_error("Error device was unable to create the Vertexshader.", result);
 				}
 
 				return pVertexShader;
 			}
 
 			template<>
-			ID3D11PixelShader* CreateShader<ID3D11PixelShader>(ID3DBlob* pShaderBlob, ID3D11ClassLinkage* pClassLinkage) const
+			std::variant<ID3D11PixelShader*, dsr_error> CreateShader<ID3D11PixelShader>(ID3DBlob* pShaderBlob, ID3D11ClassLinkage* pClassLinkage) const
 			{
 				assert(pShaderBlob);
 
@@ -45,7 +45,7 @@ namespace dsr
 				if (FAILED(result))
 				{
 					SafeRelease(pPixelShader);
-					throw dsr_error("Error device was unable to create the Pixelshader.", result);
+					return dsr_error("Error device was unable to create the Pixelshader.", result);
 				}
 
 				return pPixelShader;
