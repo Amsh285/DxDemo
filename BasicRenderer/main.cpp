@@ -9,6 +9,55 @@
 
 #include <iostream>
 
+//enum ConstantBuffer
+//{
+//	CB_Application,
+//	CB_Frame,
+//	CB_Object,
+//	NumConstantBuffers
+//};
+//
+//ID3D11Buffer* g_d3dConstantBuffers[NumConstantBuffers];
+
+struct VertexPosColor
+{
+	DirectX::XMFLOAT3 Position;
+	DirectX::XMFLOAT3 Color;
+};
+
+void LoadContent()
+{
+	VertexPosColor g_Vertices[8] =
+	{
+		{ DirectX::XMFLOAT3(-1.0f, -1.0f, -1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f) }, // 0
+		{ DirectX::XMFLOAT3(-1.0f,  1.0f, -1.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f) }, // 1
+		{ DirectX::XMFLOAT3(1.0f,  1.0f, -1.0f), DirectX::XMFLOAT3(1.0f, 1.0f, 0.0f) }, // 2
+		{ DirectX::XMFLOAT3(1.0f, -1.0f, -1.0f), DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f) }, // 3
+		{ DirectX::XMFLOAT3(-1.0f, -1.0f,  1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f) }, // 4
+		{ DirectX::XMFLOAT3(-1.0f,  1.0f,  1.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 1.0f) }, // 5
+		{ DirectX::XMFLOAT3(1.0f,  1.0f,  1.0f), DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f) }, // 6
+		{ DirectX::XMFLOAT3(1.0f, -1.0f,  1.0f), DirectX::XMFLOAT3(1.0f, 0.0f, 1.0f) }  // 7
+	};
+
+	WORD g_Indicies[36] =
+	{
+		0, 1, 2, 0, 2, 3,
+		4, 6, 5, 4, 7, 6,
+		4, 5, 1, 4, 1, 0,
+		3, 2, 6, 3, 6, 7,
+		1, 5, 6, 1, 6, 2,
+		4, 0, 3, 4, 3, 7
+	};
+
+	/*size_t ka = offsetof(VertexPosColor, Position);
+	size_t ka2 = offsetof(VertexPosColor, Color);
+	size_t ka3 = sizeof(DirectX::XMFLOAT3);
+
+	std::cout << ka << " " << ka2 << " " << ka3 << std::endl;*/
+
+	
+}
+
 int main(int argc, char* argv[])
 {
 	try
@@ -46,6 +95,8 @@ int main(int argc, char* argv[])
 			std::cout << "Could not load PixelShader. " << error.what() << std::endl;
 			return EXIT_FAILURE;
 		}
+
+		LoadContent();
 
 		dsr::directX::Direct3dShader<ID3D11VertexShader> vertexShader =
 			std::get<dsr::directX::Direct3dShader<ID3D11VertexShader>>(loadVertexShader);

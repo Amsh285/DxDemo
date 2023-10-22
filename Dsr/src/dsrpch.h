@@ -16,6 +16,9 @@
 #include <d3d11.h>
 #include <d3dcompiler.h>
 
+#include <DirectXMath.h>
+#include <DirectXColors.h>
+
 template<class T>
 using ComPtr = Microsoft::WRL::ComPtr<T>;
 

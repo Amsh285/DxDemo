@@ -11,16 +11,22 @@ namespace dsr
 		{
 		public:
 			std::shared_ptr<TShader> GetShaderPtr() const { return m_shader; }
+			std::shared_ptr<ID3DBlob> GetShaderBlob() const { return m_shaderBlob; }
 
-			Direct3dShader(const std::shared_ptr<TShader>& shader) : m_shader(shader) {}
+			Direct3dShader(const std::shared_ptr<TShader>& shader, const std::shared_ptr<ID3DBlob>& shaderBlob)
+				: m_shader(shader), m_shaderBlob(shaderBlob)
+			{
+			}
+
 		private:
 			std::shared_ptr<TShader> m_shader;
+			std::shared_ptr<ID3DBlob> m_shaderBlob;
 		};
 
 #ifdef _DEBUG
-		static const UINT s_shaderCompileFlags = D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG;
+#define SHADERCOMPILE_FLAGS D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG
 #else
-		static const UINT s_shaderCompileFlags = D3DCOMPILE_ENABLE_STRICTNESS;
+#define SHADERCOMPILE_FLAGS D3DCOMPILE_ENABLE_STRICTNESS
 #endif // DEBUG
 
 		template<class TShader>
@@ -36,7 +42,7 @@ namespace dsr
 
 			HRESULT hr = D3DCompileFromFile(
 				fileName.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE,
-				entryPoint.c_str(), profile.c_str(), s_shaderCompileFlags, 0,
+				entryPoint.c_str(), profile.c_str(), SHADERCOMPILE_FLAGS, 0,
 				&pShaderBlob, &pErrorBlob
 			);
 
@@ -60,10 +66,10 @@ namespace dsr
 			SafeRelease(pErrorBlob);
 
 			std::variant<TShader*, dsr_error> createShaderResult = device->CreateShader<TShader>(pShaderBlob, nullptr);
-			SafeRelease(pShaderBlob);
 
 			if (std::holds_alternative<dsr_error>(createShaderResult))
 			{
+				SafeRelease(pShaderBlob);
 				dsr_error createShaderError = std::get<dsr_error>(createShaderResult);
 
 				return dsr_error::Attach(
@@ -74,9 +80,11 @@ namespace dsr
 
 			TShader* pShader = std::get<TShader*>(createShaderResult);
 			assert(pShader);
+			assert(pShaderBlob);
 
 			std::shared_ptr<TShader> shaderPtr = std::shared_ptr<TShader>(pShader, [](TShader* ptr) { SafeRelease(ptr); });
-			Direct3dShader<TShader> shader(shaderPtr);
+			std::shared_ptr<ID3DBlob> shaderBlobPtr = std::shared_ptr<ID3DBlob>(pShaderBlob, [](ID3DBlob* ptr) { SafeRelease(ptr); });
+			Direct3dShader<TShader> shader(shaderPtr, shaderBlobPtr);
 			return shader;
 		}
 	}
