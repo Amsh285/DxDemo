@@ -11,6 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\DirectX\Direct3dShaderProgram.h" />
+    <ClInclude Include="src\DirectX\Direct3dDeviceShaderExtensions.h" />
     <ClInclude Include="src\DirectX\Direct3dShaderInputLayout.h" />
     <ClInclude Include="src\DirectX\Direct3dShader.h" />
     <ClInclude Include="src\DirectX\Direct3dRenderer.h" />
@@ -28,6 +30,14 @@
     <ClInclude Include="src\Windows\EventListeners\WindowEventListener.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\DirectX\Direct3dShaderProgram.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="src\DirectX\Direct3dDeviceShaderExtensions.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="src\DirectX\Direct3dShaderInputLayout.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>

@@ -6,6 +6,8 @@
 #include "DirectX/Direct3dDevice.h"
 #include "DirectX/Direct3dRenderer.h"
 #include "DirectX/Direct3dShader.h"
+#include "DirectX/Direct3dDeviceShaderExtensions.h"
+#include "DirectX/Direct3dShaderProgram.h"
 
 #include <iostream>
 
@@ -103,6 +105,10 @@ int main(int argc, char* argv[])
 
 		dsr::directX::Direct3dShader<ID3D11PixelShader> pixelShader =
 			std::get<dsr::directX::Direct3dShader<ID3D11PixelShader>>(loadPixelShader);
+
+		dsr::directX::Direct3dShaderProgram shaderProgram(vertexShader, pixelShader);
+		shaderProgram.VertexShaderInputLayout.AddVector3f("POSITION");
+		shaderProgram.VertexShaderInputLayout.AddVector3f("COLOR");
 
 		window->Show();
 
