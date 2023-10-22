@@ -127,6 +127,7 @@ int main(int argc, char* argv[])
 		{
 			dsr::dsr_error error = std::get<dsr::dsr_error>(loadShaderProgram);
 			std::cout << "error loading shader program: " << error.what() << std::endl;
+			return EXIT_FAILURE;
 		}
 
 		dsr::directX::Direct3dShaderProgram shaderProgram = std::get<dsr::directX::Direct3dShaderProgram>(loadShaderProgram);
