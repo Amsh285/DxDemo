@@ -60,6 +60,48 @@ void LoadContent()
 	
 }
 
+std::variant<dsr::directX::Direct3dShaderProgram, dsr::dsr_error> LoadShaderProgram(std::shared_ptr<dsr::directX::Direct3dDevice> device)
+{
+	std::variant<dsr::directX::Direct3dShader<ID3D11VertexShader>, dsr::dsr_error> loadVertexShader =
+		dsr::directX::LoadShaderFromFile<ID3D11VertexShader>(device, L"Assets/VertexShader.hlsl", "vs_5_0");
+
+	std::variant<dsr::directX::Direct3dShader<ID3D11PixelShader>, dsr::dsr_error> loadPixelShader =
+		dsr::directX::LoadShaderFromFile<ID3D11PixelShader>(device, L"Assets/PixelShader.hlsl", "ps_5_0");
+
+	if (std::holds_alternative<dsr::dsr_error>(loadVertexShader))
+	{
+		dsr::dsr_error error = std::get<dsr::dsr_error>(loadVertexShader);
+		return dsr::dsr_error::Attach("Could not load VertexShader. ", error);
+	}
+
+	if (std::holds_alternative<dsr::dsr_error>(loadPixelShader))
+	{
+		dsr::dsr_error error = std::get<dsr::dsr_error>(loadPixelShader);
+		return dsr::dsr_error::Attach("Could not load PixelShader. ", error);
+	}
+
+	dsr::directX::Direct3dShader<ID3D11VertexShader> vertexShader =
+		std::get<dsr::directX::Direct3dShader<ID3D11VertexShader>>(loadVertexShader);
+
+	dsr::directX::Direct3dShader<ID3D11PixelShader> pixelShader =
+		std::get<dsr::directX::Direct3dShader<ID3D11PixelShader>>(loadPixelShader);
+
+	dsr::directX::Direct3dShaderInputLayout vertexShaderInputLayout;
+	vertexShaderInputLayout.AddVector3f("POSITION");
+	vertexShaderInputLayout.AddVector3f("COLOR");
+
+	std::variant<dsr::directX::Direct3dShaderProgram, dsr::dsr_error> loadShaderProgram = dsr::directX::CreateShaderProgram(
+		device, vertexShader, pixelShader, vertexShaderInputLayout);
+
+	if (std::holds_alternative<dsr::dsr_error>(loadShaderProgram))
+	{
+		dsr::dsr_error error = std::get<dsr::dsr_error>(loadShaderProgram);
+		return dsr::dsr_error::Attach("Could not load Shaderprogram. ", error);
+	}
+
+	return std::get<dsr::directX::Direct3dShaderProgram>(loadShaderProgram);
+}
+
 int main(int argc, char* argv[])
 {
 	try
@@ -78,37 +120,16 @@ int main(int argc, char* argv[])
 		std::shared_ptr<dsr::directX::Direct3dRenderer> renderer =
 			std::make_shared<dsr::directX::Direct3dRenderer>(device);
 
-		std::variant<dsr::directX::Direct3dShader<ID3D11VertexShader>, dsr::dsr_error> loadVertexShader =
-			dsr::directX::LoadShaderFromFile<ID3D11VertexShader>(device, L"Assets/VertexShader.hlsl", "vs_5_0");
-
-		std::variant<dsr::directX::Direct3dShader<ID3D11PixelShader>, dsr::dsr_error> loadPixelShader =
-			dsr::directX::LoadShaderFromFile<ID3D11PixelShader>(device, L"Assets/PixelShader.hlsl", "ps_5_0");
-
-		if (std::holds_alternative<dsr::dsr_error>(loadVertexShader))
-		{
-			dsr::dsr_error error = std::get<dsr::dsr_error>(loadVertexShader);
-			std::cout << "Could not load VertexShader. " << error.what() << std::endl;
-			return EXIT_FAILURE;
-		}
-
-		if (std::holds_alternative<dsr::dsr_error>(loadPixelShader))
-		{
-			dsr::dsr_error error = std::get<dsr::dsr_error>(loadPixelShader);
-			std::cout << "Could not load PixelShader. " << error.what() << std::endl;
-			return EXIT_FAILURE;
-		}
-
 		LoadContent();
+		std::variant<dsr::directX::Direct3dShaderProgram, dsr::dsr_error> loadShaderProgram = LoadShaderProgram(device);
 
-		dsr::directX::Direct3dShader<ID3D11VertexShader> vertexShader =
-			std::get<dsr::directX::Direct3dShader<ID3D11VertexShader>>(loadVertexShader);
+		if (std::holds_alternative<dsr::dsr_error>(loadShaderProgram))
+		{
+			dsr::dsr_error error = std::get<dsr::dsr_error>(loadShaderProgram);
+			std::cout << "error loading shader program: " << error.what() << std::endl;
+		}
 
-		dsr::directX::Direct3dShader<ID3D11PixelShader> pixelShader =
-			std::get<dsr::directX::Direct3dShader<ID3D11PixelShader>>(loadPixelShader);
-
-		dsr::directX::Direct3dShaderProgram shaderProgram(vertexShader, pixelShader);
-		shaderProgram.VertexShaderInputLayout.AddVector3f("POSITION");
-		shaderProgram.VertexShaderInputLayout.AddVector3f("COLOR");
+		dsr::directX::Direct3dShaderProgram shaderProgram = std::get<dsr::directX::Direct3dShaderProgram>(loadShaderProgram);
 
 		window->Show();
 

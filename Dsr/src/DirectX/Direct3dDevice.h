@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ErrorHandling/dsr_error.h"
+#include "Direct3dShaderInputLayout.h"
 #include "Windows/Window.h"
 
 namespace dsr
@@ -50,6 +51,10 @@ namespace dsr
 
 				return pPixelShader;
 			}
+
+			std::variant<ID3D11InputLayout*, dsr_error> CreateInputLayout(
+				const Direct3dShaderInputLayout& layout,
+				ID3DBlob* shaderBlob) const;
 
 			template<class ShaderType>
 			void UseShader(ShaderType* pShader, ID3D11ClassInstance* const* ppClassInstances, UINT NumClassInstances);

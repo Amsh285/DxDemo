@@ -1,7 +1,9 @@
 #pragma once
 
 #include "Direct3dDevice.h"
+#include "Direct3dShaderInputLayout.h"
 #include "Direct3dShader.h"
+#include "Direct3dShaderProgram.h"
 
 namespace dsr
 {
@@ -71,5 +73,15 @@ namespace dsr
 			Direct3dShader<TShader> shader(shaderPtr, shaderBlobPtr);
 			return shader;
 		}
+
+		std::variant<Direct3dShaderProgram, dsr_error> CreateShaderProgram(
+			const std::shared_ptr<Direct3dDevice> device,
+			const Direct3dShader<ID3D11VertexShader>& vertexShader,
+			const Direct3dShader<ID3D11PixelShader>& pixelShader,
+			const Direct3dShaderInputLayout& vertexShaderInputLayout,
+			std::optional<Direct3dShader<ID3D11HullShader>> HullShader = std::nullopt,
+			std::optional<Direct3dShader<ID3D11DomainShader>> DomainShader = std::nullopt,
+			std::optional<Direct3dShader<ID3D11GeometryShader>> GeometryShader = std::nullopt
+		);
 	}
 }

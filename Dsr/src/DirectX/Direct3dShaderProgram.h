@@ -12,7 +12,7 @@ namespace dsr
 		public:
 			Direct3dShader<ID3D11VertexShader> VertexShader;
 			Direct3dShader<ID3D11PixelShader> PixelShader;
-			Direct3dShaderInputLayout VertexShaderInputLayout;
+			std::shared_ptr<ID3D11InputLayout> VertexShaderInputLayout;
 
 			std::optional<Direct3dShader<ID3D11HullShader>> HullShader;
 			std::optional<Direct3dShader<ID3D11DomainShader>> DomainShader;
@@ -20,7 +20,8 @@ namespace dsr
 
 			Direct3dShaderProgram(
 				const Direct3dShader<ID3D11VertexShader>& vertexShader,
-				const Direct3dShader<ID3D11PixelShader>& pixelShader);
+				const Direct3dShader<ID3D11PixelShader>& pixelShader,
+				const std::shared_ptr<ID3D11InputLayout>& vertexShaderInputLayout);
 		private:
 		};
 	}

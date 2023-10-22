@@ -147,6 +147,47 @@ namespace dsr
 			return device;
 		}
 
+		struct VertexPosColor
+		{
+			DirectX::XMFLOAT3 Position;
+			DirectX::XMFLOAT3 Color;
+		};
+
+		std::variant<ID3D11InputLayout*, dsr_error> Direct3dDevice::CreateInputLayout(
+			const Direct3dShaderInputLayout& layout,
+			ID3DBlob* shaderBlob) const
+		{
+			std::vector<Direct3dLayoutShaderInputLayoutDescription> descriptions = layout.GetLayout();
+			std::vector<D3D11_INPUT_ELEMENT_DESC> inputLayout;
+
+			for (auto it = descriptions.begin(); it < descriptions.end(); ++it)
+			{
+				Direct3dLayoutShaderInputLayoutDescription description = *it;
+
+				D3D11_INPUT_ELEMENT_DESC elementDesc;
+				elementDesc.SemanticName = it->SemanticName.c_str();
+				elementDesc.SemanticIndex = description.SemanticIndex;
+				elementDesc.Format = description.Format;
+				elementDesc.InputSlot = description.InputSlot;
+				elementDesc.AlignedByteOffset = description.AlignedByteOffset;
+				elementDesc.InputSlotClass = description.InputSlotClass;
+				elementDesc.InstanceDataStepRate = description.InstanceDataStepRate;
+
+				inputLayout.push_back(elementDesc);
+			}
+			
+			ID3D11InputLayout* layoutPtr;
+			HRESULT result = m_device->CreateInputLayout(inputLayout.data(), inputLayout.size(), shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), &layoutPtr);
+
+			if (FAILED(result))
+			{
+				SafeRelease(layoutPtr);
+				return dsr_error("Error device was unable to create the Inputlayout.", result);
+			}
+
+			return layoutPtr;
+		}
+
 		void Direct3dDevice::Clear(const float& r, const float& g, const float& b, const float& a)
 		{
 			const float clearColor[4] = { r, g, b, a };
