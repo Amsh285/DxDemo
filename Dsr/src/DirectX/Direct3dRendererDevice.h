@@ -14,7 +14,7 @@ namespace dsr
 			
 			Direct3dRendererDevice(const std::shared_ptr<Direct3dDevice>& device);
 
-			void SetShaderProgram(const Direct3dShaderProgram& program);
+			void UseShaderProgram(const Direct3dShaderProgram& program);
 		private:
 			std::shared_ptr<Direct3dDevice> m_device;
 		};

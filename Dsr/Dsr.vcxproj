@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\DirectX\Direct3dVertexBufferf.h" />
     <ClInclude Include="src\DirectX\Direct3dRendererDevice.h" />
     <ClInclude Include="src\DirectX\Direct3dShaderProgram.h" />
     <ClInclude Include="src\DirectX\Direct3dDeviceShaderExtensions.h" />
@@ -31,6 +32,10 @@
     <ClInclude Include="src\Windows\EventListeners\WindowEventListener.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\DirectX\Direct3dVertexBufferf.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="src\DirectX\Direct3dRendererDevice.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>

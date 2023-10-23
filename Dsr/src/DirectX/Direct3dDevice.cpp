@@ -86,13 +86,13 @@ namespace dsr
 			ID3D11Texture2D* depthStencilBuffer;
 			HRESULT createDepthStenciBufferResult = device->m_device->CreateTexture2D(&depthStencilBufferDescrition, nullptr, &depthStencilBuffer);
 
-			if(FAILED(createDepthStenciBufferResult))
+			if (FAILED(createDepthStenciBufferResult))
 				throw dsr_error("Failed to Create the DepthStencilBuffer.", createDepthStenciBufferResult);
 
 			HRESULT createDepthStencilViewResult = device->m_device->CreateDepthStencilView(depthStencilBuffer, nullptr, &device->m_depthStencilView);
 			depthStencilBuffer->Release();
 
-			if(FAILED(createDepthStencilViewResult))
+			if (FAILED(createDepthStencilViewResult))
 				throw dsr_error("Failed to Create the DepthStencilView.", createDepthStencilViewResult);
 #pragma endregion
 
@@ -125,7 +125,7 @@ namespace dsr
 
 			HRESULT createRasterizerStateResult = device->m_device->CreateRasterizerState(&rasterizerDescription, &device->m_rasterizerState);
 
-			if(FAILED(createRasterizerStateResult))
+			if (FAILED(createRasterizerStateResult))
 				throw dsr_error("Failed to Create the RasterizerState.", createRasterizerStateResult);
 #pragma endregion
 
@@ -139,6 +139,8 @@ namespace dsr
 			viewport.Width = device->m_window->GetClientWidth();
 			viewport.Height = device->m_window->GetClientHeight();
 
+			// sollte wsl nicht hier passieren
+			// Todo: ev später refactoren
 			device->m_deviceContext->RSSetState(device->m_rasterizerState.Get());
 			device->m_deviceContext->RSSetViewports(1, &viewport);
 			device->m_deviceContext->OMSetRenderTargets(1, &renderTargetView, device->m_depthStencilView.Get());
@@ -147,11 +149,19 @@ namespace dsr
 			return device;
 		}
 
-		struct VertexPosColor
+		std::variant<ID3D11Buffer*, dsr::dsr_error> Direct3dDevice::CreateBuffer(const D3D11_BUFFER_DESC* pDesc, const D3D11_SUBRESOURCE_DATA* pInitialData)
 		{
-			DirectX::XMFLOAT3 Position;
-			DirectX::XMFLOAT3 Color;
-		};
+			ID3D11Buffer* buffer;
+			HRESULT result = m_device->CreateBuffer(pDesc, pInitialData, &buffer);
+
+			if (FAILED(result))
+			{
+				SafeRelease(buffer);
+				return dsr_error("Error device was unable to create the Buffer.", result);
+			}
+
+			return buffer;
+		}
 
 		std::variant<ID3D11InputLayout*, dsr_error> Direct3dDevice::CreateInputLayout(
 			const Direct3dShaderInputLayout& layout,
@@ -175,7 +185,7 @@ namespace dsr
 
 				inputLayout.push_back(elementDesc);
 			}
-			
+
 			ID3D11InputLayout* layoutPtr;
 			HRESULT result = m_device->CreateInputLayout(inputLayout.data(), inputLayout.size(), shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), &layoutPtr);
 
@@ -186,6 +196,11 @@ namespace dsr
 			}
 
 			return layoutPtr;
+		}
+
+		void Direct3dDevice::SetInputLayout(ID3D11InputLayout* layout)
+		{
+			m_deviceContext->IASetInputLayout(layout);
 		}
 
 		void Direct3dDevice::Clear(const float& r, const float& g, const float& b, const float& a)

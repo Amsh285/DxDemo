@@ -41,6 +41,18 @@ void LoadContent()
 		{ DirectX::XMFLOAT3(1.0f, -1.0f,  1.0f), DirectX::XMFLOAT3(1.0f, 0.0f, 1.0f) }  // 7
 	};
 
+	float* ptr = reinterpret_cast<float*>(g_Vertices);
+	std::vector<float> vec(ptr, ptr + 48);
+	
+
+	for (size_t i = 0; i < 48; i++)
+	{
+		std::cout << i << ": " << ptr[i] << std::endl;
+	}
+
+	std::cout << sizeof(DirectX::XMFLOAT3) << std::endl;
+	std::cout << sizeof(VertexPosColor) << std::endl;
+
 	WORD g_Indicies[36] =
 	{
 		0, 1, 2, 0, 2, 3,
@@ -87,8 +99,13 @@ std::variant<dsr::directX::Direct3dShaderProgram, dsr::dsr_error> LoadShaderProg
 		std::get<dsr::directX::Direct3dShader<ID3D11PixelShader>>(loadPixelShader);
 
 	dsr::directX::Direct3dShaderInputLayout vertexShaderInputLayout;
-	vertexShaderInputLayout.AddVector3f("POSITION");
-	vertexShaderInputLayout.AddVector3f("COLOR");
+	/*vertexShaderInputLayout.AddVector3f("POSITION");
+	vertexShaderInputLayout.AddVector3f("COLOR");*/
+
+	// kann sein das man das machen muss weil der input ein struct array ist.
+	// Todo: Testen ob beides geht
+	vertexShaderInputLayout.AddVector3f("POSITION", 0 , 0, offsetof(VertexPosColor, Position));
+	vertexShaderInputLayout.AddVector3f("COLOR", 0, 0, offsetof(VertexPosColor, Color));
 
 	std::variant<dsr::directX::Direct3dShaderProgram, dsr::dsr_error> loadShaderProgram = dsr::directX::CreateShaderProgram(
 		device, vertexShader, pixelShader, vertexShaderInputLayout);

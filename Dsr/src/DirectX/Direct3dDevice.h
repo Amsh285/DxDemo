@@ -15,6 +15,10 @@ namespace dsr
 		public:
 			static DevicePtr Create(const WindowPtr& window);
 
+			std::variant<ID3D11Buffer*, dsr::dsr_error> CreateBuffer(
+				const D3D11_BUFFER_DESC* pDesc,
+				const D3D11_SUBRESOURCE_DATA* pInitialData);
+
 			template<class ShaderType>
 			std::variant<ShaderType*, dsr_error> CreateShader(ID3DBlob* pShaderBlob, ID3D11ClassLinkage* classLinkage) const;
 
@@ -56,18 +60,20 @@ namespace dsr
 				const Direct3dShaderInputLayout& layout,
 				ID3DBlob* shaderBlob) const;
 
+			void SetInputLayout(ID3D11InputLayout* layout);
+
 			template<class ShaderType>
-			void UseShader(ShaderType* pShader, ID3D11ClassInstance* const* ppClassInstances, UINT NumClassInstances);
-			
+			void UseShader(ShaderType* pShader, ID3D11ClassInstance* const* ppClassInstances, const uint32_t& NumClassInstances);
+
 			template<>
-			void UseShader<ID3D11VertexShader>(ID3D11VertexShader* pShader, ID3D11ClassInstance* const* ppClassInstances, UINT NumClassInstances)
+			void UseShader<ID3D11VertexShader>(ID3D11VertexShader* pShader, ID3D11ClassInstance* const* ppClassInstances, const uint32_t& NumClassInstances)
 			{
 				assert(pShader);
 				m_deviceContext->VSSetShader(pShader, ppClassInstances, NumClassInstances);
 			}
 
 			template<>
-			void UseShader<ID3D11PixelShader>(ID3D11PixelShader* pShader, ID3D11ClassInstance* const* ppClassInstances, UINT NumClassInstances)
+			void UseShader<ID3D11PixelShader>(ID3D11PixelShader* pShader, ID3D11ClassInstance* const* ppClassInstances, const uint32_t& NumClassInstances)
 			{
 				assert(pShader);
 				m_deviceContext->PSSetShader(pShader, ppClassInstances, NumClassInstances);

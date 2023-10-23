@@ -18,7 +18,8 @@ namespace dsr
 			description.AlignedByteOffset = alignedByteOffset;
 			description.InputSlotClass = inputSlotClass;
 			description.InstanceDataStepRate = instanceDataStepRate;
-
+			
+			m_totalStride += 12;
 			m_layout.push_back(description);
 		}
 	}
