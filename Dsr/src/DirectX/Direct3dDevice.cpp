@@ -151,7 +151,7 @@ namespace dsr
 
 		std::variant<ID3D11Buffer*, dsr::dsr_error> Direct3dDevice::CreateBuffer(const D3D11_BUFFER_DESC* pDesc, const D3D11_SUBRESOURCE_DATA* pInitialData)
 		{
-			ID3D11Buffer* buffer;
+			ID3D11Buffer* buffer = nullptr;
 			HRESULT result = m_device->CreateBuffer(pDesc, pInitialData, &buffer);
 
 			if (FAILED(result))

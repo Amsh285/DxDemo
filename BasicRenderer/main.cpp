@@ -7,6 +7,7 @@
 #include "DirectX/Direct3dRenderer.h"
 #include "DirectX/Direct3dShader.h"
 #include "DirectX/Direct3dDeviceShaderExtensions.h"
+#include "DirectX/Direct3dDeviceBufferExtensions.h"
 #include "DirectX/Direct3dShaderProgram.h"
 
 #include <iostream>
@@ -27,9 +28,12 @@ struct VertexPosColor
 	DirectX::XMFLOAT3 Color;
 };
 
-void LoadContent()
+std::variant<dsr::directX::Direct3dVertexBufferf, dsr::dsr_error> LoadContent(const std::shared_ptr<dsr::directX::Direct3dDevice> device)
 {
-	VertexPosColor g_Vertices[8] =
+	const size_t vertexCount = 8;
+	const size_t elementCount = vertexCount * 6;
+
+	VertexPosColor g_Vertices[vertexCount] =
 	{
 		{ DirectX::XMFLOAT3(-1.0f, -1.0f, -1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f) }, // 0
 		{ DirectX::XMFLOAT3(-1.0f,  1.0f, -1.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f) }, // 1
@@ -42,18 +46,9 @@ void LoadContent()
 	};
 
 	float* ptr = reinterpret_cast<float*>(g_Vertices);
-	std::vector<float> vec(ptr, ptr + 48);
-	
+	std::vector<float> vertexData(ptr, ptr + elementCount);
 
-	for (size_t i = 0; i < 48; i++)
-	{
-		std::cout << i << ": " << ptr[i] << std::endl;
-	}
-
-	std::cout << sizeof(DirectX::XMFLOAT3) << std::endl;
-	std::cout << sizeof(VertexPosColor) << std::endl;
-
-	WORD g_Indicies[36] =
+	std::vector<uint32_t> indexData =
 	{
 		0, 1, 2, 0, 2, 3,
 		4, 6, 5, 4, 7, 6,
@@ -63,13 +58,16 @@ void LoadContent()
 		4, 0, 3, 4, 3, 7
 	};
 
-	/*size_t ka = offsetof(VertexPosColor, Position);
-	size_t ka2 = offsetof(VertexPosColor, Color);
-	size_t ka3 = sizeof(DirectX::XMFLOAT3);
+	dsr::directX::Direct3dShaderInputLayout inputLayout;
+	inputLayout.AddVector3f("POSITION");
+	inputLayout.AddVector3f("COLOR");
 
-	std::cout << ka << " " << ka2 << " " << ka3 << std::endl;*/
+	std::variant<dsr::directX::Direct3dVertexBufferf, dsr::dsr_error> loadVertexData = dsr::directX::LoadVertexBuffer3f(device, vertexData, indexData, inputLayout);
 
-	
+	if (std::holds_alternative<dsr::dsr_error>(loadVertexData))
+		return dsr::dsr_error::Attach("Error Loading Vertexbuffer: ", std::get<dsr::dsr_error>(loadVertexData));
+
+	return std::get<dsr::directX::Direct3dVertexBufferf>(loadVertexData);
 }
 
 std::variant<dsr::directX::Direct3dShaderProgram, dsr::dsr_error> LoadShaderProgram(std::shared_ptr<dsr::directX::Direct3dDevice> device)
@@ -137,7 +135,15 @@ int main(int argc, char* argv[])
 		std::shared_ptr<dsr::directX::Direct3dRenderer> renderer =
 			std::make_shared<dsr::directX::Direct3dRenderer>(device);
 
-		LoadContent();
+		std::variant<dsr::directX::Direct3dVertexBufferf, dsr::dsr_error> loadContent = LoadContent(device);
+
+		if (std::holds_alternative<dsr::dsr_error>(loadContent))
+		{
+			dsr::dsr_error& error = std::get<dsr::dsr_error>(loadContent);
+			std::cout << "error loading content: " << error.what() << std::endl;
+			return EXIT_FAILURE;
+		}
+
 		std::variant<dsr::directX::Direct3dShaderProgram, dsr::dsr_error> loadShaderProgram = LoadShaderProgram(device);
 
 		if (std::holds_alternative<dsr::dsr_error>(loadShaderProgram))
@@ -147,6 +153,7 @@ int main(int argc, char* argv[])
 			return EXIT_FAILURE;
 		}
 
+		dsr::directX::Direct3dVertexBufferf vertexBuffer = std::get<dsr::directX::Direct3dVertexBufferf>(loadContent);
 		dsr::directX::Direct3dShaderProgram shaderProgram = std::get<dsr::directX::Direct3dShaderProgram>(loadShaderProgram);
 
 		window->Show();
