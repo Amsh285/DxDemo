@@ -62,7 +62,7 @@ std::variant<dsr::directX::Direct3dVertexBufferf, dsr::dsr_error> LoadContent(co
 	inputLayout.AddVector3f("POSITION");
 	inputLayout.AddVector3f("COLOR");
 
-	std::variant<dsr::directX::Direct3dVertexBufferf, dsr::dsr_error> loadVertexData = dsr::directX::LoadVertexBuffer3f(device, vertexData, indexData, inputLayout);
+	std::variant<dsr::directX::Direct3dVertexBufferf, dsr::dsr_error> loadVertexData = dsr::directX::LoadVertexBufferf(device, vertexData, indexData, inputLayout);
 
 	if (std::holds_alternative<dsr::dsr_error>(loadVertexData))
 		return dsr::dsr_error::Attach("Error Loading Vertexbuffer: ", std::get<dsr::dsr_error>(loadVertexData));
