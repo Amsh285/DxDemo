@@ -8,7 +8,7 @@ namespace dsr
 {
 	namespace directX
 	{
-		std::variant<Direct3dVertexBufferf, dsr_error> LoadVertexBufferf(
+		std::variant<Direct3dVertexBufferf, dsr_error> SetupVertexBufferf(
 			const std::shared_ptr<Direct3dDevice> device,
 			const std::vector<float>& vertexData,
 			const std::vector<uint32_t>& indexBuffer,

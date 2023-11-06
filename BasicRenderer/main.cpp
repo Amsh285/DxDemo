@@ -30,6 +30,9 @@ struct VertexPosColor
 
 std::variant<dsr::directX::Direct3dVertexBufferf, dsr::dsr_error> LoadContent(const std::shared_ptr<dsr::directX::Direct3dDevice> device)
 {
+	using namespace dsr;
+	using namespace dsr::directX;
+
 	const size_t vertexCount = 8;
 	const size_t elementCount = vertexCount * 6;
 
@@ -58,45 +61,42 @@ std::variant<dsr::directX::Direct3dVertexBufferf, dsr::dsr_error> LoadContent(co
 		4, 0, 3, 4, 3, 7
 	};
 
-	dsr::directX::Direct3dShaderInputLayout inputLayout;
+	Direct3dShaderInputLayout inputLayout;
 	inputLayout.AddVector3f("POSITION");
 	inputLayout.AddVector3f("COLOR");
 
-	std::variant<dsr::directX::Direct3dVertexBufferf, dsr::dsr_error> loadVertexData = dsr::directX::LoadVertexBufferf(device, vertexData, indexData, inputLayout);
+	std::variant<Direct3dVertexBufferf, dsr_error> loadVertexData = SetupVertexBufferf(device, vertexData, indexData, inputLayout);
 
-	if (std::holds_alternative<dsr::dsr_error>(loadVertexData))
-		return dsr::dsr_error::Attach("Error Loading Vertexbuffer: ", std::get<dsr::dsr_error>(loadVertexData));
+	if (std::holds_alternative<dsr_error>(loadVertexData))
+		return dsr_error::Attach("Error Loading Vertexbuffer: ", std::get<dsr_error>(loadVertexData));
 
-	return std::get<dsr::directX::Direct3dVertexBufferf>(loadVertexData);
+	return std::get<Direct3dVertexBufferf>(loadVertexData);
 }
 
 std::variant<dsr::directX::Direct3dShaderProgram, dsr::dsr_error> LoadShaderProgram(std::shared_ptr<dsr::directX::Direct3dDevice> device)
 {
-	std::variant<dsr::directX::Direct3dShader<ID3D11VertexShader>, dsr::dsr_error> loadVertexShader =
-		dsr::directX::LoadShaderFromFile<ID3D11VertexShader>(device, L"Assets/VertexShader.hlsl", "vs_5_0");
+	using namespace dsr;
+	using namespace dsr::directX;
 
-	std::variant<dsr::directX::Direct3dShader<ID3D11PixelShader>, dsr::dsr_error> loadPixelShader =
-		dsr::directX::LoadShaderFromFile<ID3D11PixelShader>(device, L"Assets/PixelShader.hlsl", "ps_5_0");
+	std::variant<Direct3dShader<ID3D11VertexShader>, dsr_error> loadVertexShader = LoadShaderFromFile<ID3D11VertexShader>(device, L"Assets/VertexShader.hlsl", "vs_5_0");
+	std::variant<Direct3dShader<ID3D11PixelShader>, dsr::dsr_error> loadPixelShader = LoadShaderFromFile<ID3D11PixelShader>(device, L"Assets/PixelShader.hlsl", "ps_5_0");
 
-	if (std::holds_alternative<dsr::dsr_error>(loadVertexShader))
+	if (std::holds_alternative<dsr_error>(loadVertexShader))
 	{
-		dsr::dsr_error error = std::get<dsr::dsr_error>(loadVertexShader);
-		return dsr::dsr_error::Attach("Could not load VertexShader. ", error);
+		dsr_error error = std::get<dsr_error>(loadVertexShader);
+		return dsr_error::Attach("Could not load VertexShader. ", error);
 	}
 
-	if (std::holds_alternative<dsr::dsr_error>(loadPixelShader))
+	if (std::holds_alternative<dsr_error>(loadPixelShader))
 	{
-		dsr::dsr_error error = std::get<dsr::dsr_error>(loadPixelShader);
-		return dsr::dsr_error::Attach("Could not load PixelShader. ", error);
+		dsr_error error = std::get<dsr_error>(loadPixelShader);
+		return dsr_error::Attach("Could not load PixelShader. ", error);
 	}
 
-	dsr::directX::Direct3dShader<ID3D11VertexShader> vertexShader =
-		std::get<dsr::directX::Direct3dShader<ID3D11VertexShader>>(loadVertexShader);
+	Direct3dShader<ID3D11VertexShader> vertexShader = std::get<Direct3dShader<ID3D11VertexShader>>(loadVertexShader);
+	Direct3dShader<ID3D11PixelShader> pixelShader = std::get<Direct3dShader<ID3D11PixelShader>>(loadPixelShader);
 
-	dsr::directX::Direct3dShader<ID3D11PixelShader> pixelShader =
-		std::get<dsr::directX::Direct3dShader<ID3D11PixelShader>>(loadPixelShader);
-
-	dsr::directX::Direct3dShaderInputLayout vertexShaderInputLayout;
+	Direct3dShaderInputLayout vertexShaderInputLayout;
 	/*vertexShaderInputLayout.AddVector3f("POSITION");
 	vertexShaderInputLayout.AddVector3f("COLOR");*/
 
@@ -105,63 +105,64 @@ std::variant<dsr::directX::Direct3dShaderProgram, dsr::dsr_error> LoadShaderProg
 	vertexShaderInputLayout.AddVector3f("POSITION", 0 , 0, offsetof(VertexPosColor, Position));
 	vertexShaderInputLayout.AddVector3f("COLOR", 0, 0, offsetof(VertexPosColor, Color));
 
-	std::variant<dsr::directX::Direct3dShaderProgram, dsr::dsr_error> loadShaderProgram = dsr::directX::CreateShaderProgram(
+	std::variant<Direct3dShaderProgram, dsr_error> loadShaderProgram = CreateShaderProgram(
 		device, vertexShader, pixelShader, vertexShaderInputLayout);
 
-	if (std::holds_alternative<dsr::dsr_error>(loadShaderProgram))
+	if (std::holds_alternative<dsr_error>(loadShaderProgram))
 	{
-		dsr::dsr_error error = std::get<dsr::dsr_error>(loadShaderProgram);
-		return dsr::dsr_error::Attach("Could not load Shaderprogram. ", error);
+		dsr_error error = std::get<dsr_error>(loadShaderProgram);
+		return dsr_error::Attach("Could not load Shaderprogram. ", error);
 	}
 
-	return std::get<dsr::directX::Direct3dShaderProgram>(loadShaderProgram);
+	return std::get<Direct3dShaderProgram>(loadShaderProgram);
 }
 
 int main(int argc, char* argv[])
 {
+	using namespace dsr;
+	using namespace dsr::directX;
+	using namespace dsr::windows;
+
 	try
 	{
-		dsr::windows::WindowData data(L"Basic renderer", 100, 100, 1280, 768);
+		WindowData data(L"Basic renderer", 100, 100, 1280, 768);
 
-		std::shared_ptr<dsr::windows::Window> window =
-			std::make_shared<dsr::windows::Window>(data);
+		std::shared_ptr<Window> window =
+			std::make_shared<Window>(data);
 
-		std::shared_ptr<dsr::windows::WindowEventListener> destroyListener = std::make_shared<dsr::windows::WindowEventListener>();
-		window->GetDestroyEventRegister().Hook(destroyListener, &dsr::windows::WindowEventListener::OnWindowDestroy);
+		std::shared_ptr<WindowEventListener> destroyListener = std::make_shared<WindowEventListener>();
+		window->GetDestroyEventRegister().Hook(destroyListener, &WindowEventListener::OnWindowDestroy);
 
-		std::shared_ptr<dsr::directX::Direct3dDevice> device =
-			dsr::directX::Direct3dDevice::Create(window);
+		std::shared_ptr<Direct3dDevice> device = Direct3dDevice::Create(window);
 
-		std::shared_ptr<dsr::directX::Direct3dRenderer> renderer =
-			std::make_shared<dsr::directX::Direct3dRenderer>(device);
+		std::shared_ptr<Direct3dRenderer> renderer = std::make_shared<Direct3dRenderer>(device);
 
-		std::variant<dsr::directX::Direct3dVertexBufferf, dsr::dsr_error> loadContent = LoadContent(device);
+		std::variant<Direct3dVertexBufferf, dsr_error> loadContent = LoadContent(device);
 
-		if (std::holds_alternative<dsr::dsr_error>(loadContent))
+		if (std::holds_alternative<dsr_error>(loadContent))
 		{
-			dsr::dsr_error& error = std::get<dsr::dsr_error>(loadContent);
+			dsr_error& error = std::get<dsr_error>(loadContent);
 			std::cout << "error loading content: " << error.what() << std::endl;
 			return EXIT_FAILURE;
 		}
 
-		std::variant<dsr::directX::Direct3dShaderProgram, dsr::dsr_error> loadShaderProgram = LoadShaderProgram(device);
+		std::variant<Direct3dShaderProgram, dsr_error> loadShaderProgram = LoadShaderProgram(device);
 
-		if (std::holds_alternative<dsr::dsr_error>(loadShaderProgram))
+		if (std::holds_alternative<dsr_error>(loadShaderProgram))
 		{
-			dsr::dsr_error error = std::get<dsr::dsr_error>(loadShaderProgram);
+			dsr_error error = std::get<dsr_error>(loadShaderProgram);
 			std::cout << "error loading shader program: " << error.what() << std::endl;
 			return EXIT_FAILURE;
 		}
 
-		dsr::directX::Direct3dVertexBufferf vertexBuffer = std::get<dsr::directX::Direct3dVertexBufferf>(loadContent);
-		dsr::directX::Direct3dShaderProgram shaderProgram = std::get<dsr::directX::Direct3dShaderProgram>(loadShaderProgram);
+		Direct3dVertexBufferf vertexBuffer = std::get<Direct3dVertexBufferf>(loadContent);
+		Direct3dShaderProgram shaderProgram = std::get<Direct3dShaderProgram>(loadShaderProgram);
 
 		window->Show();
 
-		std::shared_ptr<dsr::windows::WindowApplication> app = dsr::windows::WindowApplication
-			::Get();
+		std::shared_ptr<WindowApplication> app = WindowApplication::Get();
 
-		app->GetUpdateFrameEventRegister().Hook(renderer, &dsr::directX::Direct3dRenderer::OnUpdate);
+		app->GetUpdateFrameEventRegister().Hook(renderer, &Direct3dRenderer::OnUpdate);
 		app->PeekMessages();
 	}
 	catch (const std::exception& ex)
