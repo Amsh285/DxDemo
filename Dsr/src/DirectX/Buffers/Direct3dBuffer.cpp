@@ -7,7 +7,12 @@ namespace dsr
 	{
 		std::variant<Direct3dBuffer, dsr_error> Direct3dBuffer::CreateBuffer(const std::shared_ptr<Direct3dDevice> device, const D3D11_BUFFER_DESC& desc, const std::optional<D3D11_SUBRESOURCE_DATA>& subResourceData)
 		{
-			std::variant<ID3D11Buffer*, dsr_error> createBufferResult = device->CreateBuffer(&desc, &subResourceData.value_or(nullptr));
+			const D3D11_SUBRESOURCE_DATA* subResourceDataPtr = nullptr;
+
+			if (subResourceData.has_value())
+				subResourceDataPtr = &subResourceData.value();
+
+			std::variant<ID3D11Buffer*, dsr_error> createBufferResult = device->CreateBuffer(&desc, subResourceDataPtr);
 
 			if (std::holds_alternative<dsr_error>(createBufferResult))
 				return std::get<dsr_error>(createBufferResult);
