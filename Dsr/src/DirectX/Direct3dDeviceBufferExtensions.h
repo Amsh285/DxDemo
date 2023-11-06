@@ -3,6 +3,7 @@
 #include "Direct3dDevice.h"
 #include "Direct3dVertexBufferf.h"
 #include "Direct3dShaderInputLayout.h"
+#include "Buffers/Direct3dBuffer.h"
 
 namespace dsr
 {

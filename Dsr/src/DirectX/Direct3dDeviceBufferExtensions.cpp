@@ -12,48 +12,19 @@ namespace dsr
 			const std::vector<uint32_t>& indexBuffer,
 			const Direct3dShaderInputLayout& shaderInputLayout)
 		{
-			D3D11_BUFFER_DESC vertexBufferDescription;
-			ZeroMemory(&vertexBufferDescription, sizeof(D3D11_BUFFER_DESC));
-
-			vertexBufferDescription.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-			vertexBufferDescription.ByteWidth = sizeof(float) * vertexData.size();
-			vertexBufferDescription.CPUAccessFlags = 0;
-			vertexBufferDescription.Usage = D3D11_USAGE_DEFAULT;
-
-			D3D11_SUBRESOURCE_DATA subResourceData;
-			ZeroMemory(&subResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
-			subResourceData.pSysMem = vertexData.data();
-
-			std::variant<ID3D11Buffer*, dsr_error> createVertexBuffer = device->CreateBuffer(&vertexBufferDescription, &subResourceData);
-
+			std::variant<Direct3dBuffer, dsr_error> createVertexBuffer = Direct3dBuffer::CreateVertexBufferf(device, vertexData);
 			if (std::holds_alternative<dsr_error>(createVertexBuffer))
 				return std::get<dsr_error>(createVertexBuffer);
 
-			std::shared_ptr<ID3D11Buffer> vertexBufferPtr = std::shared_ptr<ID3D11Buffer>(
-				std::get<ID3D11Buffer*>(createVertexBuffer),
-				[](ID3D11Buffer* ptr) { SafeRelease(ptr); }
-			);
-
-			D3D11_BUFFER_DESC indexBufferDescription;
-			ZeroMemory(&indexBufferDescription, sizeof(D3D11_BUFFER_DESC));
-
-			indexBufferDescription.BindFlags = D3D11_BIND_INDEX_BUFFER;
-			indexBufferDescription.ByteWidth = sizeof(uint32_t) * indexBuffer.size();
-			indexBufferDescription.CPUAccessFlags = 0;
-			indexBufferDescription.Usage = D3D11_USAGE_DEFAULT;
-			subResourceData.pSysMem = indexBuffer.data();
-
-			std::variant<ID3D11Buffer*, dsr_error> createIndexBuffer = device->CreateBuffer(&indexBufferDescription, &subResourceData);
-
+			std::variant<Direct3dBuffer, dsr_error> createIndexBuffer = Direct3dBuffer::CreateIndexBuffer(device, indexBuffer);
 			if (std::holds_alternative<dsr_error>(createIndexBuffer))
 				return std::get<dsr_error>(createIndexBuffer);
 
-			std::shared_ptr<ID3D11Buffer> indexBufferPtr = std::shared_ptr<ID3D11Buffer>(
-				std::get<ID3D11Buffer*>(createIndexBuffer),
-				[](ID3D11Buffer* ptr) { SafeRelease(ptr); }
+			return Direct3dVertexBufferf(
+				std::get<Direct3dBuffer>(createVertexBuffer),
+				std::get<Direct3dBuffer>(createIndexBuffer),
+				shaderInputLayout
 			);
-
-			return Direct3dVertexBufferf(vertexBufferPtr, indexBufferPtr, shaderInputLayout);
 		}
 	}
 }

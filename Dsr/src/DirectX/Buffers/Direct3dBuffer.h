@@ -9,6 +9,22 @@ namespace dsr
 		class Direct3dBuffer
 		{
 		public:
+			static std::variant<Direct3dBuffer, dsr_error> CreateIndexBuffer(
+				const std::shared_ptr<Direct3dDevice> device,
+				const std::vector<uint32_t>& indexData,
+				const uint32_t& cpuAccessFlags = 0,
+				const uint32_t& miscFlags = 0,
+				const D3D11_USAGE& usage = D3D11_USAGE_DEFAULT
+			);
+
+			static std::variant<Direct3dBuffer, dsr_error> CreateVertexBufferf(
+				const std::shared_ptr<Direct3dDevice> device,
+				const std::vector<float>& vertexData,
+				const uint32_t& cpuAccessFlags = 0,
+				const uint32_t& miscFlags = 0,
+				const D3D11_USAGE& usage = D3D11_USAGE_DEFAULT
+			);
+
 			static std::variant<Direct3dBuffer, dsr_error> CreateBuffer(
 				const std::shared_ptr<Direct3dDevice> device,
 				const D3D11_BUFFER_DESC& desc,
@@ -18,7 +34,7 @@ namespace dsr
 			std::shared_ptr<ID3D11Buffer> GetBufferPtr() const { return m_buffer; }
 
 		private:
-			Direct3dBuffer() {};
+			Direct3dBuffer(const D3D11_BUFFER_DESC& desc, const std::shared_ptr<ID3D11Buffer>& bufferPtr);
 
 			D3D11_BUFFER_DESC m_description;
 			std::shared_ptr<ID3D11Buffer> m_buffer;

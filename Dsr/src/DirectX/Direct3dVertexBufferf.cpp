@@ -7,8 +7,8 @@ namespace dsr
 	namespace directX
 	{
 		Direct3dVertexBufferf::Direct3dVertexBufferf(
-			const std::shared_ptr<ID3D11Buffer>& vertexBuffer,
-			const std::shared_ptr<ID3D11Buffer>& indexBuffer,
+			const Direct3dBuffer& vertexBuffer,
+			const Direct3dBuffer& indexBuffer,
 			const Direct3dShaderInputLayout& shaderInputLayout)
 			: m_vertexBuffer(vertexBuffer), m_indexBuffer(indexBuffer), m_shaderInputLayout(shaderInputLayout)
 		{
