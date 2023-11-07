@@ -32,6 +32,7 @@
     <ClInclude Include="src\Windows\WindowData.h" />
     <ClInclude Include="src\Windows\WindowApplication.h" />
     <ClInclude Include="src\Windows\EventListeners\WindowEventListener.h" />
+    <ClInclude Include="src\Data\Transform.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\DirectX\Buffers\Direct3dBuffer.cpp">
@@ -113,6 +114,10 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="src\Windows\EventListeners\WindowEventListener.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="src\Data\Transform.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>

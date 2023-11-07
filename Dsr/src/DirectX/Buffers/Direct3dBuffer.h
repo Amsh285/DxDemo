@@ -9,6 +9,15 @@ namespace dsr
 		class Direct3dBuffer
 		{
 		public:
+			static std::variant<Direct3dBuffer, dsr_error> CreateConstantBuffer(
+				const std::shared_ptr<Direct3dDevice> device,
+				const uint32_t& byteWidth,
+				const uint32_t& cpuAccessFlags = 0,
+				const uint32_t& miscFlags = 0,
+				const D3D11_USAGE& usage = D3D11_USAGE_DEFAULT,
+				const std::optional<D3D11_SUBRESOURCE_DATA>& subResourceData = std::nullopt
+			);
+
 			static std::variant<Direct3dBuffer, dsr_error> CreateIndexBuffer(
 				const std::shared_ptr<Direct3dDevice> device,
 				const std::vector<uint32_t>& indexData,

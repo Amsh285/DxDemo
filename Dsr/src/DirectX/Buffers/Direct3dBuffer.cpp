@@ -5,6 +5,25 @@ namespace dsr
 {
 	namespace directX
 	{
+		std::variant<Direct3dBuffer, dsr_error> Direct3dBuffer::CreateConstantBuffer(
+			const std::shared_ptr<Direct3dDevice> device,
+			const uint32_t& byteWidth,
+			const uint32_t& cpuAccessFlags,
+			const uint32_t& miscFlags,
+			const D3D11_USAGE& usage,
+			const std::optional<D3D11_SUBRESOURCE_DATA>& subResourceData)
+		{
+			D3D11_BUFFER_DESC desc;
+			desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+			desc.ByteWidth = byteWidth;
+			desc.CPUAccessFlags = cpuAccessFlags;
+			desc.MiscFlags = miscFlags;
+			desc.StructureByteStride = 0;
+			desc.Usage = usage;
+
+			return CreateBuffer(device, desc, subResourceData);
+		}
+
 		std::variant<Direct3dBuffer, dsr_error> Direct3dBuffer::CreateIndexBuffer(const std::shared_ptr<Direct3dDevice> device, const std::vector<uint32_t>& indexData, const uint32_t& cpuAccessFlags, const uint32_t& miscFlags, const D3D11_USAGE& usage)
 		{
 			D3D11_BUFFER_DESC desc;

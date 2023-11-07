@@ -100,7 +100,6 @@ std::variant<dsr::directX::Direct3dShaderProgram, dsr::dsr_error> LoadShaderProg
 	/*vertexShaderInputLayout.AddVector3f("POSITION");
 	vertexShaderInputLayout.AddVector3f("COLOR");*/
 
-	// kann sein das man das machen muss weil der input ein struct array ist.
 	// Todo: Testen ob beides geht
 	vertexShaderInputLayout.AddVector3f("POSITION", 0 , 0, offsetof(VertexPosColor, Position));
 	vertexShaderInputLayout.AddVector3f("COLOR", 0, 0, offsetof(VertexPosColor, Color));
@@ -134,7 +133,6 @@ int main(int argc, char* argv[])
 		window->GetDestroyEventRegister().Hook(destroyListener, &WindowEventListener::OnWindowDestroy);
 
 		std::shared_ptr<Direct3dDevice> device = Direct3dDevice::Create(window);
-
 		std::shared_ptr<Direct3dRenderer> renderer = std::make_shared<Direct3dRenderer>(device);
 
 		std::variant<Direct3dVertexBufferf, dsr_error> loadContent = LoadContent(device);
