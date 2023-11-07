@@ -51,7 +51,7 @@
     <ClInclude Include="src\Windows\EventListeners\WindowEventListener.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\DirectX\Direct3dRenderer.h">
+    <ClInclude Include="src\DirectX\Rendering\Direct3dRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\DirectX\Direct3dShader.h">
@@ -66,7 +66,7 @@
     <ClInclude Include="src\DirectX\Direct3dShaderProgram.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\DirectX\Direct3dRendererDevice.h">
+    <ClInclude Include="src\DirectX\Rendering\Direct3dRendererDevice.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\DirectX\Direct3dVertexBufferf.h">
@@ -79,6 +79,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Data\Transform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DirectX\Rendering\Direct3dRenderUoW.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -116,7 +119,7 @@
     <ClCompile Include="src\Windows\EventListeners\WindowEventListener.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\DirectX\Direct3dRenderer.cpp">
+    <ClCompile Include="src\DirectX\Rendering\Direct3dRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\DirectX\Direct3dShader.cpp">
@@ -131,7 +134,7 @@
     <ClCompile Include="src\DirectX\Direct3dShaderProgram.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\DirectX\Direct3dRendererDevice.cpp">
+    <ClCompile Include="src\DirectX\Rendering\Direct3dRendererDevice.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\DirectX\Direct3dVertexBufferf.cpp">
@@ -144,6 +147,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Data\Transform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DirectX\Rendering\Direct3dRenderUoW.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

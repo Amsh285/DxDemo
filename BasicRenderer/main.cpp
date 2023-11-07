@@ -4,7 +4,7 @@
 #include "Windows/WindowApplication.h"
 #include "Windows/EventListeners/WindowEventListener.h"
 #include "DirectX/Direct3dDevice.h"
-#include "DirectX/Direct3dRenderer.h"
+#include "DirectX/Rendering/Direct3dRenderer.h"
 #include "DirectX/Direct3dShader.h"
 #include "DirectX/Direct3dDeviceShaderExtensions.h"
 #include "DirectX/Direct3dDeviceBufferExtensions.h"
@@ -12,15 +12,24 @@
 
 #include <iostream>
 
-//enum ConstantBuffer
-//{
-//	CB_Application,
-//	CB_Frame,
-//	CB_Object,
-//	NumConstantBuffers
-//};
-//
-//ID3D11Buffer* g_d3dConstantBuffers[NumConstantBuffers];
+//Todo: Set Toolset back to 1.43 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// also in dsr!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 
 struct VertexPosColor
 {
@@ -133,7 +142,7 @@ int main(int argc, char* argv[])
 		window->GetDestroyEventRegister().Hook(destroyListener, &WindowEventListener::OnWindowDestroy);
 
 		std::shared_ptr<Direct3dDevice> device = Direct3dDevice::Create(window);
-		std::shared_ptr<Direct3dRenderer> renderer = std::make_shared<Direct3dRenderer>(device);
+		std::shared_ptr<rendering::Direct3dRenderer> renderer = std::make_shared<rendering::Direct3dRenderer>(device);
 
 		std::variant<Direct3dVertexBufferf, dsr_error> loadContent = LoadContent(device);
 
@@ -160,7 +169,7 @@ int main(int argc, char* argv[])
 
 		std::shared_ptr<WindowApplication> app = WindowApplication::Get();
 
-		app->GetUpdateFrameEventRegister().Hook(renderer, &Direct3dRenderer::OnUpdate);
+		app->GetUpdateFrameEventRegister().Hook(renderer, &rendering::Direct3dRenderer::OnUpdate);
 		app->PeekMessages();
 	}
 	catch (const std::exception& ex)

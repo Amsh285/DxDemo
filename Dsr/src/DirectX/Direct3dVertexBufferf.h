@@ -20,6 +20,10 @@ namespace dsr
 				const Direct3dShaderInputLayout& shaderInputLayout);
 		private:
 			Direct3dBuffer m_vertexBuffer;
+
+			// https://github.com/microsoft/DirectXTK/wiki/Multistream-rendering-and-instancing
+			/*std::optional<Direct3dBuffer> m_normalbuffer; etc... for now just use one buffer for everything.*/
+
 			Direct3dBuffer m_indexBuffer;
 			Direct3dShaderInputLayout m_shaderInputLayout;
 		};
