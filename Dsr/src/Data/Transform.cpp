@@ -6,8 +6,11 @@ namespace dsr
 	namespace data
 	{
 		Transform::Transform()
-			: m_position(0.0f, 0.0f, 0.0f), m_scale(1.0f, 1.0f, 1.0f), m_rotation(0.0f, 0.0f, 0.0f)
 		{
+			Position = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
+			Scale = DirectX::XMVectorSet(1.0f, 1.0f, 1.0f, 0.0f);
+			Rotation = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+			Pivot = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
 		}
 	}
 }
