@@ -12,7 +12,8 @@ namespace dsr
 			DirectX::XMVECTOR Rotation;
 			DirectX::XMVECTOR Pivot;
 
-			DirectX::XMVECTOR CalculatePivot() const { return DirectX::XMVectorAdd(Position, Pivot); }
+			DirectX::XMVECTOR CalculatePivotPoint() const { return DirectX::XMVectorAdd(Position, Pivot); }
+			DirectX::XMMATRIX CalculateModelMatrix() const;
 
 			Transform();
 		private:
