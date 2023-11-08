@@ -27,7 +27,6 @@ namespace dsr
 
 				Direct3dRenderUoW(const Direct3dShaderProgram& shaderProgram);
 			private:
-				// keep it simple for now
 				Direct3dShaderProgram m_shaderProgram;
 			};
 		}
