@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Direct3dDevice.h"
-#include "Direct3dShaderInputLayout.h"
-#include "Direct3dShader.h"
-#include "Direct3dShaderProgram.h"
+#include "Shader/Direct3dShaderInputLayout.h"
+#include "Shader/Direct3dShader.h"
+#include "Shader/Direct3dShaderProgram.h"
 
 namespace dsr
 {

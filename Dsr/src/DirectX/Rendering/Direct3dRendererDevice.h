@@ -1,7 +1,7 @@
 #pragma once
 
 #include "DirectX/Direct3dDevice.h"
-#include "DirectX/Direct3dShaderProgram.h"
+#include "DirectX/Shader/Direct3dShaderProgram.h"
 
 namespace dsr
 {

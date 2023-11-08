@@ -2,7 +2,7 @@
 
 #include "Data/Transform.h"
 #include "DirectX/Direct3dVertexBufferf.h"
-#include "DirectX/Direct3dShaderProgram.h"
+#include "DirectX/Shader/Direct3dShaderProgram.h"
 
 namespace dsr
 {

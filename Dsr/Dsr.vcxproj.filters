@@ -54,16 +54,16 @@
     <ClInclude Include="src\DirectX\Rendering\Direct3dRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\DirectX\Direct3dShader.h">
+    <ClInclude Include="src\DirectX\Shader\Direct3dShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\DirectX\Direct3dShaderInputLayout.h">
+    <ClInclude Include="src\DirectX\Shader\Direct3dShaderInputLayout.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\DirectX\Direct3dDeviceShaderExtensions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\DirectX\Direct3dShaderProgram.h">
+    <ClInclude Include="src\DirectX\Shader\Direct3dShaderProgram.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\DirectX\Rendering\Direct3dRendererDevice.h">
@@ -122,16 +122,16 @@
     <ClCompile Include="src\DirectX\Rendering\Direct3dRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\DirectX\Direct3dShader.cpp">
+    <ClCompile Include="src\DirectX\Shader\Direct3dShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\DirectX\Direct3dShaderInputLayout.cpp">
+    <ClCompile Include="src\DirectX\Shader\Direct3dShaderInputLayout.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\DirectX\Direct3dDeviceShaderExtensions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\DirectX\Direct3dShaderProgram.cpp">
+    <ClCompile Include="src\DirectX\Shader\Direct3dShaderProgram.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\DirectX\Rendering\Direct3dRendererDevice.cpp">

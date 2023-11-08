@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ErrorHandling/dsr_error.h"
-#include "Direct3dShaderInputLayout.h"
+#include "Shader/Direct3dShaderInputLayout.h"
 #include "Windows/Window.h"
 
 namespace dsr

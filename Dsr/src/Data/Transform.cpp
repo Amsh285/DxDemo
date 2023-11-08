@@ -9,7 +9,7 @@ namespace dsr
 		{
 			using namespace DirectX;
 
-			XMMATRIX matTranslate = XMMatrixTranslationFromVector(CalculatePivotPoint());
+			XMMATRIX matTranslate = XMMatrixTranslationFromVector(Position);
 			XMMATRIX matRotate = XMMatrixRotationRollPitchYawFromVector(Rotation);
 			XMMATRIX matScale = XMMatrixScaling(XMVectorGetX(Scale), XMVectorGetY(Scale), XMVectorGetZ(Scale));
 
@@ -21,7 +21,6 @@ namespace dsr
 			Position = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
 			Scale = DirectX::XMVectorSet(1.0f, 1.0f, 1.0f, 0.0f);
 			Rotation = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
-			Pivot = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
 		}
 	}
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Direct3dShaderInputLayout.h"
+#include "Shader/Direct3dShaderInputLayout.h"
 #include "Buffers/Direct3dBuffer.h"
 
 namespace dsr
