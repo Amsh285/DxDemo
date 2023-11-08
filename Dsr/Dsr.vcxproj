@@ -21,6 +21,7 @@
     <ClInclude Include="src\DirectX\Shader\Direct3dShaderInputLayout.h" />
     <ClInclude Include="src\DirectX\Shader\Direct3dShader.h" />
     <ClInclude Include="src\DirectX\Rendering\Direct3dRenderer.h" />
+    <ClInclude Include="src\ErrorHandling\NotFoundError.h" />
     <ClInclude Include="src\Events\Application\WindowEvents.h" />
     <ClInclude Include="src\Events\EventListener.h" />
     <ClInclude Include="src\Events\IEvent.h" />
@@ -72,6 +73,10 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="src\DirectX\Rendering\Direct3dRenderer.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="src\ErrorHandling\NotFoundError.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
