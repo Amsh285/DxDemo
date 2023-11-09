@@ -19,11 +19,14 @@ namespace dsr
 				: m_device(device), m_shader(shader), m_shaderBlob(shaderBlob)
 			{
 			}
+
+
+
 		private:
 			std::shared_ptr<Direct3dDevice> m_device;
 			std::shared_ptr<TShader> m_shader;
 			std::shared_ptr<ID3DBlob> m_shaderBlob;
-			std::vector<std::pair<std::string, Direct3dBuffer>> m_constantBuffers;
+			std::map<size_t, Direct3dBuffer> m_constantBuffers;
 		};
 	}
 }

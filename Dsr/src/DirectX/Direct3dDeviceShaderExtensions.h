@@ -70,7 +70,7 @@ namespace dsr
 
 			std::shared_ptr<TShader> shaderPtr = std::shared_ptr<TShader>(pShader, [](TShader* ptr) { SafeRelease(ptr); });
 			std::shared_ptr<ID3DBlob> shaderBlobPtr = std::shared_ptr<ID3DBlob>(pShaderBlob, [](ID3DBlob* ptr) { SafeRelease(ptr); });
-			Direct3dShader<TShader> shader(shaderPtr, shaderBlobPtr);
+			Direct3dShader<TShader> shader(device, shaderPtr, shaderBlobPtr);
 			return shader;
 		}
 
