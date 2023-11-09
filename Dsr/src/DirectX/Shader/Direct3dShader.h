@@ -2,7 +2,7 @@
 
 #include "DirectX/Buffers/Direct3dBuffer.h"
 #include "DirectX/Direct3dDevice.h"
-#include "ErrorHandling/NotFoundError.h"
+#include "ErrorHandling/DsrResult.h"
 
 namespace dsr
 {
@@ -20,7 +20,7 @@ namespace dsr
 			{
 			}
 
-
+			DsrResult SetConstantBuffer(const size_t& bRegister, DirectX::XMMATRIX& value);
 
 		private:
 			std::shared_ptr<Direct3dDevice> m_device;
@@ -28,5 +28,38 @@ namespace dsr
 			std::shared_ptr<ID3DBlob> m_shaderBlob;
 			std::map<size_t, Direct3dBuffer> m_constantBuffers;
 		};
+
+		template<class TShader>
+		inline DsrResult Direct3dShader<TShader>::SetConstantBuffer(const size_t& bRegister, DirectX::XMMATRIX& value)
+		{
+			auto it = std::find(m_constantBuffers.begin(), m_constantBuffers.end(), bRegister);
+
+			if (it == m_constantBuffers.end())
+			{
+				D3D11_SUBRESOURCE_DATA subResourceData;
+				ZeroMemory(&subResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
+				subResourceData.pSysMem = &value;
+
+				std::variant<Direct3dBuffer, dsr_error> createConstantBufferResult = Direct3dBuffer::CreateConstantBuffer(
+					m_device,
+					sizeof(DirectX::XMMATRIX),
+					0, 0, D3D11_USAGE_DEFAULT,
+					subResourceData);
+
+				if (std::holds_alternative<dsr_error>(createConstantBufferResult))
+				{
+					const dsr_error& error = std::get<dsr_error>(createConstantBufferResult);
+					return DsrResult(error.what(), error.GetResult());
+				}
+
+				m_constantBuffers[bRegister] = std::get<Direct3dBuffer>(createConstantBufferResult);
+			}
+			else
+			{
+				// use existing
+			}
+
+			return DsrResult::Success("Constant buffer setup successful.");
+		}
 	}
 }
