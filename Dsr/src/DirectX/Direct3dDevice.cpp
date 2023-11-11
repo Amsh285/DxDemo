@@ -149,7 +149,7 @@ namespace dsr
 			return device;
 		}
 
-		std::variant<ID3D11Buffer*, dsr::dsr_error> Direct3dDevice::CreateBuffer(const D3D11_BUFFER_DESC* pDesc, const D3D11_SUBRESOURCE_DATA* pInitialData)
+		std::variant<ID3D11Buffer*, dsr::dsr_error> Direct3dDevice::CreateBuffer(const D3D11_BUFFER_DESC* pDesc, const D3D11_SUBRESOURCE_DATA* pInitialData) const
 		{
 			ID3D11Buffer* buffer = nullptr;
 			HRESULT result = m_device->CreateBuffer(pDesc, pInitialData, &buffer);
@@ -161,6 +161,11 @@ namespace dsr
 			}
 
 			return buffer;
+		}
+
+		void Direct3dDevice::UpdateSubResource(ID3D11Resource* resourcePtr, const uint32_t& dstSubResource, const D3D11_BOX* pDstBox, const void* dataPtr, const uint32_t& srcRowPitch, const uint32_t& srcDepthPitch)
+		{
+			m_deviceContext->UpdateSubresource(resourcePtr, dstSubResource, pDstBox, dataPtr, srcRowPitch, srcDepthPitch);
 		}
 
 		std::variant<ID3D11InputLayout*, dsr_error> Direct3dDevice::CreateInputLayout(

@@ -8,7 +8,7 @@ namespace dsr
 		namespace rendering
 		{
 			Direct3dRenderUoW::Direct3dRenderUoW(const Direct3dShaderProgram& shaderProgram)
-				: m_shaderProgram(shaderProgram)
+				: Shaders(shaderProgram)
 			{
 			}
 		}

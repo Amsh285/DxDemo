@@ -17,7 +17,15 @@ namespace dsr
 
 			std::variant<ID3D11Buffer*, dsr::dsr_error> CreateBuffer(
 				const D3D11_BUFFER_DESC* pDesc,
-				const D3D11_SUBRESOURCE_DATA* pInitialData);
+				const D3D11_SUBRESOURCE_DATA* pInitialData) const;
+
+			void UpdateSubResource(
+				ID3D11Resource* resourcePtr,
+				const uint32_t& dstSubResource,
+				const D3D11_BOX* pDstBox,
+				const void* dataPtr,
+				const uint32_t& srcRowPitch, 
+				const uint32_t& srcDepthPitch);
 
 			template<class ShaderType>
 			std::variant<ShaderType*, dsr_error> CreateShader(ID3DBlob* pShaderBlob, ID3D11ClassLinkage* classLinkage) const;

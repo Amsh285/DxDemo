@@ -17,17 +17,21 @@ namespace dsr
 				// https://github.com/microsoft/DirectXTK/wiki/Multistream-rendering-and-instancing
 				// later for instanced rendering, probably change to a Buffer
 				data::Transform Transform;
+
+				RenderData(const Direct3dVertexBufferf& vertexBuffer)
+					: VertexBuffer(vertexBuffer)
+				{
+				}
 			};
 			
 			class Direct3dRenderUoW
 			{
 			public:
-				Direct3dShaderProgram GetProgram() const { return m_shaderProgram; }
+				Direct3dShaderProgram Shaders;
 				std::vector<RenderData> RenderData;
 
 				Direct3dRenderUoW(const Direct3dShaderProgram& shaderProgram);
 			private:
-				Direct3dShaderProgram m_shaderProgram;
 			};
 		}
 	}

@@ -5,6 +5,7 @@
 #include "Windows/EventListeners/WindowEventListener.h"
 #include "DirectX/Direct3dDevice.h"
 #include "DirectX/Rendering/Direct3dRenderer.h"
+#include "DirectX/Rendering/Direct3dRenderUoW.h"
 #include "DirectX/Shader/Direct3dShader.h"
 #include "DirectX/Direct3dDeviceShaderExtensions.h"
 #include "DirectX/Direct3dDeviceBufferExtensions.h"
@@ -63,7 +64,9 @@ std::variant<dsr::directX::Direct3dVertexBufferf, dsr::dsr_error> LoadContent(co
 	return std::get<Direct3dVertexBufferf>(loadVertexData);
 }
 
-std::variant<dsr::directX::Direct3dShaderProgram, dsr::dsr_error> LoadShaderProgram(std::shared_ptr<dsr::directX::Direct3dDevice> device)
+std::variant<dsr::directX::Direct3dShaderProgram, dsr::dsr_error> LoadShaderProgram(
+	std::shared_ptr<dsr::windows::Window> window,
+	std::shared_ptr<dsr::directX::Direct3dDevice> device)
 {
 	using namespace dsr;
 	using namespace dsr::directX;
@@ -84,6 +87,19 @@ std::variant<dsr::directX::Direct3dShaderProgram, dsr::dsr_error> LoadShaderProg
 	}
 
 	Direct3dShader<ID3D11VertexShader> vertexShader = std::get<Direct3dShader<ID3D11VertexShader>>(loadVertexShader);
+
+	// setup projection matrix for vertexshader
+	float clientWidth = static_cast<float>(window->GetClientWidth());
+	float clientHeight = static_cast<float>(window->GetClientHeight());
+
+	DirectX::XMMATRIX projectionMatrix = DirectX::XMMatrixPerspectiveFovLH(
+		DirectX::XMConvertToRadians(45.0f),
+		clientWidth / clientHeight,
+		0.1f, 100.0f);
+	DsrResult constantBufferResult = vertexShader.SetConstantBuffer(0, projectionMatrix);
+	if (constantBufferResult.GetResultStatusCode() != RESULT_SUCCESS)
+		return dsr_error(constantBufferResult.GetResultMessage(), constantBufferResult.GetResultStatusCode());
+
 	Direct3dShader<ID3D11PixelShader> pixelShader = std::get<Direct3dShader<ID3D11PixelShader>>(loadPixelShader);
 
 	Direct3dShaderInputLayout vertexShaderInputLayout;
@@ -134,7 +150,7 @@ int main(int argc, char* argv[])
 			return EXIT_FAILURE;
 		}
 
-		std::variant<Direct3dShaderProgram, dsr_error> loadShaderProgram = LoadShaderProgram(device);
+		std::variant<Direct3dShaderProgram, dsr_error> loadShaderProgram = LoadShaderProgram(window, device);
 
 		if (std::holds_alternative<dsr_error>(loadShaderProgram))
 		{
@@ -145,6 +161,11 @@ int main(int argc, char* argv[])
 
 		Direct3dVertexBufferf vertexBuffer = std::get<Direct3dVertexBufferf>(loadContent);
 		Direct3dShaderProgram shaderProgram = std::get<Direct3dShaderProgram>(loadShaderProgram);
+
+		rendering::Direct3dRenderUoW uow(shaderProgram);
+		rendering::RenderData uowData(vertexBuffer);
+		uow.RenderData.push_back(uowData);
+		renderer->AddUnitOfWork(uow);
 
 		window->Show();
 

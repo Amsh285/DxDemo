@@ -42,9 +42,9 @@ namespace dsr
 			D3D11_BUFFER_DESC GetBufferDescription() const { return m_description; }
 			std::shared_ptr<ID3D11Buffer> GetBufferPtr() const { return m_buffer; }
 
-		private:
+			Direct3dBuffer();
 			Direct3dBuffer(const D3D11_BUFFER_DESC& desc, const std::shared_ptr<ID3D11Buffer>& bufferPtr);
-
+		private:
 			D3D11_BUFFER_DESC m_description;
 			std::shared_ptr<ID3D11Buffer> m_buffer;
 		};

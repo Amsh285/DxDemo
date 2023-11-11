@@ -84,6 +84,11 @@ namespace dsr
 			return Direct3dBuffer(desc, bufferPtr);
 		}
 
+		Direct3dBuffer::Direct3dBuffer()
+		{
+			ZeroMemory(&m_description, sizeof(D3D11_BUFFER_DESC));
+		}
+
 		Direct3dBuffer::Direct3dBuffer(const D3D11_BUFFER_DESC& desc, const std::shared_ptr<ID3D11Buffer>& bufferPtr)
 			: m_description(desc), m_buffer(bufferPtr)
 		{

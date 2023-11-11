@@ -20,19 +20,21 @@ namespace dsr
 			{
 			}
 
-			DsrResult SetConstantBuffer(const size_t& bRegister, DirectX::XMMATRIX& value);
+			DsrResult SetConstantBuffer(const size_t& bRegister, const DirectX::XMMATRIX& value);
 
 		private:
 			std::shared_ptr<Direct3dDevice> m_device;
 			std::shared_ptr<TShader> m_shader;
 			std::shared_ptr<ID3DBlob> m_shaderBlob;
+
+			
 			std::map<size_t, Direct3dBuffer> m_constantBuffers;
 		};
 
 		template<class TShader>
-		inline DsrResult Direct3dShader<TShader>::SetConstantBuffer(const size_t& bRegister, DirectX::XMMATRIX& value)
+		inline DsrResult Direct3dShader<TShader>::SetConstantBuffer(const size_t& bRegister, const DirectX::XMMATRIX& value)
 		{
-			auto it = std::find(m_constantBuffers.begin(), m_constantBuffers.end(), bRegister);
+			auto it = m_constantBuffers.find(bRegister);
 
 			if (it == m_constantBuffers.end())
 			{
@@ -56,7 +58,8 @@ namespace dsr
 			}
 			else
 			{
-				// use existing
+				std::shared_ptr<ID3D11Buffer> bufferPtr = it->second.GetBufferPtr();
+				m_device->UpdateSubResource(bufferPtr.get(), 0, nullptr, &value, 0, 0);
 			}
 
 			return DsrResult::Success("Constant buffer setup successful.");
