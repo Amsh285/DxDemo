@@ -208,6 +208,21 @@ namespace dsr
 			m_deviceContext->IASetInputLayout(layout);
 		}
 
+		void Direct3dDevice::SetVertexBuffers(const uint32_t& startSlot, const uint32_t& numBuffers, ID3D11Buffer* const* ppVertexBuffers, const uint32_t* pStrides, const uint32_t* pOffsets)
+		{
+			m_deviceContext->IASetVertexBuffers(startSlot, numBuffers, ppVertexBuffers, pStrides, pOffsets);
+		}
+
+		void Direct3dDevice::SetIndexBuffer(ID3D11Buffer* pIndexBuffer, const DXGI_FORMAT& Format, const uint32_t& Offset)
+		{
+			m_deviceContext->IASetIndexBuffer(pIndexBuffer, Format, Offset);
+		}
+
+		void Direct3dDevice::SetPrimitiveTopology(const D3D11_PRIMITIVE_TOPOLOGY& topology)
+		{
+			m_deviceContext->IASetPrimitiveTopology(topology);
+		}
+
 		void Direct3dDevice::Clear(const float& r, const float& g, const float& b, const float& a)
 		{
 			const float clearColor[4] = { r, g, b, a };

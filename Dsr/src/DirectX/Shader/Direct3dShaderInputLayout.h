@@ -14,7 +14,7 @@ namespace dsr
 			uint32_t AlignedByteOffset;
 			D3D11_INPUT_CLASSIFICATION InputSlotClass;
 			uint32_t InstanceDataStepRate;
-			size_t ElementByteStride;
+			uint32_t ElementByteStride;
 
 			Direct3dLayoutShaderInputLayoutDescription()
 			{
@@ -31,7 +31,7 @@ namespace dsr
 		class Direct3dShaderInputLayout
 		{
 		public:
-			size_t GetTotalStride() const { return m_totalStride; }
+			uint32_t GetTotalStride() const { return m_totalStride; }
 			std::vector<Direct3dLayoutShaderInputLayoutDescription> GetLayout() const { return m_layout; }
 
 			Direct3dShaderInputLayout();
@@ -42,7 +42,7 @@ namespace dsr
 				const uint32_t& instanceDataSteprate = 0);
 		private:
 			std::vector<Direct3dLayoutShaderInputLayoutDescription> m_layout;
-			size_t m_totalStride;
+			uint32_t m_totalStride;
 		};
 	}
 }

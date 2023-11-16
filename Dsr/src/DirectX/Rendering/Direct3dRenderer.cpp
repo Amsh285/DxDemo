@@ -21,6 +21,7 @@ namespace dsr
 			void Direct3dRenderer::OnUpdate(const dsr::events::UpdateFrameEvent& updateEvent)
 			{
 				m_device->Clear(0.0f, 0.2f, 0.4f, 1.0f);
+				m_device->SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 				// do 3D rendering on the back buffer here
 
@@ -42,6 +43,25 @@ namespace dsr
 						// user instanced rendering later
 						DirectX::XMMATRIX model = iteratorRenderData->Transform.CalculateModelMatrix();
 						DsrResult setModelMatrixResult = SetConstantBuffer(m_device, iteratorUoW->Shaders.VertexShader, 2, model);
+
+						std::shared_ptr<ID3D11Buffer> vertexBufferPtr = iteratorRenderData->VertexBuffer.GetVertexBuffer().GetBufferPtr();
+						std::shared_ptr<ID3D11Buffer> indexBufferPtr = iteratorRenderData->VertexBuffer.GetIndexBuffer().GetBufferPtr();
+						Direct3dShaderInputLayout layout = iteratorRenderData->VertexBuffer.GetLayout();
+						uint32_t vertexStride = layout.GetTotalStride();
+
+						try
+						{
+							ID3D11Buffer* vertexShaderRawPtr = vertexBufferPtr.get();
+							m_device->SetInputLayout(iteratorUoW->Shaders.VertexShaderInputLayout.get());
+
+							// bugged
+							m_device->SetVertexBuffers(0, 1, &vertexShaderRawPtr, &vertexStride, 0);
+							m_device->SetIndexBuffer(indexBufferPtr.get());
+						}
+						catch (const std::exception& ex)
+						{
+							std::cout << ex.what() << std::endl;
+						}
 					}
 				}
 

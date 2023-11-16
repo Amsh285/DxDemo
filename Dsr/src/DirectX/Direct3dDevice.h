@@ -69,6 +69,14 @@ namespace dsr
 				ID3DBlob* shaderBlob) const;
 
 			void SetInputLayout(ID3D11InputLayout* layout);
+			void SetVertexBuffers(
+				const uint32_t& startSlot,
+				const uint32_t& numBuffers,
+				ID3D11Buffer* const* ppVertexBuffers,
+				const uint32_t* pStrides,
+				const uint32_t* pOffsets);
+			void SetIndexBuffer(ID3D11Buffer* pIndexBuffer, const DXGI_FORMAT& Format = DXGI_FORMAT_R32_UINT,const uint32_t& Offset = 0);
+			void SetPrimitiveTopology(const D3D11_PRIMITIVE_TOPOLOGY& topology);
 
 			template<class ShaderType>
 			void UseShader(ShaderType* pShader, ID3D11ClassInstance* const* ppClassInstances, const uint32_t& NumClassInstances);

@@ -39,6 +39,7 @@ std::variant<dsr::directX::Direct3dVertexBufferf, dsr::dsr_error> LoadContent(co
 		{ DirectX::XMFLOAT3(1.0f, -1.0f,  1.0f), DirectX::XMFLOAT3(1.0f, 0.0f, 1.0f) }  // 7
 	};
 
+	size_t test = sizeof(VertexPosColor);
 	float* ptr = reinterpret_cast<float*>(g_Vertices);
 	std::vector<float> vertexData(ptr, ptr + elementCount);
 
@@ -108,8 +109,10 @@ std::variant<dsr::directX::Direct3dShaderProgram, dsr::dsr_error> LoadShaderProg
 	vertexShaderInputLayout.AddVector3f("COLOR");*/
 
 	// Todo: Testen ob beides geht
-	vertexShaderInputLayout.AddVector3f("POSITION", 0 , 0, offsetof(VertexPosColor, Position));
-	vertexShaderInputLayout.AddVector3f("COLOR", 0, 0, offsetof(VertexPosColor, Color));
+	uint32_t offset = offsetof(VertexPosColor, Position);
+	vertexShaderInputLayout.AddVector3f("POSITION", 0 , 0, offset);
+	offset = offsetof(VertexPosColor, Color);
+	vertexShaderInputLayout.AddVector3f("COLOR", 0, 0, offset);
 
 	std::variant<Direct3dShaderProgram, dsr_error> loadShaderProgram = CreateShaderProgram(
 		device, vertexShader, pixelShader, vertexShaderInputLayout);
