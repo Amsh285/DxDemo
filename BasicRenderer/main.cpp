@@ -96,9 +96,10 @@ std::variant<dsr::directX::Direct3dShaderProgram, dsr::dsr_error> LoadShaderProg
 		DirectX::XMConvertToRadians(45.0f),
 		clientWidth / clientHeight,
 		0.1f, 100.0f);
-	DsrResult constantBufferResult = vertexShader.SetConstantBuffer(0, projectionMatrix);
-	if (constantBufferResult.GetResultStatusCode() != RESULT_SUCCESS)
-		return dsr_error(constantBufferResult.GetResultMessage(), constantBufferResult.GetResultStatusCode());
+
+	DsrResult setProjectionMatrixResult = SetConstantBuffer(device, vertexShader, 0, projectionMatrix);
+	if (setProjectionMatrixResult.GetResultStatusCode() != RESULT_SUCCESS)
+		return dsr_error(setProjectionMatrixResult.GetResultMessage(), setProjectionMatrixResult.GetResultStatusCode());
 
 	Direct3dShader<ID3D11PixelShader> pixelShader = std::get<Direct3dShader<ID3D11PixelShader>>(loadPixelShader);
 

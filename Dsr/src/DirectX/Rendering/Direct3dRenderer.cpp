@@ -35,12 +35,13 @@ namespace dsr
 					DirectX::XMVECTOR focusPoint = DirectX::XMVectorSet(0, 0, 0, 1);
 					DirectX::XMVECTOR upDirection = DirectX::XMVectorSet(0, 1, 0, 0);
 					DirectX::XMMATRIX viewMatrix = DirectX::XMMatrixLookAtLH(eyePosition, focusPoint, upDirection);
-					iteratorUoW->Shaders.VertexShader.SetConstantBuffer(1, viewMatrix);
+					DsrResult setViewMatrixResult = SetConstantBuffer(m_device, iteratorUoW->Shaders.VertexShader, 1, viewMatrix);
 
 					for (auto iteratorRenderData = iteratorUoW->RenderData.begin(); iteratorRenderData < iteratorUoW->RenderData.end(); ++iteratorRenderData)
 					{
+						// user instanced rendering later
 						DirectX::XMMATRIX model = iteratorRenderData->Transform.CalculateModelMatrix();
-						iteratorUoW->Shaders.VertexShader.SetConstantBuffer(2, viewMatrix);
+						DsrResult setModelMatrixResult = SetConstantBuffer(m_device, iteratorUoW->Shaders.VertexShader, 2, model);
 					}
 				}
 

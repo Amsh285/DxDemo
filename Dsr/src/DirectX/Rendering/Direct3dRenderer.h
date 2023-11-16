@@ -3,6 +3,7 @@
 #include "Events/EventListener.h"
 #include "Events/Application/WindowEvents.h"
 #include "DirectX/Direct3dDevice.h"
+#include "DirectX/Direct3dDeviceShaderExtensions.h"
 #include "Direct3dRenderUoW.h"
 
 namespace dsr
