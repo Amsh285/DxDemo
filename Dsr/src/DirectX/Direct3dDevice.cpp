@@ -237,6 +237,7 @@ namespace dsr
 		void Direct3dDevice::DrawIndexed(const uint32_t& indexCount, const uint32_t& startIndexLocation, const uint32_t& baseVertexLocation)
 		{
 			m_deviceContext->DrawIndexed(indexCount, startIndexLocation, baseVertexLocation);
+			m_deviceContext->ClearDepthStencilView(m_depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 		}
 	}
 }
