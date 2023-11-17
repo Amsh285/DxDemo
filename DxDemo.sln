@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Dsr", "Dsr\Dsr.vcxproj", "{
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "InitDirectX", "InitDirectX\InitDirectX.vcxproj", "{D0D25814-122E-4CAE-8034-4C492F4E9292}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BasicRenderer", "BasicRenderer\BasicRenderer.vcxproj", "{3B61EC6C-DC6D-446C-BB57-B2D14EF0D9DE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -27,6 +29,10 @@ Global
 		{D0D25814-122E-4CAE-8034-4C492F4E9292}.Debug|x64.Build.0 = Debug|x64
 		{D0D25814-122E-4CAE-8034-4C492F4E9292}.Release|x64.ActiveCfg = Release|x64
 		{D0D25814-122E-4CAE-8034-4C492F4E9292}.Release|x64.Build.0 = Release|x64
+		{3B61EC6C-DC6D-446C-BB57-B2D14EF0D9DE}.Debug|x64.ActiveCfg = Debug|x64
+		{3B61EC6C-DC6D-446C-BB57-B2D14EF0D9DE}.Debug|x64.Build.0 = Debug|x64
+		{3B61EC6C-DC6D-446C-BB57-B2D14EF0D9DE}.Release|x64.ActiveCfg = Release|x64
+		{3B61EC6C-DC6D-446C-BB57-B2D14EF0D9DE}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -68,6 +68,12 @@ namespace dsr
 				NULL
 			);
 
+			if (!handle)
+			{
+				UnregisterClass(m_className.c_str(), GetModuleHandle(NULL));
+				throw dsr::dsr_error("Error Creating window.", GetLastError());
+			}
+
 			RECT clientArea;
 			GetClientRect(handle, &clientArea);
 
@@ -98,15 +104,10 @@ namespace dsr
 			WORD register_status = RegisterClassEx(&windowClass);
 
 			if (!register_status)
-				throw std::runtime_error("Error registering windowclass. Error Code:" + register_status);
+				throw dsr::dsr_error("Error registering windowclass. Error Code:" + register_status, register_status);
 
 			m_windowHandle = SetupWindow(windowClass);
-
-			if (!m_windowHandle)
-			{
-				UnregisterClass(m_className.c_str(), GetModuleHandle(NULL));
-				throw std::runtime_error("Error Creating window.");
-			}
+			assert(m_windowHandle);
 
 			SetWindowLongPtr(m_windowHandle, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
 		}
