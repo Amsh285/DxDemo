@@ -48,20 +48,14 @@ namespace dsr
 						std::shared_ptr<ID3D11Buffer> indexBufferPtr = iteratorRenderData->VertexBuffer.GetIndexBuffer().GetBufferPtr();
 						Direct3dShaderInputLayout layout = iteratorRenderData->VertexBuffer.GetLayout();
 						uint32_t vertexStride = layout.GetTotalStride();
+						uint32_t offset = 0;
 
-						try
-						{
-							ID3D11Buffer* vertexShaderRawPtr = vertexBufferPtr.get();
-							m_device->SetInputLayout(iteratorUoW->Shaders.VertexShaderInputLayout.get());
+						ID3D11Buffer* vertexShaderRawPtr = vertexBufferPtr.get();
+						m_device->SetInputLayout(iteratorUoW->Shaders.VertexShaderInputLayout.get());
 
-							// bugged
-							m_device->SetVertexBuffers(0, 1, &vertexShaderRawPtr, &vertexStride, 0);
-							m_device->SetIndexBuffer(indexBufferPtr.get());
-						}
-						catch (const std::exception& ex)
-						{
-							std::cout << ex.what() << std::endl;
-						}
+						// bugged
+						m_device->SetVertexBuffers(0, 1, &vertexShaderRawPtr, &vertexStride, &offset);
+						m_device->SetIndexBuffer(indexBufferPtr.get());
 					}
 				}
 
