@@ -21,14 +21,14 @@ namespace dsr
 			desc.StructureByteStride = 0;
 			desc.Usage = usage;
 
-			return CreateBuffer(device, desc, subResourceData);
+			return CreateBuffer(device, desc, byteWidth, subResourceData);
 		}
 
 		std::variant<Direct3dBuffer, dsr_error> Direct3dBuffer::CreateIndexBuffer(const std::shared_ptr<Direct3dDevice> device, const std::vector<uint32_t>& indexData, const uint32_t& cpuAccessFlags, const uint32_t& miscFlags, const D3D11_USAGE& usage)
 		{
 			D3D11_BUFFER_DESC desc;
 			desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-			desc.ByteWidth = sizeof(float) * indexData.size();
+			desc.ByteWidth = sizeof(uint32_t) * indexData.size();
 			desc.CPUAccessFlags = cpuAccessFlags;
 			desc.MiscFlags = miscFlags;
 			desc.StructureByteStride = 0;
@@ -38,7 +38,7 @@ namespace dsr
 			ZeroMemory(&subResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
 			subResourceData.pSysMem = indexData.data();
 
-			return CreateBuffer(device, desc, subResourceData);
+			return CreateBuffer(device, desc, indexData.size(), subResourceData);
 		}
 
 		std::variant<Direct3dBuffer, dsr_error> Direct3dBuffer::CreateVertexBufferf(
@@ -61,10 +61,14 @@ namespace dsr
 			ZeroMemory(&subResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
 			subResourceData.pSysMem = vertexData.data();
 
-			return CreateBuffer(device, desc, subResourceData);
+			return CreateBuffer(device, desc, vertexData.size(), subResourceData);
 		}
 
-		std::variant<Direct3dBuffer, dsr_error> Direct3dBuffer::CreateBuffer(const std::shared_ptr<Direct3dDevice> device, const D3D11_BUFFER_DESC& desc, const std::optional<D3D11_SUBRESOURCE_DATA>& subResourceData)
+		std::variant<Direct3dBuffer, dsr_error> Direct3dBuffer::CreateBuffer(
+			const std::shared_ptr<Direct3dDevice> device,
+			const D3D11_BUFFER_DESC& desc,
+			const uint32_t& bufferSize,
+			const std::optional<D3D11_SUBRESOURCE_DATA>& subResourceData)
 		{
 			const D3D11_SUBRESOURCE_DATA* subResourceDataPtr = nullptr;
 
@@ -81,16 +85,17 @@ namespace dsr
 				[](ID3D11Buffer* ptr) { SafeRelease(ptr); }
 			);
 
-			return Direct3dBuffer(desc, bufferPtr);
+			return Direct3dBuffer(desc, bufferPtr, bufferSize);
 		}
 
 		Direct3dBuffer::Direct3dBuffer()
 		{
 			ZeroMemory(&m_description, sizeof(D3D11_BUFFER_DESC));
+			m_bufferSize = 0;
 		}
 
-		Direct3dBuffer::Direct3dBuffer(const D3D11_BUFFER_DESC& desc, const std::shared_ptr<ID3D11Buffer>& bufferPtr)
-			: m_description(desc), m_buffer(bufferPtr)
+		Direct3dBuffer::Direct3dBuffer(const D3D11_BUFFER_DESC& desc, const std::shared_ptr<ID3D11Buffer>& bufferPtr, const uint32_t& bufferSize)
+			: m_description(desc), m_buffer(bufferPtr), m_bufferSize(bufferSize)
 		{
 		}
 	}

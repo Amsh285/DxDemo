@@ -37,16 +37,19 @@ namespace dsr
 			static std::variant<Direct3dBuffer, dsr_error> CreateBuffer(
 				const std::shared_ptr<Direct3dDevice> device,
 				const D3D11_BUFFER_DESC& desc,
+				const uint32_t& bufferSize,
 				const std::optional<D3D11_SUBRESOURCE_DATA>& subResourceData);
 
 			D3D11_BUFFER_DESC GetBufferDescription() const { return m_description; }
 			std::shared_ptr<ID3D11Buffer> GetBufferPtr() const { return m_buffer; }
+			uint32_t GetBufferSize() const { return m_bufferSize; }
 
 			Direct3dBuffer();
-			Direct3dBuffer(const D3D11_BUFFER_DESC& desc, const std::shared_ptr<ID3D11Buffer>& bufferPtr);
+			Direct3dBuffer(const D3D11_BUFFER_DESC& desc, const std::shared_ptr<ID3D11Buffer>& bufferPtr, const uint32_t& bufferSize);
 		private:
 			D3D11_BUFFER_DESC m_description;
 			std::shared_ptr<ID3D11Buffer> m_buffer;
+			uint32_t m_bufferSize;
 		};
 	}
 }

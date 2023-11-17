@@ -95,8 +95,19 @@ namespace dsr
 				m_deviceContext->PSSetShader(pShader, ppClassInstances, NumClassInstances);
 			}
 
+			template<class ShaderType>
+			void UseConstantBuffers(const uint32_t& startSlot, const uint32_t& numBuffers, ID3D11Buffer* const* ppConstantBuffers);
+
+			template<>
+			void UseConstantBuffers<ID3D11VertexShader>(const uint32_t& startSlot, const uint32_t& numBuffers, ID3D11Buffer* const* ppConstantBuffers)
+			{
+				m_deviceContext->VSSetConstantBuffers(startSlot, numBuffers, ppConstantBuffers);
+			}
+
 			void Clear(const float& r, const float& g, const float& b, const float& a);
 			void SwapBuffers();
+
+			void DrawIndexed(const uint32_t& indexCount, const uint32_t& startIndexLocation, const uint32_t& baseVertexLocation);
 
 			Direct3dDevice(const Direct3dDevice& other) = delete;
 			Direct3dDevice& operator=(const Direct3dDevice& other) = delete;
