@@ -105,8 +105,6 @@ std::variant<dsr::directX::Direct3dShaderProgram, dsr::dsr_error> LoadShaderProg
 	Direct3dShader<ID3D11PixelShader> pixelShader = std::get<Direct3dShader<ID3D11PixelShader>>(loadPixelShader);
 
 	Direct3dShaderInputLayout vertexShaderInputLayout;
-	/*vertexShaderInputLayout.AddVector3f("POSITION");
-	vertexShaderInputLayout.AddVector3f("COLOR");*/
 
 	// Todo: Testen ob beides geht
 	uint32_t offset = offsetof(VertexPosColor, Position);

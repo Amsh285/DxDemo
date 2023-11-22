@@ -12,6 +12,15 @@ namespace dsr
 
 			switch (message)
 			{
+			case WM_SIZE:
+			{
+				pWnd->m_data->clientWidth = LOWORD(lParam);
+				pWnd->m_data->clientHeight = HIWORD(lParam);
+
+				dsr::events::WindowResizedEvent resizedEvent;
+				pWnd->m_windowResizedEmitter.operator()(resizedEvent);
+				break;
+			}
 			case WM_LBUTTONDOWN:
 			{
 				std::cout << "ka" << std::endl;

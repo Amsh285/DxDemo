@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\DsrApplication.h" />
     <ClInclude Include="src\ErrorHandling\DsrResult.h" />
     <ClInclude Include="src\DirectX\Rendering\Direct3dRenderUoW.h" />
     <ClInclude Include="src\DirectX\Buffers\Direct3dBuffer.h" />
@@ -38,6 +39,10 @@
     <ClInclude Include="src\Data\Transform.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\DsrApplication.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="src\ErrorHandling\DsrResult.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>

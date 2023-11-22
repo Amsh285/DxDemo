@@ -14,6 +14,10 @@ namespace dsr
 		{
 		};
 
+		class WindowResizedEvent : public IEvent
+		{
+		};
+
 		class UpdateFrameEvent : public IEvent
 		{
 		};
