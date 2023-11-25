@@ -21,6 +21,8 @@ namespace dsr
 			{
 			}
 
+			Direct3dShader(const Direct3dShader& other) = delete;
+			Direct3dShader& operator=(const Direct3dShader& other) = delete;
 		private:
 			std::shared_ptr<TShader> m_shader;
 			std::shared_ptr<ID3DBlob> m_shaderBlob;

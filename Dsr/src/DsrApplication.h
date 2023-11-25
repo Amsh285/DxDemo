@@ -8,6 +8,10 @@
 
 #include "DirectX/Direct3dDevice.h"
 #include "DirectX/Rendering/Direct3dRenderer.h"
+#include "DirectX/Shader/Direct3dShaderProgram.h"
+
+#include "DirectX/Direct3dDeviceBufferExtensions.h"
+#include "DirectX/Direct3dDeviceShaderExtensions.h"
 
 namespace dsr
 {
@@ -15,6 +19,8 @@ namespace dsr
 	{
 	public:
 		void Initialize();
+		virtual DsrResult Setup() = 0;
+		void Run();
 
 		DsrApplication(
 			const std::wstring& title,
@@ -26,12 +32,13 @@ namespace dsr
 		std::shared_ptr<directX::rendering::Direct3dRenderer> m_renderer;
 		std::shared_ptr<windows::WindowApplication> m_windowApplication;
 
-	private:
-		class WindowManager
+		class WindowManager : public events::EventListener
 		{
 		public:
 			void OnWindowDestroy(const events::WindowDestroyEvent& destroyEvent);
 			void OnWindowResize(const events::WindowResizedEvent& resizeEvent);
+
+			std::vector<directX::Direct3dShaderProgram> ShaderPrograms;
 
 			WindowManager(
 				const std::shared_ptr<windows::Window>& window,
@@ -44,5 +51,8 @@ namespace dsr
 		};
 
 		std::shared_ptr<WindowManager> m_windowManager;
+
+	private:
+
 	};
 }

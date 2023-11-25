@@ -50,15 +50,15 @@ namespace dsr
 						m_device->SetVertexBuffers(0, 1, &vertexShaderRawPtr, &vertexStride, &offset);
 						m_device->SetIndexBuffer(indexBufferPtr.get());
 
-						m_device->UseShader(iteratorUoW->Shaders.VertexShader.GetShaderPtr().get(), nullptr, 0);
+						m_device->UseShader(iteratorUoW->Shaders.VertexShader->GetShaderPtr().get(), nullptr, 0);
 
 						std::vector<ID3D11Buffer*> vsConstantBuffers;
 
-						for (auto pair : iteratorUoW->Shaders.VertexShader.ConstantBuffers)
+						for (auto pair : iteratorUoW->Shaders.VertexShader->ConstantBuffers)
 							vsConstantBuffers.push_back(pair.second.GetBufferPtr().get());
 
 						m_device->UseConstantBuffers<ID3D11VertexShader>(0, vsConstantBuffers.size(), vsConstantBuffers.data());
-						m_device->UseShader(iteratorUoW->Shaders.PixelShader.GetShaderPtr().get(), nullptr, 0);
+						m_device->UseShader(iteratorUoW->Shaders.PixelShader->GetShaderPtr().get(), nullptr, 0);
 
 						uint32_t indexBufferSize = iteratorRenderData->VertexBuffer.GetIndexBuffer().GetBufferSize();
 						m_device->DrawIndexed(indexBufferSize, 0, 0);

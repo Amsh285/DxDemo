@@ -1,7 +1,6 @@
 #include "dsrpch.h"
 #include "Direct3dDeviceBufferExtensions.h"
 
-
 namespace dsr
 {
 	namespace directX

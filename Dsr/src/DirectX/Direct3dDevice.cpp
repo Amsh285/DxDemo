@@ -223,6 +223,11 @@ namespace dsr
 			m_deviceContext->IASetPrimitiveTopology(topology);
 		}
 
+		void Direct3dDevice::SetViewports(const uint32_t& numViewports, const D3D11_VIEWPORT* pViewports)
+		{
+			m_deviceContext->RSSetViewports(numViewports, pViewports);
+		}
+
 		void Direct3dDevice::Clear(const float& r, const float& g, const float& b, const float& a)
 		{
 			const float clearColor[4] = { r, g, b, a };
