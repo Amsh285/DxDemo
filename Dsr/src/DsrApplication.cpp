@@ -13,7 +13,7 @@ namespace dsr
 
 	void DsrApplication::WindowManager::OnWindowResize(const events::WindowResizedEvent& resizeEvent)
 	{
-		using namespace dsr;
+		/*using namespace dsr;
 		using namespace dsr::directX;
 
 		D3D11_VIEWPORT viewPort;
@@ -36,14 +36,14 @@ namespace dsr
 		DirectX::XMMATRIX projectionMatrix = DirectX::XMMatrixPerspectiveFovLH(
 			DirectX::XMConvertToRadians(45.0f),
 			aspectRatio,
-			0.1f, 100.0f);
+			0.1f, 1000.0f);
 
 		std::cout << "aspect ratio: " << aspectRatio << std::endl;
 
 		for (Direct3dShaderProgram program : ShaderPrograms)
 		{
 			DsrResult setProjectionMatrixResult = SetConstantBuffer(m_device, program.VertexShader, 0, projectionMatrix);
-		}
+		}*/
 	}
 
 	DsrApplication::WindowManager::WindowManager(
