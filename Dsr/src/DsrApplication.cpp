@@ -13,10 +13,10 @@ namespace dsr
 
 	void DsrApplication::WindowManager::OnWindowResize(const events::WindowResizedEvent& resizeEvent)
 	{
-		/*using namespace dsr;
+		using namespace dsr;
 		using namespace dsr::directX;
 
-		D3D11_VIEWPORT viewPort;
+		/*D3D11_VIEWPORT viewPort;
 		ZeroMemory(&viewPort, sizeof(D3D11_VIEWPORT));
 
 		int clientWidth = m_window->GetClientWidth();
@@ -28,11 +28,9 @@ namespace dsr
 		viewPort.MaxDepth = 1.0f;
 		viewPort.Width = static_cast<float>(clientWidth);
 		viewPort.Height = static_cast<float>(clientHeight);
-		m_device->SetViewports(1, &viewPort);
+		m_device->SetViewports(1, &viewPort);*/
 
-		
-
-		float aspectRatio = static_cast<float>(clientWidth) / static_cast<float>(clientHeight);
+		float aspectRatio = static_cast<float>(m_window->GetClientWidth()) / static_cast<float>(m_window->GetClientHeight());
 		DirectX::XMMATRIX projectionMatrix = DirectX::XMMatrixPerspectiveFovLH(
 			DirectX::XMConvertToRadians(45.0f),
 			aspectRatio,
@@ -43,7 +41,7 @@ namespace dsr
 		for (Direct3dShaderProgram program : ShaderPrograms)
 		{
 			DsrResult setProjectionMatrixResult = SetConstantBuffer(m_device, program.VertexShader, 0, projectionMatrix);
-		}*/
+		}
 	}
 
 	DsrApplication::WindowManager::WindowManager(
