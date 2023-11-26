@@ -117,20 +117,6 @@ std::variant<dsr::directX::Direct3dShaderProgram, dsr::dsr_error> BasicRendererA
 	}
 
 	auto vertexShader = std::get<std::shared_ptr<Direct3dShader<ID3D11VertexShader>>>(loadVertexShader);
-
-	// setup projection matrix for vertexshader
-	float clientWidth = static_cast<float>(m_window->GetClientWidth());
-	float clientHeight = static_cast<float>(m_window->GetClientHeight());
-
-	DirectX::XMMATRIX projectionMatrix = DirectX::XMMatrixPerspectiveFovLH(
-		DirectX::XMConvertToRadians(45.0f),
-		clientWidth / clientHeight,
-		0.1f, 100.0f);
-
-	DsrResult setProjectionMatrixResult = SetConstantBuffer(m_device, vertexShader, 0, projectionMatrix);
-	if (setProjectionMatrixResult.GetResultStatusCode() != RESULT_SUCCESS)
-		return dsr_error(setProjectionMatrixResult.GetResultMessage(), setProjectionMatrixResult.GetResultStatusCode());
-
 	auto pixelShader = std::get<std::shared_ptr<Direct3dShader<ID3D11PixelShader>>>(loadPixelShader);
 
 	Direct3dShaderInputLayout vertexShaderInputLayout;
