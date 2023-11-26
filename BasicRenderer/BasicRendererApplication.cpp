@@ -40,6 +40,8 @@ dsr::DsrResult BasicRendererApplication::Setup()
 	m_renderer->AddUnitOfWork(uow);
 
 	m_mainCamera->Transform.Position = DirectX::XMVectorSet(0.0f, 0.0f, -30.0f, 0.0f);
+	//m_mainCamera->Transform.Rotation = DirectX::XMVectorSet(15.0f, 0.0f, 0.0f, 0.0f);
+	//m_mainCamera->Transform.Rotation = DirectX::XMVectorSet(0.0f, -15.0f, 0.0f, 0.0f);
 
 	return DsrResult::Success("Setup Successful.");
 }
