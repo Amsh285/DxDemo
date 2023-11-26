@@ -20,6 +20,8 @@ namespace dsr
 
 			void Direct3dRenderer::OnUpdate(const dsr::events::UpdateFrameEvent& updateEvent)
 			{
+				using namespace DirectX;
+
 				m_device->Clear(0.0f, 0.2f, 0.4f, 1.0f);
 				m_device->SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
@@ -27,16 +29,25 @@ namespace dsr
 				{
 					//Just to get something going now.. optimize that later
 					//setup viewmatrix
-					DirectX::XMVECTOR eyePosition = DirectX::XMVectorSet(0, 0, -10, 1);
-					DirectX::XMVECTOR focusPoint = DirectX::XMVectorSet(0, 0, 0, 1);
+					/*DirectX::XMVECTOR eyePosition = DirectX::XMVectorSet(0, 0, -10, 1);
+					DirectX::XMVECTOR focusPoint = DirectX::XMVectorSet(0, 0, -9, 1);
 					DirectX::XMVECTOR upDirection = DirectX::XMVectorSet(0, 1, 0, 0);
 					DirectX::XMMATRIX viewMatrix = DirectX::XMMatrixLookAtLH(eyePosition, focusPoint, upDirection);
-					DsrResult setViewMatrixResult = SetConstantBuffer(m_device, iteratorUoW->Shaders.VertexShader, 1, viewMatrix);
+					DsrResult setViewMatrixResult = SetConstantBuffer(m_device, iteratorUoW->Shaders.VertexShader, 1, viewMatrix);*/
+
+					if (m_activeCamera)
+					{
+						XMMATRIX projectionMatrix = m_activeCamera->GetProjectionMatrix();
+						XMMATRIX viewMatrix = m_activeCamera->GetViewMatrix();
+
+						DsrResult setProjectionMatrixResult = SetConstantBuffer(m_device, iteratorUoW->Shaders.VertexShader, 0, projectionMatrix);
+						DsrResult setViewMatrixResult = SetConstantBuffer(m_device, iteratorUoW->Shaders.VertexShader, 1, viewMatrix);
+					}
 
 					for (auto iteratorRenderData = iteratorUoW->RenderData.begin(); iteratorRenderData < iteratorUoW->RenderData.end(); ++iteratorRenderData)
 					{
 						// use instanced rendering later
-						DirectX::XMMATRIX model = iteratorRenderData->Transform.CalculateModelMatrix();
+						XMMATRIX model = iteratorRenderData->Transform.CalculateModelMatrix();
 						DsrResult setModelMatrixResult = SetConstantBuffer(m_device, iteratorUoW->Shaders.VertexShader, 2, model);
 
 						std::shared_ptr<ID3D11Buffer> vertexBufferPtr = iteratorRenderData->VertexBuffer.GetVertexBuffer().GetBufferPtr();
@@ -53,7 +64,6 @@ namespace dsr
 						m_device->UseShader(iteratorUoW->Shaders.VertexShader->GetShaderPtr().get(), nullptr, 0);
 
 						std::vector<ID3D11Buffer*> vsConstantBuffers;
-
 						for (auto pair : iteratorUoW->Shaders.VertexShader->ConstantBuffers)
 							vsConstantBuffers.push_back(pair.second.GetBufferPtr().get());
 

@@ -13,35 +13,9 @@ namespace dsr
 
 	void DsrApplication::WindowManager::OnWindowResize(const events::WindowResizedEvent& resizeEvent)
 	{
-		using namespace dsr;
-		using namespace dsr::directX;
-
-		/*D3D11_VIEWPORT viewPort;
-		ZeroMemory(&viewPort, sizeof(D3D11_VIEWPORT));
-
-		int clientWidth = m_window->GetClientWidth();
-		int clientHeight = m_window->GetClientHeight();
-
-		viewPort.TopLeftX = 0.0f;
-		viewPort.TopLeftY = 0.0f;
-		viewPort.MinDepth = 0.0f;
-		viewPort.MaxDepth = 1.0f;
-		viewPort.Width = static_cast<float>(clientWidth);
-		viewPort.Height = static_cast<float>(clientHeight);
-		m_device->SetViewports(1, &viewPort);*/
-
 		float aspectRatio = static_cast<float>(m_window->GetClientWidth()) / static_cast<float>(m_window->GetClientHeight());
-		DirectX::XMMATRIX projectionMatrix = DirectX::XMMatrixPerspectiveFovLH(
-			DirectX::XMConvertToRadians(45.0f),
-			aspectRatio,
-			0.1f, 1000.0f);
-
-		std::cout << "aspect ratio: " << aspectRatio << std::endl;
-
-		for (Direct3dShaderProgram program : ShaderPrograms)
-		{
-			DsrResult setProjectionMatrixResult = SetConstantBuffer(m_device, program.VertexShader, 0, projectionMatrix);
-		}
+		for (std::shared_ptr<camerasystem::Camera> camera : Cameras)
+			camera->AspectRatio = aspectRatio;
 	}
 
 	DsrApplication::WindowManager::WindowManager(
@@ -63,6 +37,14 @@ namespace dsr
 		m_windowApplication->GetUpdateFrameEventRegister().Hook(m_renderer, &directX::rendering::Direct3dRenderer::OnUpdate);
 	}
 
+	DsrResult DsrApplication::Setup()
+	{
+		m_mainCamera = CreateCamera();
+		SetActiveCamera(m_mainCamera);
+
+		return DsrResult::Success("base setup complete.");
+	}
+
 	void DsrApplication::Run()
 	{
 		m_window->Show();
@@ -76,5 +58,21 @@ namespace dsr
 		: m_window(std::make_shared<windows::Window>(windows::WindowData(title, x, y, width, height))),
 		m_windowApplication(windows::WindowApplication::Get())
 	{
+	}
+
+	std::shared_ptr<camerasystem::Camera> DsrApplication::CreateCamera()
+	{
+		std::shared_ptr<camerasystem::Camera> camera = std::make_shared<camerasystem::Camera>();
+
+		float aspectRatio = static_cast<float>(m_window->GetClientWidth()) / static_cast<float>(m_window->GetClientHeight());
+		camera->AspectRatio = aspectRatio;
+
+		m_windowManager->Cameras.push_back(camera);
+		return camera;
+	}
+
+	void DsrApplication::SetActiveCamera(const std::shared_ptr<camerasystem::Camera>& camera)
+	{
+		m_renderer->SetActiveCamera(camera);
 	}
 }

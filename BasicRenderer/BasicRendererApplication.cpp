@@ -6,6 +6,11 @@ dsr::DsrResult BasicRendererApplication::Setup()
 	using namespace dsr::directX;
 	using namespace dsr::windows;
 
+	DsrResult baseResult = DsrApplication::Setup();
+
+	if (baseResult.GetResultStatusCode() != RESULT_SUCCESS)
+		return baseResult;
+
 	std::variant<Direct3dVertexBufferf, dsr_error> loadContent = LoadContent();
 
 	if (std::holds_alternative<dsr_error>(loadContent))
@@ -34,7 +39,8 @@ dsr::DsrResult BasicRendererApplication::Setup()
 	uow.RenderData.push_back(uowData);
 	m_renderer->AddUnitOfWork(uow);
 
-	m_windowManager->ShaderPrograms.push_back(shaderProgram);
+	m_mainCamera->Transform.Position = DirectX::XMVectorSet(0.0f, 0.0f, -30.0f, 0.0f);
+
 	return DsrResult::Success("Setup Successful.");
 }
 
