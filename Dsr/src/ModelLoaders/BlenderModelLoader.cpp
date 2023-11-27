@@ -17,27 +17,39 @@ namespace dsr
 		}
 		//https://stackoverflow.com/questions/14265581/parse-split-a-string-in-c-using-string-delimiter-standard-c
 
-		
 		std::string line;
-		std::vector<std::string> first = ParseLine(modelFile, " ");
+		std::getline(modelFile, line);
+		std::vector<std::string> versionSegments = SegmentLine(line, " ");
 
+		if (versionSegments[1] != "Blender")
+		{
+			std::string message = "error loading modelfile: ";
+			message += path.generic_string();
+			message += ". Invalid File Format.";
+			return dsr_error(message, ERROR_OPENMODELFILEINVALIDFORMAT);
+		}
 
+		// skip headerinfo
+		std::getline(modelFile, line);
+		std::getline(modelFile, line);
 		std::getline(modelFile, line);
 
 		while (std::getline(modelFile, line))
 		{
-			std::cout << line << std::endl;
+			std::vector<std::string> lineData = SegmentLine(line, " ");
+		
+			if (lineData[0] == "v")
+			{
+				//VertexPosition
+			}
 		}
 
 		return BlenderModel();
 	}
 
-	std::vector<std::string> BlenderModelLoader::ParseLine(std::fstream& stream, const std::string& delimiter)
+	std::vector<std::string> BlenderModelLoader::SegmentLine(std::string line, const std::string& delimiter)
 	{
 		std::vector<std::string> tokens;
-
-		std::string line;
-		std::getline(stream, line);
 		size_t pos;
 
 		while (true)
@@ -49,7 +61,7 @@ namespace dsr
 				tokens.push_back(line);
 				break;
 			}
-			
+
 			tokens.push_back(line.substr(0, pos));
 			line.erase(0, pos + delimiter.length());
 		}

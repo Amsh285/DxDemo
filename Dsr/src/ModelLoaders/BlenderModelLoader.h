@@ -5,7 +5,8 @@
 
 namespace dsr
 {
-#define ERROR_OPENMODELFILE 102
+constexpr auto ERROR_OPENMODELFILE = 102;
+constexpr auto ERROR_OPENMODELFILEINVALIDFORMAT = 103;
 
 	struct BlenderModel
 	{
@@ -18,6 +19,6 @@ namespace dsr
 	public:
 		std::variant<BlenderModel, dsr_error> Load(const std::filesystem::path& path);
 	private:
-		std::vector<std::string> ParseLine(std::fstream& stream, const std::string& delimiter);
+		std::vector<std::string> SegmentLine(std::string line, const std::string& delimiter);
 	};
 }
