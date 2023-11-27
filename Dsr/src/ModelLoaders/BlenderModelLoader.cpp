@@ -34,13 +34,29 @@ namespace dsr
 		std::getline(modelFile, line);
 		std::getline(modelFile, line);
 
+		std::vector<DirectX::XMFLOAT3> vertexPositions;
+		std::vector<DirectX::XMFLOAT3> vertexNormals;
+		std::vector<DirectX::XMFLOAT2> vertexTxCoords;
+
 		while (std::getline(modelFile, line))
 		{
 			std::vector<std::string> lineData = SegmentLine(line, " ");
-		
+
 			if (lineData[0] == "v")
 			{
-				//VertexPosition
+				vertexPositions.push_back(DirectX::XMFLOAT3(std::stof(lineData[1]), std::stof(lineData[2]), std::stof(lineData[3])));
+			}
+			else if (lineData[0] == "vn")
+			{
+				vertexNormals.push_back(DirectX::XMFLOAT3(std::stof(lineData[1]), std::stof(lineData[2]), std::stof(lineData[3])));
+			}
+			else if (lineData[0] == "vt")
+			{
+				vertexTxCoords.push_back(DirectX::XMFLOAT2(std::stof(lineData[1]), std::stof(lineData[2])));
+			}
+			else if (lineData[0] == "f")
+			{
+				//now the real difficult part...
 			}
 		}
 
