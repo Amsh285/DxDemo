@@ -2,6 +2,8 @@
 
 #include <assert.h>
 #include <iostream>
+#include <fstream>
+#include <filesystem>
 #include <map>
 #include <memory>
 #include <mutex>

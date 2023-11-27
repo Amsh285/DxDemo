@@ -7,6 +7,7 @@
 #include "Windows/WindowApplication.h"
 
 #include "CameraSystem/Camera.h"
+#include "ModelLoaders/BlenderModelLoader.h"
 
 #include "DirectX/Direct3dDevice.h"
 #include "DirectX/Rendering/Direct3dRenderer.h"
@@ -38,6 +39,7 @@ namespace dsr
 		std::shared_ptr<windows::WindowApplication> m_windowApplication;
 
 		std::shared_ptr<camerasystem::Camera> m_mainCamera;
+		std::shared_ptr<BlenderModelLoader> m_blenderModelLoader;
 
 		class WindowManager : public events::EventListener
 		{

@@ -30,6 +30,7 @@ namespace dsr
 		m_device = directX::Direct3dDevice::Create(m_window);
 		m_renderer = std::make_shared<directX::rendering::Direct3dRenderer>(m_device);
 		m_windowManager = std::make_shared<WindowManager>(m_window, m_device);
+		m_blenderModelLoader = std::make_shared<BlenderModelLoader>();
 	}
 
 	DsrResult DsrApplication::Setup()
