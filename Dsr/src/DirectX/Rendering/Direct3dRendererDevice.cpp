@@ -15,9 +15,9 @@ namespace dsr
 			void Direct3dRendererDevice::UseShaderProgram(const Direct3dShaderProgram& program)
 			{
 				m_device->SetInputLayout(program.VertexShaderInputLayout.get());
-				m_device->UseShader(program.VertexShader.GetShaderPtr().get(), nullptr, 0);
+				m_device->UseShader(program.VertexShader->GetShaderPtr().get(), nullptr, 0);
 
-				m_device->UseShader(program.PixelShader.GetShaderPtr().get(), nullptr, 0);
+				m_device->UseShader(program.PixelShader->GetShaderPtr().get(), nullptr, 0);
 			}
 		}
 	}

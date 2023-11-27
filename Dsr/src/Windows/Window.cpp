@@ -12,6 +12,20 @@ namespace dsr
 
 			switch (message)
 			{
+			case WM_SIZE:
+			{
+				pWnd->m_data->clientWidth = LOWORD(lParam);
+				pWnd->m_data->clientHeight = HIWORD(lParam);
+
+				RECT windowArea = { 0, 0, pWnd->m_data->clientWidth, pWnd->m_data->clientHeight };
+				AdjustWindowRect(&windowArea, WS_OVERLAPPEDWINDOW, FALSE);
+				pWnd->m_data->width = windowArea.right - windowArea.left;
+				pWnd->m_data->height = windowArea.bottom - windowArea.top;
+
+				dsr::events::WindowResizedEvent resizedEvent;
+				pWnd->m_windowResizedEmitter.operator()(resizedEvent);
+				break;
+			}
 			case WM_LBUTTONDOWN:
 			{
 				std::cout << "ka" << std::endl;
@@ -32,6 +46,8 @@ namespace dsr
 			default:
 				break;
 			}
+
+			//std::cout << "message: " << message << std::endl;
 
 			return DefWindowProc(windowHandle, message, wParam, lParam);
 		}

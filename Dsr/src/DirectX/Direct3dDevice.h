@@ -104,6 +104,8 @@ namespace dsr
 				m_deviceContext->VSSetConstantBuffers(startSlot, numBuffers, ppConstantBuffers);
 			}
 
+			void SetViewports(const uint32_t& numViewports, const D3D11_VIEWPORT* pViewports);
+
 			void Clear(const float& r, const float& g, const float& b, const float& a);
 			void SwapBuffers();
 

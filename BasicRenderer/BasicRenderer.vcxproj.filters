@@ -18,9 +18,17 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BasicRendererApplication.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\VertexShader.hlsl" />
     <FxCompile Include="Assets\PixelShader.hlsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BasicRendererApplication.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

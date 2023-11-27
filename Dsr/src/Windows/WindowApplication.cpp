@@ -23,6 +23,8 @@ namespace dsr
 		{
 			MSG message = { 0 };
 
+			uint32_t counter = 0;
+
 			while (true)
 			{
 				if (PeekMessage(&message, NULL, 0, 0, PM_REMOVE))
@@ -34,6 +36,8 @@ namespace dsr
 						break;
 				}
 				
+				//std::cout << "updateframe" << counter++ << std::endl;
+
 				dsr::events::UpdateFrameEvent event;
 				m_updateFrameEvent.operator()(event);
 			}
