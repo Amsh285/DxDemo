@@ -22,8 +22,6 @@ namespace dsr
 				pWnd->m_data->width = windowArea.right - windowArea.left;
 				pWnd->m_data->height = windowArea.bottom - windowArea.top;
 
-				std::cout << "resizing" << std::endl;
-
 				dsr::events::WindowResizedEvent resizedEvent;
 				pWnd->m_windowResizedEmitter.operator()(resizedEvent);
 				break;

@@ -29,18 +29,17 @@ namespace dsr
 	{
 		m_device = directX::Direct3dDevice::Create(m_window);
 		m_renderer = std::make_shared<directX::rendering::Direct3dRenderer>(m_device);
-
 		m_windowManager = std::make_shared<WindowManager>(m_window, m_device);
-
-		m_window->GetDestroyEventRegister().Hook(m_windowManager, &DsrApplication::WindowManager::OnWindowDestroy);
-		m_window->GetResizedEventRegister().Hook(m_windowManager, &DsrApplication::WindowManager::OnWindowResize);
-		m_windowApplication->GetUpdateFrameEventRegister().Hook(m_renderer, &directX::rendering::Direct3dRenderer::OnUpdate);
 	}
 
 	DsrResult DsrApplication::Setup()
 	{
 		m_mainCamera = CreateCamera();
 		SetActiveCamera(m_mainCamera);
+
+		m_window->GetDestroyEventRegister().Hook(m_windowManager, &DsrApplication::WindowManager::OnWindowDestroy);
+		m_window->GetResizedEventRegister().Hook(m_windowManager, &DsrApplication::WindowManager::OnWindowResize);
+		m_windowApplication->GetUpdateFrameEventRegister().Hook(m_renderer, &directX::rendering::Direct3dRenderer::OnUpdate);
 
 		return DsrResult::Success("base setup complete.");
 	}
