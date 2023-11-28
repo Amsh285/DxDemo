@@ -67,6 +67,7 @@ namespace dsr
 				std::vector<std::string> v2 = SegmentLine(lineData[3], "/");
 				std::vector<std::string> v3 = SegmentLine(lineData[4], "/");
 
+				//mind windingorder
 				DirectX::XMINT3 vertex0(std::stoi(v0[0]) -1, std::stoi(v0[1]) -1, std::stoi(v0[2]) - 1);
 				DirectX::XMINT3 vertex1(std::stoi(v1[0]) - 1, std::stoi(v1[1]) - 1, std::stoi(v1[2]) - 1);
 				DirectX::XMINT3 vertex2(std::stoi(v2[0]) - 1, std::stoi(v2[1]) - 1, std::stoi(v2[2]) - 1);
