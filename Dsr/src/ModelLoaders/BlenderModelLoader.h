@@ -21,6 +21,6 @@ constexpr auto ERROR_OPENMODELFILEINVALIDFORMAT = 103;
 		std::variant<BlenderModel, dsr_error> Load(const std::filesystem::path& path);
 	private:
 		std::vector<std::string> SegmentLine(std::string line, const std::string& delimiter);
-		std::variant<uint32_t, NotFoundError> SearchVertexIndexBufferIndex(const std::vector<std::pair<uint32_t, DirectX::XMINT3>>& vertexIndexBufferMap, const DirectX::XMINT3& vertexDataIndices);
+		std::optional<uint32_t> SearchVertexIndexBufferIndex(const std::vector<std::pair<uint32_t, DirectX::XMINT3>>& vertexIndexBufferMap, const DirectX::XMINT3& vertexDataIndices);
 	};
 }
