@@ -34,9 +34,15 @@ namespace dsr
 		std::getline(modelFile, line);
 		std::getline(modelFile, line);
 
+		std::vector<std::pair<uint32_t, DirectX::XMINT3>> storedinidces;
+		uint32_t vertexIndex = 0;
+
 		std::vector<DirectX::XMFLOAT3> vertexPositions;
-		std::vector<DirectX::XMFLOAT3> vertexNormals;
 		std::vector<DirectX::XMFLOAT2> vertexTxCoords;
+		std::vector<DirectX::XMFLOAT3> vertexNormals;
+
+		std::vector<Vertex3FP2FTx3FN> vertexBuffer;
+		std::vector<uint32_t> indexBuffer;
 
 		while (std::getline(modelFile, line))
 		{
@@ -56,11 +62,38 @@ namespace dsr
 			}
 			else if (lineData[0] == "f")
 			{
-				//now the real difficult part...
+				std::vector<std::string> v0 = SegmentLine(lineData[1], "/");
+				std::vector<std::string> v1 = SegmentLine(lineData[2], "/");
+				std::vector<std::string> v2 = SegmentLine(lineData[3], "/");
+				std::vector<std::string> v3 = SegmentLine(lineData[4], "/");
+
+				DirectX::XMINT3 vertex0(std::stoi(v0[0]) -1, std::stoi(v0[1]) -1, std::stoi(v0[2]) - 1);
+				DirectX::XMINT3 vertex1(std::stoi(v1[0]) - 1, std::stoi(v1[1]) - 1, std::stoi(v1[2]) - 1);
+				DirectX::XMINT3 vertex2(std::stoi(v2[0]) - 1, std::stoi(v2[1]) - 1, std::stoi(v2[2]) - 1);
+				DirectX::XMINT3 vertex3(std::stoi(v3[0]) - 1, std::stoi(v3[1]) - 1, std::stoi(v3[2]) - 1);
+
+				std::optional<uint32_t> searchResult = SearchVertexIndexBufferIndex(storedinidces, vertex0);
+
+				if (searchResult.has_value())
+				{
+					indexBuffer.push_back(searchResult.value());
+				}
+				else
+				{
+					const DirectX::XMFLOAT3& vertexPosition = vertexPositions[vertex0.x];
+					const DirectX::XMFLOAT2& vertexTxCoord = vertexTxCoords[vertex0.y];
+					const DirectX::XMFLOAT3& vertexNormal = vertexNormals[vertex0.z];
+
+					Vertex3FP2FTx3FN vertex{ vertexPosition, vertexTxCoord, vertexNormal };
+					vertexBuffer.push_back(vertex);
+					indexBuffer.push_back(vertexIndex);
+					storedinidces.push_back(std::pair<uint32_t, DirectX::XMINT3>(vertexIndex, vertex0));
+					++vertexIndex;
+				}
 			}
 		}
 
-		return BlenderModel();
+		return BlenderModel{ vertexBuffer, indexBuffer };
 	}
 
 	std::vector<std::string> BlenderModelLoader::SegmentLine(std::string line, const std::string& delimiter)
@@ -83,5 +116,18 @@ namespace dsr
 		}
 
 		return tokens;
+	}
+
+	std::optional<uint32_t> BlenderModelLoader::SearchVertexIndexBufferIndex(const std::vector<std::pair<uint32_t, DirectX::XMINT3>>& vertexIndexBufferMap, const DirectX::XMINT3& vertexDataIndices)
+	{
+		//not the fastest solution. should be improved in the future
+		const auto& it = std::find_if(vertexIndexBufferMap.begin(), vertexIndexBufferMap.end(), [vertexDataIndices](const std::pair<uint32_t, DirectX::XMINT3>& item) {
+			return item.second.x == vertexDataIndices.x && item.second.y == vertexDataIndices.y && item.second.z == vertexDataIndices.z;
+			});
+
+		if (it == vertexIndexBufferMap.end())
+			return std::nullopt;
+
+		return it->first;
 	}
 }
