@@ -67,34 +67,53 @@ namespace dsr
 				std::vector<std::string> v2 = SegmentLine(lineData[3], "/");
 				std::vector<std::string> v3 = SegmentLine(lineData[4], "/");
 
-				//mind windingorder
 				DirectX::XMINT3 vertex0(std::stoi(v0[0]) -1, std::stoi(v0[1]) -1, std::stoi(v0[2]) - 1);
 				DirectX::XMINT3 vertex1(std::stoi(v1[0]) - 1, std::stoi(v1[1]) - 1, std::stoi(v1[2]) - 1);
 				DirectX::XMINT3 vertex2(std::stoi(v2[0]) - 1, std::stoi(v2[1]) - 1, std::stoi(v2[2]) - 1);
 				DirectX::XMINT3 vertex3(std::stoi(v3[0]) - 1, std::stoi(v3[1]) - 1, std::stoi(v3[2]) - 1);
 
-				std::optional<uint32_t> searchResult = SearchVertexIndexBufferIndex(storedinidces, vertex0);
-
-				if (searchResult.has_value())
-				{
-					indexBuffer.push_back(searchResult.value());
-				}
-				else
-				{
-					const DirectX::XMFLOAT3& vertexPosition = vertexPositions[vertex0.x];
-					const DirectX::XMFLOAT2& vertexTxCoord = vertexTxCoords[vertex0.y];
-					const DirectX::XMFLOAT3& vertexNormal = vertexNormals[vertex0.z];
-
-					Vertex3FP2FTx3FN vertex{ vertexPosition, vertexTxCoord, vertexNormal };
-					vertexBuffer.push_back(vertex);
-					indexBuffer.push_back(vertexIndex);
-					storedinidces.push_back(std::pair<uint32_t, DirectX::XMINT3>(vertexIndex, vertex0));
-					++vertexIndex;
-				}
+				//windingorder: clockwise
+				ApplyVertexToBuffers(vertex0, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);
+				ApplyVertexToBuffers(vertex1, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);
+				ApplyVertexToBuffers(vertex2, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);
+				ApplyVertexToBuffers(vertex0, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);
+				ApplyVertexToBuffers(vertex2, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);
+				ApplyVertexToBuffers(vertex3, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);
 			}
 		}
 
 		return BlenderModel{ vertexBuffer, indexBuffer };
+	}
+
+	void BlenderModelLoader::ApplyVertexToBuffers(
+		const DirectX::XMINT3& vertexIndexData,
+		std::vector<Vertex3FP2FTx3FN>& vertexBuffer,
+		std::vector<uint32_t>& indexBuffer,
+		std::vector<DirectX::XMFLOAT3>& vertexPositions,
+		std::vector<DirectX::XMFLOAT2>& vertexTxCoords,
+		std::vector<DirectX::XMFLOAT3>& vertexNormals,
+		std::vector<std::pair<uint32_t,
+		DirectX::XMINT3>>& storedinidces,
+		uint32_t& vertexIndex)
+	{
+		std::optional<uint32_t> searchResult = SearchVertexIndexBufferIndex(storedinidces, vertexIndexData);
+
+		if (searchResult.has_value())
+		{
+			indexBuffer.push_back(searchResult.value());
+		}
+		else
+		{
+			const DirectX::XMFLOAT3& vertexPosition = vertexPositions[vertexIndexData.x];
+			const DirectX::XMFLOAT2& vertexTxCoord = vertexTxCoords[vertexIndexData.y];
+			const DirectX::XMFLOAT3& vertexNormal = vertexNormals[vertexIndexData.z];
+
+			Vertex3FP2FTx3FN vertex{ vertexPosition, vertexTxCoord, vertexNormal };
+			vertexBuffer.push_back(vertex);
+			indexBuffer.push_back(vertexIndex);
+			storedinidces.push_back(std::pair<uint32_t, DirectX::XMINT3>(vertexIndex, vertexIndexData));
+			++vertexIndex;
+		}
 	}
 
 	std::vector<std::string> BlenderModelLoader::SegmentLine(std::string line, const std::string& delimiter)
