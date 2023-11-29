@@ -36,6 +36,11 @@ namespace dsr
 
 			Direct3dShaderInputLayout();
 
+			void AddVector2f(const std::string& semanticName, const uint32_t& semanticIndex = 0,
+				const uint32_t& inputSlot = 0, const uint32_t& alignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT,
+				const D3D11_INPUT_CLASSIFICATION& inputSlotClass = D3D11_INPUT_CLASSIFICATION::D3D11_INPUT_PER_VERTEX_DATA,
+				const uint32_t& instanceDataSteprate = 0);
+
 			void AddVector3f(const std::string& semanticName, const uint32_t& semanticIndex = 0,
 				const uint32_t& inputSlot = 0, const uint32_t& alignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT,
 				const D3D11_INPUT_CLASSIFICATION& inputSlotClass = D3D11_INPUT_CLASSIFICATION::D3D11_INPUT_PER_VERTEX_DATA,
