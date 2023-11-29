@@ -16,7 +16,7 @@ namespace dsr
 #endif // DEBUG
 
 		template<class TShader>
-		std::variant<Direct3dShader<TShader>, dsr_error> LoadShaderFromFile(
+		std::variant<std::shared_ptr<Direct3dShader<TShader>>, dsr_error> LoadShaderFromFile(
 			const std::shared_ptr<Direct3dDevice> device,
 			const std::wstring& fileName,
 			const std::string& profile,
@@ -70,24 +70,22 @@ namespace dsr
 
 			std::shared_ptr<TShader> shaderPtr = std::shared_ptr<TShader>(pShader, [](TShader* ptr) { SafeRelease(ptr); });
 			std::shared_ptr<ID3DBlob> shaderBlobPtr = std::shared_ptr<ID3DBlob>(pShaderBlob, [](ID3DBlob* ptr) { SafeRelease(ptr); });
-			Direct3dShader<TShader> shader(shaderPtr, shaderBlobPtr);
+			std::shared_ptr<Direct3dShader<TShader>> shader = std::make_shared<Direct3dShader<TShader>>(shaderPtr, shaderBlobPtr);
+
 			return shader;
 		}
 
 		std::variant<Direct3dShaderProgram, dsr_error> CreateShaderProgram(
 			const std::shared_ptr<Direct3dDevice> device,
-			const Direct3dShader<ID3D11VertexShader>& vertexShader,
-			const Direct3dShader<ID3D11PixelShader>& pixelShader,
-			const Direct3dShaderInputLayout& vertexShaderInputLayout,
-			std::optional<Direct3dShader<ID3D11HullShader>> HullShader = std::nullopt,
-			std::optional<Direct3dShader<ID3D11DomainShader>> DomainShader = std::nullopt,
-			std::optional<Direct3dShader<ID3D11GeometryShader>> GeometryShader = std::nullopt
+			const std::shared_ptr<Direct3dShader<ID3D11VertexShader>>& vertexShader,
+			const std::shared_ptr<Direct3dShader<ID3D11PixelShader>>& pixelShader,
+			const Direct3dShaderInputLayout& vertexShaderInputLayout
 		);
 
 		template<class TShader>
 		DsrResult SetConstantBuffer(
 			const std::shared_ptr<Direct3dDevice> device,
-			Direct3dShader<TShader>& target,
+			std::shared_ptr<Direct3dShader<TShader>> target,
 			const size_t& bRegister,
 			const DirectX::XMMATRIX& value
 		);
@@ -95,13 +93,13 @@ namespace dsr
 		template<class TShader>
 		DsrResult SetConstantBuffer(
 			const std::shared_ptr<Direct3dDevice> device,
-			Direct3dShader<TShader>& target,
+			std::shared_ptr<Direct3dShader<TShader>> target,
 			const size_t& bRegister,
 			const DirectX::XMMATRIX& value)
 		{
-			auto it = target.ConstantBuffers.find(bRegister);
+			auto it = target->ConstantBuffers.find(bRegister);
 
-			if (it == target.ConstantBuffers.end())
+			if (it == target->ConstantBuffers.end())
 			{
 				D3D11_SUBRESOURCE_DATA subResourceData;
 				ZeroMemory(&subResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
@@ -119,7 +117,7 @@ namespace dsr
 					return DsrResult(error.what(), error.GetResult());
 				}
 
-				target.ConstantBuffers[bRegister] = std::get<Direct3dBuffer>(createConstantBufferResult);
+				target->ConstantBuffers[bRegister] = std::get<Direct3dBuffer>(createConstantBufferResult);
 			}
 			else
 			{

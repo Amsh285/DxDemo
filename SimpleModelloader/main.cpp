@@ -1,17 +1,19 @@
 
-#include "BasicRendererApplication.h"
+#include <iostream>
+
+#include "ModelloaderApplication.h"
 
 int main(int argc, char* argv[])
 {
 	try
 	{
-		BasicRendererApplication application;
+		ModelloaderApplication application;
 		application.Initialize();
 
 		dsr::DsrResult setupResult = application.Setup();
 		if (setupResult.GetResultStatusCode() != RESULT_SUCCESS)
 		{
-			std::cout << "error setup application: " << setupResult.GetResultMessage() << std::endl;
+			std::cout << "Setup failed: " << setupResult.GetResultMessage() << std::endl;
 			return EXIT_FAILURE;
 		}
 
