@@ -25,12 +25,11 @@ dsr::DsrResult ModelloaderApplication::Setup()
 
 	rendering::Direct3dRenderUoW uow(std::get<Direct3dShaderProgram>(loadShader));
 	rendering::RenderData uowData(std::get<Direct3dVertexBufferf>(loadContent));
+	uowData.Transform.Rotation = DirectX::XMVectorSet(0.0f, 65.0f, 0.0f, 0.0f);
 	uow.RenderData.push_back(uowData);
 	m_renderer->AddUnitOfWork(uow);
 
-	// strange...
-	// m_mainCamera->Transform.Position = DirectX::XMVectorSet(3.0f, 0.0f, -200.0f, 0.0f);
-	m_mainCamera->Transform.Position = DirectX::XMVectorSet(0.0f, 0.0f, -200.0f, 0.0f);
+	m_mainCamera->Transform.Position = DirectX::XMVectorSet(0.0f, 1.0f, -3.0f, 0.0f);
 
 	return dsr::DsrResult::Success("Setup Successful.");
 }
@@ -45,7 +44,8 @@ std::variant<dsr::directX::Direct3dVertexBufferf, dsr::dsr_error> ModelloaderApp
 	using namespace dsr;
 	using namespace dsr::directX;
 
-	std::variant<BlenderModel, dsr_error> loadModel = m_blenderModelLoader->Load(L"Assets/Map.obj");
+	//std::variant<BlenderModel, dsr_error> loadModel = m_blenderModelLoader->Load(L"Assets/Map.obj");
+	std::variant<BlenderModel, dsr_error> loadModel = m_blenderModelLoader->Load(L"Assets/sorcwithoutStaff.tobj");
 	if (std::holds_alternative<dsr_error>(loadModel))
 		return dsr::dsr_error::Attach("Error loading blendermodel: ", std::get<dsr_error>(loadModel));
 
