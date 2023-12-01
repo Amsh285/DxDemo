@@ -8,6 +8,8 @@ namespace dsr
 constexpr auto ERROR_OPENMODELFILE = 102;
 constexpr auto ERROR_OPENMODELFILEINVALIDFORMAT = 103;
 
+constexpr auto ERROR_PARSEMODELFILEINVALIDFACEFORMAT = 1001;
+
 	struct BlenderModel
 	{
 		std::vector<Vertex3FP2FTx3FN> VertexBuffer;

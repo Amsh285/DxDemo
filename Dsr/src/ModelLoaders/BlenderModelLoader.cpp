@@ -62,23 +62,48 @@ namespace dsr
 			}
 			else if (lineData[0] == "f")
 			{
-				std::vector<std::string> v0 = SegmentLine(lineData[1], "/");
-				std::vector<std::string> v1 = SegmentLine(lineData[2], "/");
-				std::vector<std::string> v2 = SegmentLine(lineData[3], "/");
-				std::vector<std::string> v3 = SegmentLine(lineData[4], "/");
+				if (lineData.size() == 5)
+				{
+					//handle quadrilateral polygon
+					std::vector<std::string> v0 = SegmentLine(lineData[1], "/");
+					std::vector<std::string> v1 = SegmentLine(lineData[2], "/");
+					std::vector<std::string> v2 = SegmentLine(lineData[3], "/");
+					std::vector<std::string> v3 = SegmentLine(lineData[4], "/");
 
-				DirectX::XMINT3 vertex0(std::stoi(v0[0]) -1, std::stoi(v0[1]) -1, std::stoi(v0[2]) - 1);
-				DirectX::XMINT3 vertex1(std::stoi(v1[0]) - 1, std::stoi(v1[1]) - 1, std::stoi(v1[2]) - 1);
-				DirectX::XMINT3 vertex2(std::stoi(v2[0]) - 1, std::stoi(v2[1]) - 1, std::stoi(v2[2]) - 1);
-				DirectX::XMINT3 vertex3(std::stoi(v3[0]) - 1, std::stoi(v3[1]) - 1, std::stoi(v3[2]) - 1);
+					DirectX::XMINT3 vertex0(std::stoi(v0[0]) - 1, std::stoi(v0[1]) - 1, std::stoi(v0[2]) - 1);
+					DirectX::XMINT3 vertex1(std::stoi(v1[0]) - 1, std::stoi(v1[1]) - 1, std::stoi(v1[2]) - 1);
+					DirectX::XMINT3 vertex2(std::stoi(v2[0]) - 1, std::stoi(v2[1]) - 1, std::stoi(v2[2]) - 1);
+					DirectX::XMINT3 vertex3(std::stoi(v3[0]) - 1, std::stoi(v3[1]) - 1, std::stoi(v3[2]) - 1);
 
-				//windingorder: clockwise
-				ApplyVertexToBuffers(vertex0, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);
-				ApplyVertexToBuffers(vertex1, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);
-				ApplyVertexToBuffers(vertex2, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);
-				ApplyVertexToBuffers(vertex0, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);
-				ApplyVertexToBuffers(vertex2, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);
-				ApplyVertexToBuffers(vertex3, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);
+					//windingorder: clockwise
+					ApplyVertexToBuffers(vertex0, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);
+					ApplyVertexToBuffers(vertex1, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);
+					ApplyVertexToBuffers(vertex2, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);
+					ApplyVertexToBuffers(vertex0, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);
+					ApplyVertexToBuffers(vertex2, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);
+					ApplyVertexToBuffers(vertex3, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);
+				}
+				else if (lineData.size() == 4)
+				{
+					//handle triangle
+					std::vector<std::string> v0 = SegmentLine(lineData[1], "/");
+					std::vector<std::string> v1 = SegmentLine(lineData[2], "/");
+					std::vector<std::string> v2 = SegmentLine(lineData[3], "/");
+
+					DirectX::XMINT3 vertex0(std::stoi(v0[0]) - 1, std::stoi(v0[1]) - 1, std::stoi(v0[2]) - 1);
+					DirectX::XMINT3 vertex1(std::stoi(v1[0]) - 1, std::stoi(v1[1]) - 1, std::stoi(v1[2]) - 1);
+					DirectX::XMINT3 vertex2(std::stoi(v2[0]) - 1, std::stoi(v2[1]) - 1, std::stoi(v2[2]) - 1);
+
+					ApplyVertexToBuffers(vertex0, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);
+					ApplyVertexToBuffers(vertex1, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);
+					ApplyVertexToBuffers(vertex2, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);
+				}
+				else
+				{
+					std::string errorMessage = "Handle Face: unexpected number of lineData elements: ";
+					errorMessage += lineData.size();
+					return dsr_error(errorMessage, ERROR_PARSEMODELFILEINVALIDFACEFORMAT);
+				}
 			}
 		}
 

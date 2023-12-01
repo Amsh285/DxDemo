@@ -16,6 +16,16 @@ namespace dsr
 			return matTranslate * matScale * matRotate;
 		}
 
+		DirectX::XMMATRIX Transform::CalculateNormalMatrix() const
+		{
+			using namespace DirectX;
+
+			XMMATRIX model = CalculateModelMatrix();
+			XMVECTOR determinant = XMMatrixDeterminant(model);
+
+			return XMMatrixTranspose(XMMatrixInverse(&determinant, model));
+		}
+
 		Transform::Transform()
 		{
 			Position = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
