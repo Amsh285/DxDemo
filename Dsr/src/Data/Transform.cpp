@@ -23,6 +23,7 @@ namespace dsr
 			XMMATRIX model = CalculateModelMatrix();
 			XMVECTOR determinant = XMMatrixDeterminant(model);
 
+			// http://www.lighthouse3d.com/tutorials/glsl-12-tutorial/the-normal-matrix/
 			return XMMatrixTranspose(XMMatrixInverse(&determinant, model));
 		}
 

@@ -48,7 +48,11 @@ namespace dsr
 					{
 						// use instanced rendering later
 						XMMATRIX model = iteratorRenderData->Transform.CalculateModelMatrix();
-						DsrResult setModelMatrixResult = SetConstantBuffer(m_device, iteratorUoW->Shaders.VertexShader, 2, model);
+						XMMATRIX normal = iteratorRenderData->Transform.CalculateNormalMatrix();
+
+						DsrResult setModelMatrixResult = SetVertexShaderPerObjectData(m_device, iteratorUoW->Shaders.VertexShader, 2, { model, normal });
+
+						//DsrResult setModelMatrixResult = SetConstantBuffer(m_device, iteratorUoW->Shaders.VertexShader, 2, model);
 
 						std::shared_ptr<ID3D11Buffer> vertexBufferPtr = iteratorRenderData->VertexBuffer.GetVertexBuffer().GetBufferPtr();
 						std::shared_ptr<ID3D11Buffer> indexBufferPtr = iteratorRenderData->VertexBuffer.GetIndexBuffer().GetBufferPtr();
@@ -77,6 +81,15 @@ namespace dsr
 
 				// switch the back buffer and the front buffer
 				m_device->SwapBuffers();
+			}
+
+			DsrResult Direct3dRenderer::SetVertexShaderPerObjectData(
+				const std::shared_ptr<Direct3dDevice> device,
+				std::shared_ptr<Direct3dShader<ID3D11VertexShader>> target,
+				const size_t& bRegister,
+				const dsr::shader::PerObject& data)
+			{
+				return SetConstantBuffer<ID3D11VertexShader>(device, target, bRegister, &data, sizeof(dsr::shader::PerObject));
 			}
 		}
 	}

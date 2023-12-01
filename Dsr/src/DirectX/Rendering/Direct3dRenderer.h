@@ -10,6 +10,8 @@
 
 #include "Direct3dRenderUoW.h"
 
+#include "DirectX/Shader/Data/VertexShaderData.h"
+
 namespace dsr
 {
 	namespace directX
@@ -27,6 +29,13 @@ namespace dsr
 				void AddUnitOfWork(const Direct3dRenderUoW& uow);
 				void OnUpdate(const dsr::events::UpdateFrameEvent& updateEvent);
 			private:
+				DsrResult SetVertexShaderPerObjectData(
+					const std::shared_ptr<Direct3dDevice> device,
+					std::shared_ptr<Direct3dShader<ID3D11VertexShader>> target,
+					const size_t& bRegister,
+					const dsr::shader::PerObject& data);
+
+
 				std::shared_ptr<Direct3dDevice> m_device;
 				std::vector<Direct3dRenderUoW> m_units;
 

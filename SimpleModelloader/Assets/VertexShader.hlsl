@@ -12,6 +12,7 @@ cbuffer PerFrame : register(b1)
 cbuffer PerObject : register(b2)
 {
     matrix worldMatrix;
+    matrix normalMatrix;
 }
 
 struct AppData
@@ -36,7 +37,8 @@ VertexShaderOutput main(AppData IN)
     matrix mvp = mul(projectionMatrix, mul(viewMatrix, worldMatrix));
 
     output.fragPosition = mul(worldMatrix, float4(IN.position, 1.0f));
-    output.normal = IN.normal;
+    output.normal = mul(normalMatrix, IN.normal);
+    //output.normal = IN.normal;
     output.color = float4(0.0f, 1.0f, 0.0f, 1.0f);
     output.position = mul(mvp, float4(IN.position, 1.0f));
 
