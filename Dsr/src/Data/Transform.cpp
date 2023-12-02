@@ -10,7 +10,12 @@ namespace dsr
 			using namespace DirectX;
 
 			XMMATRIX matTranslate = XMMatrixTranslationFromVector(Position);
-			XMMATRIX matRotate = XMMatrixRotationRollPitchYawFromVector(Rotation);
+
+			XMVECTOR quaternion = XMQuaternionRotationRollPitchYaw(
+				XMConvertToRadians(XMVectorGetX(Rotation)),
+				XMConvertToRadians(XMVectorGetY(Rotation)),
+				XMConvertToRadians(XMVectorGetZ(Rotation)));
+			XMMATRIX matRotate = XMMatrixRotationQuaternion(quaternion);
 			XMMATRIX matScale = XMMatrixScaling(XMVectorGetX(Scale), XMVectorGetY(Scale), XMVectorGetZ(Scale));
 
 			return matTranslate * matScale * matRotate;

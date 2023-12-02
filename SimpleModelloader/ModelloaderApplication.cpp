@@ -25,7 +25,7 @@ dsr::DsrResult ModelloaderApplication::Setup()
 
 	rendering::Direct3dRenderUoW uow(std::get<Direct3dShaderProgram>(loadShader));
 	rendering::RenderData uowData(std::get<Direct3dVertexBufferf>(loadContent));
-	uowData.Transform.Rotation = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+	uowData.Transform.Rotation = DirectX::XMVectorSet(0.0f, 90.0f, 0.0f, 0.0f);
 	uow.RenderData.push_back(uowData);
 	m_renderer->AddUnitOfWork(uow);
 
