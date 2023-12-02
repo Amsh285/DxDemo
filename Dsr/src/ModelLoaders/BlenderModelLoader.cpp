@@ -163,7 +163,7 @@ namespace dsr
 		return tokens;
 	}
 
-	std::optional<uint32_t> BlenderModelLoader::SearchVertexIndexBufferIndex(const std::unordered_map<FaceVertex, uint32_t, FaceVertexHash>& vertexIndexBufferMap, const FaceVertex& vertexDataIndices)
+	std::optional<uint32_t> BlenderModelLoader::SearchVertexIndexBufferIndex(const std::unordered_map<FaceVertex, uint32_t, FaceVertexHash>& vertexIndexBufferMap, const FaceVertex& vertexDataIndices) const
 	{
 		auto it = vertexIndexBufferMap.find(vertexDataIndices);
 

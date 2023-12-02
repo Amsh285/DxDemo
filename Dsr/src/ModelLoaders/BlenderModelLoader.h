@@ -74,6 +74,6 @@ constexpr auto ERROR_PARSEMODELFILEINVALIDFACEFORMAT = 1001;
 		);
 
 		std::vector<std::string> SegmentLine(std::string line, const std::string& delimiter);
-		std::optional<uint32_t> SearchVertexIndexBufferIndex(const std::unordered_map<FaceVertex, uint32_t, FaceVertexHash>& vertexIndexBufferMap, const FaceVertex& vertexDataIndices);
+		std::optional<uint32_t> SearchVertexIndexBufferIndex(const std::unordered_map<FaceVertex, uint32_t, FaceVertexHash>& vertexIndexBufferMap, const FaceVertex& vertexDataIndices) const;
 	};
 }
