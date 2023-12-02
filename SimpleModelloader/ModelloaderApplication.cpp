@@ -45,7 +45,10 @@ std::variant<dsr::directX::Direct3dVertexBufferf, dsr::dsr_error> ModelloaderApp
 	using namespace dsr::directX;
 
 	//std::variant<BlenderModel, dsr_error> loadModel = m_blenderModelLoader->Load(L"Assets/Map.obj");
-	std::variant<BlenderModel, dsr_error> loadModel = m_blenderModelLoader->Load(L"Assets/sorcwithoutStaff.tobj");
+	std::variant<BlenderModel, dsr_error> loadModel = m_blenderModelLoader->Load(
+		L"Assets/sorcwithoutStaff.tobj",
+		L"Assets/Sorceress.mtl");
+
 	if (std::holds_alternative<dsr_error>(loadModel))
 		return dsr::dsr_error::Attach("Error loading blendermodel: ", std::get<dsr_error>(loadModel));
 

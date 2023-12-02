@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\ModelLoaders\BlenderMTLLoader.h" />
     <ClInclude Include="src\ModelLoaders\BlenderModelLoader.h" />
     <ClInclude Include="src\CameraSystem\Camera.h" />
     <ClInclude Include="src\DsrApplication.h" />
@@ -43,6 +44,10 @@
     <ClInclude Include="src\DirectX\Shader\Data\VertexShaderData.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\ModelLoaders\BlenderMTLLoader.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="src\ModelLoaders\BlenderModelLoader.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>

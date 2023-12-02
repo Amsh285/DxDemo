@@ -2,6 +2,7 @@
 
 #include "Data/Vertex.h"
 #include "ErrorHandling/dsr_error.h"
+#include "ModelLoaders/BlenderMTLLoader.h"
 
 namespace dsr
 {
@@ -60,7 +61,9 @@ constexpr auto ERROR_PARSEMODELFILEINVALIDFACEFORMAT = 1001;
 	class BlenderModelLoader
 	{
 	public:
-		std::variant<BlenderModel, dsr_error> Load(const std::filesystem::path& path);
+		std::variant<BlenderModel, dsr_error> Load(
+			const std::filesystem::path& modelPath,
+			const std::filesystem::path& materialPath);
 	private:
 		void ApplyVertexToBuffers(
 			const FaceVertex& vertexIndexData,
@@ -75,5 +78,7 @@ constexpr auto ERROR_PARSEMODELFILEINVALIDFACEFORMAT = 1001;
 
 		std::vector<std::string> SegmentLine(std::string line, const std::string& delimiter);
 		std::optional<uint32_t> SearchVertexIndexBufferIndex(const std::unordered_map<FaceVertex, uint32_t, FaceVertexHash>& vertexIndexBufferMap, const FaceVertex& vertexDataIndices) const;
+
+		BlenderMTLLoader m_materialLoader;
 	};
 }

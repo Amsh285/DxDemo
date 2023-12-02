@@ -3,14 +3,23 @@
 
 namespace dsr
 {
-	std::variant<BlenderModel, dsr_error> BlenderModelLoader::Load(const std::filesystem::path& path)
+	std::variant<BlenderModel, dsr_error> BlenderModelLoader::Load(
+		const std::filesystem::path& path,
+		const std::filesystem::path& materialPath)
 	{
+		std::variant<std::unordered_map<std::string, BlenderMaterialData>, dsr_error> loadMaterial = m_materialLoader.Load(materialPath);
+
+		if (std::holds_alternative<dsr_error>(loadMaterial))
+			return std::get<dsr_error>(loadMaterial);
+
+		std::unordered_map<std::string, BlenderMaterialData> materialMap = std::get<std::unordered_map<std::string, BlenderMaterialData>>(loadMaterial);
+
 		std::fstream modelFile;
 		modelFile.open(path, std::ios::in);
 
 		if (!modelFile.is_open())
 		{
-			std::string message = "error loading modelfile: ";
+			std::string message = "error opening modelfile: ";
 			message += path.generic_string();
 			message += ". File could not be opened.";
 			return dsr_error(message, ERROR_OPENMODELFILE);
