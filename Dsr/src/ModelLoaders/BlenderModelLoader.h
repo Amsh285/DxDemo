@@ -9,12 +9,24 @@ namespace dsr
 constexpr auto ERROR_OPENMODELFILE = 102;
 constexpr auto ERROR_OPENMODELFILEINVALIDFORMAT = 103;
 
-constexpr auto ERROR_PARSEMODELFILEINVALIDFACEFORMAT = 1001;
+constexpr auto ERROR_PARSEMODELFILE_INVALIDFACEFORMAT = 1001;
+
+constexpr auto ERROR_PARSEMODELFILE_INVALIDUSEMATERIALINSTRUCTIONFORMAT = 1020;
+
+	struct BlenderModelMaterialGroup
+	{
+		uint32_t StartIndexLocation;
+		uint32_t IndexCount;
+
+		std::string MaterialName;
+		BlenderMaterialData MaterialData;
+	};
 
 	struct BlenderModel
 	{
 		std::vector<Vertex3FP2FTx3FN> VertexBuffer;
 		std::vector<uint32_t> IndexBuffer;
+		std::vector<BlenderModelMaterialGroup> MaterialGroups;
 	};
 
 	struct FaceVertex

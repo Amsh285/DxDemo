@@ -54,8 +54,12 @@ namespace dsr
 		std::vector<Vertex3FP2FTx3FN> vertexBuffer;
 		std::vector<uint32_t> indexBuffer;
 
+		uint32_t rowIndex = 3, startIndexLocation = 0;
+		std::vector<BlenderModelMaterialGroup> materialGroups;
+
 		while (std::getline(modelFile, line))
 		{
+			++rowIndex;
 			std::vector<std::string> lineData = SegmentLine(line, " ");
 
 			if (lineData[0] == "v")
@@ -112,12 +116,54 @@ namespace dsr
 				{
 					std::string errorMessage = "Handle Face: unexpected number of lineData elements: ";
 					errorMessage += lineData.size();
-					return dsr_error(errorMessage, ERROR_PARSEMODELFILEINVALIDFACEFORMAT);
+					return dsr_error(errorMessage, ERROR_PARSEMODELFILE_INVALIDFACEFORMAT);
 				}
+			}
+			else if (lineData[0] == "usemtl")
+			{
+				if (lineData.size() != 2)
+				{
+					std::string errorMessage = "Handle UseMaterial: unexpected number of lineData elements: ";
+					errorMessage += lineData.size();
+					errorMessage += ". RowIndex: " + rowIndex;
+					return dsr_error(errorMessage, ERROR_PARSEMODELFILE_INVALIDUSEMATERIALINSTRUCTIONFORMAT);
+				}
+
+				BlenderModelMaterialGroup materialGroup;
+				materialGroup.MaterialData = materialMap[lineData[1]];
+
+				if (materialGroups.empty())
+				{
+					materialGroup.StartIndexLocation = 0;
+					materialGroup.IndexCount = 0;
+				}
+				else
+				{
+					BlenderModelMaterialGroup& lastGroup = materialGroups.back();
+					lastGroup.IndexCount = indexBuffer.size() - lastGroup.StartIndexLocation;
+
+					materialGroup.StartIndexLocation = lastGroup.StartIndexLocation + lastGroup.IndexCount;
+					materialGroup.IndexCount = 0;
+				}
+
+				materialGroups.push_back(materialGroup);
 			}
 		}
 
-		return BlenderModel{ vertexBuffer, indexBuffer };
+		if (materialGroups.empty())
+		{
+			BlenderModelMaterialGroup materialGroup;
+			materialGroup.StartIndexLocation = 0;
+			materialGroup.IndexCount = indexBuffer.size();
+			materialGroups.push_back(materialGroup);
+		}
+		else
+		{
+			BlenderModelMaterialGroup& lastGroup = materialGroups.back();
+			lastGroup.IndexCount = indexBuffer.size() - lastGroup.StartIndexLocation;
+		}
+
+		return BlenderModel{ vertexBuffer, indexBuffer, materialGroups };
 	}
 
 	void BlenderModelLoader::ApplyVertexToBuffers(
