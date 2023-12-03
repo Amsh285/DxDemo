@@ -15,9 +15,19 @@ namespace dsr
 		public:
 			static DevicePtr Create(const WindowPtr& window);
 
+			std::variant<ID3D11Texture2D*, dsr_error> CreateTexture2D(
+				const D3D11_TEXTURE2D_DESC* pDesc,
+				const D3D11_SUBRESOURCE_DATA* pInitialData
+			) const;
+
 			std::variant<ID3D11Buffer*, dsr::dsr_error> CreateBuffer(
 				const D3D11_BUFFER_DESC* pDesc,
 				const D3D11_SUBRESOURCE_DATA* pInitialData) const;
+
+			std::variant<ID3D11ShaderResourceView*, dsr_error> CreateShaderResourceView(
+				ID3D11Resource* pResource,
+				const D3D11_SHADER_RESOURCE_VIEW_DESC* pDesc
+			);
 
 			void UpdateSubResource(
 				ID3D11Resource* resourcePtr,

@@ -1,5 +1,6 @@
 #pragma once
 
+//Todo: fix this namespace mess
 namespace dsr
 {
 	namespace shader
