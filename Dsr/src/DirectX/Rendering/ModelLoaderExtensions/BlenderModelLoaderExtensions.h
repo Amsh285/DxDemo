@@ -1,0 +1,35 @@
+#pragma once
+
+#include "DirectX/Direct3dDevice.h"
+#include "DirectX/Direct3dDeviceBufferExtensions.h"
+#include "DirectX/Rendering/Direct3dRenderUoW.h"
+
+#include "ErrorHandling/dsr_error.h"
+#include "ModelLoaders/BlenderModelLoader.h"
+
+namespace dsr
+{
+	namespace directX
+	{
+		namespace rendering
+		{
+			struct GroupedVertexBuffer
+			{
+				Direct3dVertexBufferf Vertexbuffer;
+				std::vector<VertexGroup> VertexGroups;
+			};
+
+			std::variant<GroupedVertexBuffer, dsr_error> LoadWavefrontModel(
+				std::shared_ptr<Direct3dDevice> device,
+				std::shared_ptr<BlenderModelLoader> modelLoader,
+				const std::filesystem::path& baseDirectory,
+				const std::filesystem::path& modelPath,
+				const std::filesystem::path& materialPath);
+
+			std::vector<rendering::VertexGroup> MapModel(
+				std::shared_ptr<Direct3dDevice> device,
+				const std::filesystem::path& baseDirectory,
+				const BlenderModel& model);
+		}
+	}
+}

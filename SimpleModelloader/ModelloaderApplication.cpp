@@ -4,12 +4,13 @@ dsr::DsrResult ModelloaderApplication::Setup()
 {
 	using namespace dsr;
 	using namespace dsr::directX;
+	using namespace dsr::directX::rendering;
 
 	dsr::DsrResult baseResult = DsrApplication::Setup();
 	if (baseResult.GetResultStatusCode() != RESULT_SUCCESS)
 		return baseResult;
 
-	std::variant<Direct3dVertexBufferf, dsr_error> loadContent = LoadContent();
+	std::variant<GroupedVertexBuffer, dsr::dsr_error> loadContent = LoadContent();
 	if (std::holds_alternative<dsr_error>(loadContent))
 	{
 		const dsr_error& error = std::get<dsr_error>(loadContent);
@@ -23,9 +24,13 @@ dsr::DsrResult ModelloaderApplication::Setup()
 		return DsrResult(error.what(), error.GetResult());
 	}
 
-	rendering::Direct3dRenderUoW uow(std::get<Direct3dShaderProgram>(loadShader));
-	rendering::RenderData uowData(std::get<Direct3dVertexBufferf>(loadContent));
+	const GroupedVertexBuffer& groupedBuffer = std::get<GroupedVertexBuffer>(loadContent);
+
+	rendering::RenderData uowData(groupedBuffer.Vertexbuffer);
+	uowData.VertexGroups = groupedBuffer.VertexGroups;
 	uowData.Transform.Rotation = DirectX::XMVectorSet(0.0f, 90.0f, 0.0f, 0.0f);
+
+	rendering::Direct3dRenderUoW uow(std::get<Direct3dShaderProgram>(loadShader));
 	uow.RenderData.push_back(uowData);
 	m_renderer->AddUnitOfWork(uow);
 
@@ -39,83 +44,23 @@ ModelloaderApplication::ModelloaderApplication()
 {
 }
 
-std::variant<dsr::directX::Direct3dVertexBufferf, dsr::dsr_error> ModelloaderApplication::LoadContent()
+std::variant<dsr::directX::rendering::GroupedVertexBuffer, dsr::dsr_error> ModelloaderApplication::LoadContent()
 {
 	using namespace dsr;
 	using namespace dsr::directX;
+	using namespace dsr::directX::rendering;
 
-	//std::variant<BlenderModel, dsr_error> loadModel = m_blenderModelLoader->Load(L"Assets/Map.obj");
-	std::variant<BlenderModel, dsr_error> loadModel = m_blenderModelLoader->Load(
-		L"Assets/sorcwithoutStaff.tobj",
-		L"Assets/Sorceress.mtl");
+	std::variant<GroupedVertexBuffer, dsr_error> loadModelResult = LoadWavefrontModel(
+		m_device,
+		m_blenderModelLoader,
+		"Assets/",
+		"sorcwithoutStaff.tobj",
+		"Sorceress.mtl");
 
-	if (std::holds_alternative<dsr_error>(loadModel))
-		return dsr::dsr_error::Attach("Error loading blendermodel: ", std::get<dsr_error>(loadModel));
+	if (std::holds_alternative<dsr_error>(loadModelResult))
+		return std::get<dsr_error>(loadModelResult);
 
-	Direct3dShaderInputLayout inputLayout;
-	inputLayout.AddVector3f("POSITION");
-	inputLayout.AddVector2f("TXCOORD");
-	inputLayout.AddVector3f("NORMAL");
-
-	const BlenderModel& model = std::get<BlenderModel>(loadModel);
-	std::vector<float> vertexBuffer;
-
-	for (const Vertex3FP2FTx3FN& vertex : model.VertexBuffer)
-	{
-		vertexBuffer.push_back(vertex.Position.x);
-		vertexBuffer.push_back(vertex.Position.y);
-		vertexBuffer.push_back(vertex.Position.z);
-
-		vertexBuffer.push_back(vertex.texCoords.x);
-		vertexBuffer.push_back(vertex.texCoords.y);
-
-		vertexBuffer.push_back(vertex.Normal.x);
-		vertexBuffer.push_back(vertex.Normal.y);
-		vertexBuffer.push_back(vertex.Normal.z);
-	}
-
-	std::vector<rendering::VertexGroup> vertexGroups;
-
-	for (const auto& item : model.MaterialGroups)
-	{
-		Material data;
-		data.Name = item.MaterialName;
-		data.SpecularExponent = item.MaterialData.SpecularExponent;
-		data.AmbientColor = item.MaterialData.AmbientColor;
-		data.DiffuseColor = item.MaterialData.DiffuseColor;
-		data.EmissiveColor = item.MaterialData.EmissiveColor;
-		data.OpticalDensity = item.MaterialData.OpticalDensity;
-		data.IlluminationModel = item.MaterialData.IlluminationModel;
-
-		if (item.MaterialData.MapDiffuse.empty())
-			data.DiffuseMap = std::nullopt;
-		else
-		{
-			std::variant<Direct3dShaderTexture2D, dsr_error> loadTextureResult = Direct3dShaderTexture2D::LoadSingleRGBA(m_device, "Assets/" + item.MaterialData.MapDiffuse);
-
-			if (std::holds_alternative<dsr_error>(loadTextureResult))
-			{
-				dsr_error& error = std::get<dsr_error>(loadTextureResult);
-				std::cout << "error loading Texture: " << item.MaterialData.MapDiffuse << ". " << error.what() << std::endl;
-				data.DiffuseMap = std::nullopt;
-			}
-			else
-				data.DiffuseMap = std::get<Direct3dShaderTexture2D>(loadTextureResult);
-		}
-
-		rendering::VertexGroup group;
-		group.StartIndexLocation = item.StartIndexLocation;
-		group.IndexCount = item.IndexCount;
-		group.Material = data;
-
-		vertexGroups.push_back(group);
-	}
-
-	std::variant<Direct3dVertexBufferf, dsr_error> loadVertexData = SetupVertexBufferf(m_device, vertexBuffer, model.IndexBuffer, inputLayout);
-	if (std::holds_alternative<dsr_error>(loadVertexData))
-		return dsr_error::Attach("Error setup vertexbuffer: ", std::get<dsr_error>(loadVertexData));
-
-	return std::get<Direct3dVertexBufferf>(loadVertexData);
+	return std::get<GroupedVertexBuffer>(loadModelResult);
 }
 
 std::variant<dsr::directX::Direct3dShaderProgram, dsr::dsr_error> ModelloaderApplication::LoadShaderProgram()

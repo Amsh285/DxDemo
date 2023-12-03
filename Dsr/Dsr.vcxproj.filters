@@ -120,6 +120,9 @@
     <ClInclude Include="src\Vendor\wrappers\STBIImage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\DirectX\Rendering\ModelLoaderExtensions\BlenderModelLoaderExtensions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Windows\Window.cpp">
@@ -219,6 +222,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Vendor\wrappers\STBIImage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DirectX\Rendering\ModelLoaderExtensions\BlenderModelLoaderExtensions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
