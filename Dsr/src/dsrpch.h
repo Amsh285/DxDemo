@@ -1,5 +1,7 @@
 #pragma once
 
+
+
 #include <assert.h>
 #include <iostream>
 #include <fstream>
@@ -35,3 +37,10 @@ inline void SafeRelease(T& ptr)
         ptr = NULL;
     }
 }
+
+
+#ifdef DSR_LIBRARY
+#define STB_IMAGE_IMPLEMENTATION
+#include "Vendor/stb/stb_image.h"
+#endif
+
