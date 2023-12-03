@@ -114,6 +114,12 @@ namespace dsr
 				m_deviceContext->VSSetConstantBuffers(startSlot, numBuffers, ppConstantBuffers);
 			}
 
+			template<>
+			void UseConstantBuffers<ID3D11PixelShader>(const uint32_t& startSlot, const uint32_t& numBuffers, ID3D11Buffer* const* ppConstantBuffers)
+			{
+				m_deviceContext->PSSetConstantBuffers(startSlot, numBuffers, ppConstantBuffers);
+			}
+
 			void SetViewports(const uint32_t& numViewports, const D3D11_VIEWPORT* pViewports);
 
 			void Clear(const float& r, const float& g, const float& b, const float& a);

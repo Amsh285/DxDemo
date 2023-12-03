@@ -4,6 +4,7 @@
 #include "DirectX/Direct3dVertexBufferf.h"
 #include "DirectX/Shader/Direct3dShaderProgram.h"
 #include "DirectX/Shader/Data/Material.h"
+#include "DirectX/Textures/Direct3dShaderTexture2D.h"
 
 namespace dsr
 {
@@ -13,9 +14,13 @@ namespace dsr
 		{
 			struct VertexGroup
 			{
+				std::string MaterialName;
+
 				uint32_t StartIndexLocation;
 				uint32_t IndexCount;
 				Material Material;
+
+				std::optional<Direct3dShaderTexture2D> DiffuseMap;
 			};
 
 			struct RenderData

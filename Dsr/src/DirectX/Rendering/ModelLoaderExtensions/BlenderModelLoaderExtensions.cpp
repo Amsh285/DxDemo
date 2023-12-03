@@ -65,8 +65,12 @@ namespace dsr
 
 				for (const auto& item : model.MaterialGroups)
 				{
+					rendering::VertexGroup group;
+					group.StartIndexLocation = item.StartIndexLocation;
+					group.IndexCount = item.IndexCount;
+					group.MaterialName = item.MaterialName;
+
 					Material data;
-					data.Name = item.MaterialName;
 					data.SpecularExponent = item.MaterialData.SpecularExponent;
 					data.AmbientColor = item.MaterialData.AmbientColor;
 					data.DiffuseColor = item.MaterialData.DiffuseColor;
@@ -75,7 +79,7 @@ namespace dsr
 					data.IlluminationModel = item.MaterialData.IlluminationModel;
 
 					if (item.MaterialData.MapDiffuse.empty())
-						data.DiffuseMap = std::nullopt;
+						group.DiffuseMap = std::nullopt;
 					else
 					{
 						std::variant<Direct3dShaderTexture2D, dsr_error> loadTextureResult = Direct3dShaderTexture2D::LoadSingleRGBA(device, baseDirectory.string() + item.MaterialData.MapDiffuse);
@@ -86,17 +90,13 @@ namespace dsr
 
 							//Todo: improve handling
 							std::cout << "error loading Texture: " << item.MaterialData.MapDiffuse << ". " << error.what() << std::endl;
-							data.DiffuseMap = std::nullopt;
+							group.DiffuseMap = std::nullopt;
 						}
 						else
-							data.DiffuseMap = std::get<Direct3dShaderTexture2D>(loadTextureResult);
+							group.DiffuseMap = std::get<Direct3dShaderTexture2D>(loadTextureResult);
 					}
-
-					rendering::VertexGroup group;
-					group.StartIndexLocation = item.StartIndexLocation;
-					group.IndexCount = item.IndexCount;
+					
 					group.Material = data;
-
 					vertexGroups.push_back(group);
 				}
 

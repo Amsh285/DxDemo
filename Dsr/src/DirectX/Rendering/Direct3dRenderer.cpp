@@ -74,8 +74,45 @@ namespace dsr
 						m_device->UseConstantBuffers<ID3D11VertexShader>(0, vsConstantBuffers.size(), vsConstantBuffers.data());
 						m_device->UseShader(iteratorUoW->Shaders.PixelShader->GetShaderPtr().get(), nullptr, 0);
 
-						uint32_t indexBufferSize = iteratorRenderData->VertexBuffer.GetIndexBuffer().GetBufferSize();
-						m_device->DrawIndexed(indexBufferSize, 0, 0);
+						if (iteratorRenderData->VertexGroups.empty())
+						{
+							uint32_t indexBufferSize = iteratorRenderData->VertexBuffer.GetIndexBuffer().GetBufferSize();
+							m_device->DrawIndexed(indexBufferSize, 0, 0);
+						}
+						else
+						{
+							// test debug
+							/*for (size_t i = 0; i < iteratorRenderData->VertexGroups.size(); i++)
+							{
+								VertexGroup group = iteratorRenderData->VertexGroups[i];
+								DirectX::XMFLOAT4 color;
+
+								if(i % 2 == 0)
+									color = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
+								else
+									color = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
+
+								SetConstantBuffer(m_device, iteratorUoW->Shaders.PixelShader, 0, &color, sizeof(XMFLOAT4));
+
+								std::vector<ID3D11Buffer*> psConstantBuffers;
+								for(auto& pair : iteratorUoW->Shaders.PixelShader->ConstantBuffers)
+									psConstantBuffers.push_back(pair.second.GetBufferPtr().get());
+
+								m_device->UseConstantBuffers<ID3D11PixelShader>(0, psConstantBuffers.size(), psConstantBuffers.data());
+								m_device->DrawIndexed(group.IndexCount, group.StartIndexLocation, 0);
+							}*/
+
+							for (const auto& vertexGroup : iteratorRenderData->VertexGroups)
+							{
+								SetConstantBuffer(m_device, iteratorUoW->Shaders.PixelShader, 0, &vertexGroup.Material, sizeof(Material));
+								std::vector<ID3D11Buffer*> psConstantBuffers;
+								for (auto& pair : iteratorUoW->Shaders.PixelShader->ConstantBuffers)
+									psConstantBuffers.push_back(pair.second.GetBufferPtr().get());
+
+								m_device->UseConstantBuffers<ID3D11PixelShader>(0, psConstantBuffers.size(), psConstantBuffers.data());
+								m_device->DrawIndexed(vertexGroup.IndexCount, vertexGroup.StartIndexLocation, 0);
+							}
+						}
 					}
 				}
 
