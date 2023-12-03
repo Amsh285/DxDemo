@@ -131,6 +131,7 @@ namespace dsr
 
 				BlenderModelMaterialGroup materialGroup;
 				materialGroup.MaterialData = materialMap[lineData[1]];
+				materialGroup.MaterialName = lineData[1];
 
 				if (materialGroups.empty())
 				{

@@ -43,16 +43,6 @@ constexpr auto ERROR_PARSEMODELFILE_INVALIDUSEMATERIALINSTRUCTIONFORMAT = 1020;
 		}
 	};
 
-	struct FaceVertexEq
-	{
-		bool operator()(const FaceVertex& lhs, const FaceVertex& rhs)
-		{
-			return lhs.VertexIndex == rhs.VertexIndex &&
-				lhs.TxCoordIndex == rhs.TxCoordIndex &&
-				lhs.NormalIndex == rhs.NormalIndex;
-		}
-	};
-
 	struct FaceVertexHash
 	{
 		size_t operator()(const FaceVertex& fv) const

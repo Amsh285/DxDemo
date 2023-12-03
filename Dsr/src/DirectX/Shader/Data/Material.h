@@ -8,6 +8,9 @@ namespace dsr
 	{
 		struct Material
 		{
+			std::string Name;
+			
+
 			float SpecularExponent;
 			DirectX::XMFLOAT3 AmbientColor; //Ka
 			DirectX::XMFLOAT3 DiffuseColor; //Kd

@@ -74,14 +74,14 @@ std::variant<dsr::directX::Direct3dVertexBufferf, dsr::dsr_error> ModelloaderApp
 		vertexBuffer.push_back(vertex.Normal.z);
 	}
 
-	std::vector<Material> materials;
+	std::vector<rendering::VertexGroup> vertexGroups;
 
 	for (const auto& item : model.MaterialGroups)
 	{
 		Material data;
+		data.Name = item.MaterialName;
 		data.SpecularExponent = item.MaterialData.SpecularExponent;
 		data.AmbientColor = item.MaterialData.AmbientColor;
-
 		data.DiffuseColor = item.MaterialData.DiffuseColor;
 		data.EmissiveColor = item.MaterialData.EmissiveColor;
 		data.OpticalDensity = item.MaterialData.OpticalDensity;
@@ -103,7 +103,12 @@ std::variant<dsr::directX::Direct3dVertexBufferf, dsr::dsr_error> ModelloaderApp
 				data.DiffuseMap = std::get<Direct3dShaderTexture2D>(loadTextureResult);
 		}
 
-		materials.push_back(data);
+		rendering::VertexGroup group;
+		group.StartIndexLocation = item.StartIndexLocation;
+		group.IndexCount = item.IndexCount;
+		group.Material = data;
+
+		vertexGroups.push_back(group);
 	}
 
 	std::variant<Direct3dVertexBufferf, dsr_error> loadVertexData = SetupVertexBufferf(m_device, vertexBuffer, model.IndexBuffer, inputLayout);
