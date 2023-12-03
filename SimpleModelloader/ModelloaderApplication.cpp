@@ -74,6 +74,38 @@ std::variant<dsr::directX::Direct3dVertexBufferf, dsr::dsr_error> ModelloaderApp
 		vertexBuffer.push_back(vertex.Normal.z);
 	}
 
+	std::vector<Material> materials;
+
+	for (const auto& item : model.MaterialGroups)
+	{
+		Material data;
+		data.SpecularExponent = item.MaterialData.SpecularExponent;
+		data.AmbientColor = item.MaterialData.AmbientColor;
+
+		data.DiffuseColor = item.MaterialData.DiffuseColor;
+		data.EmissiveColor = item.MaterialData.EmissiveColor;
+		data.OpticalDensity = item.MaterialData.OpticalDensity;
+		data.IlluminationModel = item.MaterialData.IlluminationModel;
+
+		if (item.MaterialData.MapDiffuse.empty())
+			data.DiffuseMap = std::nullopt;
+		else
+		{
+			std::variant<Direct3dShaderTexture2D, dsr_error> loadTextureResult = Direct3dShaderTexture2D::LoadSingleRGBA(m_device, "Assets/" + item.MaterialData.MapDiffuse);
+
+			if (std::holds_alternative<dsr_error>(loadTextureResult))
+			{
+				dsr_error& error = std::get<dsr_error>(loadTextureResult);
+				std::cout << "error loading Texture: " << item.MaterialData.MapDiffuse << ". " << error.what() << std::endl;
+				data.DiffuseMap = std::nullopt;
+			}
+			else
+				data.DiffuseMap = std::get<Direct3dShaderTexture2D>(loadTextureResult);
+		}
+
+		materials.push_back(data);
+	}
+
 	std::variant<Direct3dVertexBufferf, dsr_error> loadVertexData = SetupVertexBufferf(m_device, vertexBuffer, model.IndexBuffer, inputLayout);
 	if (std::holds_alternative<dsr_error>(loadVertexData))
 		return dsr_error::Attach("Error setup vertexbuffer: ", std::get<dsr_error>(loadVertexData));

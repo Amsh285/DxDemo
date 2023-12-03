@@ -1,6 +1,12 @@
 #include "dsrpch.h"
 #include "STBIImage.h"
 
+// Das ist mit ABSTAND die dümmste zurückgebliebenste SCHEISSE die ich in meinem ganzen Leben je gesehen habe.
+// Die Leute die so ne scheisse verbrechen gehören gehängt!
+// Wenn ich jemals die specs für die image files finde Programmier ich die scheisse Lieber selber bevor ich diesen SCHEISSDRECK nochmal verwende.
+#define STB_IMAGE_IMPLEMENTATION
+#include "Vendor/stb/stb_image.h"
+
 namespace dsr
 {
 	namespace vendor

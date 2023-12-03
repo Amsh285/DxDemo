@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Vendor/stb/stb_image.h"
+
 namespace dsr
 {
 	namespace vendor

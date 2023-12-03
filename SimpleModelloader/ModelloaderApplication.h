@@ -2,6 +2,8 @@
 
 #include "dsrpch.h"
 #include "DsrApplication.h"
+#include "DirectX/Shader/Data/Material.h"
+
 
 class ModelloaderApplication : public dsr::DsrApplication
 {

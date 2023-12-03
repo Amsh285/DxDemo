@@ -38,7 +38,4 @@ inline void SafeRelease(T& ptr)
     }
 }
 
-#ifdef DSR_LIBRARY
-#define STB_IMAGE_IMPLEMENTATION
-#include "Vendor/stb/stb_image.h"
-#endif
+

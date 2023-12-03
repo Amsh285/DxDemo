@@ -6,9 +6,8 @@ namespace dsr
 {
 	namespace directX
 	{
-		class Material
+		struct Material
 		{
-		public:
 			float SpecularExponent;
 			DirectX::XMFLOAT3 AmbientColor; //Ka
 			DirectX::XMFLOAT3 DiffuseColor; //Kd
@@ -16,7 +15,7 @@ namespace dsr
 			float OpticalDensity; //Ni
 			uint32_t IlluminationModel;
 
-			Direct3dShaderTexture2D DiffuseMap;
+			std::optional<Direct3dShaderTexture2D> DiffuseMap;
 		};
 	}
 }
