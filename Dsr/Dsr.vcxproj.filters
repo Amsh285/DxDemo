@@ -114,13 +114,16 @@
     <ClInclude Include="src\DirectX\Textures\Direct3dShaderTexture2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\DirectX\Shader\Data\Material.h">
+    <ClInclude Include="src\DirectX\Shader\Data\MaterialBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Vendor\wrappers\STBIImage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\DirectX\Rendering\ModelLoaderExtensions\BlenderModelLoaderExtensions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Data\Material.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -218,13 +221,16 @@
     <ClCompile Include="src\DirectX\Textures\Direct3dShaderTexture2D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\DirectX\Shader\Data\Material.cpp">
+    <ClCompile Include="src\DirectX\Shader\Data\MaterialBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Vendor\wrappers\STBIImage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\DirectX\Rendering\ModelLoaderExtensions\BlenderModelLoaderExtensions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Data\Material.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

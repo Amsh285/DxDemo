@@ -1,5 +1,5 @@
 #include "dsrpch.h"
-#include "Material.h"
+#include "MaterialBuffer.h"
 
 namespace dsr
 {

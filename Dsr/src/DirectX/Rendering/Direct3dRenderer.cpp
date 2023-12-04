@@ -104,7 +104,7 @@ namespace dsr
 
 							for (const auto& vertexGroup : iteratorRenderData->VertexGroups)
 							{
-								SetConstantBuffer(m_device, iteratorUoW->Shaders.PixelShader, 0, &vertexGroup.Material, sizeof(Material));
+								SetConstantBuffer(m_device, iteratorUoW->Shaders.PixelShader, 0, &vertexGroup.Material, sizeof(MaterialBuffer));
 								std::vector<ID3D11Buffer*> psConstantBuffers;
 								for (auto& pair : iteratorUoW->Shaders.PixelShader->ConstantBuffers)
 									psConstantBuffers.push_back(pair.second.GetBufferPtr().get());

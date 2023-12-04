@@ -2,7 +2,6 @@
 
 #include "dsrpch.h"
 #include "DsrApplication.h"
-#include "DirectX/Shader/Data/Material.h"
 #include "DirectX/Rendering/ModelLoaderExtensions/BlenderModelLoaderExtensions.h"
 
 
