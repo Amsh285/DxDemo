@@ -114,7 +114,7 @@
     <ClInclude Include="src\DirectX\Textures\Direct3dShaderTexture2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\DirectX\Shader\Data\MaterialBuffer.h">
+    <ClInclude Include="src\DirectX\Shader\Data\PixelShaderData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Vendor\wrappers\STBIImage.h">
@@ -221,7 +221,7 @@
     <ClCompile Include="src\DirectX\Textures\Direct3dShaderTexture2D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\DirectX\Shader\Data\MaterialBuffer.cpp">
+    <ClCompile Include="src\DirectX\Shader\Data\PixelShaderData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Vendor\wrappers\STBIImage.cpp">

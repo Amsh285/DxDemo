@@ -4,7 +4,7 @@ namespace dsr
 {
 	namespace directX
 	{
-        struct MaterialBuffer
+        struct PixelShaderData
         {
             float SpecularExponent;
             DirectX::XMFLOAT3 AmbientColor;

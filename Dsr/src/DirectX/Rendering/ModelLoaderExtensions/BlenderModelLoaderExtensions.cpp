@@ -70,7 +70,7 @@ namespace dsr
 					group.IndexCount = item.IndexCount;
 					group.MaterialName = item.MaterialName;
 
-					MaterialBuffer data;
+					PixelShaderData data;
 					data.SpecularExponent = item.MaterialData.SpecularExponent;
 					data.AmbientColor = item.MaterialData.AmbientColor;
 					data.DiffuseColor = item.MaterialData.DiffuseColor;

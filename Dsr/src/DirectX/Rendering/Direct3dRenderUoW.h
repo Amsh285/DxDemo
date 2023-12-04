@@ -3,7 +3,7 @@
 #include "Data/Transform.h"
 #include "DirectX/Direct3dVertexBufferf.h"
 #include "DirectX/Shader/Direct3dShaderProgram.h"
-#include "DirectX/Shader/Data/MaterialBuffer.h"
+#include "DirectX/Shader/Data/PixelShaderData.h"
 #include "DirectX/Textures/Direct3dShaderTexture2D.h"
 
 namespace dsr
@@ -18,7 +18,7 @@ namespace dsr
 
 				uint32_t StartIndexLocation;
 				uint32_t IndexCount;
-				MaterialBuffer Material;
+				PixelShaderData Material;
 
 				std::optional<Direct3dShaderTexture2D> DiffuseMap;
 			};
