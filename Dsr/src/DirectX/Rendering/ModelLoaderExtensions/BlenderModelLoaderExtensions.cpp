@@ -72,10 +72,11 @@ namespace dsr
 
 					PixelShaderData data;
 					data.SpecularExponent = item.MaterialData.SpecularExponent;
-					data.AmbientColor = item.MaterialData.AmbientColor;
-					data.DiffuseColor = item.MaterialData.DiffuseColor;
-					data.EmissiveColor = item.MaterialData.EmissiveColor;
-					data.OpticalDensity = item.MaterialData.OpticalDensity;
+					data.AmbientColor = DirectX::XMFLOAT4(item.MaterialData.AmbientColor.x, item.MaterialData.AmbientColor.y, item.MaterialData.AmbientColor.z, 1.0f);
+					data.DiffuseColor = DirectX::XMFLOAT4(item.MaterialData.DiffuseColor.x, item.MaterialData.DiffuseColor.y, item.MaterialData.DiffuseColor.z, 1.0f);
+					data.EmissiveColor = DirectX::XMFLOAT4(item.MaterialData.EmissiveColor.x, item.MaterialData.EmissiveColor.y, item.MaterialData.EmissiveColor.z, 1.0f);
+					data.SpecularColor = DirectX::XMFLOAT4(item.MaterialData.SpecularColor.x, item.MaterialData.SpecularColor.y, item.MaterialData.SpecularColor.z, 1.0f);
+					data.OpticalDensity =  item.MaterialData.OpticalDensity;
 					data.IlluminationModel = item.MaterialData.IlluminationModel;
 
 					if (item.MaterialData.MapDiffuse.empty())
@@ -93,9 +94,12 @@ namespace dsr
 							group.DiffuseMap = std::nullopt;
 						}
 						else
+						{
+							data.UseDiffuseMap = 1;
 							group.DiffuseMap = std::get<Direct3dShaderTexture2D>(loadTextureResult);
+						}
 					}
-					
+
 					group.PSData = data;
 					vertexGroups.push_back(group);
 				}

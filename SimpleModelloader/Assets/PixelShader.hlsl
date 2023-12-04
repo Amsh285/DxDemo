@@ -4,22 +4,25 @@
 //    float4 mat_color;
 //}
 
-cbuffer MaterialBuffer : register(b0)
+cbuffer Material : register(b0)
 {
-	float mat_specularExponent;
-	float3 mat_ambientColor;    // Ka
-	float  pad0;
-	float3 mat_diffuseColor;    // Kd
-	float  pad1;
-	float3 mat_emissiveColor;   // Ke
-	float  pad2;
-	float mat_opticalDensity;   // Ni
-	uint  mat_illuminationModel;
-	float  pad3;  // Padding to ensure 64 bytes
-	float3 CameraPosition;
-	float pad4;
-};
+	float4 Ka;
+	float4 Kd;
+	float4 Ks;
+	float4 Ke;
 
+	float SpecularExponent;
+	float OpticalDensity;
+	uint IlluminationModel;
+	float pad0;
+
+	float4 CameraPosition;
+
+	uint UseDiffuseMap;
+	uint UseBumpMap;
+	uint UseAlphaMap;
+	float pad1;
+}
 
 struct PixelShaderInput
 {
@@ -28,62 +31,43 @@ struct PixelShaderInput
 	float4 color : COLOR;
 };
 
-//float4 main(PixelShaderInput IN) : SV_TARGET
-//{
-//    float4 ambientColor = float4(0.1f, 0.1f, 0.1f, 1.0f);
-//
-//    float3 lightColor = float3(1.0f, 1.0f, 1.0f);
-//    float3 lightPosition = float3(0.0f, 10.0f, -10.0f);
-//
-//    float3 norm = normalize(IN.normal);
-//    float3 lightDirection = normalize(lightPosition - IN.fragPosition);
-//    float strength = max(dot(norm, lightDirection), 0.0);
-//    float4 diffuseColor = float4(strength * lightColor, 1.0f);
-//
-//    // Use the MaterialBuffer to access material properties
-//    float4 materialAmbient = float4(mat_ambientColor, 1.0f);
-//    float4 materialDiffuse = float4(mat_diffuseColor, 1.0f);
-//
-//    // Calculate the final color using material properties
-//    /*if (mat_illuminationModel == 1)
-//    {
-//        return IN.color * (materialDiffuse * (diffuseColor + ambientColor) * materialAmbient);
-//    }
-//    else
-//        return float4(0.8f, 0.8f, 0.8f, 1.0f);*/
-//
-//    //return IN.color * (materialDiffuse * (diffuseColor + ambientColor) * materialAmbient);
-//    return (materialDiffuse * (diffuseColor + ambientColor) * materialAmbient);
-//}
-
 float4 main(PixelShaderInput IN) : SV_TARGET
 {
-	//float mat_specularExponent;
-	//float3 mat_ambientColor;    // Ka
-	//float  pad0;
-	//float3 mat_diffuseColor;    // Kd
-	//float  pad1;
-	//float3 mat_emissiveColor;   // Ke
-	//float  pad2;
-	//float mat_opticalDensity;   // Ni
-	//uint  mat_illuminationModel;
-	//float  pad3;  // Padding to ensure 64 bytes
+	if (UseDiffuseMap == 1)
+	{
+		return float4(1.0f, 0.0f, 0.0f, 1.0f);
+	}
+	else
+	{
+		// Phong Shading
 
-	float4 lightAmbient = float4(0.2f, 0.2, 0.2f, 1.0f);
-	float4 lightDiffuse = float4(0.5f, 0.5f, 0.5f, 1.0f);
-	float4 lightSpecular = float4(1.0f, 1.0f, 1.0f, 1.0f);
+		//maybe this shouldn´t be done test again when the shader has more functionality...
+		//comments below can be switched to test the different results
+		/*float4 materialAmbient = max(Ka, 0.0000000000000001f);
+		float4 materialDiffuse = max(Kd, 0.0000000000000001f);
+		float4 materialSpecular = max(Ks, 0.0000000000000001f);
+		float4 materialEmissive = max(Ke, 0.0000000000000001f);*/
+		
+		float4 lightAmbient = float4(0.2f, 0.2, 0.2f, 1.0f);
+		float4 lightDiffuse = float4(0.5f, 0.5f, 0.5f, 1.0f);
+		float4 lightSpecular = float4(1.0f, 1.0f, 1.0f, 1.0f);
+		float4 lightPosition = float4(0.0f, 10.0f, -10.0f, 1.0f);
 
-	float4 lightColor = float4(1.0f, 1.0f, 1.0f, 1.0f);
-	float3 lightPosition = float3(0.0f, 10.0f, -10.0f);
+		float4 ambientColor = Ka * lightAmbient;
 
-	float4 ambientColor = float4(mat_ambientColor, 1.0f) * lightAmbient;
+		float4 norm = float4(normalize(IN.normal), 0.0f);
+		float4 lightDirection = float4(normalize(lightPosition.xyz - IN.fragPosition.xyz), 0.0f);
+		float diffuse_strength = max(dot(norm, lightDirection), 0.0);
+		float4 diffuseColor = lightDiffuse * (diffuse_strength * Kd);
 
-	float3 norm = normalize(IN.normal);
-	float3 lightDirection = normalize(lightPosition - IN.fragPosition);
-	float diffuse_strength = max(dot(norm, lightDirection), 0.0);
-	float4 diffuseColor = lightDiffuse * (diffuse_strength * float4(mat_diffuseColor, 1.0f));
+		float4 viewDir = float4(normalize(CameraPosition.xyz - IN.fragPosition.xyz), 0.0f);
+		float4 reflectDir = float4(reflect(-lightPosition.xyz, norm.xyz), 0.0f);
+		float spec = pow(max(dot(viewDir, reflectDir), 0.0), SpecularExponent);
+		float4 specularColor = saturate(float4(lightSpecular.xyz * (spec * Ks.xyz), 0.0f));
+		//float4 specularColor = saturate(float4(lightSpecular.xyz * (spec * materialSpecular.xyz), 0.0f));
 
-	return ambientColor + diffuseColor;
-	//return ambientColor * diffuseColor;
+		return ambientColor + diffuseColor + specularColor;
+		//return ambientColor + diffuseColor;
+	}
 }
 

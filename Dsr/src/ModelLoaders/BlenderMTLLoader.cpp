@@ -107,6 +107,18 @@ namespace dsr
 
 					currentMaterial.EmissiveColor = DirectX::XMFLOAT3(std::stof(lineData[1]), std::stof(lineData[2]), std::stof(lineData[3]));
 				}
+				else if (lineData[0] == "Ks")
+				{
+					if (lineData.size() != 4)
+					{
+						std::string errorMessage = "Handle SpecularColor: unexpected number of lineData elements: ";
+						errorMessage += lineData.size();
+						errorMessage += ". RowIndex: " + rowIndex;
+						return dsr_error(errorMessage, ERROR_PARSEMATERIALFILE_INVALID_SPECULARCOLORFORMAT);
+					}
+
+					currentMaterial.SpecularColor = DirectX::XMFLOAT3(std::stof(lineData[1]), std::stof(lineData[2]), std::stof(lineData[3]));
+				}
 				else if (lineData[0] == "Ni")
 				{
 					if (lineData.size() != 2)
@@ -118,6 +130,18 @@ namespace dsr
 					}
 
 					currentMaterial.OpticalDensity = std::stof(lineData[1]);
+				}
+				else if (lineData[0] == "d")
+				{
+					if (lineData.size() != 2)
+					{
+						std::string errorMessage = "Handle DissolveFactor: unexpected number of lineData elements: ";
+						errorMessage += lineData.size();
+						errorMessage += ". RowIndex: " + rowIndex;
+						return dsr_error(errorMessage, ERROR_PARSEMATERIALFILE_INVALID_DISSOLVEFACTORFORMAT);
+					}
+
+					currentMaterial.DissolveFactor = std::stof(lineData[1]);
 				}
 				else if (lineData[0] == "illum")
 				{

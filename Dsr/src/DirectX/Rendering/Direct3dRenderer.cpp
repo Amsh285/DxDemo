@@ -68,7 +68,7 @@ namespace dsr
 						m_device->UseShader(iteratorUoW->Shaders.VertexShader->GetShaderPtr().get(), nullptr, 0);
 
 						std::vector<ID3D11Buffer*> vsConstantBuffers;
-						for (auto pair : iteratorUoW->Shaders.VertexShader->ConstantBuffers)
+						for (auto& pair : iteratorUoW->Shaders.VertexShader->ConstantBuffers)
 							vsConstantBuffers.push_back(pair.second.GetBufferPtr().get());
 
 						m_device->UseConstantBuffers<ID3D11VertexShader>(0, vsConstantBuffers.size(), vsConstantBuffers.data());
@@ -104,12 +104,26 @@ namespace dsr
 
 							for (auto& vertexGroup : iteratorRenderData->VertexGroups)
 							{
-								XMStoreFloat3(&vertexGroup.PSData.CameraPosition, m_activeCamera->Transform.Position);
+								XMStoreFloat4(&vertexGroup.PSData.CameraPosition, m_activeCamera->Transform.Position);
+
+								/*if(vertexGroup.PSData.UseDiffuseMap)
+									std::cout << "SCHEISSDRECK: " << std::endl;*/
+
+
 
 								SetConstantBuffer(m_device, iteratorUoW->Shaders.PixelShader, 0, &vertexGroup.PSData, sizeof(PixelShaderData));
 								std::vector<ID3D11Buffer*> psConstantBuffers;
 								for (auto& pair : iteratorUoW->Shaders.PixelShader->ConstantBuffers)
 									psConstantBuffers.push_back(pair.second.GetBufferPtr().get());
+
+								//if (vertexGroup.DiffuseMap.has_value())
+								//{
+								//	vertexGroup.
+								//}
+								//else
+								//{
+
+								//}
 
 								m_device->UseConstantBuffers<ID3D11PixelShader>(0, psConstantBuffers.size(), psConstantBuffers.data());
 								m_device->DrawIndexed(vertexGroup.IndexCount, vertexGroup.StartIndexLocation, 0);

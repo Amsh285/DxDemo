@@ -34,7 +34,7 @@ dsr::DsrResult ModelloaderApplication::Setup()
 	uow.RenderData.push_back(uowData);
 	m_renderer->AddUnitOfWork(uow);
 
-	m_mainCamera->Transform.Position = DirectX::XMVectorSet(0.0f, 1.0f, -3.0f, 0.0f);
+	m_mainCamera->Transform.Position = DirectX::XMVectorSet(0.0f, 1.0f, -3.0f, 1.0f);
 
 	return dsr::DsrResult::Success("Setup Successful.");
 }
