@@ -16,6 +16,8 @@ namespace dsr
             float OpticalDensity;
             uint32_t IlluminationModel;
             float pad3;
+            DirectX::XMFLOAT3 CameraPosition;
+            float pad4;
         };
 	}
 }

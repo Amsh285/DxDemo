@@ -16,6 +16,8 @@ cbuffer MaterialBuffer : register(b0)
 	float mat_opticalDensity;   // Ni
 	uint  mat_illuminationModel;
 	float  pad3;  // Padding to ensure 64 bytes
+	float3 CameraPosition;
+	float pad4;
 };
 
 

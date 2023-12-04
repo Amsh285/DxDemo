@@ -102,9 +102,11 @@ namespace dsr
 								m_device->DrawIndexed(group.IndexCount, group.StartIndexLocation, 0);
 							}*/
 
-							for (const auto& vertexGroup : iteratorRenderData->VertexGroups)
+							for (auto& vertexGroup : iteratorRenderData->VertexGroups)
 							{
-								SetConstantBuffer(m_device, iteratorUoW->Shaders.PixelShader, 0, &vertexGroup.Material, sizeof(PixelShaderData));
+								XMStoreFloat3(&vertexGroup.PSData.CameraPosition, m_activeCamera->Transform.Position);
+
+								SetConstantBuffer(m_device, iteratorUoW->Shaders.PixelShader, 0, &vertexGroup.PSData, sizeof(PixelShaderData));
 								std::vector<ID3D11Buffer*> psConstantBuffers;
 								for (auto& pair : iteratorUoW->Shaders.PixelShader->ConstantBuffers)
 									psConstantBuffers.push_back(pair.second.GetBufferPtr().get());

@@ -96,7 +96,7 @@ namespace dsr
 							group.DiffuseMap = std::get<Direct3dShaderTexture2D>(loadTextureResult);
 					}
 					
-					group.Material = data;
+					group.PSData = data;
 					vertexGroups.push_back(group);
 				}
 

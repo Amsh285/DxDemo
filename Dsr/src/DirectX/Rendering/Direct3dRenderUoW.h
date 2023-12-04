@@ -18,7 +18,7 @@ namespace dsr
 
 				uint32_t StartIndexLocation;
 				uint32_t IndexCount;
-				PixelShaderData Material;
+				PixelShaderData PSData;
 
 				std::optional<Direct3dShaderTexture2D> DiffuseMap;
 			};
