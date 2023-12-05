@@ -191,6 +191,20 @@ namespace dsr
 			return resourceViewPtr;
 		}
 
+		std::variant<ID3D11SamplerState*, dsr_error> Direct3dDevice::CreateSamplerState(const D3D11_SAMPLER_DESC* pSamplerDesc)
+		{
+			ID3D11SamplerState* samplerStatePtr = nullptr;
+
+			HRESULT result = m_device->CreateSamplerState(pSamplerDesc, &samplerStatePtr);
+			if (FAILED(result))
+			{
+				SafeRelease(samplerStatePtr);
+				return dsr_error("Error device was unable to create the SamplerState.", result);
+			}
+
+			return samplerStatePtr;
+		}
+
 		void Direct3dDevice::UpdateSubResource(ID3D11Resource* resourcePtr, const uint32_t& dstSubResource, const D3D11_BOX* pDstBox, const void* dataPtr, const uint32_t& srcRowPitch, const uint32_t& srcDepthPitch)
 		{
 			m_deviceContext->UpdateSubresource(resourcePtr, dstSubResource, pDstBox, dataPtr, srcRowPitch, srcDepthPitch);

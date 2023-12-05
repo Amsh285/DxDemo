@@ -29,6 +29,8 @@ namespace dsr
 				const D3D11_SHADER_RESOURCE_VIEW_DESC* pDesc
 			);
 
+			std::variant<ID3D11SamplerState*, dsr_error> CreateSamplerState(const D3D11_SAMPLER_DESC* pSamplerDesc);
+
 			void UpdateSubResource(
 				ID3D11Resource* resourcePtr,
 				const uint32_t& dstSubResource,

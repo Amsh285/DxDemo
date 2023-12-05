@@ -7,6 +7,22 @@ namespace dsr
 	{
 		namespace rendering
 		{
+			DsrResult Direct3dRenderer::Initialize()
+			{
+				std::variant<Direct3dSamplerState, dsr_error> createSamplerStateResult = Direct3dSamplerState::CreateDefault(m_device);
+				if (std::holds_alternative<dsr_error>(createSamplerStateResult))
+				{
+					const dsr_error& error = std::get<dsr_error>(createSamplerStateResult);
+					std::string errorMessage = "Error initializing Renderer: ";
+					errorMessage += error.what();
+					return DsrResult(errorMessage, error.GetResult());
+				}
+
+				m_defaultSamplerState = std::get<Direct3dSamplerState>(createSamplerStateResult);
+
+				return DsrResult::Success("Initializing Renderer Successful.");
+			}
+
 			Direct3dRenderer::Direct3dRenderer(const std::shared_ptr<Direct3dDevice>& device)
 				: m_device(device)
 			{
@@ -81,33 +97,9 @@ namespace dsr
 						}
 						else
 						{
-							// test debug
-							/*for (size_t i = 0; i < iteratorRenderData->VertexGroups.size(); i++)
-							{
-								VertexGroup group = iteratorRenderData->VertexGroups[i];
-								DirectX::XMFLOAT4 color;
-
-								if(i % 2 == 0)
-									color = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
-								else
-									color = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
-
-								SetConstantBuffer(m_device, iteratorUoW->Shaders.PixelShader, 0, &color, sizeof(XMFLOAT4));
-
-								std::vector<ID3D11Buffer*> psConstantBuffers;
-								for(auto& pair : iteratorUoW->Shaders.PixelShader->ConstantBuffers)
-									psConstantBuffers.push_back(pair.second.GetBufferPtr().get());
-
-								m_device->UseConstantBuffers<ID3D11PixelShader>(0, psConstantBuffers.size(), psConstantBuffers.data());
-								m_device->DrawIndexed(group.IndexCount, group.StartIndexLocation, 0);
-							}*/
-
 							for (auto& vertexGroup : iteratorRenderData->VertexGroups)
 							{
 								XMStoreFloat4(&vertexGroup.PSData.CameraPosition, m_activeCamera->Transform.Position);
-
-								/*if(vertexGroup.PSData.UseDiffuseMap)
-									std::cout << "SCHEISSDRECK: " << std::endl;*/
 
 
 

@@ -1,16 +1,17 @@
 #pragma once
 
+#include "Direct3dRenderUoW.h"
 #include "CameraSystem/Camera.h"
 
 #include "Events/EventListener.h"
 #include "Events/Application/WindowEvents.h"
 
+#include "ErrorHandling/DsrResult.h"
+
 #include "DirectX/Direct3dDevice.h"
 #include "DirectX/Direct3dDeviceShaderExtensions.h"
-
-#include "Direct3dRenderUoW.h"
-
 #include "DirectX/Shader/Data/VertexShaderData.h"
+#include "DirectX/Textures/Direct3dSamplerState.h"
 
 namespace dsr
 {
@@ -24,6 +25,7 @@ namespace dsr
 				std::shared_ptr<camerasystem::Camera> GetActiveCamera() const { return m_activeCamera; }
 				void SetActiveCamera(const std::shared_ptr<camerasystem::Camera>& camera) { m_activeCamera = camera; }
 
+				DsrResult Initialize();
 				Direct3dRenderer(const std::shared_ptr<Direct3dDevice>& device);
 
 				void AddUnitOfWork(const Direct3dRenderUoW& uow);
@@ -35,6 +37,7 @@ namespace dsr
 					const size_t& bRegister,
 					const dsr::shader::PerObject& data);
 
+				Direct3dSamplerState m_defaultSamplerState;
 
 				std::shared_ptr<Direct3dDevice> m_device;
 				std::vector<Direct3dRenderUoW> m_units;
