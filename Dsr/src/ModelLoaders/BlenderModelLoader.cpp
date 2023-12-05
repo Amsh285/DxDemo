@@ -75,6 +75,21 @@ namespace dsr
 				DirectX::XMStoreFloat3(&newPosition, convertedPosition);
 
 				vertexPositions.push_back(newPosition);*/
+
+				//look into this
+				//// Invert every Z coord of v entry:
+				//z = -1.0f * input.z;
+
+				//// Invert every Z coord of vn entry:
+				//nz = -1.0f * input.nz;
+
+				//// Invert every V coord of vt entry:
+				//tv = 1.0f - input.tv;
+
+				//...
+				//	// When assembling vertices:
+				//	// Revert face order from 0->1->2 to 2->1->0, depending on your implementation.
+
 				vertexPositions.push_back(position);
 			}
 			else if (lineData[0] == "vn")
