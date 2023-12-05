@@ -27,6 +27,7 @@ struct VertexShaderOutput
     float4 fragPosition : FRAGPOS;
     float3 normal : NORMAL;
     float4 color : COLOR;
+    float2 texCoord : TXCOORD;
     float4 position : SV_POSITION;
 };
 
@@ -40,6 +41,7 @@ VertexShaderOutput main(AppData IN)
     output.normal = mul(normalMatrix, IN.normal);
     //output.normal = IN.normal;
     output.color = float4(0.0f, 1.0f, 0.0f, 1.0f);
+    output.texCoord = IN.texCoord;
     output.position = mul(mvp, float4(IN.position, 1.0f));
 
     return output;

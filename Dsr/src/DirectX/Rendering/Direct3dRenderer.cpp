@@ -19,8 +19,15 @@ namespace dsr
 				}
 
 				m_defaultSamplerState = std::get<Direct3dSamplerState>(createSamplerStateResult);
+				SetDefaultSamplerState();
 
 				return DsrResult::Success("Initializing Renderer Successful.");
+			}
+
+			void Direct3dRenderer::SetDefaultSamplerState()
+			{
+				ID3D11SamplerState* state = m_defaultSamplerState.GetSamplerStatePtr().get();
+				m_device->SetSamplers<ID3D11PixelShader>(0, 1, &state);
 			}
 
 			Direct3dRenderer::Direct3dRenderer(const std::shared_ptr<Direct3dDevice>& device)
@@ -100,24 +107,21 @@ namespace dsr
 							for (auto& vertexGroup : iteratorRenderData->VertexGroups)
 							{
 								XMStoreFloat4(&vertexGroup.PSData.CameraPosition, m_activeCamera->Transform.Position);
-
-
-
 								SetConstantBuffer(m_device, iteratorUoW->Shaders.PixelShader, 0, &vertexGroup.PSData, sizeof(PixelShaderData));
+
 								std::vector<ID3D11Buffer*> psConstantBuffers;
 								for (auto& pair : iteratorUoW->Shaders.PixelShader->ConstantBuffers)
 									psConstantBuffers.push_back(pair.second.GetBufferPtr().get());
 
-								//if (vertexGroup.DiffuseMap.has_value())
-								//{
-								//	vertexGroup.
-								//}
-								//else
-								//{
+								std::vector<ID3D11ShaderResourceView*> psResourceViews;
 
-								//}
+								if (vertexGroup.DiffuseMap.has_value())
+								{
+									psResourceViews.push_back(vertexGroup.DiffuseMap.value().GetShaderResourceViewPtr().get());
+								}
 
 								m_device->UseConstantBuffers<ID3D11PixelShader>(0, psConstantBuffers.size(), psConstantBuffers.data());
+								m_device->SetShaderResources<ID3D11PixelShader>(0, psResourceViews.size(), psResourceViews.data());
 								m_device->DrawIndexed(vertexGroup.IndexCount, vertexGroup.StartIndexLocation, 0);
 							}
 						}

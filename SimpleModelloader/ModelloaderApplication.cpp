@@ -28,13 +28,14 @@ dsr::DsrResult ModelloaderApplication::Setup()
 
 	rendering::RenderData uowData(groupedBuffer.Vertexbuffer);
 	uowData.VertexGroups = groupedBuffer.VertexGroups;
-	uowData.Transform.Rotation = DirectX::XMVectorSet(0.0f, 90.0f, 0.0f, 0.0f);
+	uowData.Transform.Rotation = DirectX::XMVectorSet(45.0f, 0.0f, 0.0f, 0.0f);
 
 	rendering::Direct3dRenderUoW uow(std::get<Direct3dShaderProgram>(loadShader));
 	uow.RenderData.push_back(uowData);
 	m_renderer->AddUnitOfWork(uow);
 
-	m_mainCamera->Transform.Position = DirectX::XMVectorSet(0.0f, 1.0f, -3.0f, 1.0f);
+	//m_mainCamera->Transform.Position = DirectX::XMVectorSet(0.0f, 1.0f, -3.0f, 1.0f);
+	m_mainCamera->Transform.Position = DirectX::XMVectorSet(0.0f, 1.0f, -10.0f, 1.0f);
 
 	return dsr::DsrResult::Success("Setup Successful.");
 }
@@ -50,12 +51,19 @@ std::variant<dsr::directX::rendering::GroupedVertexBuffer, dsr::dsr_error> Model
 	using namespace dsr::directX;
 	using namespace dsr::directX::rendering;
 
-	std::variant<GroupedVertexBuffer, dsr_error> loadModelResult = LoadWavefrontModel(
+	/*std::variant<GroupedVertexBuffer, dsr_error> loadModelResult = LoadWavefrontModel(
 		m_device,
 		m_blenderModelLoader,
 		"Assets/",
 		"sorcwithoutStaff.tobj",
-		"Sorceress.mtl");
+		"Sorceress.mtl");*/
+
+	std::variant<GroupedVertexBuffer, dsr_error> loadModelResult = LoadWavefrontModel(
+		m_device,
+		m_blenderModelLoader,
+		"Assets/CubeTest2/",
+		"cubeTest.tobj",
+		"cubeTest.mtl");
 
 	if (std::holds_alternative<dsr_error>(loadModelResult))
 		return std::get<dsr_error>(loadModelResult);

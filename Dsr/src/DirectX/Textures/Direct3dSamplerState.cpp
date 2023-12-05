@@ -10,11 +10,14 @@ namespace dsr
 			D3D11_SAMPLER_DESC desc;
 			ZeroMemory(&desc, sizeof(desc));
 			desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+			//desc.Filter = D3D11_FILTER_ANISOTROPIC;
+
 			desc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
 			desc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
 			desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
 			desc.MipLODBias = 0.0f;
 			desc.MaxAnisotropy = 1;
+			//desc.MaxAnisotropy = 16;
 			desc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
 			desc.BorderColor[0] = 0.0f;
 			desc.BorderColor[1] = 0.0f;

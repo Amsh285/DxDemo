@@ -191,6 +191,11 @@ namespace dsr
 			return resourceViewPtr;
 		}
 
+		void Direct3dDevice::GenerateMips(ID3D11ShaderResourceView* pShaderResourceView)
+		{
+			m_deviceContext->GenerateMips(pShaderResourceView);
+		}
+
 		std::variant<ID3D11SamplerState*, dsr_error> Direct3dDevice::CreateSamplerState(const D3D11_SAMPLER_DESC* pSamplerDesc)
 		{
 			ID3D11SamplerState* samplerStatePtr = nullptr;

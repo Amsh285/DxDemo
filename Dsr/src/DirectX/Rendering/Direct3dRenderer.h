@@ -26,6 +26,9 @@ namespace dsr
 				void SetActiveCamera(const std::shared_ptr<camerasystem::Camera>& camera) { m_activeCamera = camera; }
 
 				DsrResult Initialize();
+
+				void SetDefaultSamplerState();
+
 				Direct3dRenderer(const std::shared_ptr<Direct3dDevice>& device);
 
 				void AddUnitOfWork(const Direct3dRenderUoW& uow);

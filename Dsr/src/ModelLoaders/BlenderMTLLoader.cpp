@@ -219,6 +219,9 @@ namespace dsr
 			}
 		}
 
+		if (!materialName.empty() && materialDataMap.find(materialName) == materialDataMap.end())
+			materialDataMap[materialName] = currentMaterial;
+
 		return materialDataMap;
 	}
 

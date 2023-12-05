@@ -57,6 +57,8 @@ namespace dsr
 		uint32_t rowIndex = 3, startIndexLocation = 0;
 		std::vector<BlenderModelMaterialGroup> materialGroups;
 
+		
+
 		while (std::getline(modelFile, line))
 		{
 			++rowIndex;
@@ -64,7 +66,16 @@ namespace dsr
 
 			if (lineData[0] == "v")
 			{
-				vertexPositions.push_back(DirectX::XMFLOAT3(std::stof(lineData[1]), std::stof(lineData[2]), std::stof(lineData[3])));
+				DirectX::XMFLOAT3 position(std::stof(lineData[1]), std::stof(lineData[2]), std::stof(lineData[3]));
+
+				/*DirectX::XMMATRIX convert_rhs = DirectX::XMMatrixScaling(1.0f, 1.0f, -1.0f);
+				DirectX::XMVECTOR originalPosition = DirectX::XMLoadFloat3(&position);
+				DirectX::XMVECTOR convertedPosition = DirectX::XMVector3Transform(originalPosition, convert_rhs);
+				DirectX::XMFLOAT3 newPosition;
+				DirectX::XMStoreFloat3(&newPosition, convertedPosition);
+
+				vertexPositions.push_back(newPosition);*/
+				vertexPositions.push_back(position);
 			}
 			else if (lineData[0] == "vn")
 			{

@@ -76,14 +76,17 @@ namespace dsr
 					data.DiffuseColor = DirectX::XMFLOAT4(item.MaterialData.DiffuseColor.x, item.MaterialData.DiffuseColor.y, item.MaterialData.DiffuseColor.z, 1.0f);
 					data.EmissiveColor = DirectX::XMFLOAT4(item.MaterialData.EmissiveColor.x, item.MaterialData.EmissiveColor.y, item.MaterialData.EmissiveColor.z, 1.0f);
 					data.SpecularColor = DirectX::XMFLOAT4(item.MaterialData.SpecularColor.x, item.MaterialData.SpecularColor.y, item.MaterialData.SpecularColor.z, 1.0f);
-					data.OpticalDensity =  item.MaterialData.OpticalDensity;
+					data.OpticalDensity = item.MaterialData.OpticalDensity;
 					data.IlluminationModel = item.MaterialData.IlluminationModel;
 
 					if (item.MaterialData.MapDiffuse.empty())
 						group.DiffuseMap = std::nullopt;
 					else
 					{
-						std::variant<Direct3dShaderTexture2D, dsr_error> loadTextureResult = Direct3dShaderTexture2D::LoadSingleRGBA(device, baseDirectory.string() + item.MaterialData.MapDiffuse);
+						std::variant<Direct3dShaderTexture2D, dsr_error> loadTextureResult = Direct3dShaderTexture2D::LoadSingleRGBA(
+							device,
+							baseDirectory.string() + item.MaterialData.MapDiffuse,
+							1, D3D11_RESOURCE_MISC_GENERATE_MIPS);
 
 						if (std::holds_alternative<dsr_error>(loadTextureResult))
 						{
@@ -97,6 +100,8 @@ namespace dsr
 						{
 							data.UseDiffuseMap = 1;
 							group.DiffuseMap = std::get<Direct3dShaderTexture2D>(loadTextureResult);
+
+							device->GenerateMips(group.DiffuseMap.value().GetShaderResourceViewPtr().get());
 						}
 					}
 
