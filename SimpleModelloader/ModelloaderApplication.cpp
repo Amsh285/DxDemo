@@ -28,7 +28,7 @@ dsr::DsrResult ModelloaderApplication::Setup()
 
 	rendering::RenderData uowData(groupedBuffer.Vertexbuffer);
 	uowData.VertexGroups = groupedBuffer.VertexGroups;
-	uowData.Transform.Rotation = DirectX::XMVectorSet(-45.0f, 0.0f, 0.0f, 0.0f);
+	uowData.Transform.Rotation = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
 
 	rendering::Direct3dRenderUoW uow(std::get<Direct3dShaderProgram>(loadShader));
 	uow.RenderData.push_back(uowData);
@@ -61,7 +61,7 @@ std::variant<dsr::directX::rendering::GroupedVertexBuffer, dsr::dsr_error> Model
 	std::variant<GroupedVertexBuffer, dsr_error> loadModelResult = LoadWavefrontModel(
 		m_device,
 		m_blenderModelLoader,
-		"Assets/CubeTest2/",
+		"Assets/CubeTest/",
 		"cubeTest.tobj",
 		"cubeTest.mtl");
 

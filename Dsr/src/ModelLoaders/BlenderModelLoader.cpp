@@ -57,7 +57,20 @@ namespace dsr
 		uint32_t rowIndex = 3, startIndexLocation = 0;
 		std::vector<BlenderModelMaterialGroup> materialGroups;
 
-		
+		//cheers
+		//https://stackoverflow.com/questions/16986017/how-do-i-make-blender-operate-in-left-hand
+		//// Invert every Z coord of v entry:
+		//z = -1.0f * input.z;
+
+		//// Invert every Z coord of vn entry:
+		//nz = -1.0f * input.nz;
+
+		//// Invert every V coord of vt entry:
+		//tv = 1.0f - input.tv;
+
+		//...
+		//// When assembling vertices:
+		//// Revert face order from 0->1->2 to 2->1->0, depending on your implementation.
 
 		while (std::getline(modelFile, line))
 		{
@@ -66,39 +79,22 @@ namespace dsr
 
 			if (lineData[0] == "v")
 			{
-				DirectX::XMFLOAT3 position(std::stof(lineData[1]), std::stof(lineData[2]), std::stof(lineData[3]));
-
-				/*DirectX::XMMATRIX convert_rhs = DirectX::XMMatrixScaling(1.0f, 1.0f, -1.0f);
-				DirectX::XMVECTOR originalPosition = DirectX::XMLoadFloat3(&position);
-				DirectX::XMVECTOR convertedPosition = DirectX::XMVector3Transform(originalPosition, convert_rhs);
-				DirectX::XMFLOAT3 newPosition;
-				DirectX::XMStoreFloat3(&newPosition, convertedPosition);
-
-				vertexPositions.push_back(newPosition);*/
-
-				//look into this
-				//// Invert every Z coord of v entry:
-				//z = -1.0f * input.z;
-
-				//// Invert every Z coord of vn entry:
-				//nz = -1.0f * input.nz;
-
-				//// Invert every V coord of vt entry:
-				//tv = 1.0f - input.tv;
-
-				//...
-				//	// When assembling vertices:
-				//	// Revert face order from 0->1->2 to 2->1->0, depending on your implementation.
-
+				//DirectX::XMFLOAT3 position(std::stof(lineData[1]), std::stof(lineData[2]), std::stof(lineData[3]));
+				DirectX::XMFLOAT3 position(std::stof(lineData[1]), std::stof(lineData[2]), std::stof(lineData[3]) *-1);
 				vertexPositions.push_back(position);
 			}
 			else if (lineData[0] == "vn")
 			{
-				vertexNormals.push_back(DirectX::XMFLOAT3(std::stof(lineData[1]), std::stof(lineData[2]), std::stof(lineData[3])));
+				//DirectX::XMFLOAT3 normal(std::stof(lineData[1]), std::stof(lineData[2]), std::stof(lineData[3]));
+				DirectX::XMFLOAT3 normal(std::stof(lineData[1]), std::stof(lineData[2]), std::stof(lineData[3]) *-1);
+
+				vertexNormals.push_back(normal);
 			}
 			else if (lineData[0] == "vt")
 			{
-				vertexTxCoords.push_back(DirectX::XMFLOAT2(std::stof(lineData[1]), std::stof(lineData[2])));
+				//DirectX::XMFLOAT2  txCoord(std::stof(lineData[1]), std::stof(lineData[2]));
+				DirectX::XMFLOAT2  txCoord(std::stof(lineData[1]), 1.0f - std::stof(lineData[2]));
+				vertexTxCoords.push_back(txCoord);
 			}
 			else if (lineData[0] == "f")
 			{
@@ -116,12 +112,19 @@ namespace dsr
 					FaceVertex vertex3 = { std::stoi(v3[0]) - 1, std::stoi(v3[1]) - 1, std::stoi(v3[2]) - 1 };
 
 					//windingorder: clockwise
-					ApplyVertexToBuffers(vertex0, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);
+					/*ApplyVertexToBuffers(vertex0, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);
 					ApplyVertexToBuffers(vertex1, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);
 					ApplyVertexToBuffers(vertex2, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);
 					ApplyVertexToBuffers(vertex0, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);
 					ApplyVertexToBuffers(vertex2, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);
+					ApplyVertexToBuffers(vertex3, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);*/
+
+					ApplyVertexToBuffers(vertex2, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);
+					ApplyVertexToBuffers(vertex1, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);
+					ApplyVertexToBuffers(vertex0, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);
 					ApplyVertexToBuffers(vertex3, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);
+					ApplyVertexToBuffers(vertex2, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);
+					ApplyVertexToBuffers(vertex0, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);
 				}
 				else if (lineData.size() == 4)
 				{
@@ -134,9 +137,13 @@ namespace dsr
 					FaceVertex vertex1 = { std::stoi(v1[0]) - 1, std::stoi(v1[1]) - 1, std::stoi(v1[2]) - 1 };
 					FaceVertex vertex2 = { std::stoi(v2[0]) - 1, std::stoi(v2[1]) - 1, std::stoi(v2[2]) - 1 };
 
-					ApplyVertexToBuffers(vertex0, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);
+					/*ApplyVertexToBuffers(vertex0, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);
 					ApplyVertexToBuffers(vertex1, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);
+					ApplyVertexToBuffers(vertex2, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);*/
+
 					ApplyVertexToBuffers(vertex2, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);
+					ApplyVertexToBuffers(vertex1, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);
+					ApplyVertexToBuffers(vertex0, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);
 				}
 				else
 				{
