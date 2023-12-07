@@ -94,26 +94,5 @@ namespace dsr
 			const size_t& bRegister,
 			const void* dataPtr,
 			const size_t& dataSize);
-
-		template<class TShader>
-		DsrResult SetShaderConstantBuffer(
-			const std::shared_ptr<Direct3dDevice> device,
-			std::shared_ptr<Direct3dShader<TShader>> target,
-			const size_t& bRegister,
-			const DirectX::XMMATRIX& value)
-		{
-			return SetShaderConstantBuffer(device, target, bRegister, &value, sizeof(DirectX::XMMATRIX));
-		}
-
-		template<class TShader>
-		DsrResult SetShaderConstantBuffer(
-			const std::shared_ptr<Direct3dDevice> device,
-			std::shared_ptr<Direct3dShader<TShader>> target,
-			const size_t& bRegister,
-			const void* dataPtr,
-			const size_t& dataSize)
-		{
-			return SetConstantBuffer(device, target->ConstantBuffers, bRegister, dataPtr, dataSize);
-		}
 	}
 }

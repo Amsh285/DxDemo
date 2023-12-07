@@ -63,8 +63,8 @@ namespace dsr
 						XMMATRIX projectionMatrix = m_activeCamera->GetProjectionMatrix();
 						XMMATRIX viewMatrix = m_activeCamera->GetViewMatrix();
 
-						DsrResult setProjectionMatrixResult = SetShaderConstantBuffer(m_device, iteratorUoW->Shaders.VertexShader, 0, projectionMatrix);
-						DsrResult setViewMatrixResult = SetShaderConstantBuffer(m_device, iteratorUoW->Shaders.VertexShader, 1, viewMatrix);
+						DsrResult setProjectionMatrixResult = SetConstantBuffer(m_device, m_vsConstantBuffers, 0, projectionMatrix);
+						DsrResult setViewMatrixResult = SetConstantBuffer(m_device, m_vsConstantBuffers, 1, viewMatrix);
 					}
 
 					for (auto iteratorRenderData = iteratorUoW->RenderData.begin(); iteratorRenderData < iteratorUoW->RenderData.end(); ++iteratorRenderData)
@@ -90,8 +90,9 @@ namespace dsr
 
 						m_device->UseShader(iteratorUoW->Shaders.VertexShader->GetShaderPtr().get(), nullptr, 0);
 
+						//Todo: simplyfy this stuff. leads to errors to often
 						std::vector<ID3D11Buffer*> vsConstantBuffers;
-						for (auto& pair : iteratorUoW->Shaders.VertexShader->ConstantBuffers)
+						for (auto& pair : m_vsConstantBuffers)
 							vsConstantBuffers.push_back(pair.second.GetBufferPtr().get());
 
 						m_device->UseConstantBuffers<ID3D11VertexShader>(0, vsConstantBuffers.size(), vsConstantBuffers.data());
@@ -110,10 +111,10 @@ namespace dsr
 									m_device->UseShader(vertexGroup.PixelShader->GetShaderPtr().get(), nullptr, 0);
 
 								XMStoreFloat4(&vertexGroup.PSData.CameraPosition, m_activeCamera->Transform.Position);
-								SetShaderConstantBuffer(m_device, iteratorUoW->Shaders.PixelShader, 0, &vertexGroup.PSData, sizeof(PixelShaderData));
+								SetConstantBuffer(m_device, m_psConstantBuffers, 0, &vertexGroup.PSData, sizeof(PixelShaderData));
 
 								std::vector<ID3D11Buffer*> psConstantBuffers;
-								for (auto& pair : iteratorUoW->Shaders.PixelShader->ConstantBuffers)
+								for (auto& pair : m_psConstantBuffers)
 									psConstantBuffers.push_back(pair.second.GetBufferPtr().get());
 								 
 								std::vector<ID3D11ShaderResourceView*> psResourceViews;
@@ -138,7 +139,7 @@ namespace dsr
 				const size_t& bRegister,
 				const dsr::shader::PerObject& data)
 			{
-				return SetShaderConstantBuffer<ID3D11VertexShader>(device, target, bRegister, &data, sizeof(dsr::shader::PerObject));
+				return SetConstantBuffer(device, m_vsConstantBuffers, bRegister, &data, sizeof(dsr::shader::PerObject));
 			}
 		}
 	}
