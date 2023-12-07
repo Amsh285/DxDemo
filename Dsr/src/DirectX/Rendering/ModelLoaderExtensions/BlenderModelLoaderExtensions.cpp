@@ -47,7 +47,7 @@ namespace dsr
 					vertexBuffer.push_back(vertex.Normal.z);
 				}
 
-				std::vector<VertexGroup> vertexGroups = MapModel(device, baseDirectory, model);
+				std::vector<VertexGroup> vertexGroups = MapModel(baseDirectory, model);
 
 				std::variant<Direct3dVertexBufferf, dsr_error> loadVertexData = SetupVertexBufferf(device, vertexBuffer, model.IndexBuffer, inputLayout);
 				if (std::holds_alternative<dsr_error>(loadVertexData))
@@ -57,7 +57,6 @@ namespace dsr
 			}
 
 			std::vector<VertexGroup> MapModel(
-				std::shared_ptr<Direct3dDevice> device,
 				const std::filesystem::path& baseDirectory,
 				const BlenderModel& model)
 			{
@@ -78,34 +77,8 @@ namespace dsr
 					data.SpecularColor = DirectX::XMFLOAT4(item.MaterialData.SpecularColor.x, item.MaterialData.SpecularColor.y, item.MaterialData.SpecularColor.z, 1.0f);
 					data.OpticalDensity = item.MaterialData.OpticalDensity;
 					data.IlluminationModel = item.MaterialData.IlluminationModel;
-
-					if (item.MaterialData.MapDiffuse.empty())
-						group.DiffuseMap = std::nullopt;
-					else
-					{
-						std::variant<Direct3dShaderTexture2D, dsr_error> loadTextureResult = Direct3dShaderTexture2D::LoadSingleRGBA(
-							device,
-							baseDirectory.string() + item.MaterialData.MapDiffuse,
-							1, D3D11_RESOURCE_MISC_GENERATE_MIPS);
-
-						if (std::holds_alternative<dsr_error>(loadTextureResult))
-						{
-							dsr_error& error = std::get<dsr_error>(loadTextureResult);
-
-							//Todo: improve handling
-							std::cout << "error loading Texture: " << item.MaterialData.MapDiffuse << ". " << error.what() << std::endl;
-							group.DiffuseMap = std::nullopt;
-						}
-						else
-						{
-							data.UseDiffuseMap = 1;
-							group.DiffuseMap = std::get<Direct3dShaderTexture2D>(loadTextureResult);
-
-							device->GenerateMips(group.DiffuseMap.value().GetShaderResourceViewPtr().get());
-						}
-					}
-
 					group.PSData = data;
+
 					vertexGroups.push_back(group);
 				}
 

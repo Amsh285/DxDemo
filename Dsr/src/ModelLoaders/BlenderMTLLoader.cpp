@@ -85,15 +85,21 @@ namespace dsr
 				}
 				else if (lineData[0] == "Kd")
 				{
-					if (lineData.size() != 4)
+					if (lineData.size() == 4)
+					{
+						currentMaterial.DiffuseColor = DirectX::XMFLOAT4(std::stof(lineData[1]), std::stof(lineData[2]), std::stof(lineData[3]), 1.0f);
+					}
+					else if (lineData.size() == 5)
+					{
+						currentMaterial.DiffuseColor = DirectX::XMFLOAT4(std::stof(lineData[1]), std::stof(lineData[2]), std::stof(lineData[3]), std::stof(lineData[4]));
+					}
+					else
 					{
 						std::string errorMessage = "Handle DiffuseColor: unexpected number of lineData elements: ";
 						errorMessage += lineData.size();
 						errorMessage += ". RowIndex: " + rowIndex;
 						return dsr_error(errorMessage, ERROR_PARSEMATERIALFILE_INVALID_DIFFUSECOLORFORMAT);
 					}
-
-					currentMaterial.DiffuseColor = DirectX::XMFLOAT3(std::stof(lineData[1]), std::stof(lineData[2]), std::stof(lineData[3]));
 				}
 				else if (lineData[0] == "Ke")
 				{

@@ -106,19 +106,19 @@ namespace dsr
 						{
 							for (auto& vertexGroup : iteratorRenderData->VertexGroups)
 							{
+								if (vertexGroup.PixelShader)
+									m_device->UseShader(vertexGroup.PixelShader->GetShaderPtr().get(), nullptr, 0);
+
 								XMStoreFloat4(&vertexGroup.PSData.CameraPosition, m_activeCamera->Transform.Position);
 								SetConstantBuffer(m_device, iteratorUoW->Shaders.PixelShader, 0, &vertexGroup.PSData, sizeof(PixelShaderData));
 
 								std::vector<ID3D11Buffer*> psConstantBuffers;
 								for (auto& pair : iteratorUoW->Shaders.PixelShader->ConstantBuffers)
 									psConstantBuffers.push_back(pair.second.GetBufferPtr().get());
-
+								 
 								std::vector<ID3D11ShaderResourceView*> psResourceViews;
-
-								if (vertexGroup.DiffuseMap.has_value())
-								{
-									psResourceViews.push_back(vertexGroup.DiffuseMap.value().GetShaderResourceViewPtr().get());
-								}
+								for (const Direct3dShaderTexture2D& texture : vertexGroup.PSTextures2D)
+									psResourceViews.push_back(texture.GetShaderResourceViewPtr().get());
 
 								m_device->UseConstantBuffers<ID3D11PixelShader>(0, psConstantBuffers.size(), psConstantBuffers.data());
 								m_device->SetShaderResources<ID3D11PixelShader>(0, psResourceViews.size(), psResourceViews.data());

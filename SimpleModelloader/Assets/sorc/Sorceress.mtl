@@ -1,0 +1,135 @@
+# Blender 4.0.1 MTL File: 'Sorceress.blend'
+# www.blender.org
+
+newmtl face
+Ns 250.000000
+Ka 0.209091 0.209091 0.209091
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd materials/textures/pc_mg_av_face_01_d.tga
+map_refl materials/textures/pc_mg_av_face_01_s.tga
+map_Bump -bm 0.100000 materials/textures/pc_mg_av_face_01_n.tga
+
+newmtl hair
+Ns 236.549591
+Ka 0.790909 0.790909 0.790909
+Kd 0.061732 0.108228 0.259139
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Bump -bm 1.000000 materials/textures/pc_mg_05_hair_n.tga
+
+newmtl helmet
+Ns 90.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.043735 0.043735 0.043735
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 3
+map_Ks materials/textures/pc_mem_hr_00_helmet1_s.tga
+map_d materials/textures/pc_mem_hr_00_helmet1_d.tga
+map_Bump -bm 1.000000 materials/textures/pc_mem_hr_00_helmet1_n.tga
+
+newmtl lashes
+Ns 39.999996
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 1
+map_Kd materials/textures/pc_mg_eyelashes_d.tga
+map_d materials/textures/pc_mg_eyelashes_d.tga
+
+newmtl lower
+Ns 152.809906
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 3
+map_Ks materials/textures/pc_mem_hr_00_lower_s.tga
+map_d materials/textures/pc_mem_hr_00_lower_d.tga
+map_Bump -bm 1.000000 materials/textures/pc_mem_hr_00_lower_n.tga
+
+newmtl pupill
+Ns 39.999996
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd materials/textures/pc_mg_av_eyeiris_d.tga
+
+newmtl skin_lower
+Ns 250.000000
+Ka 0.031818 0.031818 0.031818
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd materials/textures/pc_mg_av_base_lower_d_loc_int.tga
+map_refl materials/textures/pc_mg_av_base_lower_s_loc_int.tga
+map_Bump -bm 0.300000 materials/textures/pc_mg_av_base_lower_n_loc_int.tga
+
+newmtl skin_upper
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd materials/textures/pc_mg_av_base_upper_d_loc_int.tga
+map_refl materials/textures/pc_mg_av_base_upper_s_loc_int.tga
+map_Bump -bm 1.000000 materials/textures/pc_mg_av_base_upper_n_loc_int.tga
+
+newmtl upper
+Ns 159.999985
+Ka 1.000000 1.000000 1.000000
+Kd 0.025187 0.051269 0.381326 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 1
+map_Ks materials/textures/pc_mem_hr_00_upper_s.tga
+map_d materials/textures/pc_mem_hr_00_upper_d.tga
+map_Bump -bm 1.000000 materials/textures/pc_mem_hr_00_upper_n.tga
+
+newmtl upper1
+Ns 159.999985
+Ka 1.000000 1.000000 1.000000
+Kd 0.025290 0.051334 0.379003 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Ks materials/textures/pc_mem_hr_00_upper1_s.tga
+map_Bump -bm 1.000000 materials/textures/pc_mem_hr_00_upper1_n.tga
+
+newmtl upper2
+Ns 90.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Ks materials/textures/pc_mem_hr_00_upper2_s.tga
+map_Bump -bm 1.000000 materials/textures/pc_mem_hr_00_upper2_n.tga
+
+newmtl wp_wmem_09_mi
+Ns 307.520599
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Ks weapon/materials/textures/wp_wmem_09_s.tga
+map_Bump -bm 1.000000 weapon/materials/textures/wp_wmem_09_n.tga

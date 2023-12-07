@@ -27,7 +27,6 @@ namespace dsr
 				const std::filesystem::path& materialPath);
 
 			std::vector<rendering::VertexGroup> MapModel(
-				std::shared_ptr<Direct3dDevice> device,
 				const std::filesystem::path& baseDirectory,
 				const BlenderModel& model);
 		}

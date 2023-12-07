@@ -27,7 +27,7 @@ namespace dsr
 	{
 		float SpecularExponent; // Ns
 		DirectX::XMFLOAT3 AmbientColor; //Ka
-		DirectX::XMFLOAT3 DiffuseColor; //Kd
+		DirectX::XMFLOAT4 DiffuseColor; //Kd
 		DirectX::XMFLOAT3 EmissiveColor; //Ke
 		DirectX::XMFLOAT3 SpecularColor; // Ks
 		float OpticalDensity; //Ni
