@@ -12,11 +12,6 @@ cbuffer Material : register(b0)
 	float pad0;
 
 	float4 CameraPosition;
-
-	uint UseDiffuseMap;
-	uint UseBumpMap;
-	uint UseAlphaMap;
-	float pad1;
 }
 
 //SamplerState defaultSamplerState : register(s0);

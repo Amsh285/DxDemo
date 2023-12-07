@@ -57,6 +57,23 @@ std::variant<std::map<std::string, dsr::directX::rendering::GroupedVertexBuffer>
 
 	GroupedVertexBuffer sorcModel = std::get<GroupedVertexBuffer>(loadSorcModel);
 	sorcModel.GlobalTransform.Rotation = DirectX::XMVectorSet(0.0f, 90.0f, 0.0f, 0.0f);
+	
+	for (VertexGroup& group : sorcModel.VertexGroups)
+	{
+		if (group.MaterialName == "face")
+		{
+			std::variant<std::shared_ptr<Direct3dShader<ID3D11PixelShader>>, dsr_error> loadPixelShader = LoadShaderFromFile<ID3D11PixelShader>(m_device, L"Assets/sorc/psFace.hlsl", "ps_5_0");
+			if (std::holds_alternative<dsr_error>(loadPixelShader))
+			{
+				const dsr_error& error = std::get<dsr_error>(loadPixelShader);
+				std::cout << "could not load pixelshader: Assets/sorc/psFace.hlsl. Error: " << error.what() << std::endl;
+			}
+			else
+			{
+				group.PixelShader = std::get<std::shared_ptr<Direct3dShader<ID3D11PixelShader>>>(loadPixelShader);
+			}
+		}
+	}
 
 	models[MODELNAMES_SORC] = sorcModel;
 	return models;
