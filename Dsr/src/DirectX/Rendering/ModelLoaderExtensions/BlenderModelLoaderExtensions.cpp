@@ -53,7 +53,7 @@ namespace dsr
 				if (std::holds_alternative<dsr_error>(loadVertexData))
 					return dsr_error::Attach("Error setup vertexbuffer: ", std::get<dsr_error>(loadVertexData));
 
-				return GroupedVertexBuffer{ std::get<Direct3dVertexBufferf>(loadVertexData), vertexGroups };
+				return GroupedVertexBuffer{dsr::data::Transform(), std::get<Direct3dVertexBufferf>(loadVertexData), vertexGroups};
 			}
 
 			std::vector<VertexGroup> MapModel(

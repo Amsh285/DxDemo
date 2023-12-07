@@ -43,6 +43,7 @@ namespace dsr
 				}
 			};
 			
+			//this has to be refactored soon
 			class Direct3dRenderUoW
 			{
 			public:

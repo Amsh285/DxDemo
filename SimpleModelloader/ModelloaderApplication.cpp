@@ -2,6 +2,8 @@
 
 /*TODO: Reset Toolset to latest back again!*/
 
+constexpr auto MODELNAMES_SORC = "sorc";
+
 dsr::DsrResult ModelloaderApplication::Setup()
 {
 	using namespace dsr;
@@ -12,11 +14,13 @@ dsr::DsrResult ModelloaderApplication::Setup()
 	if (baseResult.GetResultStatusCode() != RESULT_SUCCESS)
 		return baseResult;
 
-	std::variant<GroupedVertexBuffer, dsr::dsr_error> loadSorcModel = LoadSorcModel();
-	if (std::holds_alternative<dsr_error>(loadSorcModel))
+	std::variant<std::map<std::string, GroupedVertexBuffer>, dsr::dsr_error> loadContent = LoadContent();
+	if (std::holds_alternative<dsr_error>(loadContent))
 	{
-		const dsr_error& error = std::get<dsr_error>(loadSorcModel);
-		return DsrResult(error.what(), error.GetResult());
+		const dsr_error& error = std::get<dsr_error>(loadContent);
+		std::string errorMessage = "Error loading Content: ";
+		errorMessage += error.what();
+		return DsrResult(errorMessage, error.GetResult());
 	}
 
 	std::variant<Direct3dShaderProgram, dsr_error> loadDefaultShaderProgram = LoadDefaultShaderProgram();
@@ -26,15 +30,7 @@ dsr::DsrResult ModelloaderApplication::Setup()
 		return DsrResult(error.what(), error.GetResult());
 	}
 
-	const GroupedVertexBuffer& groupedBuffer = std::get<GroupedVertexBuffer>(loadSorcModel);
-
-	rendering::RenderData uowData(groupedBuffer.Vertexbuffer);
-	uowData.VertexGroups = groupedBuffer.VertexGroups;
-	uowData.Transform.Rotation = DirectX::XMVectorSet(0.0f, 90.0f, 0.0f, 0.0f);
-
-	rendering::Direct3dRenderUoW uow(std::get<Direct3dShaderProgram>(loadDefaultShaderProgram));
-	uow.RenderData.push_back(uowData);
-	m_renderer->AddUnitOfWork(uow);
+	AddContent(std::get<Direct3dShaderProgram>(loadDefaultShaderProgram), std::get<std::map<std::string, GroupedVertexBuffer>>(loadContent));
 
 	m_mainCamera->Transform.Position = DirectX::XMVectorSet(0.0f, 1.0f, -3.0f, 1.0f);
 	//m_mainCamera->Transform.Position = DirectX::XMVectorSet(0.0f, 1.0f, -10.0f, 1.0f);
@@ -55,6 +51,14 @@ std::variant<std::map<std::string, dsr::directX::rendering::GroupedVertexBuffer>
 
 	std::map<std::string, GroupedVertexBuffer> models;
 
+	std::variant<GroupedVertexBuffer, dsr::dsr_error> loadSorcModel = LoadSorcModel();
+	if (std::holds_alternative<dsr_error>(loadSorcModel))
+		return std::get<dsr_error>(loadSorcModel);
+
+	GroupedVertexBuffer sorcModel = std::get<GroupedVertexBuffer>(loadSorcModel);
+	sorcModel.GlobalTransform.Rotation = DirectX::XMVectorSet(0.0f, 90.0f, 0.0f, 0.0f);
+
+	models[MODELNAMES_SORC] = sorcModel;
 	return models;
 }
 
@@ -65,6 +69,20 @@ void ModelloaderApplication::AddContent(
 	using namespace dsr;
 	using namespace dsr::directX;
 	using namespace dsr::directX::rendering;
+
+	rendering::Direct3dRenderUoW uow(defaultShader);
+
+	for (const auto& item : content)
+	{
+		rendering::RenderData uowData(item.second.Vertexbuffer);
+		uowData.Modelname = item.first;
+		uowData.VertexGroups = item.second.VertexGroups;
+		uowData.Transform = item.second.GlobalTransform;
+
+		uow.RenderData.push_back(uowData);	
+	}
+
+	m_renderer->AddUnitOfWork(uow);
 }
 
 std::variant<dsr::directX::rendering::GroupedVertexBuffer, dsr::dsr_error> ModelloaderApplication::LoadSorcModel()

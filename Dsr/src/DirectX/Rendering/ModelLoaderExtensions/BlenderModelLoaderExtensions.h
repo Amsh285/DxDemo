@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Data/Transform.h"
+
 #include "DirectX/Direct3dDevice.h"
 #include "DirectX/Direct3dDeviceBufferExtensions.h"
 #include "DirectX/Rendering/Direct3dRenderUoW.h"
@@ -15,6 +17,7 @@ namespace dsr
 		{
 			struct GroupedVertexBuffer
 			{
+				dsr::data::Transform GlobalTransform;
 				Direct3dVertexBufferf Vertexbuffer;
 				std::vector<VertexGroup> VertexGroups;
 			};

@@ -14,6 +14,7 @@ namespace dsr
 			Direct3dBuffer GetIndexBuffer() const { return m_indexBuffer; }
 			Direct3dShaderInputLayout GetLayout() const { return m_shaderInputLayout; }
 
+			Direct3dVertexBufferf() = default;
 			Direct3dVertexBufferf(
 				const Direct3dBuffer& vertexBuffer,
 				const Direct3dBuffer& indexBuffer,
