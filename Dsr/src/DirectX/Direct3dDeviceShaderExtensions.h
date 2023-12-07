@@ -82,53 +82,38 @@ namespace dsr
 			const Direct3dShaderInputLayout& vertexShaderInputLayout
 		);
 
-		template<class TShader>
 		DsrResult SetConstantBuffer(
+			const std::shared_ptr<Direct3dDevice> device,
+			std::map<size_t, Direct3dBuffer>& target,
+			const size_t& bRegister,
+			const DirectX::XMMATRIX& value);
+
+		DsrResult SetConstantBuffer(
+			const std::shared_ptr<Direct3dDevice> device,
+			std::map<size_t, Direct3dBuffer>& target,
+			const size_t& bRegister,
+			const void* dataPtr,
+			const size_t& dataSize);
+
+		template<class TShader>
+		DsrResult SetShaderConstantBuffer(
 			const std::shared_ptr<Direct3dDevice> device,
 			std::shared_ptr<Direct3dShader<TShader>> target,
 			const size_t& bRegister,
 			const DirectX::XMMATRIX& value)
 		{
-			return SetConstantBuffer(device, target, bRegister, &value, sizeof(DirectX::XMMATRIX));
+			return SetShaderConstantBuffer(device, target, bRegister, &value, sizeof(DirectX::XMMATRIX));
 		}
 
 		template<class TShader>
-		DsrResult SetConstantBuffer(
+		DsrResult SetShaderConstantBuffer(
 			const std::shared_ptr<Direct3dDevice> device,
 			std::shared_ptr<Direct3dShader<TShader>> target,
 			const size_t& bRegister,
 			const void* dataPtr,
 			const size_t& dataSize)
 		{
-			auto it = target->ConstantBuffers.find(bRegister);
-
-			if (it == target->ConstantBuffers.end())
-			{
-				D3D11_SUBRESOURCE_DATA subResourceData;
-				ZeroMemory(&subResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
-				subResourceData.pSysMem = dataPtr;
-
-				std::variant<Direct3dBuffer, dsr_error> createConstantBufferResult = Direct3dBuffer::CreateConstantBuffer(
-					device,
-					dataSize,
-					0, 0, D3D11_USAGE_DEFAULT,
-					subResourceData);
-
-				if (std::holds_alternative<dsr_error>(createConstantBufferResult))
-				{
-					const dsr_error& error = std::get<dsr_error>(createConstantBufferResult);
-					return DsrResult(error.what(), error.GetResult());
-				}
-
-				target->ConstantBuffers[bRegister] = std::get<Direct3dBuffer>(createConstantBufferResult);
-			}
-			else
-			{
-				std::shared_ptr<ID3D11Buffer> bufferPtr = it->second.GetBufferPtr();
-				device->UpdateSubResource(bufferPtr.get(), 0, nullptr, dataPtr, 0, 0);
-			}
-
-			return DsrResult::Success("Constant buffer setup successful.");
+			return SetConstantBuffer(device, target->ConstantBuffers, bRegister, dataPtr, dataSize);
 		}
 	}
 }

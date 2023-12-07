@@ -1,5 +1,7 @@
 #include "ModelloaderApplication.h"
 
+/*TODO: Reset Toolset to latest back again!*/
+
 dsr::DsrResult ModelloaderApplication::Setup()
 {
 	using namespace dsr;

@@ -63,8 +63,8 @@ namespace dsr
 						XMMATRIX projectionMatrix = m_activeCamera->GetProjectionMatrix();
 						XMMATRIX viewMatrix = m_activeCamera->GetViewMatrix();
 
-						DsrResult setProjectionMatrixResult = SetConstantBuffer(m_device, iteratorUoW->Shaders.VertexShader, 0, projectionMatrix);
-						DsrResult setViewMatrixResult = SetConstantBuffer(m_device, iteratorUoW->Shaders.VertexShader, 1, viewMatrix);
+						DsrResult setProjectionMatrixResult = SetShaderConstantBuffer(m_device, iteratorUoW->Shaders.VertexShader, 0, projectionMatrix);
+						DsrResult setViewMatrixResult = SetShaderConstantBuffer(m_device, iteratorUoW->Shaders.VertexShader, 1, viewMatrix);
 					}
 
 					for (auto iteratorRenderData = iteratorUoW->RenderData.begin(); iteratorRenderData < iteratorUoW->RenderData.end(); ++iteratorRenderData)
@@ -110,7 +110,7 @@ namespace dsr
 									m_device->UseShader(vertexGroup.PixelShader->GetShaderPtr().get(), nullptr, 0);
 
 								XMStoreFloat4(&vertexGroup.PSData.CameraPosition, m_activeCamera->Transform.Position);
-								SetConstantBuffer(m_device, iteratorUoW->Shaders.PixelShader, 0, &vertexGroup.PSData, sizeof(PixelShaderData));
+								SetShaderConstantBuffer(m_device, iteratorUoW->Shaders.PixelShader, 0, &vertexGroup.PSData, sizeof(PixelShaderData));
 
 								std::vector<ID3D11Buffer*> psConstantBuffers;
 								for (auto& pair : iteratorUoW->Shaders.PixelShader->ConstantBuffers)
@@ -138,7 +138,7 @@ namespace dsr
 				const size_t& bRegister,
 				const dsr::shader::PerObject& data)
 			{
-				return SetConstantBuffer<ID3D11VertexShader>(device, target, bRegister, &data, sizeof(dsr::shader::PerObject));
+				return SetShaderConstantBuffer<ID3D11VertexShader>(device, target, bRegister, &data, sizeof(dsr::shader::PerObject));
 			}
 		}
 	}

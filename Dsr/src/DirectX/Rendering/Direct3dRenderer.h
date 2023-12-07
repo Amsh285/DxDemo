@@ -31,6 +31,10 @@ namespace dsr
 
 				Direct3dRenderer(const std::shared_ptr<Direct3dDevice>& device);
 
+				//prohibit copies in order to prevent out of date buffers.
+				Direct3dRenderer(const Direct3dRenderer& other) = delete;
+				Direct3dRenderer& operator=(const Direct3dRenderer& other) = delete;
+
 				void AddUnitOfWork(const Direct3dRenderUoW& uow);
 				void OnUpdate(const dsr::events::UpdateFrameEvent& updateEvent);
 			private:
@@ -46,6 +50,9 @@ namespace dsr
 				std::vector<Direct3dRenderUoW> m_units;
 
 				std::shared_ptr<camerasystem::Camera> m_activeCamera;
+
+				std::map<size_t, Direct3dBuffer> m_vsConstantBuffers;
+				std::map<size_t, Direct3dBuffer> m_psConstantBuffers;
 			};
 		}
 	}
