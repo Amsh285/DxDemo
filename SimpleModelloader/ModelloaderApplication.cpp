@@ -60,19 +60,48 @@ std::variant<std::map<std::string, dsr::directX::rendering::GroupedVertexBuffer>
 	
 	for (VertexGroup& group : sorcModel.VertexGroups)
 	{
-		if (group.MaterialName == "face")
+		/*if (group.MaterialName == "face")
 		{
 			std::variant<std::shared_ptr<Direct3dShader<ID3D11PixelShader>>, dsr_error> loadPixelShader = LoadShaderFromFile<ID3D11PixelShader>(m_device, L"Assets/sorc/psFace.hlsl", "ps_5_0");
 			if (std::holds_alternative<dsr_error>(loadPixelShader))
 			{
 				const dsr_error& error = std::get<dsr_error>(loadPixelShader);
-				std::cout << "could not load pixelshader: Assets/sorc/psFace.hlsl. Error: " << error.what() << std::endl;
+				std::cout << "face: could not load pixelshader: Assets/sorc/psFace.hlsl. Error: " << error.what() << std::endl;
 			}
 			else
 			{
 				group.PixelShader = std::get<std::shared_ptr<Direct3dShader<ID3D11PixelShader>>>(loadPixelShader);
+
+				std::variant<Direct3dShaderTexture2D, dsr_error> loadfaceDiffuseMap = Direct3dShaderTexture2D::LoadSingleRGBA(m_device, "Assets/sorc/materials/textures/pc_mg_av_face_01_d.tga", 1, D3D11_RESOURCE_MISC_GENERATE_MIPS);
+				std::variant<Direct3dShaderTexture2D, dsr_error> loadNormalMap = Direct3dShaderTexture2D::LoadSingleRGBA(m_device, "Assets/sorc/materials/textures/pc_mg_av_face_01_n.tga");
+				
+				bool hasDiffuseMapError = std::holds_alternative<dsr_error>(loadfaceDiffuseMap);
+				bool hasNormalMapError = std::holds_alternative<dsr_error>(loadNormalMap);
+				
+				if (hasDiffuseMapError)
+				{
+					const dsr_error& error = std::get<dsr_error>(loadfaceDiffuseMap);
+					std::cout << "face: could not load diffusemap: " << error.what() << std::endl;
+				}
+
+				if (hasNormalMapError)
+				{
+					const dsr_error& error = std::get<dsr_error>(loadNormalMap);
+					std::cout << "face: could not load normalmap: " << error.what() << std::endl;
+				}
+
+				if (!hasDiffuseMapError && !hasNormalMapError)
+				{
+					Direct3dShaderTexture2D diffuseMap = std::get<Direct3dShaderTexture2D>(loadfaceDiffuseMap);
+					m_device->GenerateMips(diffuseMap.GetShaderResourceViewPtr().get());
+
+					Direct3dShaderTexture2D normalMap = std::get<Direct3dShaderTexture2D>(loadNormalMap);
+					
+					group.PSTextures2D.push_back(diffuseMap);
+					group.PSTextures2D.push_back(normalMap);
+				}
 			}
-		}
+		}*/
 	}
 
 	models[MODELNAMES_SORC] = sorcModel;

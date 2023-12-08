@@ -19,6 +19,8 @@ cbuffer Material : register(b0)
 
 struct PixelShaderInput
 {
+	matrix normalMatrix : MATNORM;
+
 	float4 fragPosition : FRAGPOS;
 	float3 normal : NORMAL;
 	float4 color : COLOR;
@@ -45,22 +47,5 @@ float4 main(PixelShaderInput IN) : SV_TARGET
 	float4 specularColor = saturate(float4(lightSpecular.xyz * (spec * Ks.xyz), 0.0f));
 
 	return ambientColor + diffuseColor + specularColor;
-
-	//if (UseDiffuseMap == 1)
-	//{
-	//	float4 diffuseMapColor = diffuseMap.Sample(defaultSamplerState, IN.texCoord);
-	//	return diffuseMapColor;
-	//}
-	//else
-	//{
-	//	// Phong Shading
-	//	float4 viewDir = float4(normalize(CameraPosition.xyz - IN.fragPosition.xyz), 0.0f);
-	//	float4 reflectDir = float4(reflect(-lightPosition.xyz, norm.xyz), 0.0f);
-	//	float spec = pow(max(dot(viewDir, reflectDir), 0.0), SpecularExponent);
-	//	float4 specularColor = saturate(float4(lightSpecular.xyz * (spec * Ks.xyz), 0.0f));
-	//	//float4 specularColor = saturate(float4(lightSpecular.xyz * (spec * materialSpecular.xyz), 0.0f));
-
-	//	return ambientColor + diffuseColor + specularColor;
-	//}
 }
 

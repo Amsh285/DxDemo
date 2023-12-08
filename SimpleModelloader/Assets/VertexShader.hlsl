@@ -24,6 +24,8 @@ struct AppData
 
 struct VertexShaderOutput
 {
+    matrix normalMatrix : MATNORM;
+
     float4 fragPosition : FRAGPOS;
     float3 normal : NORMAL;
     float4 color : COLOR;
@@ -37,6 +39,7 @@ VertexShaderOutput main(AppData IN)
  
     matrix mvp = mul(projectionMatrix, mul(viewMatrix, worldMatrix));
 
+    output.normalMatrix = normalMatrix;
     output.fragPosition = mul(worldMatrix, float4(IN.position, 1.0f));
     output.normal = mul(normalMatrix, IN.normal);
     //output.normal = IN.normal;
