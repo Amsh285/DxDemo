@@ -69,4 +69,17 @@ float4 main(PixelShaderInput IN) : SV_TARGET
 	float4 specularColor = saturate(float4(lightSpecular.xyz * (spec * Ks.xyz), 0.0f));
 	
 	return ambientColor + diffuseColor + specularColor;*/
+
+
+
+	// lets try that
+	// ... (existing code)
+
+	float metallicFactor = Metallic; // Get the metallic factor from the material properties
+
+	// Calculate the mix between diffuse and specular based on the metallic factor
+	float3 finalColor = lerp(diffuseColor.rgb, lightSpecular.rgb, metallicFactor);
+
+	// Return the final color with ambient contribution
+	return ambientColor + float4(finalColor, 1.0f);
 }
