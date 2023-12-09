@@ -23,6 +23,8 @@ namespace dsr
 			std::shared_ptr<ID3D11Texture2D> GetTexturePtr() const { return m_texture; }
 			std::shared_ptr<ID3D11ShaderResourceView> GetShaderResourceViewPtr() const { return m_shaderResourceView; }
 
+
+			Direct3dShaderTexture2D() = default;
 			Direct3dShaderTexture2D(
 				const std::shared_ptr<ID3D11Texture2D>& texture,
 				const std::shared_ptr<ID3D11ShaderResourceView>& shaderResourceView);

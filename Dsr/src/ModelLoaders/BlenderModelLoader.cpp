@@ -80,13 +80,13 @@ namespace dsr
 			if (lineData[0] == "v")
 			{
 				//DirectX::XMFLOAT3 position(std::stof(lineData[1]), std::stof(lineData[2]), std::stof(lineData[3]));
-				DirectX::XMFLOAT3 position(std::stof(lineData[1]), std::stof(lineData[2]), std::stof(lineData[3]) *-1);
+				DirectX::XMFLOAT3 position(std::stof(lineData[1]), std::stof(lineData[2]), std::stof(lineData[3]) *-1.0f);
 				vertexPositions.push_back(position);
 			}
 			else if (lineData[0] == "vn")
 			{
 				//DirectX::XMFLOAT3 normal(std::stof(lineData[1]), std::stof(lineData[2]), std::stof(lineData[3]));
-				DirectX::XMFLOAT3 normal(std::stof(lineData[1]), std::stof(lineData[2]), std::stof(lineData[3]) *-1);
+				DirectX::XMFLOAT3 normal(std::stof(lineData[1]), std::stof(lineData[2]), std::stof(lineData[3]) *-1.0f);
 
 				vertexNormals.push_back(normal);
 			}

@@ -101,6 +101,8 @@ namespace dsr
 							{
 								if (vertexGroup.PixelShader)
 									m_device->UseShader(vertexGroup.PixelShader->GetShaderPtr().get(), nullptr, 0);
+								else
+									m_device->UseShader(iteratorUoW->Shaders.PixelShader->GetShaderPtr().get(), nullptr, 0);
 
 								XMStoreFloat4(&vertexGroup.PSData.CameraPosition, m_activeCamera->Transform.Position);
 								SetConstantBuffer(m_device, m_psConstantBuffers, 0, &vertexGroup.PSData, sizeof(PixelShaderData));

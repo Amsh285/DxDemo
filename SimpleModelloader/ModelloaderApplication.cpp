@@ -57,10 +57,10 @@ std::variant<std::map<std::string, dsr::directX::rendering::GroupedVertexBuffer>
 
 	GroupedVertexBuffer sorcModel = std::get<GroupedVertexBuffer>(loadSorcModel);
 	sorcModel.GlobalTransform.Rotation = DirectX::XMVectorSet(0.0f, 90.0f, 0.0f, 0.0f);
-	
+
 	for (VertexGroup& group : sorcModel.VertexGroups)
 	{
-		/*if (group.MaterialName == "face")
+		if (group.MaterialName == "face")
 		{
 			std::variant<std::shared_ptr<Direct3dShader<ID3D11PixelShader>>, dsr_error> loadPixelShader = LoadShaderFromFile<ID3D11PixelShader>(m_device, L"Assets/sorc/psFace.hlsl", "ps_5_0");
 			if (std::holds_alternative<dsr_error>(loadPixelShader))
@@ -74,10 +74,10 @@ std::variant<std::map<std::string, dsr::directX::rendering::GroupedVertexBuffer>
 
 				std::variant<Direct3dShaderTexture2D, dsr_error> loadfaceDiffuseMap = Direct3dShaderTexture2D::LoadSingleRGBA(m_device, "Assets/sorc/materials/textures/pc_mg_av_face_01_d.tga", 1, D3D11_RESOURCE_MISC_GENERATE_MIPS);
 				std::variant<Direct3dShaderTexture2D, dsr_error> loadNormalMap = Direct3dShaderTexture2D::LoadSingleRGBA(m_device, "Assets/sorc/materials/textures/pc_mg_av_face_01_n.tga");
-				
+
 				bool hasDiffuseMapError = std::holds_alternative<dsr_error>(loadfaceDiffuseMap);
 				bool hasNormalMapError = std::holds_alternative<dsr_error>(loadNormalMap);
-				
+
 				if (hasDiffuseMapError)
 				{
 					const dsr_error& error = std::get<dsr_error>(loadfaceDiffuseMap);
@@ -96,12 +96,40 @@ std::variant<std::map<std::string, dsr::directX::rendering::GroupedVertexBuffer>
 					m_device->GenerateMips(diffuseMap.GetShaderResourceViewPtr().get());
 
 					Direct3dShaderTexture2D normalMap = std::get<Direct3dShaderTexture2D>(loadNormalMap);
-					
+
 					group.PSTextures2D.push_back(diffuseMap);
 					group.PSTextures2D.push_back(normalMap);
 				}
 			}
-		}*/
+		}
+		else if (group.MaterialName == "upper")
+		{
+			std::variant<std::shared_ptr<Direct3dShader<ID3D11PixelShader>>, dsr_error> loadPixelShader = LoadShaderFromFile<ID3D11PixelShader>(m_device, L"Assets/sorc/psUpper.hlsl", "ps_5_0");
+			if (std::holds_alternative<dsr_error>(loadPixelShader))
+			{
+				const dsr_error& error = std::get<dsr_error>(loadPixelShader);
+				std::cout << "upper: could not load pixelshader: Assets/sorc/psUpper.hlsl. Error: " << error.what() << std::endl;
+			}
+			else
+			{
+				std::optional<Direct3dShaderTexture2D> diffuseMap = LoadTexture("Assets/sorc/materials/textures/pc_mem_hr_00_upper_d.tga", "upper", D3D11_RESOURCE_MISC_GENERATE_MIPS);
+				std::optional<Direct3dShaderTexture2D> normalMap = LoadTexture("Assets/sorc/materials/textures/pc_mem_hr_00_upper_n.tga", "upper");
+				std::optional<Direct3dShaderTexture2D> specularMap = LoadTexture("Assets/sorc/materials/textures/pc_mem_hr_00_upper_s.tga", "upper");
+				std::optional<Direct3dShaderTexture2D> emissionMap = LoadTexture("Assets/sorc/materials/textures/pc_mem_hr_00_upper_e.tga", "upper");
+				std::optional<Direct3dShaderTexture2D> interpolationMap = LoadTexture("Assets/sorc/materials/textures/pc_mem_hr_00_upper_cm.tga", "upper");
+
+				if (diffuseMap.has_value() && normalMap.has_value() && specularMap.has_value() && interpolationMap.has_value() && emissionMap.has_value())
+				{
+					m_device->GenerateMips(diffuseMap.value().GetShaderResourceViewPtr().get());
+					group.PSTextures2D.push_back(diffuseMap.value());
+					group.PSTextures2D.push_back(normalMap.value());
+					group.PSTextures2D.push_back(specularMap.value());
+					group.PSTextures2D.push_back(emissionMap.value());
+					group.PSTextures2D.push_back(interpolationMap.value());
+					group.PixelShader = std::get<std::shared_ptr<Direct3dShader<ID3D11PixelShader>>>(loadPixelShader);
+				}
+			}
+		}
 	}
 
 	models[MODELNAMES_SORC] = sorcModel;
@@ -125,7 +153,7 @@ void ModelloaderApplication::AddContent(
 		uowData.VertexGroups = item.second.VertexGroups;
 		uowData.Transform = item.second.GlobalTransform;
 
-		uow.RenderData.push_back(uowData);	
+		uow.RenderData.push_back(uowData);
 	}
 
 	m_renderer->AddUnitOfWork(uow);
@@ -195,4 +223,22 @@ std::variant<dsr::directX::Direct3dShaderProgram, dsr::dsr_error> ModelloaderApp
 	}
 
 	return std::get<Direct3dShaderProgram>(loadShaderProgram);
+}
+
+std::optional<dsr::directX::Direct3dShaderTexture2D> ModelloaderApplication::LoadTexture(const std::filesystem::path& fileName, const std::string& group, const uint32_t& miscFlags)
+{
+	using namespace dsr;
+	using namespace dsr::directX;
+	using namespace dsr::directX::rendering;
+
+	std::variant<Direct3dShaderTexture2D, dsr_error> loadTextureResult = Direct3dShaderTexture2D::LoadSingleRGBA(m_device, fileName, 1, miscFlags);
+
+	if (std::holds_alternative<dsr_error>(loadTextureResult))
+	{
+		const dsr_error& error = std::get<dsr_error>(loadTextureResult);
+		std::cout << group << ": could not load texture: " << fileName << ". Error: " << error.what() << std::endl;
+		return std::nullopt;
+	}
+
+	return std::get<Direct3dShaderTexture2D>(loadTextureResult);
 }

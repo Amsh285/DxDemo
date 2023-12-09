@@ -19,4 +19,6 @@ private:
 
 	std::variant<dsr::directX::rendering::GroupedVertexBuffer, dsr::dsr_error> LoadSorcModel();
 	std::variant<dsr::directX::Direct3dShaderProgram, dsr::dsr_error> LoadDefaultShaderProgram();
+
+	std::optional<dsr::directX::Direct3dShaderTexture2D> LoadTexture(const std::filesystem::path& fileName, const std::string& group = "", const uint32_t& miscFlags = 0);
 };
