@@ -36,18 +36,15 @@ float4 main(PixelShaderInput IN) : SV_TARGET
 	float4 lightDiffuse = float4(0.8f, 0.8f, 0.8f, 1.0f);
 	float4 lightSpecular = float4(1.0f, 1.0f, 1.0f, 1.0f);
 	float4 lightPosition = CameraPosition;
-	/*float4 lightPosition = float4(0.0f, 0.0f, -5.0f, 1.0f);*/
-	//float4 lightPosition = float4(0.0f, 0.0f, -10.0f, 1.0f);
-
 
 	float4 ambientColor = Ka * lightAmbient;
 
 	float4 interpolationMapSample = interpolationMap.Sample(defaultSamplerState, IN.texCoord);
 	float4 diffuseMapColor = diffuseMap.Sample(defaultSamplerState, IN.texCoord);
 
-	float4 mix1 = lerp(diffuseMapColor, float4(0.054480, 0.054480, 0.054480, 1.000000), interpolationMapSample.r);
-	float4 mix2 = lerp(mix1, float4(0.025187, 0.051269, 0.381326, 1.000000), interpolationMapSample.g);
-	float4 finalDiffuse = lerp(mix2, float4(0.054480, 0.054480, 0.054480, 1.000000), interpolationMapSample.b);
+	// configure color areas
+	float4 mix1 = lerp(diffuseMapColor, float4(0.043735, 0.043735, 0.043735, 1.000000), interpolationMapSample.r);
+	float4 finalDiffuse = lerp(mix1, float4(0.043735, 0.043735, 0.043735, 1.000000), interpolationMapSample.b);
 
 	// pertub normalvector
 	float3 normalMapSample = normalMap.Sample(defaultSamplerState, IN.texCoord).xyz;
@@ -70,8 +67,7 @@ float4 main(PixelShaderInput IN) : SV_TARGET
 	float fresnel = pow(1.0 - cosTheta, 2); // Adjust the power value as needed
 
 	// Adjust the strength of the specular reflection
-	//float specularStrength = 0.1f; // Adjust the strength as needed
-	float specularStrength = 0.05f; // Adjust the strength as needed
+	float specularStrength = 0.1f;
 
 	// Blend between reflection and refraction based on Fresnel term
 	float3 specularColor = lerp(
@@ -81,5 +77,4 @@ float4 main(PixelShaderInput IN) : SV_TARGET
 	);
 
 	return ambientColor + diffuseColor + float4(specularColor, 1.0f) * specularStrength;
-	/*return ambientColor + diffuseColor + float4(specularColor, 1.0f);*/
 }

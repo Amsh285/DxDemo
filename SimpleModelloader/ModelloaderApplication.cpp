@@ -62,11 +62,11 @@ std::variant<std::map<std::string, dsr::directX::rendering::GroupedVertexBuffer>
 	{
 		if (group.MaterialName == "face")
 		{
-			std::variant<std::shared_ptr<Direct3dShader<ID3D11PixelShader>>, dsr_error> loadPixelShader = LoadShaderFromFile<ID3D11PixelShader>(m_device, L"Assets/sorc/psFace.hlsl", "ps_5_0");
+			std::variant<std::shared_ptr<Direct3dShader<ID3D11PixelShader>>, dsr_error> loadPixelShader = LoadShaderFromFile<ID3D11PixelShader>(m_device, L"Assets/sorc/shaders/psFace.hlsl", "ps_5_0");
 			if (std::holds_alternative<dsr_error>(loadPixelShader))
 			{
 				const dsr_error& error = std::get<dsr_error>(loadPixelShader);
-				std::cout << "face: could not load pixelshader: Assets/sorc/psFace.hlsl. Error: " << error.what() << std::endl;
+				std::cout << "face: could not load pixelshader: Assets/sorc/shaders/psFace.hlsl. Error: " << error.what() << std::endl;
 			}
 			else
 			{
@@ -104,19 +104,103 @@ std::variant<std::map<std::string, dsr::directX::rendering::GroupedVertexBuffer>
 		}
 		else if (group.MaterialName == "upper")
 		{
-			std::variant<std::shared_ptr<Direct3dShader<ID3D11PixelShader>>, dsr_error> loadPixelShader = LoadShaderFromFile<ID3D11PixelShader>(m_device, L"Assets/sorc/psUpper.hlsl", "ps_5_0");
+			std::variant<std::shared_ptr<Direct3dShader<ID3D11PixelShader>>, dsr_error> loadPixelShader = LoadShaderFromFile<ID3D11PixelShader>(m_device, L"Assets/sorc/shaders/psUpper.hlsl", "ps_5_0");
 			if (std::holds_alternative<dsr_error>(loadPixelShader))
 			{
 				const dsr_error& error = std::get<dsr_error>(loadPixelShader);
-				std::cout << "upper: could not load pixelshader: Assets/sorc/psUpper.hlsl. Error: " << error.what() << std::endl;
+				std::cout << "upper: could not load pixelshader: Assets/sorc/shaders/psUpper.hlsl. Error: " << error.what() << std::endl;
 			}
 			else
 			{
-				std::optional<Direct3dShaderTexture2D> diffuseMap = LoadTexture("Assets/sorc/materials/textures/pc_mem_hr_00_upper_d.tga", "upper", D3D11_RESOURCE_MISC_GENERATE_MIPS);
-				std::optional<Direct3dShaderTexture2D> normalMap = LoadTexture("Assets/sorc/materials/textures/pc_mem_hr_00_upper_n.tga", "upper");
-				std::optional<Direct3dShaderTexture2D> specularMap = LoadTexture("Assets/sorc/materials/textures/pc_mem_hr_00_upper_s.tga", "upper");
-				std::optional<Direct3dShaderTexture2D> emissionMap = LoadTexture("Assets/sorc/materials/textures/pc_mem_hr_00_upper_e.tga", "upper");
-				std::optional<Direct3dShaderTexture2D> interpolationMap = LoadTexture("Assets/sorc/materials/textures/pc_mem_hr_00_upper_cm.tga", "upper");
+				std::optional<Direct3dShaderTexture2D> diffuseMap = LoadTexture("Assets/sorc/materials/textures/pc_mem_hr_00_upper_d.tga", group.MaterialName, D3D11_RESOURCE_MISC_GENERATE_MIPS);
+				std::optional<Direct3dShaderTexture2D> normalMap = LoadTexture("Assets/sorc/materials/textures/pc_mem_hr_00_upper_n.tga", group.MaterialName);
+				std::optional<Direct3dShaderTexture2D> specularMap = LoadTexture("Assets/sorc/materials/textures/pc_mem_hr_00_upper_s.tga", group.MaterialName);
+				std::optional<Direct3dShaderTexture2D> emissionMap = LoadTexture("Assets/sorc/materials/textures/pc_mem_hr_00_upper_e.tga", group.MaterialName);
+				std::optional<Direct3dShaderTexture2D> interpolationMap = LoadTexture("Assets/sorc/materials/textures/pc_mem_hr_00_upper_cm.tga", group.MaterialName);
+
+				if (diffuseMap.has_value() && normalMap.has_value() && specularMap.has_value() && interpolationMap.has_value() && emissionMap.has_value())
+				{
+					m_device->GenerateMips(diffuseMap.value().GetShaderResourceViewPtr().get());
+					group.PSTextures2D.push_back(diffuseMap.value());
+					group.PSTextures2D.push_back(normalMap.value());
+					group.PSTextures2D.push_back(specularMap.value());
+					group.PSTextures2D.push_back(emissionMap.value());
+					group.PSTextures2D.push_back(interpolationMap.value());
+					group.PixelShader = std::get<std::shared_ptr<Direct3dShader<ID3D11PixelShader>>>(loadPixelShader);
+				}
+			}
+		}
+		else if (group.MaterialName == "upper1")
+		{
+			std::variant<std::shared_ptr<Direct3dShader<ID3D11PixelShader>>, dsr_error> loadPixelShader = LoadShaderFromFile<ID3D11PixelShader>(m_device, L"Assets/sorc/shaders/psUpper1.hlsl", "ps_5_0");
+			if (std::holds_alternative<dsr_error>(loadPixelShader))
+			{
+				const dsr_error& error = std::get<dsr_error>(loadPixelShader);
+				std::cout << "upper: could not load pixelshader: Assets/sorc/shaders/psUpper1.hlsl. Error: " << error.what() << std::endl;
+			}
+			else
+			{
+				std::optional<Direct3dShaderTexture2D> diffuseMap = LoadTexture("Assets/sorc/materials/textures/pc_mem_hr_00_upper1_d.tga", group.MaterialName, D3D11_RESOURCE_MISC_GENERATE_MIPS);
+				std::optional<Direct3dShaderTexture2D> normalMap = LoadTexture("Assets/sorc/materials/textures/pc_mem_hr_00_upper1_n.tga", group.MaterialName);
+				std::optional<Direct3dShaderTexture2D> specularMap = LoadTexture("Assets/sorc/materials/textures/pc_mem_hr_00_upper1_s.tga", group.MaterialName);
+				std::optional<Direct3dShaderTexture2D> emissionMap = LoadTexture("Assets/sorc/materials/textures/pc_mem_hr_00_upper1_e.tga", group.MaterialName);
+				std::optional<Direct3dShaderTexture2D> interpolationMap = LoadTexture("Assets/sorc/materials/textures/pc_mem_hr_00_upper1_cm.tga", group.MaterialName);
+
+				if (diffuseMap.has_value() && normalMap.has_value() && specularMap.has_value() && interpolationMap.has_value() && emissionMap.has_value())
+				{
+					m_device->GenerateMips(diffuseMap.value().GetShaderResourceViewPtr().get());
+					group.PSTextures2D.push_back(diffuseMap.value());
+					group.PSTextures2D.push_back(normalMap.value());
+					group.PSTextures2D.push_back(specularMap.value());
+					group.PSTextures2D.push_back(emissionMap.value());
+					group.PSTextures2D.push_back(interpolationMap.value());
+					group.PixelShader = std::get<std::shared_ptr<Direct3dShader<ID3D11PixelShader>>>(loadPixelShader);
+				}
+			}
+		}
+		else if (group.MaterialName == "upper2")
+		{
+			std::variant<std::shared_ptr<Direct3dShader<ID3D11PixelShader>>, dsr_error> loadPixelShader = LoadShaderFromFile<ID3D11PixelShader>(m_device, L"Assets/sorc/shaders/psUpper2.hlsl", "ps_5_0");
+			if (std::holds_alternative<dsr_error>(loadPixelShader))
+			{
+				const dsr_error& error = std::get<dsr_error>(loadPixelShader);
+				std::cout << "upper: could not load pixelshader: Assets/sorc/shaders/psUpper2.hlsl. Error: " << error.what() << std::endl;
+			}
+			else
+			{
+				std::optional<Direct3dShaderTexture2D> diffuseMap = LoadTexture("Assets/sorc/materials/textures/pc_mem_hr_00_upper2_d.tga", group.MaterialName, D3D11_RESOURCE_MISC_GENERATE_MIPS);
+				std::optional<Direct3dShaderTexture2D> normalMap = LoadTexture("Assets/sorc/materials/textures/pc_mem_hr_00_upper2_n.tga", group.MaterialName);
+				std::optional<Direct3dShaderTexture2D> specularMap = LoadTexture("Assets/sorc/materials/textures/pc_mem_hr_00_upper2_s.tga", group.MaterialName);
+				std::optional<Direct3dShaderTexture2D> emissionMap = LoadTexture("Assets/sorc/materials/textures/pc_mem_hr_00_upper2_e.tga", group.MaterialName);
+				std::optional<Direct3dShaderTexture2D> interpolationMap = LoadTexture("Assets/sorc/materials/textures/pc_mem_hr_00_upper2_cm.tga", group.MaterialName);
+
+				if (diffuseMap.has_value() && normalMap.has_value() && specularMap.has_value() && interpolationMap.has_value() && emissionMap.has_value())
+				{
+					m_device->GenerateMips(diffuseMap.value().GetShaderResourceViewPtr().get());
+					group.PSTextures2D.push_back(diffuseMap.value());
+					group.PSTextures2D.push_back(normalMap.value());
+					group.PSTextures2D.push_back(specularMap.value());
+					group.PSTextures2D.push_back(emissionMap.value());
+					group.PSTextures2D.push_back(interpolationMap.value());
+					group.PixelShader = std::get<std::shared_ptr<Direct3dShader<ID3D11PixelShader>>>(loadPixelShader);
+				}
+			}
+		}
+		else if (group.MaterialName == "lower")
+		{
+			std::variant<std::shared_ptr<Direct3dShader<ID3D11PixelShader>>, dsr_error> loadPixelShader = LoadShaderFromFile<ID3D11PixelShader>(m_device, L"Assets/sorc/shaders/psLower.hlsl", "ps_5_0");
+			if (std::holds_alternative<dsr_error>(loadPixelShader))
+			{
+				const dsr_error& error = std::get<dsr_error>(loadPixelShader);
+				std::cout << "upper: could not load pixelshader: Assets/sorc/shaders/psLower.hlsl. Error: " << error.what() << std::endl;
+			}
+			else
+			{
+				std::optional<Direct3dShaderTexture2D> diffuseMap = LoadTexture("Assets/sorc/materials/textures/pc_mem_hr_00_lower_d.tga", group.MaterialName, D3D11_RESOURCE_MISC_GENERATE_MIPS);
+				std::optional<Direct3dShaderTexture2D> normalMap = LoadTexture("Assets/sorc/materials/textures/pc_mem_hr_00_lower_n.tga", group.MaterialName);
+				std::optional<Direct3dShaderTexture2D> specularMap = LoadTexture("Assets/sorc/materials/textures/pc_mem_hr_00_lower_s.tga", group.MaterialName);
+				std::optional<Direct3dShaderTexture2D> emissionMap = LoadTexture("Assets/sorc/materials/textures/pc_mem_hr_00_lower_e.tga", group.MaterialName);
+				std::optional<Direct3dShaderTexture2D> interpolationMap = LoadTexture("Assets/sorc/materials/textures/pc_mem_hr_00_lower_cm.tga", group.MaterialName);
 
 				if (diffuseMap.has_value() && normalMap.has_value() && specularMap.has_value() && interpolationMap.has_value() && emissionMap.has_value())
 				{

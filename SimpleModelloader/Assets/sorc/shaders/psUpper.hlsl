@@ -60,7 +60,7 @@ float4 main(PixelShaderInput IN) : SV_TARGET
 	float diffuse_strength = max(dot(perturbedNormal, lightDirection.xyz), 0.0);
 	float4 diffuseColor = lightDiffuse * (diffuse_strength * finalDiffuse);
 
-	// specular
+	// specular ok leave that out fucks everything up
 	float4 viewDir = float4(normalize(CameraPosition.xyz - IN.fragPosition.xyz), 0.0f);
 	float3 reflectDir = reflect(-lightPosition.xyz, perturbedNormal);
 	float4 specularMapColor = specularMap.Sample(defaultSamplerState, IN.texCoord);
@@ -71,7 +71,7 @@ float4 main(PixelShaderInput IN) : SV_TARGET
 
 	// Adjust the strength of the specular reflection
 	//float specularStrength = 0.1f; // Adjust the strength as needed
-	float specularStrength = 0.05f; // Adjust the strength as needed
+	float specularStrength = 0.1f; // Adjust the strength as needed
 
 	// Blend between reflection and refraction based on Fresnel term
 	float3 specularColor = lerp(
@@ -79,6 +79,8 @@ float4 main(PixelShaderInput IN) : SV_TARGET
 		diffuseMapColor.xyz,
 		fresnel
 	);
+
+	
 
 	return ambientColor + diffuseColor + float4(specularColor, 1.0f) * specularStrength;
 	/*return ambientColor + diffuseColor + float4(specularColor, 1.0f);*/
