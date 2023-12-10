@@ -43,7 +43,7 @@ float4 main(PixelShaderInput IN) : SV_TARGET
 	float3 normalMapSample = normalMap.Sample(defaultSamplerState, IN.texCoord).xyz;
 	normalMapSample = normalize(normalMapSample * 2.0 - 1.0);
 	normalMapSample.z = -normalMapSample.z;
-	float3 perturbedNormal = normalize(IN.normal + normalMapSample * 0.1f);
+	float3 perturbedNormal = normalize(IN.normal + normalMapSample * 0.3f);
 
 	// diffuse
 	float4 lightDirection = float4(normalize(lightPosition.xyz - IN.fragPosition.xyz), 0.0f);

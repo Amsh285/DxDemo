@@ -32,6 +32,7 @@ dsr::DsrResult ModelloaderApplication::Setup()
 
 	AddContent(std::get<Direct3dShaderProgram>(loadDefaultShaderProgram), std::get<std::map<std::string, GroupedVertexBuffer>>(loadContent));
 
+	//m_mainCamera->Transform.Position = DirectX::XMVectorSet(0.0f, 1.0f, -1.0f, 1.0f);
 	m_mainCamera->Transform.Position = DirectX::XMVectorSet(0.0f, 1.0f, -3.0f, 1.0f);
 	//m_mainCamera->Transform.Position = DirectX::XMVectorSet(0.0f, 1.0f, -10.0f, 1.0f);
 
@@ -58,6 +59,10 @@ std::variant<std::map<std::string, dsr::directX::rendering::GroupedVertexBuffer>
 	GroupedVertexBuffer sorcModel = std::get<GroupedVertexBuffer>(loadSorcModel);
 	sorcModel.GlobalTransform.Rotation = DirectX::XMVectorSet(0.0f, 90.0f, 0.0f, 0.0f);
 
+	// Ugly but has to be done lashes are nearer an will fuck up the eye texture.
+	// this is probably due to wrong blending. Must be fixed later.
+	sorcModel.VertexGroups.erase(sorcModel.VertexGroups.begin() + 9);
+	
 	for (VertexGroup& group : sorcModel.VertexGroups)
 	{
 		if (group.MaterialName == "face")
@@ -70,35 +75,17 @@ std::variant<std::map<std::string, dsr::directX::rendering::GroupedVertexBuffer>
 			}
 			else
 			{
-				group.PixelShader = std::get<std::shared_ptr<Direct3dShader<ID3D11PixelShader>>>(loadPixelShader);
+				std::optional<Direct3dShaderTexture2D> diffuseMap = LoadTexture("Assets/sorc/materials/textures/pc_mg_av_face_01_d.tga", group.MaterialName, D3D11_RESOURCE_MISC_GENERATE_MIPS);
+				std::optional<Direct3dShaderTexture2D> normalMap = LoadTexture("Assets/sorc/materials/textures/pc_mg_av_face_01_n.tga", group.MaterialName);
+				std::optional<Direct3dShaderTexture2D> specularMap = LoadTexture("Assets/sorc/materials/textures/pc_mg_av_face_01_s.tga", group.MaterialName);
 
-				std::variant<Direct3dShaderTexture2D, dsr_error> loadfaceDiffuseMap = Direct3dShaderTexture2D::LoadSingleRGBA(m_device, "Assets/sorc/materials/textures/pc_mg_av_face_01_d.tga", 1, D3D11_RESOURCE_MISC_GENERATE_MIPS);
-				std::variant<Direct3dShaderTexture2D, dsr_error> loadNormalMap = Direct3dShaderTexture2D::LoadSingleRGBA(m_device, "Assets/sorc/materials/textures/pc_mg_av_face_01_n.tga");
-
-				bool hasDiffuseMapError = std::holds_alternative<dsr_error>(loadfaceDiffuseMap);
-				bool hasNormalMapError = std::holds_alternative<dsr_error>(loadNormalMap);
-
-				if (hasDiffuseMapError)
+				if (diffuseMap.has_value() && normalMap.has_value() && specularMap.has_value())
 				{
-					const dsr_error& error = std::get<dsr_error>(loadfaceDiffuseMap);
-					std::cout << "face: could not load diffusemap: " << error.what() << std::endl;
-				}
-
-				if (hasNormalMapError)
-				{
-					const dsr_error& error = std::get<dsr_error>(loadNormalMap);
-					std::cout << "face: could not load normalmap: " << error.what() << std::endl;
-				}
-
-				if (!hasDiffuseMapError && !hasNormalMapError)
-				{
-					Direct3dShaderTexture2D diffuseMap = std::get<Direct3dShaderTexture2D>(loadfaceDiffuseMap);
-					m_device->GenerateMips(diffuseMap.GetShaderResourceViewPtr().get());
-
-					Direct3dShaderTexture2D normalMap = std::get<Direct3dShaderTexture2D>(loadNormalMap);
-
-					group.PSTextures2D.push_back(diffuseMap);
-					group.PSTextures2D.push_back(normalMap);
+					m_device->GenerateMips(diffuseMap.value().GetShaderResourceViewPtr().get());
+					group.PSTextures2D.push_back(diffuseMap.value());
+					group.PSTextures2D.push_back(normalMap.value());
+					group.PSTextures2D.push_back(specularMap.value());
+					group.PixelShader = std::get<std::shared_ptr<Direct3dShader<ID3D11PixelShader>>>(loadPixelShader);
 				}
 			}
 		}
@@ -213,6 +200,95 @@ std::variant<std::map<std::string, dsr::directX::rendering::GroupedVertexBuffer>
 					group.PixelShader = std::get<std::shared_ptr<Direct3dShader<ID3D11PixelShader>>>(loadPixelShader);
 				}
 			}
+		}
+		else if (group.MaterialName == "skin_lower")
+		{
+			std::variant<std::shared_ptr<Direct3dShader<ID3D11PixelShader>>, dsr_error> loadPixelShader = LoadShaderFromFile<ID3D11PixelShader>(m_device, L"Assets/sorc/shaders/psSkinLower.hlsl", "ps_5_0");
+			if (std::holds_alternative<dsr_error>(loadPixelShader))
+			{
+				const dsr_error& error = std::get<dsr_error>(loadPixelShader);
+				std::cout << "upper: could not load pixelshader: Assets/sorc/shaders/psSkinLower.hlsl. Error: " << error.what() << std::endl;
+			}
+			else
+			{
+				std::optional<Direct3dShaderTexture2D> diffuseMap = LoadTexture("Assets/sorc/materials/textures/pc_mg_av_base_lower_d_loc_int.tga", group.MaterialName, D3D11_RESOURCE_MISC_GENERATE_MIPS);
+				std::optional<Direct3dShaderTexture2D> normalMap = LoadTexture("Assets/sorc/materials/textures/pc_mg_av_base_lower_n_loc_int.tga", group.MaterialName);
+				std::optional<Direct3dShaderTexture2D> specularMap = LoadTexture("Assets/sorc/materials/textures/pc_mg_av_base_lower_s_loc_int.tga", group.MaterialName);
+
+				if (diffuseMap.has_value() && normalMap.has_value() && specularMap.has_value())
+				{
+					m_device->GenerateMips(diffuseMap.value().GetShaderResourceViewPtr().get());
+					group.PSTextures2D.push_back(diffuseMap.value());
+					group.PSTextures2D.push_back(normalMap.value());
+					group.PSTextures2D.push_back(specularMap.value());
+					group.PixelShader = std::get<std::shared_ptr<Direct3dShader<ID3D11PixelShader>>>(loadPixelShader);
+				}
+			}
+		}
+		else if (group.MaterialName == "skin_upper")
+		{
+			std::variant<std::shared_ptr<Direct3dShader<ID3D11PixelShader>>, dsr_error> loadPixelShader = LoadShaderFromFile<ID3D11PixelShader>(m_device, L"Assets/sorc/shaders/psSkinUpper.hlsl", "ps_5_0");
+			if (std::holds_alternative<dsr_error>(loadPixelShader))
+			{
+				const dsr_error& error = std::get<dsr_error>(loadPixelShader);
+				std::cout << "upper: could not load pixelshader: Assets/sorc/shaders/psSkinUpper.hlsl. Error: " << error.what() << std::endl;
+			}
+			else
+			{
+				std::optional<Direct3dShaderTexture2D> diffuseMap = LoadTexture("Assets/sorc/materials/textures/pc_mg_av_base_upper_d_loc_int.tga", group.MaterialName, D3D11_RESOURCE_MISC_GENERATE_MIPS);
+				std::optional<Direct3dShaderTexture2D> normalMap = LoadTexture("Assets/sorc/materials/textures/pc_mg_av_base_upper_n_loc_int.tga", group.MaterialName);
+				std::optional<Direct3dShaderTexture2D> specularMap = LoadTexture("Assets/sorc/materials/textures/pc_mg_av_base_upper_s_loc_int.tga", group.MaterialName);
+
+				if (diffuseMap.has_value() && normalMap.has_value() && specularMap.has_value())
+				{
+					m_device->GenerateMips(diffuseMap.value().GetShaderResourceViewPtr().get());
+					group.PSTextures2D.push_back(diffuseMap.value());
+					group.PSTextures2D.push_back(normalMap.value());
+					group.PSTextures2D.push_back(specularMap.value());
+					group.PixelShader = std::get<std::shared_ptr<Direct3dShader<ID3D11PixelShader>>>(loadPixelShader);
+				}
+			}
+		}
+		else if (group.MaterialName == "pupill")
+		{
+			std::variant<std::shared_ptr<Direct3dShader<ID3D11PixelShader>>, dsr_error> loadPixelShader = LoadShaderFromFile<ID3D11PixelShader>(m_device, L"Assets/sorc/shaders/psPupill.hlsl", "ps_5_0");
+			if (std::holds_alternative<dsr_error>(loadPixelShader))
+			{
+				const dsr_error& error = std::get<dsr_error>(loadPixelShader);
+				std::cout << "upper: could not load pixelshader: Assets/sorc/shaders/psPupill.hlsl. Error: " << error.what() << std::endl;
+			}
+			else
+			{
+				std::optional<Direct3dShaderTexture2D> diffuseMap = LoadTexture("Assets/sorc/materials/textures/pc_mg_av_eyeiris_d.tga", group.MaterialName, D3D11_RESOURCE_MISC_GENERATE_MIPS);
+
+				if (diffuseMap.has_value())
+				{
+					m_device->GenerateMips(diffuseMap.value().GetShaderResourceViewPtr().get());
+					group.PSTextures2D.push_back(diffuseMap.value());
+					group.PixelShader = std::get<std::shared_ptr<Direct3dShader<ID3D11PixelShader>>>(loadPixelShader);
+				}
+			}
+		}
+		else if (group.MaterialName == "lashes")
+		{
+			//have to probably implement blending to properly render this..
+			/*std::variant<std::shared_ptr<Direct3dShader<ID3D11PixelShader>>, dsr_error> loadPixelShader = LoadShaderFromFile<ID3D11PixelShader>(m_device, L"Assets/sorc/shaders/psLashes.hlsl", "ps_5_0");
+			if (std::holds_alternative<dsr_error>(loadPixelShader))
+			{
+				const dsr_error& error = std::get<dsr_error>(loadPixelShader);
+				std::cout << "upper: could not load pixelshader: Assets/sorc/shaders/psLashes.hlsl. Error: " << error.what() << std::endl;
+			}
+			else
+			{
+				std::optional<Direct3dShaderTexture2D> diffuseMap = LoadTexture("Assets/sorc/materials/textures/pc_mg_eyelashes_d.tga", group.MaterialName, D3D11_RESOURCE_MISC_GENERATE_MIPS);
+
+				if (diffuseMap.has_value())
+				{
+					m_device->GenerateMips(diffuseMap.value().GetShaderResourceViewPtr().get());
+					group.PSTextures2D.push_back(diffuseMap.value());
+					group.PixelShader = std::get<std::shared_ptr<Direct3dShader<ID3D11PixelShader>>>(loadPixelShader);
+				}
+			}*/
 		}
 	}
 
