@@ -76,6 +76,7 @@ float4 main(PixelShaderInput IN) : SV_TARGET
 		fresnel
 	);
 
+	// not working metallic should fix it
 	return ambientColor + diffuseColor + float4(specularColor, 1.0f) * specularStrength;
 
 	// diffuse
