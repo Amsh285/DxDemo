@@ -33,7 +33,8 @@ float4 main(PixelShaderInput IN) : SV_TARGET
 	float4 lightAmbient = float4(0.2f, 0.2f, 0.2f, 1.0f);
 	float4 lightDiffuse = float4(0.8f, 0.8f, 0.8f, 1.0f);
 	float4 lightSpecular = float4(1.0f, 1.0f, 1.0f, 1.0f);
-	float4 lightPosition = CameraPosition;
+	//float4 lightPosition = CameraPosition;
+	float4 lightPosition = float4(0.0f, 1.0f, -3.0f, 1.0f);
 
 	float4 finalDiffuse = diffuseMap.Sample(defaultSamplerState, IN.texCoord);
 

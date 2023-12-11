@@ -35,10 +35,7 @@ float4 main(PixelShaderInput IN) : SV_TARGET
 	float4 lightAmbient = float4(0.2f, 0.2f, 0.2f, 1.0f);
 	float4 lightDiffuse = float4(0.8f, 0.8f, 0.8f, 1.0f);
 	float4 lightSpecular = float4(1.0f, 1.0f, 1.0f, 1.0f);
-	float4 lightPosition = CameraPosition;
-	/*float4 lightPosition = float4(0.0f, 0.0f, -5.0f, 1.0f);*/
-	//float4 lightPosition = float4(0.0f, 0.0f, -10.0f, 1.0f);
-
+	float4 lightPosition = float4(0.0f, 1.0f, -3.0f, 1.0f);
 
 	float4 ambientColor = Ka * lightAmbient;
 
@@ -71,7 +68,7 @@ float4 main(PixelShaderInput IN) : SV_TARGET
 
 	// Adjust the strength of the specular reflection
 	//float specularStrength = 0.1f; // Adjust the strength as needed
-	float specularStrength = 0.1f; // Adjust the strength as needed
+	float specularStrength = 0.2f; // Adjust the strength as needed
 
 	// Blend between reflection and refraction based on Fresnel term
 	float3 specularColor = lerp(
@@ -82,6 +79,6 @@ float4 main(PixelShaderInput IN) : SV_TARGET
 
 	
 
-	return ambientColor + diffuseColor + float4(specularColor, 1.0f) * specularStrength;
+	return ambientColor + diffuseColor + (float4(specularColor, 1.0f) * specularStrength);
 	/*return ambientColor + diffuseColor + float4(specularColor, 1.0f);*/
 }
