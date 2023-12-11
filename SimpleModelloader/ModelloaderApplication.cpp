@@ -33,7 +33,7 @@ dsr::DsrResult ModelloaderApplication::Setup()
 	AddContent(std::get<Direct3dShaderProgram>(loadDefaultShaderProgram), std::get<std::map<std::string, GroupedVertexBuffer>>(loadContent));
 
 	//m_mainCamera->Transform.Position = DirectX::XMVectorSet(0.0f, 1.0f, -1.0f, 1.0f);
-	m_mainCamera->Transform.Position = DirectX::XMVectorSet(0.0f, 1.0f, -3.0f, 1.0f);
+	m_mainCamera->Transform.Position = DirectX::XMVectorSet(0.0f, 1.0f, -1.0f, 1.0f);
 	//m_mainCamera->Transform.Position = DirectX::XMVectorSet(0.0f, 1.0f, -10.0f, 1.0f);
 
 	return dsr::DsrResult::Success("Setup Successful.");
@@ -62,7 +62,7 @@ std::variant<std::map<std::string, dsr::directX::rendering::GroupedVertexBuffer>
 	// Ugly but has to be done lashes are nearer an will fuck up the eye texture.
 	// this is probably due to wrong blending. Must be fixed later.
 	sorcModel.VertexGroups.erase(sorcModel.VertexGroups.begin() + 9);
-	
+
 	for (VertexGroup& group : sorcModel.VertexGroups)
 	{
 		if (group.MaterialName == "face")
@@ -289,6 +289,54 @@ std::variant<std::map<std::string, dsr::directX::rendering::GroupedVertexBuffer>
 					group.PixelShader = std::get<std::shared_ptr<Direct3dShader<ID3D11PixelShader>>>(loadPixelShader);
 				}
 			}*/
+		}
+		else if (group.MaterialName == "helmet")
+		{
+			std::variant<std::shared_ptr<Direct3dShader<ID3D11PixelShader>>, dsr_error> loadPixelShader = LoadShaderFromFile<ID3D11PixelShader>(m_device, L"Assets/sorc/shaders/psHelmet.hlsl", "ps_5_0");
+			if (std::holds_alternative<dsr_error>(loadPixelShader))
+			{
+				const dsr_error& error = std::get<dsr_error>(loadPixelShader);
+				std::cout << "upper: could not load pixelshader: Assets/sorc/shaders/psHelmet.hlsl. Error: " << error.what() << std::endl;
+			}
+			else
+			{
+				std::optional<Direct3dShaderTexture2D> diffuseMap = LoadTexture("Assets/sorc/materials/textures/pc_mem_hr_00_helmet1_d.tga", group.MaterialName, D3D11_RESOURCE_MISC_GENERATE_MIPS);
+				std::optional<Direct3dShaderTexture2D> normalMap = LoadTexture("Assets/sorc/materials/textures/pc_mem_hr_00_helmet1_n.tga", group.MaterialName);
+				std::optional<Direct3dShaderTexture2D> specularMap = LoadTexture("Assets/sorc/materials/textures/pc_mem_hr_00_helmet1_s.tga", group.MaterialName);
+				std::optional<Direct3dShaderTexture2D> emissionMap = LoadTexture("Assets/sorc/materials/textures/pc_mem_hr_00_helmet1_e.tga", group.MaterialName);
+
+				if (diffuseMap.has_value() && normalMap.has_value() && specularMap.has_value() && emissionMap.has_value())
+				{
+					m_device->GenerateMips(diffuseMap.value().GetShaderResourceViewPtr().get());
+					group.PSTextures2D.push_back(diffuseMap.value());
+					group.PSTextures2D.push_back(normalMap.value());
+					group.PSTextures2D.push_back(specularMap.value());
+					group.PSTextures2D.push_back(emissionMap.value());
+					group.PixelShader = std::get<std::shared_ptr<Direct3dShader<ID3D11PixelShader>>>(loadPixelShader);
+				}
+			}
+		}
+		else if (group.MaterialName == "hair")
+		{
+			std::variant<std::shared_ptr<Direct3dShader<ID3D11PixelShader>>, dsr_error> loadPixelShader = LoadShaderFromFile<ID3D11PixelShader>(m_device, L"Assets/sorc/shaders/psHair.hlsl", "ps_5_0");
+			if (std::holds_alternative<dsr_error>(loadPixelShader))
+			{
+				const dsr_error& error = std::get<dsr_error>(loadPixelShader);
+				std::cout << "upper: could not load pixelshader: Assets/sorc/shaders/psHair.hlsl. Error: " << error.what() << std::endl;
+			}
+			else
+			{
+				std::optional<Direct3dShaderTexture2D> diffuseMap = LoadTexture("Assets/sorc/materials/textures/pc_mg_05_hair_d.tga", group.MaterialName, D3D11_RESOURCE_MISC_GENERATE_MIPS);
+				std::optional<Direct3dShaderTexture2D> normalMap = LoadTexture("Assets/sorc/materials/textures/pc_mg_05_hair_n.tga", group.MaterialName);
+
+				if (diffuseMap.has_value() && normalMap.has_value())
+				{
+					m_device->GenerateMips(diffuseMap.value().GetShaderResourceViewPtr().get());
+					group.PSTextures2D.push_back(diffuseMap.value());
+					group.PSTextures2D.push_back(normalMap.value());
+					group.PixelShader = std::get<std::shared_ptr<Direct3dShader<ID3D11PixelShader>>>(loadPixelShader);
+				}
+			}
 		}
 	}
 
