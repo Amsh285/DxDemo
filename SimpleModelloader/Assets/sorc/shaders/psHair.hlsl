@@ -67,7 +67,7 @@ float4 main(PixelShaderInput IN) : SV_TARGET
 	float fresnel = pow(1.0 - cosTheta, 2); // Adjust the power value as needed
 
 	// Adjust the strength of the specular reflection
-	float specularStrength = 0.1f;
+	float specularStrength = 0.02f;
 
 	// Blend between reflection and refraction based on Fresnel term
 	float3 specularColor = lerp(
