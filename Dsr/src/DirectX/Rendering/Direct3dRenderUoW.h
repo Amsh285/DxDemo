@@ -14,6 +14,7 @@ namespace dsr
 		{
 			struct VertexGroup
 			{
+				//currently just for debugging
 				std::string MaterialName;
 
 				uint32_t StartIndexLocation;

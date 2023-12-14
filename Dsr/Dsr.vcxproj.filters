@@ -129,6 +129,9 @@
     <ClInclude Include="src\DirectX\Textures\Direct3dSamplerState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\DirectX\Rendering\Data\VertexGroup.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Windows\Window.cpp">
@@ -237,6 +240,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\DirectX\Textures\Direct3dSamplerState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DirectX\Rendering\Data\VertexGroup.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

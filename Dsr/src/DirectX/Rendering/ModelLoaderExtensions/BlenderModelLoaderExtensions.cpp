@@ -47,27 +47,27 @@ namespace dsr
 					vertexBuffer.push_back(vertex.Normal.z);
 				}
 
-				std::vector<VertexGroup> vertexGroups = MapModel(baseDirectory, model);
+				std::map<std::string, std::shared_ptr<VertexGroup>> namedVertexGroups = MapModel(baseDirectory, model);
 
 				std::variant<Direct3dVertexBufferf, dsr_error> loadVertexData = SetupVertexBufferf(device, vertexBuffer, model.IndexBuffer, inputLayout);
 				if (std::holds_alternative<dsr_error>(loadVertexData))
 					return dsr_error::Attach("Error setup vertexbuffer: ", std::get<dsr_error>(loadVertexData));
 
-				return GroupedVertexBuffer{dsr::data::Transform(), std::get<Direct3dVertexBufferf>(loadVertexData), vertexGroups};
+				return GroupedVertexBuffer{dsr::data::Transform(), std::get<Direct3dVertexBufferf>(loadVertexData), namedVertexGroups};
 			}
 
-			std::vector<VertexGroup> MapModel(
+			std::map<std::string, std::shared_ptr<VertexGroup>> MapModel(
 				const std::filesystem::path& baseDirectory,
 				const BlenderModel& model)
 			{
-				std::vector<VertexGroup> vertexGroups;
+				std::map<std::string, std::shared_ptr<VertexGroup>> namedVertexGroups;
 
 				for (const auto& item : model.MaterialGroups)
 				{
-					rendering::VertexGroup group;
-					group.StartIndexLocation = item.StartIndexLocation;
-					group.IndexCount = item.IndexCount;
-					group.MaterialName = item.MaterialName;
+					std::shared_ptr<VertexGroup> group = std::make_shared<VertexGroup>();
+					group->StartIndexLocation = item.StartIndexLocation;
+					group->IndexCount = item.IndexCount;
+					group->MaterialName = item.MaterialName;
 
 					PixelShaderData data;
 					data.SpecularExponent = item.MaterialData.SpecularExponent;
@@ -77,12 +77,12 @@ namespace dsr
 					data.SpecularColor = DirectX::XMFLOAT4(item.MaterialData.SpecularColor.x, item.MaterialData.SpecularColor.y, item.MaterialData.SpecularColor.z, 1.0f);
 					data.OpticalDensity = item.MaterialData.OpticalDensity;
 					data.IlluminationModel = item.MaterialData.IlluminationModel;
-					group.PSData = data;
+					group->PSData = data;
 
-					vertexGroups.push_back(group);
+					namedVertexGroups[group->MaterialName] = group;
 				}
 
-				return vertexGroups;
+				return namedVertexGroups;
 			}
 		}
 	}
