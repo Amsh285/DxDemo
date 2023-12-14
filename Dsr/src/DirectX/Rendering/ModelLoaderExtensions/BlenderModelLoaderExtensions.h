@@ -19,7 +19,7 @@ namespace dsr
 			{
 				dsr::data::Transform GlobalTransform;
 				Direct3dVertexBufferf Vertexbuffer;
-				std::map<std::string, std::shared_ptr<VertexGroup>> VertexGroups;
+				std::unordered_map<std::string, std::shared_ptr<VertexGroup>> VertexGroups;
 			};
 
 			std::variant<GroupedVertexBuffer, dsr_error> LoadWavefrontModel(
@@ -29,7 +29,7 @@ namespace dsr
 				const std::filesystem::path& modelPath,
 				const std::filesystem::path& materialPath);
 
-			std::map<std::string, std::shared_ptr<VertexGroup>> MapModel(
+			std::unordered_map<std::string, std::shared_ptr<VertexGroup>> MapModel(
 				const std::filesystem::path& baseDirectory,
 				const BlenderModel& model);
 		}

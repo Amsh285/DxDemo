@@ -57,13 +57,7 @@ std::variant<std::map<std::string, dsr::directX::rendering::GroupedVertexBuffer>
 		return std::get<dsr_error>(loadSorcModel);
 
 	GroupedVertexBuffer sorcModel = std::get<GroupedVertexBuffer>(loadSorcModel);
-	sorcModel.GlobalTransform.Rotation = DirectX::XMVectorSet(0.0f, 90.0f, 0.0f, 0.0f);
-
-	// Ugly but has to be done lashes are nearer an will fuck up the eye texture.
-	// this is probably due to wrong blending. Must be fixed later.
-	//sorcModel.VertexGroups.erase(sorcModel.VertexGroups.begin() + 9);
-	sorcModel.VertexGroups.erase("lashes");
-	std::cout << "aaaa" << std::endl;
+	
 
 	//for (VertexGroup& group : sorcModel.VertexGroups)
 	//{
@@ -342,6 +336,14 @@ std::variant<std::map<std::string, dsr::directX::rendering::GroupedVertexBuffer>
 	//	}
 	//}
 
+
+/*std::variant<GroupedVertexBuffer, dsr_error> loadModelResult = LoadWavefrontModel(
+		m_device,
+		m_blenderModelLoader,
+		"Assets/CubeTest/",
+		"cubeTest.tobj",
+		"cubeTest.mtl");*/
+
 	models[MODELNAMES_SORC] = sorcModel;
 	return models;
 }
@@ -384,18 +386,19 @@ std::variant<dsr::directX::rendering::GroupedVertexBuffer, dsr::dsr_error> Model
 		"Assets/sorc/",
 		"sorcwithoutStaff.tobj",
 		"Sorceress.mtl");
-
-	/*std::variant<GroupedVertexBuffer, dsr_error> loadModelResult = LoadWavefrontModel(
-		m_device,
-		m_blenderModelLoader,
-		"Assets/CubeTest/",
-		"cubeTest.tobj",
-		"cubeTest.mtl");*/
-
 	if (std::holds_alternative<dsr_error>(loadModelResult))
 		return std::get<dsr_error>(loadModelResult);
 
-	return std::get<GroupedVertexBuffer>(loadModelResult);
+	GroupedVertexBuffer& sorcModel = std::get<GroupedVertexBuffer>(loadModelResult);
+
+	sorcModel.GlobalTransform.Rotation = DirectX::XMVectorSet(0.0f, 90.0f, 0.0f, 0.0f);
+
+	// Ugly but has to be done lashes are nearer an will fuck up the eye texture.
+	// this is probably due to wrong blending. Must be fixed later.
+	//sorcModel.VertexGroups.erase(sorcModel.VertexGroups.begin() + 9);
+	sorcModel.VertexGroups.erase("lashes");
+
+	return sorcModel;
 }
 
 std::variant<dsr::directX::Direct3dShaderProgram, dsr::dsr_error> ModelloaderApplication::LoadDefaultShaderProgram()

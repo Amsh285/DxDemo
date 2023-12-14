@@ -2,9 +2,9 @@
 
 #include "Data/Transform.h"
 #include "DirectX/Direct3dVertexBufferf.h"
+#include "DirectX/Rendering/Data/VertexGroup.h"
 #include "DirectX/Shader/Direct3dShaderProgram.h"
-#include "DirectX/Shader/Data/PixelShaderData.h"
-#include "DirectX/Textures/Direct3dShaderTexture2D.h"
+
 
 namespace dsr
 {
@@ -12,19 +12,6 @@ namespace dsr
 	{
 		namespace rendering
 		{
-			struct VertexGroup
-			{
-				//currently just for debugging
-				std::string MaterialName;
-
-				uint32_t StartIndexLocation;
-				uint32_t IndexCount;
-
-				PixelShaderData PSData;
-				std::shared_ptr<Direct3dShader<ID3D11PixelShader>> PixelShader;
-				std::vector<Direct3dShaderTexture2D> PSTextures2D;
-			};
-
 			struct RenderData
 			{
 				// debug

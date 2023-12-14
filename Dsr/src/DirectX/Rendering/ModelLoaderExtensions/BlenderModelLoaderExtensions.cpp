@@ -47,7 +47,7 @@ namespace dsr
 					vertexBuffer.push_back(vertex.Normal.z);
 				}
 
-				std::map<std::string, std::shared_ptr<VertexGroup>> namedVertexGroups = MapModel(baseDirectory, model);
+				std::unordered_map<std::string, std::shared_ptr<VertexGroup>> namedVertexGroups = MapModel(baseDirectory, model);
 
 				std::variant<Direct3dVertexBufferf, dsr_error> loadVertexData = SetupVertexBufferf(device, vertexBuffer, model.IndexBuffer, inputLayout);
 				if (std::holds_alternative<dsr_error>(loadVertexData))
@@ -56,11 +56,12 @@ namespace dsr
 				return GroupedVertexBuffer{dsr::data::Transform(), std::get<Direct3dVertexBufferf>(loadVertexData), namedVertexGroups};
 			}
 
-			std::map<std::string, std::shared_ptr<VertexGroup>> MapModel(
+			std::unordered_map<std::string, std::shared_ptr<VertexGroup>> MapModel(
 				const std::filesystem::path& baseDirectory,
 				const BlenderModel& model)
 			{
-				std::map<std::string, std::shared_ptr<VertexGroup>> namedVertexGroups;
+				std::unordered_map<std::string, std::shared_ptr<VertexGroup>> namedVertexGroups;
+				uint32_t sortOrder = 0;
 
 				for (const auto& item : model.MaterialGroups)
 				{
@@ -68,6 +69,7 @@ namespace dsr
 					group->StartIndexLocation = item.StartIndexLocation;
 					group->IndexCount = item.IndexCount;
 					group->MaterialName = item.MaterialName;
+					group->SortOrder = sortOrder++;
 
 					PixelShaderData data;
 					data.SpecularExponent = item.MaterialData.SpecularExponent;
