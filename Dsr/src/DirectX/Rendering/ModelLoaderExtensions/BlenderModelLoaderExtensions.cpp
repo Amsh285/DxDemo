@@ -7,7 +7,7 @@ namespace dsr
 	{
 		namespace rendering
 		{
-			std::variant<GroupedVertexBuffer, dsr_error> LoadWavefrontModel(
+			std::variant<ModelConfiguration, dsr_error> LoadWavefrontModel(
 				std::shared_ptr<Direct3dDevice> device,
 				std::shared_ptr<BlenderModelLoader> modelLoader,
 				const std::filesystem::path& baseDirectory,
@@ -17,8 +17,7 @@ namespace dsr
 				using namespace dsr;
 				using namespace dsr::directX;
 
-				//std::variant<BlenderModel, dsr_error> loadModel = m_blenderModelLoader->Load(L"Assets/Map.obj");
-				std::variant<BlenderModel, dsr_error> loadModel = modelLoader->Load(
+				std::variant<WavefrontModel, dsr_error> loadModel = modelLoader->Load(
 					baseDirectory / modelPath,
 					baseDirectory / materialPath);
 
@@ -30,7 +29,7 @@ namespace dsr
 				inputLayout.AddVector2f("TXCOORD");
 				inputLayout.AddVector3f("NORMAL");
 
-				const BlenderModel& model = std::get<BlenderModel>(loadModel);
+				const WavefrontModel& model = std::get<WavefrontModel>(loadModel);
 				std::vector<float> vertexBuffer;
 
 				for (const Vertex3FP2FTx3FN& vertex : model.VertexBuffer)
@@ -47,18 +46,16 @@ namespace dsr
 					vertexBuffer.push_back(vertex.Normal.z);
 				}
 
-				std::unordered_map<std::string, std::shared_ptr<VertexGroup>> namedVertexGroups = MapModel(baseDirectory, model);
+				std::unordered_map<std::string, std::shared_ptr<VertexGroup>> namedVertexGroups = MapModel(model);
 
 				std::variant<Direct3dVertexBufferf, dsr_error> loadVertexData = SetupVertexBufferf(device, vertexBuffer, model.IndexBuffer, inputLayout);
 				if (std::holds_alternative<dsr_error>(loadVertexData))
 					return dsr_error::Attach("Error setup vertexbuffer: ", std::get<dsr_error>(loadVertexData));
 
-				return GroupedVertexBuffer{dsr::data::Transform(), std::get<Direct3dVertexBufferf>(loadVertexData), namedVertexGroups};
+				return ModelConfiguration(dsr::data::Transform(), std::get<Direct3dVertexBufferf>(loadVertexData), namedVertexGroups);
 			}
 
-			std::unordered_map<std::string, std::shared_ptr<VertexGroup>> MapModel(
-				const std::filesystem::path& baseDirectory,
-				const BlenderModel& model)
+			std::unordered_map<std::string, std::shared_ptr<VertexGroup>> MapModel(const WavefrontModel& model)
 			{
 				std::unordered_map<std::string, std::shared_ptr<VertexGroup>> namedVertexGroups;
 				uint32_t sortOrder = 0;
@@ -69,7 +66,6 @@ namespace dsr
 					group->StartIndexLocation = item.StartIndexLocation;
 					group->IndexCount = item.IndexCount;
 					group->MaterialName = item.MaterialName;
-					group->SortOrder = sortOrder++;
 
 					PixelShaderData data;
 					data.SpecularExponent = item.MaterialData.SpecularExponent;

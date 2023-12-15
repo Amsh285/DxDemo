@@ -3,7 +3,7 @@
 
 namespace dsr
 {
-	std::variant<BlenderModel, dsr_error> BlenderModelLoader::Load(
+	std::variant<WavefrontModel, dsr_error> BlenderModelLoader::Load(
 		const std::filesystem::path& path,
 		const std::filesystem::path& materialPath)
 	{
@@ -55,7 +55,7 @@ namespace dsr
 		std::vector<uint32_t> indexBuffer;
 
 		uint32_t rowIndex = 3, startIndexLocation = 0;
-		std::vector<BlenderModelMaterialGroup> materialGroups;
+		std::vector<WavefrontModelMaterialGroup> materialGroups;
 
 		//cheers
 		//https://stackoverflow.com/questions/16986017/how-do-i-make-blender-operate-in-left-hand
@@ -119,6 +119,7 @@ namespace dsr
 					ApplyVertexToBuffers(vertex2, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);
 					ApplyVertexToBuffers(vertex3, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);*/
 
+					//had to be changed to convert the blender rhs
 					ApplyVertexToBuffers(vertex2, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);
 					ApplyVertexToBuffers(vertex1, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);
 					ApplyVertexToBuffers(vertex0, vertexBuffer, indexBuffer, vertexPositions, vertexTxCoords, vertexNormals, storedinidces, vertexIndex);
@@ -162,7 +163,7 @@ namespace dsr
 					return dsr_error(errorMessage, ERROR_PARSEMODELFILE_INVALIDUSEMATERIALINSTRUCTIONFORMAT);
 				}
 
-				BlenderModelMaterialGroup materialGroup;
+				WavefrontModelMaterialGroup materialGroup;
 				materialGroup.MaterialData = materialMap[lineData[1]];
 				materialGroup.MaterialName = lineData[1];
 
@@ -173,7 +174,7 @@ namespace dsr
 				}
 				else
 				{
-					BlenderModelMaterialGroup& lastGroup = materialGroups.back();
+					WavefrontModelMaterialGroup& lastGroup = materialGroups.back();
 					lastGroup.IndexCount = indexBuffer.size() - lastGroup.StartIndexLocation;
 
 					materialGroup.StartIndexLocation = lastGroup.StartIndexLocation + lastGroup.IndexCount;
@@ -186,18 +187,18 @@ namespace dsr
 
 		if (materialGroups.empty())
 		{
-			BlenderModelMaterialGroup materialGroup;
+			WavefrontModelMaterialGroup materialGroup;
 			materialGroup.StartIndexLocation = 0;
 			materialGroup.IndexCount = indexBuffer.size();
 			materialGroups.push_back(materialGroup);
 		}
 		else
 		{
-			BlenderModelMaterialGroup& lastGroup = materialGroups.back();
+			WavefrontModelMaterialGroup& lastGroup = materialGroups.back();
 			lastGroup.IndexCount = indexBuffer.size() - lastGroup.StartIndexLocation;
 		}
 
-		return BlenderModel{ vertexBuffer, indexBuffer, materialGroups };
+		return WavefrontModel{ vertexBuffer, indexBuffer, materialGroups };
 	}
 
 	void BlenderModelLoader::ApplyVertexToBuffers(

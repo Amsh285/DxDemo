@@ -13,7 +13,7 @@ constexpr auto ERROR_PARSEMODELFILE_INVALIDFACEFORMAT = 1001;
 
 constexpr auto ERROR_PARSEMODELFILE_INVALIDUSEMATERIALINSTRUCTIONFORMAT = 1020;
 
-	struct BlenderModelMaterialGroup
+	struct WavefrontModelMaterialGroup
 	{
 		uint32_t StartIndexLocation;
 		uint32_t IndexCount;
@@ -22,11 +22,11 @@ constexpr auto ERROR_PARSEMODELFILE_INVALIDUSEMATERIALINSTRUCTIONFORMAT = 1020;
 		BlenderMaterialData MaterialData;
 	};
 
-	struct BlenderModel
+	struct WavefrontModel
 	{
 		std::vector<Vertex3FP2FTx3FN> VertexBuffer;
 		std::vector<uint32_t> IndexBuffer;
-		std::vector<BlenderModelMaterialGroup> MaterialGroups;
+		std::vector<WavefrontModelMaterialGroup> MaterialGroups;
 	};
 
 	struct FaceVertex
@@ -63,7 +63,7 @@ constexpr auto ERROR_PARSEMODELFILE_INVALIDUSEMATERIALINSTRUCTIONFORMAT = 1020;
 	class BlenderModelLoader
 	{
 	public:
-		std::variant<BlenderModel, dsr_error> Load(
+		std::variant<WavefrontModel, dsr_error> Load(
 			const std::filesystem::path& modelPath,
 			const std::filesystem::path& materialPath);
 	private:

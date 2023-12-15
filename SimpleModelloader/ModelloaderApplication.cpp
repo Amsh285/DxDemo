@@ -14,7 +14,7 @@ dsr::DsrResult ModelloaderApplication::Setup()
 	if (baseResult.GetResultStatusCode() != RESULT_SUCCESS)
 		return baseResult;
 
-	std::variant<std::map<std::string, GroupedVertexBuffer>, dsr::dsr_error> loadContent = LoadContent();
+	std::variant<std::map<std::string, ModelConfiguration>, dsr::dsr_error> loadContent = LoadContent();
 	if (std::holds_alternative<dsr_error>(loadContent))
 	{
 		const dsr_error& error = std::get<dsr_error>(loadContent);
@@ -30,7 +30,7 @@ dsr::DsrResult ModelloaderApplication::Setup()
 		return DsrResult(error.what(), error.GetResult());
 	}
 
-	AddContent(std::get<Direct3dShaderProgram>(loadDefaultShaderProgram), std::get<std::map<std::string, GroupedVertexBuffer>>(loadContent));
+	AddContent(std::get<Direct3dShaderProgram>(loadDefaultShaderProgram), std::get<std::map<std::string, ModelConfiguration>>(loadContent));
 
 	//m_mainCamera->Transform.Position = DirectX::XMVectorSet(0.0f, 1.0f, -1.0f, 1.0f);
 	m_mainCamera->Transform.Position = DirectX::XMVectorSet(0.0f, 1.0f, -1.0f, 1.0f);
@@ -44,19 +44,19 @@ ModelloaderApplication::ModelloaderApplication()
 {
 }
 
-std::variant<std::map<std::string, dsr::directX::rendering::GroupedVertexBuffer>, dsr::dsr_error> ModelloaderApplication::LoadContent()
+std::variant<std::map<std::string, dsr::ModelConfiguration>, dsr::dsr_error> ModelloaderApplication::LoadContent()
 {
 	using namespace dsr;
 	using namespace dsr::directX;
 	using namespace dsr::directX::rendering;
 
-	std::map<std::string, GroupedVertexBuffer> models;
+	std::map<std::string, ModelConfiguration> models;
 
-	std::variant<GroupedVertexBuffer, dsr::dsr_error> loadSorcModel = LoadSorcModel();
+	std::variant<ModelConfiguration, dsr::dsr_error> loadSorcModel = LoadSorcModel();
 	if (std::holds_alternative<dsr_error>(loadSorcModel))
 		return std::get<dsr_error>(loadSorcModel);
 
-	GroupedVertexBuffer sorcModel = std::get<GroupedVertexBuffer>(loadSorcModel);
+	ModelConfiguration sorcModel = std::get<ModelConfiguration>(loadSorcModel);
 	
 
 	//for (VertexGroup& group : sorcModel.VertexGroups)
@@ -350,7 +350,7 @@ std::variant<std::map<std::string, dsr::directX::rendering::GroupedVertexBuffer>
 
 void ModelloaderApplication::AddContent(
 	const dsr::directX::Direct3dShaderProgram& defaultShader,
-	const std::map<std::string, dsr::directX::rendering::GroupedVertexBuffer>& content)
+	const std::map<std::string, dsr::ModelConfiguration>& content)
 {
 	using namespace dsr;
 	using namespace dsr::directX;
@@ -360,7 +360,7 @@ void ModelloaderApplication::AddContent(
 
 	for (const auto& item : content)
 	{
-		rendering::RenderData uowData(item.second.Vertexbuffer);
+		rendering::RenderData uowData(item.second.GetVertexBuffer());
 		uowData.Modelname = item.first;
 
 		//Todo: Fix that
@@ -374,13 +374,13 @@ void ModelloaderApplication::AddContent(
 	m_renderer->AddUnitOfWork(uow);
 }
 
-std::variant<dsr::directX::rendering::GroupedVertexBuffer, dsr::dsr_error> ModelloaderApplication::LoadSorcModel()
+std::variant<dsr::ModelConfiguration, dsr::dsr_error> ModelloaderApplication::LoadSorcModel()
 {
 	using namespace dsr;
 	using namespace dsr::directX;
 	using namespace dsr::directX::rendering;
 
-	std::variant<GroupedVertexBuffer, dsr_error> loadModelResult = LoadWavefrontModel(
+	std::variant<ModelConfiguration, dsr_error> loadModelResult = LoadWavefrontModel(
 		m_device,
 		m_blenderModelLoader,
 		"Assets/sorc/",
@@ -389,14 +389,14 @@ std::variant<dsr::directX::rendering::GroupedVertexBuffer, dsr::dsr_error> Model
 	if (std::holds_alternative<dsr_error>(loadModelResult))
 		return std::get<dsr_error>(loadModelResult);
 
-	GroupedVertexBuffer& sorcModel = std::get<GroupedVertexBuffer>(loadModelResult);
+	ModelConfiguration& sorcModel = std::get<ModelConfiguration>(loadModelResult);
 
 	sorcModel.GlobalTransform.Rotation = DirectX::XMVectorSet(0.0f, 90.0f, 0.0f, 0.0f);
 
 	// Ugly but has to be done lashes are nearer an will fuck up the eye texture.
 	// this is probably due to wrong blending. Must be fixed later.
 	//sorcModel.VertexGroups.erase(sorcModel.VertexGroups.begin() + 9);
-	sorcModel.VertexGroups.erase("lashes");
+	sorcModel.RemoveVertexGroup("lashes");
 
 	return sorcModel;
 }

@@ -13,11 +13,11 @@ namespace dsr
 			class VertexGroup
 			{
 			public:
+				// just for debug.. remove later
 				std::string MaterialName;
 
 				uint32_t StartIndexLocation;
 				uint32_t IndexCount;
-				uint32_t SortOrder;
 
 				PixelShaderData PSData;
 				std::shared_ptr<Direct3dShader<ID3D11PixelShader>> PixelShader;
