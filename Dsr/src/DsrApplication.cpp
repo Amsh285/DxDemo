@@ -35,6 +35,10 @@ namespace dsr
 
 	DsrResult DsrApplication::Setup()
 	{
+		DsrResult renderInitResult = m_renderer->Initialize();
+		if (renderInitResult.GetResultStatusCode() != RESULT_SUCCESS)
+			return renderInitResult;
+
 		m_mainCamera = CreateCamera();
 		SetActiveCamera(m_mainCamera);
 

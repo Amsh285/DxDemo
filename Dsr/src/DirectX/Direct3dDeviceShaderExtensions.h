@@ -82,50 +82,17 @@ namespace dsr
 			const Direct3dShaderInputLayout& vertexShaderInputLayout
 		);
 
-		template<class TShader>
 		DsrResult SetConstantBuffer(
 			const std::shared_ptr<Direct3dDevice> device,
-			std::shared_ptr<Direct3dShader<TShader>> target,
+			std::map<size_t, Direct3dBuffer>& target,
 			const size_t& bRegister,
-			const DirectX::XMMATRIX& value
-		);
+			const DirectX::XMMATRIX& value);
 
-		template<class TShader>
 		DsrResult SetConstantBuffer(
 			const std::shared_ptr<Direct3dDevice> device,
-			std::shared_ptr<Direct3dShader<TShader>> target,
+			std::map<size_t, Direct3dBuffer>& target,
 			const size_t& bRegister,
-			const DirectX::XMMATRIX& value)
-		{
-			auto it = target->ConstantBuffers.find(bRegister);
-
-			if (it == target->ConstantBuffers.end())
-			{
-				D3D11_SUBRESOURCE_DATA subResourceData;
-				ZeroMemory(&subResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
-				subResourceData.pSysMem = &value;
-
-				std::variant<Direct3dBuffer, dsr_error> createConstantBufferResult = Direct3dBuffer::CreateConstantBuffer(
-					device,
-					sizeof(DirectX::XMMATRIX),
-					0, 0, D3D11_USAGE_DEFAULT,
-					subResourceData);
-
-				if (std::holds_alternative<dsr_error>(createConstantBufferResult))
-				{
-					const dsr_error& error = std::get<dsr_error>(createConstantBufferResult);
-					return DsrResult(error.what(), error.GetResult());
-				}
-
-				target->ConstantBuffers[bRegister] = std::get<Direct3dBuffer>(createConstantBufferResult);
-			}
-			else
-			{
-				std::shared_ptr<ID3D11Buffer> bufferPtr = it->second.GetBufferPtr();
-				device->UpdateSubResource(bufferPtr.get(), 0, nullptr, &value, 0, 0);
-			}
-
-			return DsrResult::Success("Constant buffer setup successful.");
-		}
+			const void* dataPtr,
+			const size_t& dataSize);
 	}
 }

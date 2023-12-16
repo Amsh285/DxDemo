@@ -2,7 +2,9 @@
 
 #include "Data/Transform.h"
 #include "DirectX/Direct3dVertexBufferf.h"
+#include "DirectX/Rendering/Data/VertexGroup.h"
 #include "DirectX/Shader/Direct3dShaderProgram.h"
+
 
 namespace dsr
 {
@@ -12,11 +14,15 @@ namespace dsr
 		{
 			struct RenderData
 			{
+				// debug
+				std::string Modelname;
+
 				Direct3dVertexBufferf VertexBuffer;
 
 				// https://github.com/microsoft/DirectXTK/wiki/Multistream-rendering-and-instancing
-				// later for instanced rendering, probably change to a Buffer
 				data::Transform Transform;
+
+				std::vector<std::shared_ptr<VertexGroup>> VertexGroups;
 
 				RenderData(const Direct3dVertexBufferf& vertexBuffer)
 					: VertexBuffer(vertexBuffer)
@@ -24,6 +30,7 @@ namespace dsr
 				}
 			};
 			
+			//this has to be refactored soon
 			class Direct3dRenderUoW
 			{
 			public:

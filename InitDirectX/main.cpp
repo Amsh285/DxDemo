@@ -6,7 +6,7 @@
 #include "Windows/WindowApplication.h"
 #include "Windows/EventListeners/WindowEventListener.h"
 #include "DirectX/Direct3dDevice.h"
-#include "DirectX/Direct3dRenderer.h"
+#include "DirectX/Rendering/Direct3dRenderer.h"
 
 #include <iostream>
 
@@ -27,14 +27,14 @@ int main(int argc, char* argv[])
 	std::shared_ptr<dsr::directX::Direct3dDevice> device =
 		dsr::directX::Direct3dDevice::Create(window);
 
-	std::shared_ptr<dsr::directX::Direct3dRenderer> renderer =
-		std::make_shared<dsr::directX::Direct3dRenderer>(device);
+	std::shared_ptr<dsr::directX::rendering::Direct3dRenderer> renderer =
+		std::make_shared<dsr::directX::rendering::Direct3dRenderer>(device);
 
 	window->Show();
 
 	std::shared_ptr<dsr::windows::WindowApplication> app = dsr::windows::WindowApplication
 		::Get();
 
-	app->GetUpdateFrameEventRegister().Hook(renderer, &dsr::directX::Direct3dRenderer::OnUpdate);
+	app->GetUpdateFrameEventRegister().Hook(renderer, &dsr::directX::rendering::Direct3dRenderer::OnUpdate);
 	app->PeekMessages();
 }

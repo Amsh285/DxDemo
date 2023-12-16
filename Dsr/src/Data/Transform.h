@@ -12,6 +12,7 @@ namespace dsr
 			DirectX::XMVECTOR Rotation;
 
 			DirectX::XMMATRIX CalculateModelMatrix() const;
+			DirectX::XMMATRIX CalculateNormalMatrix() const;
 
 			Transform();
 		private:
