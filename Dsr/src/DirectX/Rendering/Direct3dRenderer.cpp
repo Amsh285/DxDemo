@@ -99,31 +99,30 @@ namespace dsr
 						{
 							for (auto& vertexGroup : iteratorRenderData->VertexGroups)
 							{
-								if (vertexGroup.PixelShader)
-									m_device->UseShader(vertexGroup.PixelShader->GetShaderPtr().get(), nullptr, 0);
+								if (vertexGroup->PixelShader)
+									m_device->UseShader(vertexGroup->PixelShader->GetShaderPtr().get(), nullptr, 0);
 								else
 									m_device->UseShader(iteratorUoW->Shaders.PixelShader->GetShaderPtr().get(), nullptr, 0);
 
-								XMStoreFloat4(&vertexGroup.PSData.CameraPosition, m_activeCamera->Transform.Position);
-								SetConstantBuffer(m_device, m_psConstantBuffers, 0, &vertexGroup.PSData, sizeof(PixelShaderData));
+								XMStoreFloat4(&vertexGroup->PSData.CameraPosition, m_activeCamera->Transform.Position);
+								SetConstantBuffer(m_device, m_psConstantBuffers, 0, &vertexGroup->PSData, sizeof(PixelShaderData));
 
 								std::vector<ID3D11Buffer*> psConstantBuffers;
 								for (auto& pair : m_psConstantBuffers)
 									psConstantBuffers.push_back(pair.second.GetBufferPtr().get());
 								 
 								std::vector<ID3D11ShaderResourceView*> psResourceViews;
-								for (const Direct3dShaderTexture2D& texture : vertexGroup.PSTextures2D)
+								for (const Direct3dShaderTexture2D& texture : vertexGroup->PSTextures2D)
 									psResourceViews.push_back(texture.GetShaderResourceViewPtr().get());
 
 								m_device->UseConstantBuffers<ID3D11PixelShader>(0, psConstantBuffers.size(), psConstantBuffers.data());
 								m_device->SetShaderResources<ID3D11PixelShader>(0, psResourceViews.size(), psResourceViews.data());
-								m_device->DrawIndexed(vertexGroup.IndexCount, vertexGroup.StartIndexLocation, 0);
+								m_device->DrawIndexed(vertexGroup->IndexCount, vertexGroup->StartIndexLocation, 0);
 							}
 						}
 					}
 				}
 
-				// switch the back buffer and the front buffer
 				m_device->SwapBuffers();
 			}
 

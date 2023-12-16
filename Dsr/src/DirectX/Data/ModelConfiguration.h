@@ -14,6 +14,7 @@ namespace dsr
 	public:
 		directX::Direct3dVertexBufferf GetVertexBuffer() const { return m_vertexBuffer; }
 		std::unordered_map<std::string, std::shared_ptr<directX::rendering::VertexGroup>> GetVertexGroupMap() const { return m_vertexGroupMap; }
+		std::vector<std::shared_ptr<directX::rendering::VertexGroup>> GetVertexGroups() const;
 
 		data::Transform GlobalTransform;
 
@@ -21,6 +22,8 @@ namespace dsr
 		std::variant<NotFoundError, DsrResult> ConfigureVertexGroupWithResult(const std::string& name, const std::function<DsrResult(std::shared_ptr<directX::rendering::VertexGroup>)>& configFunc);
 
 		void RemoveVertexGroup(const std::string& name) { m_vertexGroupMap.erase(name); }
+
+		
 
 		ModelConfiguration() = default;
 		ModelConfiguration(

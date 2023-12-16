@@ -20,10 +20,9 @@ namespace dsr
 				Direct3dVertexBufferf VertexBuffer;
 
 				// https://github.com/microsoft/DirectXTK/wiki/Multistream-rendering-and-instancing
-				// later for instanced rendering, probably change to a Buffer
 				data::Transform Transform;
 
-				std::vector<VertexGroup> VertexGroups;
+				std::vector<std::shared_ptr<VertexGroup>> VertexGroups;
 
 				RenderData(const Direct3dVertexBufferf& vertexBuffer)
 					: VertexBuffer(vertexBuffer)

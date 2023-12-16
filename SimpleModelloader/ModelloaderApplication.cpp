@@ -1,7 +1,5 @@
 #include "ModelloaderApplication.h"
 
-/*TODO: Reset Toolset to latest back again!*/
-
 constexpr auto MODELNAMES_SORC = "sorc";
 
 dsr::DsrResult ModelloaderApplication::Setup()
@@ -363,9 +361,7 @@ void ModelloaderApplication::AddContent(
 		rendering::RenderData uowData(item.second.GetVertexBuffer());
 		uowData.Modelname = item.first;
 
-		//Todo: Fix that
-		//uowData.VertexGroups = item.second.VertexGroups;
-
+		uowData.VertexGroups = item.second.GetVertexGroups();
 		uowData.Transform = item.second.GlobalTransform;
 
 		uow.RenderData.push_back(uowData);

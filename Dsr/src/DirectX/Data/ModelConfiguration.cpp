@@ -3,6 +3,26 @@
 
 namespace dsr
 {
+	std::vector<std::shared_ptr<directX::rendering::VertexGroup>> ModelConfiguration::GetVertexGroups() const
+	{
+		using namespace dsr::directX::rendering;
+
+		std::vector<std::shared_ptr<VertexGroup>> vertexGroups;
+		for (const auto& pair : m_vertexGroupMap) {
+			vertexGroups.push_back(pair.second);
+		}
+
+		std::sort(
+			vertexGroups.begin(),
+			vertexGroups.end(),
+			[](const std::shared_ptr<VertexGroup>& left, const std::shared_ptr<VertexGroup>& right) {
+				return left->StartIndexLocation < right->StartIndexLocation; 
+			});
+
+		return vertexGroups;
+
+	}
+
 	void ModelConfiguration::ConfigureVertexGroup(const std::string& name, const std::function<void(std::shared_ptr<directX::rendering::VertexGroup>)>& configFunc)
 	{
 		auto it = m_vertexGroupMap.find(name);
