@@ -35,12 +35,16 @@ namespace dsr
 			{
 				std::uint8_t keyCode = LOBYTE(wParam);
 				std::cout << "Keydown keyCode: " << static_cast<std::uint32_t>(keyCode) << std::endl;
+
+				pWnd->m_keyDownEventEmitter.operator()(dsr::events::KeyDownEvent(keyCode));
 				break;
 			}
 			case WM_KEYUP:
 			{
 				std::uint8_t keyCode = LOBYTE(wParam);
 				std::cout << "-------------------Keyup keyCode: " << static_cast<std::uint32_t>(keyCode) << std::endl;
+
+				pWnd->m_keyUpEventEmitter.operator()(dsr::events::KeyUpEvent(keyCode));
 				break;
 			}
 			case WM_CLOSE:

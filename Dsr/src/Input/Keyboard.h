@@ -1,25 +1,24 @@
 #pragma once
 
+#include "Events/Application/InputEvents.h"
+#include "Events/EventListener.h"
+
 namespace dsr
 {
 	namespace input
 	{
-		enum class KeyState
-		{
-			None,
-			Down,
-			DownRepeat,
-			Up
-		};
-
-		class Keyboard
+		class Keyboard : public dsr::events::EventListener
 		{
 		public:
+			bool IsKeyDown(const uint8_t& keyCode);
+			bool IsKeyUp(const uint8_t& keyCode);
+
 			Keyboard();
 
-			bool QueryState(const uint8_t& keyCode, const KeyState& state);
+			void HandleKeyDown(const dsr::events::KeyDownEvent& keyDown);
+			void HandleKeyUp(const dsr::events::KeyUpEvent& keyUp);
 		private:
-			std::unordered_map<uint8_t, KeyState> m_stateMap;
+			std::bitset<256> m_currentState, m_previousState;
 		};
 	}
 }

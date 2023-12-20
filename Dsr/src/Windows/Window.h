@@ -6,6 +6,7 @@
 #include "Events/EventListener.h"
 #include "Events/IEvent.h"
 #include "Events/Application/WindowEvents.h"
+#include "Events/Application/InputEvents.h"
 
 namespace dsr
 {
@@ -19,6 +20,9 @@ namespace dsr
 			EventRegisterType<const dsr::events::WindowCloseEvent&>& GetCloseEventRegister() { return m_windowCloseEventEmitter; }
 			EventRegisterType<const dsr::events::WindowDestroyEvent&>& GetDestroyEventRegister() { return m_windowDestroyEmitter; }
 			EventRegisterType<const dsr::events::WindowResizedEvent&>& GetResizedEventRegister() { return m_windowResizedEmitter; }
+
+			EventRegisterType<const dsr::events::KeyDownEvent&>& GetKeyDownEventRegister() { return m_keyDownEventEmitter; }
+			EventRegisterType<const dsr::events::KeyUpEvent&>& GetKeyUpEventRegister() { return m_keyUpEventEmitter; }
 
 			int GetClientWidth() const { return m_data->clientWidth; }
 			int GetClientHeight() const { return m_data->clientHeight; }
@@ -43,6 +47,9 @@ namespace dsr
 			EventEmitterType<const dsr::events::WindowCloseEvent&> m_windowCloseEventEmitter;
 			EventEmitterType<const dsr::events::WindowDestroyEvent&> m_windowDestroyEmitter;
 			EventEmitterType<const dsr::events::WindowResizedEvent&> m_windowResizedEmitter;
+
+			EventEmitterType<const dsr::events::KeyDownEvent&> m_keyDownEventEmitter;
+			EventEmitterType<const dsr::events::KeyUpEvent&> m_keyUpEventEmitter;
 		};
 	}
 }
