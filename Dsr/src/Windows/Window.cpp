@@ -34,14 +34,13 @@ namespace dsr
 			case WM_KEYDOWN:
 			{
 				std::uint8_t keyCode = LOBYTE(wParam);
-				
-
-				std::cout << "keyCode: " << static_cast<std::uint32_t>(keyCode) << std::endl;
-
+				std::cout << "Keydown keyCode: " << static_cast<std::uint32_t>(keyCode) << std::endl;
 				break;
 			}
 			case WM_KEYUP:
 			{
+				std::uint8_t keyCode = LOBYTE(wParam);
+				std::cout << "-------------------Keyup keyCode: " << static_cast<std::uint32_t>(keyCode) << std::endl;
 				break;
 			}
 			case WM_CLOSE:
