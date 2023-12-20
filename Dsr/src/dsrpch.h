@@ -1,8 +1,7 @@
 #pragma once
 
-
-
 #include <assert.h>
+#include <bitset>
 #include <iostream>
 #include <fstream>
 #include <filesystem>

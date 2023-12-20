@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Input\Keyboard.h" />
     <ClInclude Include="src\DirectX\Data\ModelConfiguration.h" />
     <ClInclude Include="src\DirectX\Textures\Direct3dSamplerState.h" />
     <ClInclude Include="src\Data\Material.h" />
@@ -53,6 +54,10 @@
     <ClInclude Include="src\DirectX\Rendering\Data\VertexGroup.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Input\Keyboard.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="src\DirectX\Data\ModelConfiguration.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
