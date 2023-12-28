@@ -22,7 +22,7 @@ void dsr::input::Keyboard::OnPrepareUpdateFrame(const dsr::events::PrepareUdateF
 
 bool dsr::input::Keyboard::IsKeyDown(const uint8_t& keyCode)
 {
-	return m_currentState[keyCode];
+	return m_currentState[keyCode] && !m_previousState[keyCode];
 }
 
 bool dsr::input::Keyboard::IsKeyHolding(const uint8_t& keyCode)
