@@ -18,6 +18,10 @@ namespace dsr
 		{
 		};
 
+		class PrepareUdateFrameEvent : public IEvent
+		{
+		};
+
 		class UpdateFrameEvent : public IEvent
 		{
 		};

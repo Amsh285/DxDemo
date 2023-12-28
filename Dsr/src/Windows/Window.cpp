@@ -31,6 +31,11 @@ namespace dsr
 				std::cout << "ka" << std::endl;
 				break;
 			}
+			case WM_MOUSEMOVE:
+			{
+				std::cout << "mousemove: " << std::endl;
+				break;
+			}
 			case WM_KEYDOWN:
 			{
 				std::uint8_t keyCode = LOBYTE(wParam);
