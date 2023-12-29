@@ -27,13 +27,36 @@ namespace dsr
 				break;
 			}
 			case WM_LBUTTONDOWN:
+			case WM_MBUTTONDOWN:
+			case WM_RBUTTONDOWN:
 			{
-				std::cout << "ka" << std::endl;
+				int32_t x = GET_X_LPARAM(lParam);
+				int32_t y = GET_Y_LPARAM(lParam);
+				WORD mouseButtonState = LOWORD(wParam);
+
+				dsr::events::MouseDownEvent event(x, y, mouseButtonState);
+				pWnd->m_mouseDownEventEmitter.operator()(event);
+				break;
+			}
+			case WM_LBUTTONUP:
+			case WM_MBUTTONUP:
+			case WM_RBUTTONUP:
+			{
+				int32_t x = GET_X_LPARAM(lParam);
+				int32_t y = GET_Y_LPARAM(lParam);
+				WORD mouseButtonState = LOWORD(wParam);
+
+				dsr::events::MouseUpEvent event(x, y, mouseButtonState);
+				pWnd->m_mouseUpEventEmitter.operator()(event);
 				break;
 			}
 			case WM_MOUSEMOVE:
 			{
-				std::cout << "mousemove: " << std::endl;
+				int32_t x = GET_X_LPARAM(lParam);
+				int32_t y = GET_Y_LPARAM(lParam);
+
+				dsr::events::MouseMoveEvent event(x, y);
+				pWnd->m_mouseMoveEventEmitter.operator()(event);
 				break;
 			}
 			case WM_KEYDOWN:

@@ -9,7 +9,7 @@ namespace dsr
 		class KeyDownEvent : public IEvent
 		{
 		public:
-			uint8_t GetKeyCode() const { return m_keyCode; }
+			const uint8_t& GetKeyCode() const { return m_keyCode; }
 
 			explicit KeyDownEvent(const uint8_t& keyCode);
 		private:
@@ -19,7 +19,7 @@ namespace dsr
 		class KeyUpEvent : public IEvent
 		{
 		public:
-			uint8_t GetKeyCode() const { return m_keyCode; }
+			const uint8_t& GetKeyCode() const { return m_keyCode; }
 
 			explicit KeyUpEvent(const uint8_t& keyCode);
 		private:

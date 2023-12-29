@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Events\Application\InputEvents\MouseEvents.h" />
     <ClInclude Include="src\Input\Mouse.h" />
     <ClInclude Include="src\Events\Application\InputEvents\KeyboardEvents.h" />
     <ClInclude Include="src\Input\Keyboard.h" />
@@ -56,6 +57,9 @@
     <ClInclude Include="src\DirectX\Rendering\Data\VertexGroup.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Events\Application\InputEvents\MouseEvents.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="src\Input\Mouse.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>

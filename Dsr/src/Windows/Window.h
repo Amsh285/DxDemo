@@ -7,6 +7,7 @@
 #include "Events/IEvent.h"
 #include "Events/Application/WindowEvents.h"
 #include "Events/Application/InputEvents/KeyboardEvents.h"
+#include "Events/Application/InputEvents/MouseEvents.h"
 
 namespace dsr
 {
@@ -23,6 +24,10 @@ namespace dsr
 
 			EventRegisterType<const dsr::events::KeyDownEvent&>& GetKeyDownEventRegister() { return m_keyDownEventEmitter; }
 			EventRegisterType<const dsr::events::KeyUpEvent&>& GetKeyUpEventRegister() { return m_keyUpEventEmitter; }
+
+			EventRegisterType<const dsr::events::MouseDownEvent&>& GetMouseDownEventRegister() { return m_mouseDownEventEmitter; }
+			EventRegisterType<const dsr::events::MouseUpEvent&>& GetMouseUpEventRegister() { return m_mouseUpEventEmitter; }
+			EventRegisterType<const dsr::events::MouseMoveEvent&>& GetMouseMoveEventRegister() { return m_mouseMoveEventEmitter; }
 
 			int GetClientWidth() const { return m_data->clientWidth; }
 			int GetClientHeight() const { return m_data->clientHeight; }
@@ -50,6 +55,10 @@ namespace dsr
 
 			EventEmitterType<const dsr::events::KeyDownEvent&> m_keyDownEventEmitter;
 			EventEmitterType<const dsr::events::KeyUpEvent&> m_keyUpEventEmitter;
+
+			EventEmitterType<const dsr::events::MouseDownEvent&> m_mouseDownEventEmitter;
+			EventEmitterType<const dsr::events::MouseUpEvent&> m_mouseUpEventEmitter;
+			EventEmitterType<const dsr::events::MouseMoveEvent&> m_mouseMoveEventEmitter;
 		};
 	}
 }
