@@ -20,17 +20,17 @@ void dsr::input::Keyboard::OnPrepareUpdateFrame(const dsr::events::PrepareUdateF
 	m_previousState = m_currentState;
 }
 
-bool dsr::input::Keyboard::IsKeyDown(const uint8_t& keyCode)
+bool dsr::input::Keyboard::IsKeyDown(const uint8_t& keyCode) const
 {
 	return m_currentState[keyCode] && !m_previousState[keyCode];
 }
 
-bool dsr::input::Keyboard::IsKeyHolding(const uint8_t& keyCode)
+bool dsr::input::Keyboard::IsKeyHolding(const uint8_t& keyCode) const
 {
 	return m_currentState[keyCode] && m_previousState[keyCode];
 }
 
-bool dsr::input::Keyboard::IsKeyUp(const uint8_t& keyCode)
+bool dsr::input::Keyboard::IsKeyUp(const uint8_t& keyCode) const
 {
 	return !m_currentState[keyCode] && m_previousState[keyCode];
 }

@@ -11,6 +11,13 @@ namespace dsr
 			int32_t X;
 			int32_t Y;
 
+			bool Equals(const MousePosition& rhs) const { return X == rhs.X && Y == rhs.Y; }
+
+			MousePosition()
+				: X(0), Y(0)
+			{
+			}
+
 			MousePosition(const int32_t& x, const int32_t& y)
 				: X(x), Y(y)
 			{
@@ -47,7 +54,7 @@ namespace dsr
 		};
 
 		class MouseDownEvent : public MouseKeyEvent
-		{ 
+		{
 		public:
 			MouseDownEvent(const int32_t& x, const int32_t& y, const uint16_t& keyCode)
 				: MouseKeyEvent(x, y, keyCode)

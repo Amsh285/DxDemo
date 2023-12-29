@@ -11,9 +11,9 @@ namespace dsr
 		class Keyboard : public dsr::events::EventListener
 		{
 		public:
-			bool IsKeyDown(const uint8_t& keyCode);
-			bool IsKeyHolding(const uint8_t& keyCode);
-			bool IsKeyUp(const uint8_t& keyCode);
+			bool IsKeyDown(const uint8_t& keyCode) const;
+			bool IsKeyHolding(const uint8_t& keyCode) const;
+			bool IsKeyUp(const uint8_t& keyCode) const;
 
 			Keyboard();
 
