@@ -5,19 +5,20 @@ namespace dsr
 {
 	namespace inputdevices
 	{
-		bool Mouse::IsKeyDown(const uint16_t& keyCode) const
+		bool Mouse::IsKeyDown(const uint16_t& keyFlags) const
 		{
-			return m_currentKeyState[keyCode] && !m_previousKeyState[keyCode];
+
+			return (m_currentKeyState & keyFlags) && (~m_previousKeyState & keyFlags);
 		}
 
-		bool Mouse::IsKeyHolding(const uint16_t& keyCode) const
+		bool Mouse::IsKeyHolding(const uint16_t& keyFlags) const
 		{
-			return m_currentKeyState[keyCode] && m_previousKeyState[keyCode];
+			return (m_currentKeyState & keyFlags) && (m_previousKeyState & keyFlags);
 		}
 
-		bool Mouse::IsKeyUp(const uint16_t& keyCode) const
+		bool Mouse::IsKeyUp(const uint16_t& keyFlags) const
 		{
-			return !m_currentKeyState[keyCode] && m_previousKeyState[keyCode];
+			return (~m_currentKeyState & keyFlags) && (m_previousKeyState & keyFlags);
 		}
 
 		bool Mouse::IsMoving() const

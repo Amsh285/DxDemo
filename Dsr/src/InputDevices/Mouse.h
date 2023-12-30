@@ -14,9 +14,9 @@ namespace dsr
 			const dsr::events::MousePosition& GetCurrentPosition() const { return m_currentPosition; }
 			const dsr::events::MousePosition& GetPreviousPosition() const { return m_previousPosition; }
 
-			bool IsKeyDown(const uint16_t& keyCode) const;
-			bool IsKeyHolding(const uint16_t& keyCode) const;
-			bool IsKeyUp(const uint16_t& keyCode) const;
+			bool IsKeyDown(const uint16_t& keyFlags) const;
+			bool IsKeyHolding(const uint16_t& keyFlags) const;
+			bool IsKeyUp(const uint16_t& keyFlags) const;
 			bool IsMoving() const;
 
 			void OnMouseDown(const dsr::events::MouseDownEvent& mouseDown);
@@ -24,7 +24,7 @@ namespace dsr
 			void OnMouseMove(const dsr::events::MouseMoveEvent& mouseMove);
 			void OnPrepareUpdateFrame(const dsr::events::PrepareUdateFrameEvent& prepareUpdate);
 		private:
-			std::bitset<256> m_currentKeyState, m_previousKeyState;
+			uint16_t m_currentKeyState, m_previousKeyState;
 			dsr::events::MousePosition m_currentPosition, m_previousPosition;
 		};
 	}
