@@ -8,9 +8,8 @@
 
 namespace dsr
 {
-	namespace subsystems
+	namespace input
 	{
-		//Todo
 		class InputSystem : public Input
 		{
 		public:
@@ -30,7 +29,7 @@ namespace dsr
 				const EventRegisterType<dsr::events::PrepareUdateFrameEvent>& prepareUpdateFrameEventRegister
 			);
 		private:
-			
+
 		};
 	}
 }

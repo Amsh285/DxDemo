@@ -3,7 +3,7 @@
 
 namespace dsr
 {
-	namespace subsystems
+	namespace input
 	{
 		Input::Input()
 			: m_keyboard(std::make_shared<dsr::inputdevices::Keyboard>()),

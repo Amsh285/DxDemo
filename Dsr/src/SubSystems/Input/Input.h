@@ -5,7 +5,7 @@
 
 namespace dsr
 {
-	namespace subsystems
+	namespace input
 	{
 		class Input
 		{

@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\SubSystems\Input\KeyMap.h" />
     <ClInclude Include="src\SubSystems\Input\Input.h" />
     <ClInclude Include="src\SubSystems\Input\InputSystem.h" />
     <ClInclude Include="src\Events\Application\InputEvents\MouseEvents.h" />
@@ -47,6 +48,7 @@
     <ClInclude Include="src\DirectX\Direct3dDevice.h" />
     <ClInclude Include="src\dsrpch.h" />
     <ClInclude Include="src\ErrorHandling\dsr_error.h" />
+    <ClInclude Include="src\SubSystems\Input\KeyCode.h" />
     <ClInclude Include="src\Vendor\stb\stb_image.h" />
     <ClInclude Include="src\Windows\Window.h" />
     <ClInclude Include="src\Windows\WindowData.h" />
@@ -59,6 +61,9 @@
     <ClInclude Include="src\DirectX\Rendering\Data\VertexGroup.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\SubSystems\Input\KeyMap.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="src\SubSystems\Input\Input.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
