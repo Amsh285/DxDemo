@@ -6,7 +6,7 @@
 
 namespace dsr
 {
-	namespace input
+	namespace inputdevices
 	{
 		class Keyboard : public dsr::events::EventListener
 		{

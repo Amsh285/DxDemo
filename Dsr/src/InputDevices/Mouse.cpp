@@ -3,7 +3,7 @@
 
 namespace dsr
 {
-	namespace input
+	namespace inputdevices
 	{
 		bool Mouse::IsKeyDown(const uint16_t& keyCode) const
 		{

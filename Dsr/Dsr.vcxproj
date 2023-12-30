@@ -11,11 +11,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Input\InputSystem.h" />
+    <ClInclude Include="src\SubSystems\Input\Input.h" />
+    <ClInclude Include="src\SubSystems\Input\InputSystem.h" />
     <ClInclude Include="src\Events\Application\InputEvents\MouseEvents.h" />
-    <ClInclude Include="src\Input\Mouse.h" />
+    <ClInclude Include="src\InputDevices\Mouse.h" />
     <ClInclude Include="src\Events\Application\InputEvents\KeyboardEvents.h" />
-    <ClInclude Include="src\Input\Keyboard.h" />
+    <ClInclude Include="src\InputDevices\Keyboard.h" />
     <ClInclude Include="src\DirectX\Data\ModelConfiguration.h" />
     <ClInclude Include="src\DirectX\Textures\Direct3dSamplerState.h" />
     <ClInclude Include="src\Data\Material.h" />
@@ -58,20 +59,23 @@
     <ClInclude Include="src\DirectX\Rendering\Data\VertexGroup.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Input\InputSystem.cpp">
+    <ClCompile Include="src\SubSystems\Input\Input.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="src\SubSystems\Input\InputSystem.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="src\Events\Application\InputEvents\MouseEvents.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="src\Input\Mouse.cpp">
+    <ClCompile Include="src\InputDevices\Mouse.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="src\Events\Application\InputEvents\KeyboardEvents.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="src\Input\Keyboard.cpp">
+    <ClCompile Include="src\InputDevices\Keyboard.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>

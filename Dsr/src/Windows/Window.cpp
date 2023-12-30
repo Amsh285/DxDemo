@@ -34,6 +34,7 @@ namespace dsr
 				int32_t y = GET_Y_LPARAM(lParam);
 				WORD mouseButtonState = LOWORD(wParam);
 
+				std::cout << "mousedown: " << mouseButtonState << std::endl;
 				dsr::events::MouseDownEvent event(x, y, mouseButtonState);
 				pWnd->m_mouseDownEventEmitter.operator()(event);
 				break;
@@ -42,10 +43,15 @@ namespace dsr
 			case WM_MBUTTONUP:
 			case WM_RBUTTONUP:
 			{
+				// Mouse uses byte States
+				// keyboard uses single keycodes
+				// find a coherent solution
+
 				int32_t x = GET_X_LPARAM(lParam);
 				int32_t y = GET_Y_LPARAM(lParam);
 				WORD mouseButtonState = LOWORD(wParam);
 
+				std::cout << "mouseup: " << mouseButtonState << std::endl;
 				dsr::events::MouseUpEvent event(x, y, mouseButtonState);
 				pWnd->m_mouseUpEventEmitter.operator()(event);
 				break;

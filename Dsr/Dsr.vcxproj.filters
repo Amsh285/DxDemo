@@ -135,19 +135,22 @@
     <ClInclude Include="src\DirectX\Data\ModelConfiguration.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Input\Keyboard.h">
+    <ClInclude Include="src\InputDevices\Keyboard.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Events\Application\InputEvents\KeyboardEvents.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Input\Mouse.h">
+    <ClInclude Include="src\InputDevices\Mouse.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Events\Application\InputEvents\MouseEvents.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Input\InputSystem.h">
+    <ClInclude Include="src\SubSystems\Input\InputSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SubSystems\Input\Input.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -266,19 +269,22 @@
     <ClCompile Include="src\DirectX\Data\ModelConfiguration.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Input\Keyboard.cpp">
+    <ClCompile Include="src\InputDevices\Keyboard.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Events\Application\InputEvents\KeyboardEvents.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Input\Mouse.cpp">
+    <ClCompile Include="src\InputDevices\Mouse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Events\Application\InputEvents\MouseEvents.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Input\InputSystem.cpp">
+    <ClCompile Include="src\SubSystems\Input\InputSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SubSystems\Input\Input.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,22 +1,23 @@
 #pragma once
 
-#include "Events/EventRegister.h"
+#include "Events/Application/InputEvents/KeyboardEvents.h"
+#include "Events/Application/InputEvents/MouseEvents.h"
 #include "Events/Application/WindowEvents.h"
-#include "Input/Keyboard.h"
-#include "Input/Mouse.h"
+#include "Events/EventRegister.h"
+#include "SubSystems/Input/Input.h"
 
 namespace dsr
 {
-	namespace input
+	namespace subsystems
 	{
 		//Todo
-		class InputSystem
+		class InputSystem : public Input
 		{
 		public:
-			std::shared_ptr<dsr::input::Keyboard> GetKeyboard() const { return m_keyboard; }
-			std::shared_ptr<dsr::input::Mouse> GetMouse() const { return m_mouse; }
+			/*std::shared_ptr<dsr::inputdevices::Keyboard> GetKeyboard() const { return m_keyboard; }
+			std::shared_ptr<dsr::inputdevices::Mouse> GetMouse() const { return m_mouse; }*/
 
-			InputSystem();
+
 			InputSystem(const InputSystem& other) = delete;
 			InputSystem& operator=(const InputSystem& other) = delete;
 
@@ -29,8 +30,7 @@ namespace dsr
 				const EventRegisterType<dsr::events::PrepareUdateFrameEvent>& prepareUpdateFrameEventRegister
 			);
 		private:
-			std::shared_ptr<dsr::input::Keyboard> m_keyboard;
-			std::shared_ptr<dsr::input::Mouse> m_mouse;
+			
 		};
 	}
 }
