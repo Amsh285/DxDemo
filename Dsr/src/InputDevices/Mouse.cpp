@@ -26,6 +26,11 @@ namespace dsr
 			return !m_currentPosition.Equals(m_previousPosition);
 		}
 
+		Mouse::Mouse()
+			: m_currentKeyState(0), m_previousKeyState(0)
+		{
+		}
+
 		void Mouse::OnMouseDown(const dsr::events::MouseDownEvent& mouseDown)
 		{
 			m_currentKeyState = mouseDown.GetKeyCode();

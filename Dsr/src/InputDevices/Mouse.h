@@ -19,6 +19,8 @@ namespace dsr
 			bool IsKeyUp(const uint16_t& keyFlags) const;
 			bool IsMoving() const;
 
+			Mouse();
+
 			void OnMouseDown(const dsr::events::MouseDownEvent& mouseDown);
 			void OnMouseUp(const dsr::events::MouseUpEvent& mouseUp);
 			void OnMouseMove(const dsr::events::MouseMoveEvent& mouseMove);

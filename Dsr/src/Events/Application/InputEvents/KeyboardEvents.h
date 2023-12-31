@@ -9,21 +9,21 @@ namespace dsr
 		class KeyDownEvent : public IEvent
 		{
 		public:
-			const uint8_t& GetKeyCode() const { return m_keyCode; }
+			const uint16_t& GetKeyCode() const { return m_keyCode; }
 
-			explicit KeyDownEvent(const uint8_t& keyCode);
+			explicit KeyDownEvent(const uint16_t& keyCode);
 		private:
-			uint8_t m_keyCode;
+			uint16_t m_keyCode;
 		};
 
 		class KeyUpEvent : public IEvent
 		{
 		public:
-			const uint8_t& GetKeyCode() const { return m_keyCode; }
+			const uint16_t& GetKeyCode() const { return m_keyCode; }
 
-			explicit KeyUpEvent(const uint8_t& keyCode);
+			explicit KeyUpEvent(const uint16_t& keyCode);
 		private:
-			uint8_t m_keyCode;
+			uint16_t m_keyCode;
 		};
 	}
 }

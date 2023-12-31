@@ -11,9 +11,9 @@ namespace dsr
 		class Keyboard : public dsr::events::EventListener
 		{
 		public:
-			bool IsKeyDown(const uint8_t& keyCode) const;
-			bool IsKeyHolding(const uint8_t& keyCode) const;
-			bool IsKeyUp(const uint8_t& keyCode) const;
+			bool IsKeyDown(const uint16_t& keyCode) const;
+			bool IsKeyHolding(const uint16_t& keyCode) const;
+			bool IsKeyUp(const uint16_t& keyCode) const;
 
 			Keyboard();
 
@@ -21,7 +21,7 @@ namespace dsr
 			void OnKeyUp(const dsr::events::KeyUpEvent& keyUp);
 			void OnPrepareUpdateFrame(const dsr::events::PrepareUdateFrameEvent& prepareUpdate);
 		private:
-			std::bitset<256> m_currentState, m_previousState;
+			uint16_t m_currentState, m_previousState;
 		};
 	}
 }

@@ -156,9 +156,6 @@
     <ClInclude Include="src\SubSystems\Input\KeyCode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\SubSystems\Input\KeyMap.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Windows\Window.cpp">
@@ -291,9 +288,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\SubSystems\Input\Input.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SubSystems\Input\KeyMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
