@@ -40,7 +40,7 @@ namespace dsr
 
 		std::shared_ptr<camerasystem::Camera> m_mainCamera;
 		std::shared_ptr<BlenderModelLoader> m_blenderModelLoader;
-
+	private:
 		class WindowManager : public events::EventListener
 		{
 		public:
@@ -60,8 +60,5 @@ namespace dsr
 		};
 
 		std::shared_ptr<WindowManager> m_windowManager;
-
-	private:
-
 	};
 }

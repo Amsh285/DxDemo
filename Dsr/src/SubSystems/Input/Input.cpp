@@ -5,9 +5,11 @@ namespace dsr
 {
 	namespace input
 	{
-		Input::Input()
-			: m_keyboard(std::make_shared<dsr::inputdevices::Keyboard>()),
-			m_mouse(std::make_shared<dsr::inputdevices::Mouse>())
+		Input::Input(
+			const std::shared_ptr<dsr::inputdevices::Keyboard>& keyboard,
+			const std::shared_ptr<dsr::inputdevices::Mouse>& mouse,
+			const std::unordered_map<KeyCode, uint16_t>& keyMap)
+			: m_keyboard(keyboard), m_mouse(mouse), m_keyMap(keyMap)
 		{
 		}
 	}
