@@ -97,5 +97,26 @@ namespace dsr
 			}
 		private:
 		};
+
+		class MouseHoverEvent : public MouseEvent
+		{
+		public:
+			MouseHoverEvent(const int32_t& x, const int32_t& y)
+				: MouseEvent(x, y)
+			{
+			}
+
+			MouseHoverEvent(const MousePosition& position)
+				: MouseEvent(position)
+			{
+			}
+		private:
+		};
+
+		class MouseLeaveEvent
+		{
+		public:
+		private:
+		};
 	}
 }

@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Windows\MouseEventTracker.h" />
     <ClInclude Include="src\Windows\Input\WinInput.h" />
     <ClInclude Include="src\SubSystems\Input\Input.h" />
     <ClInclude Include="src\SubSystems\Input\InputSystem.h" />
@@ -61,6 +62,9 @@
     <ClInclude Include="src\DirectX\Rendering\Data\VertexGroup.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Windows\MouseEventTracker.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="src\Windows\Input\WinInput.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>

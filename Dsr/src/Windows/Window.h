@@ -1,6 +1,7 @@
 #pragma once
 
 #include "WindowData.h"
+#include "MouseEventTracker.h"
 #include "ErrorHandling/dsr_error.h"
 #include "Events/EventEmitter.h"
 #include "Events/EventListener.h"
@@ -28,6 +29,8 @@ namespace dsr
 			EventRegisterType<const dsr::events::MouseDownEvent&>& GetMouseDownEventRegister() { return m_mouseDownEventEmitter; }
 			EventRegisterType<const dsr::events::MouseUpEvent&>& GetMouseUpEventRegister() { return m_mouseUpEventEmitter; }
 			EventRegisterType<const dsr::events::MouseMoveEvent&>& GetMouseMoveEventRegister() { return m_mouseMoveEventEmitter; }
+			EventRegisterType<const dsr::events::MouseHoverEvent&>& GetMouseHoverEventRegister() { return m_mouseHoverEventEmitter; }
+			EventRegisterType<const dsr::events::MouseLeaveEvent&>& GetMouseLeaveEventRegister() { return m_mouseLeaveEventEmitter; }
 
 			int GetClientWidth() const { return m_data->clientWidth; }
 			int GetClientHeight() const { return m_data->clientHeight; }
@@ -45,6 +48,7 @@ namespace dsr
 			HWND m_windowHandle;
 			std::wstring m_className = L"Window_";
 			std::unique_ptr<WindowData> m_data;
+			std::shared_ptr<MouseEventTracker> m_mouseEventTracker;
 
 			int GetNextClassId();
 			HWND SetupWindow(const WNDCLASSEX& windowClass);
@@ -59,6 +63,8 @@ namespace dsr
 			EventEmitterType<const dsr::events::MouseDownEvent&> m_mouseDownEventEmitter;
 			EventEmitterType<const dsr::events::MouseUpEvent&> m_mouseUpEventEmitter;
 			EventEmitterType<const dsr::events::MouseMoveEvent&> m_mouseMoveEventEmitter;
+			EventEmitterType<const dsr::events::MouseHoverEvent&> m_mouseHoverEventEmitter;
+			EventEmitterType<const dsr::events::MouseLeaveEvent&> m_mouseLeaveEventEmitter;
 		};
 	}
 }

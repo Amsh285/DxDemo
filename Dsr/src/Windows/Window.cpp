@@ -17,13 +17,39 @@ namespace dsr
 				pWnd->m_data->clientWidth = LOWORD(lParam);
 				pWnd->m_data->clientHeight = HIWORD(lParam);
 
-				RECT windowArea = { 0, 0, pWnd->m_data->clientWidth, pWnd->m_data->clientHeight };
+ 				RECT windowArea = { 0, 0, pWnd->m_data->clientWidth, pWnd->m_data->clientHeight };
 				AdjustWindowRect(&windowArea, WS_OVERLAPPEDWINDOW, FALSE);
 				pWnd->m_data->width = windowArea.right - windowArea.left;
 				pWnd->m_data->height = windowArea.bottom - windowArea.top;
 
 				dsr::events::WindowResizedEvent resizedEvent;
 				pWnd->m_windowResizedEmitter.operator()(resizedEvent);
+				break;
+			}
+			case WM_KILLFOCUS:
+			{
+				std::cout << "killfocus" << std::endl;
+				break;
+			}
+			case WM_MOUSEHOVER:
+			{
+				int32_t x = GET_X_LPARAM(lParam);
+				int32_t y = GET_Y_LPARAM(lParam);
+
+				std::cout << "mouse hover" << std::endl;
+
+				dsr::events::MouseHoverEvent event(x, y);
+				pWnd->m_mouseHoverEventEmitter.operator()(event);
+				break;
+			}
+			case WM_MOUSELEAVE:
+			{
+				// https://stackoverflow.com/questions/27272944/popup-window-on-wm-mousehover-in-win32-api-how-to-close-it
+				// https://www.gamedev.net/forums/topic/594773-c-win32-detect-when-the-mouse-leaves-my-app-window/4770224/
+				std::cout << "mouse leave" << std::endl;
+
+				dsr::events::MouseLeaveEvent event;
+				pWnd->m_mouseLeaveEventEmitter.operator()(event);
 				break;
 			}
 			case WM_LBUTTONDOWN:
@@ -56,6 +82,10 @@ namespace dsr
 			{
 				int32_t x = GET_X_LPARAM(lParam);
 				int32_t y = GET_Y_LPARAM(lParam);
+
+				// https://stackoverflow.com/questions/27272944/popup-window-on-wm-mousehover-in-win32-api-how-to-close-it
+				// https://www.gamedev.net/forums/topic/594773-c-win32-detect-when-the-mouse-leaves-my-app-window/4770224/
+				// std::cout << "mouse position (x:, y:) => (" << x << ", " << y << ")" << std::endl;
 
 				dsr::events::MouseMoveEvent event(x, y);
 				pWnd->m_mouseMoveEventEmitter.operator()(event);
@@ -172,6 +202,11 @@ namespace dsr
 			assert(m_windowHandle);
 
 			SetWindowLongPtr(m_windowHandle, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
+
+			m_mouseEventTracker = std::make_shared<MouseEventTracker>(m_windowHandle);
+			m_mouseMoveEventEmitter.Hook(m_mouseEventTracker, &MouseEventTracker::OnMouseMove);
+			m_mouseHoverEventEmitter.Hook(m_mouseEventTracker, &MouseEventTracker::OnMouseHover);
+			m_mouseLeaveEventEmitter.Hook(m_mouseEventTracker, &MouseEventTracker::OnMouseLeave);
 		}
 
 		Window::~Window()

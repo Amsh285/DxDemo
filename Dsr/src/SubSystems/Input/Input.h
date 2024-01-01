@@ -12,6 +12,9 @@ namespace dsr
 		class Input
 		{
 		public:
+			std::shared_ptr<dsr::inputdevices::Keyboard> GetKeyboard() const { return m_keyboard; }
+			std::shared_ptr<dsr::inputdevices::Mouse> GetMouse() const { return m_mouse; }
+
 			Input(
 				const std::shared_ptr<dsr::inputdevices::Keyboard>& keyboard,
 				const std::shared_ptr<dsr::inputdevices::Mouse>& mouse,
