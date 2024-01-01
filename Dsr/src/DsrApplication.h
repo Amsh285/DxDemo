@@ -5,6 +5,7 @@
 
 #include "Windows/Window.h"
 #include "Windows/WindowApplication.h"
+#include "Windows/Input/WinInput.h"
 
 #include "CameraSystem/Camera.h"
 #include "ModelLoaders/BlenderModelLoader.h"
@@ -15,6 +16,8 @@
 
 #include "DirectX/Direct3dDeviceBufferExtensions.h"
 #include "DirectX/Direct3dDeviceShaderExtensions.h"
+
+#include "SubSystems/Input/InputSystem.h"
 
 namespace dsr
 {
@@ -32,6 +35,8 @@ namespace dsr
 	protected:
 		std::shared_ptr<camerasystem::Camera> CreateCamera();
 		void SetActiveCamera(const std::shared_ptr<camerasystem::Camera>& camera);
+
+		std::shared_ptr<dsr::input::Input> GetInput() const;
 
 		std::shared_ptr<windows::Window> m_window;
 		std::shared_ptr<directX::Direct3dDevice> m_device;
@@ -60,5 +65,6 @@ namespace dsr
 		};
 
 		std::shared_ptr<WindowManager> m_windowManager;
+		std::shared_ptr<dsr::input::InputSystem> m_inputSystem;
 	};
 }

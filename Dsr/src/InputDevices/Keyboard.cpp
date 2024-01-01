@@ -22,6 +22,8 @@ namespace dsr
 
 		void Keyboard::OnPrepareUpdateFrame(const dsr::events::PrepareUdateFrameEvent& prepareUpdate)
 		{
+			// works for now. I should check out focus behaviour later.
+			// Keyups dont get fired in debug probably because the window loses focus.
 			m_previousState = m_currentState;
 		}
 

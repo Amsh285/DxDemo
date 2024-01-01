@@ -31,6 +31,7 @@ namespace dsr
 		m_renderer = std::make_shared<directX::rendering::Direct3dRenderer>(m_device);
 		m_windowManager = std::make_shared<WindowManager>(m_window, m_device);
 		m_blenderModelLoader = std::make_shared<BlenderModelLoader>();
+		m_inputSystem = std::make_shared<dsr::input::InputSystem>(dsr::windows::CreateKeyMap());
 	}
 
 	DsrResult DsrApplication::Setup()
@@ -45,6 +46,15 @@ namespace dsr
 		m_window->GetDestroyEventRegister().Hook(m_windowManager, &DsrApplication::WindowManager::OnWindowDestroy);
 		m_window->GetResizedEventRegister().Hook(m_windowManager, &DsrApplication::WindowManager::OnWindowResize);
 		m_windowApplication->GetUpdateFrameEventRegister().Hook(m_renderer, &directX::rendering::Direct3dRenderer::OnUpdate);
+
+		m_inputSystem->RegisterEvents(
+			m_window->GetKeyDownEventRegister(),
+			m_window->GetKeyUpEventRegister(),
+			m_window->GetMouseDownEventRegister(),
+			m_window->GetMouseUpEventRegister(),
+			m_window->GetMouseMoveEventRegister(),
+			m_windowApplication->GetPrepareUpdateFrameEventRegister()
+		);
 
 		return DsrResult::Success("base setup complete.");
 	}
@@ -78,5 +88,10 @@ namespace dsr
 	void DsrApplication::SetActiveCamera(const std::shared_ptr<camerasystem::Camera>& camera)
 	{
 		m_renderer->SetActiveCamera(camera);
+	}
+
+	std::shared_ptr<dsr::input::Input> DsrApplication::GetInput() const
+	{
+		return m_inputSystem->GetInput();
 	}
 }
