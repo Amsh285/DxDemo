@@ -17,7 +17,7 @@ namespace dsr
 				pWnd->m_data->clientWidth = LOWORD(lParam);
 				pWnd->m_data->clientHeight = HIWORD(lParam);
 
- 				RECT windowArea = { 0, 0, pWnd->m_data->clientWidth, pWnd->m_data->clientHeight };
+				RECT windowArea = { 0, 0, pWnd->m_data->clientWidth, pWnd->m_data->clientHeight };
 				AdjustWindowRect(&windowArea, WS_OVERLAPPEDWINDOW, FALSE);
 				pWnd->m_data->width = windowArea.right - windowArea.left;
 				pWnd->m_data->height = windowArea.bottom - windowArea.top;
@@ -26,9 +26,16 @@ namespace dsr
 				pWnd->m_windowResizedEmitter.operator()(resizedEvent);
 				break;
 			}
+			case WM_SETFOCUS:
+			{
+				dsr::events::AquiredFocusEvent event;
+				pWnd->m_aquiredFocusEvent.operator()(event);
+				break;
+			}
 			case WM_KILLFOCUS:
 			{
-				std::cout << "killfocus" << std::endl;
+				dsr::events::LooseFocusEvent event;
+				pWnd->m_looseFocusEvent.operator()(event);
 				break;
 			}
 			case WM_MOUSEHOVER:
@@ -36,18 +43,12 @@ namespace dsr
 				int32_t x = GET_X_LPARAM(lParam);
 				int32_t y = GET_Y_LPARAM(lParam);
 
-				std::cout << "mouse hover" << std::endl;
-
 				dsr::events::MouseHoverEvent event(x, y);
 				pWnd->m_mouseHoverEventEmitter.operator()(event);
 				break;
 			}
 			case WM_MOUSELEAVE:
 			{
-				// https://stackoverflow.com/questions/27272944/popup-window-on-wm-mousehover-in-win32-api-how-to-close-it
-				// https://www.gamedev.net/forums/topic/594773-c-win32-detect-when-the-mouse-leaves-my-app-window/4770224/
-				std::cout << "mouse leave" << std::endl;
-
 				dsr::events::MouseLeaveEvent event;
 				pWnd->m_mouseLeaveEventEmitter.operator()(event);
 				break;
@@ -85,8 +86,6 @@ namespace dsr
 
 				// https://stackoverflow.com/questions/27272944/popup-window-on-wm-mousehover-in-win32-api-how-to-close-it
 				// https://www.gamedev.net/forums/topic/594773-c-win32-detect-when-the-mouse-leaves-my-app-window/4770224/
-				// std::cout << "mouse position (x:, y:) => (" << x << ", " << y << ")" << std::endl;
-
 				dsr::events::MouseMoveEvent event(x, y);
 				pWnd->m_mouseMoveEventEmitter.operator()(event);
 				break;
@@ -122,8 +121,6 @@ namespace dsr
 			default:
 				break;
 			}
-
-			//std::cout << "message: " << message << std::endl;
 
 			return DefWindowProc(windowHandle, message, wParam, lParam);
 		}

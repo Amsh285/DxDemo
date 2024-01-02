@@ -19,6 +19,7 @@ namespace dsr
 
 			void OnKeyDown(const dsr::events::KeyDownEvent& keyDown);
 			void OnKeyUp(const dsr::events::KeyUpEvent& keyUp);
+			void OnLooseFocus(const dsr::events::LooseFocusEvent& looseFocus);
 			void OnPrepareUpdateFrame(const dsr::events::PrepareUdateFrameEvent& prepareUpdate);
 		private:
 			uint16_t m_currentState, m_previousState;

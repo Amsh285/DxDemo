@@ -18,6 +18,14 @@ namespace dsr
 		{
 		};
 
+		class AquiredFocusEvent : public IEvent
+		{
+		};
+
+		class LooseFocusEvent : public IEvent
+		{
+		};
+
 		class PrepareUdateFrameEvent : public IEvent
 		{
 		};

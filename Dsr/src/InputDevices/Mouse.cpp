@@ -48,6 +48,12 @@ namespace dsr
 			m_currentPosition = mouseMove.GetPosition();
 		}
 
+		void Mouse::OnLooseFocus(const dsr::events::LooseFocusEvent& looseFocus)
+		{
+			//this will reset the mouse button states when the application window looses focus
+			m_currentKeyState = m_previousKeyState = 0x0000;
+		}
+
 		void Mouse::OnPrepareUpdateFrame(const dsr::events::PrepareUdateFrameEvent& prepareUpdate)
 		{
 			m_previousKeyState = m_currentKeyState;

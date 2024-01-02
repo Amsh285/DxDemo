@@ -12,25 +12,21 @@ namespace dsr
 			m_input = std::make_shared<Input>(m_keyboard, m_mouse, keyMap);
 		}
 
-		void InputSystem::RegisterEvents(
-			EventRegisterType<const dsr::events::KeyDownEvent&>& keyDownEventRegister,
-			EventRegisterType<const dsr::events::KeyUpEvent&>& keyUpEventRegister,
-			EventRegisterType<const dsr::events::MouseDownEvent&>& mouseDownEventRegister,
-			EventRegisterType<const dsr::events::MouseUpEvent&>& mouseUpEventRegister,
-			EventRegisterType<const dsr::events::MouseMoveEvent&>& mouseMoveEventRegister,
-			EventRegisterType<const dsr::events::PrepareUdateFrameEvent&>& prepareUpdateFrameEventRegister)
+		void InputSystem::RegisterEvents(std::shared_ptr<dsr::EventDispatcher> dispatcher)
 		{
 			using namespace dsr::inputdevices;
-			
-			keyDownEventRegister.Hook(m_keyboard, &Keyboard::OnKeyDown);
-			keyUpEventRegister.Hook(m_keyboard, &Keyboard::OnKeyUp);
 
-			mouseDownEventRegister.Hook(m_mouse, &Mouse::OnMouseDown);
-			mouseUpEventRegister.Hook(m_mouse, &Mouse::OnMouseUp);
-			mouseMoveEventRegister.Hook(m_mouse, &Mouse::OnMouseMove);
+			dispatcher->RegisterEventListener(m_keyboard, &Keyboard::OnKeyDown);
+			dispatcher->RegisterEventListener(m_keyboard, &Keyboard::OnKeyUp);
+			dispatcher->RegisterEventListener(m_keyboard, &Keyboard::OnLooseFocus);
 
-			prepareUpdateFrameEventRegister.Hook(m_keyboard, &Keyboard::OnPrepareUpdateFrame);
-			prepareUpdateFrameEventRegister.Hook(m_mouse, &Mouse::OnPrepareUpdateFrame);
+			dispatcher->RegisterEventListener(m_mouse, &Mouse::OnMouseDown);
+			dispatcher->RegisterEventListener(m_mouse, &Mouse::OnMouseUp);
+			dispatcher->RegisterEventListener(m_mouse, &Mouse::OnMouseMove);
+			dispatcher->RegisterEventListener(m_mouse, &Mouse::OnLooseFocus);
+
+			dispatcher->RegisterEventListener(m_keyboard, &Keyboard::OnPrepareUpdateFrame);
+			dispatcher->RegisterEventListener(m_mouse, &Mouse::OnPrepareUpdateFrame);
 		}
 	}
 }

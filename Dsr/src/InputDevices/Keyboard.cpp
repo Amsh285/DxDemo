@@ -20,10 +20,19 @@ namespace dsr
 			m_currentState &= ~keyUp.GetKeyCode();
 		}
 
+		void Keyboard::OnLooseFocus(const dsr::events::LooseFocusEvent& looseFocus)
+		{
+			// this will interupt keydowns and prevent keyups when losing keyboardfocus
+			// another solution could be to manually trigger key ups for all keys that are currently down
+			// but this could lead to unexpected behaviour.
+			// Therefore when loosing the keyboard-focus, the keyboard will be reset to a clean state.
+			// It is up to Developers to handle key up events with
+			// the possibility of the window loosing focus appropriately.
+			m_previousState = m_currentState = 0x0000;
+		}
+
 		void Keyboard::OnPrepareUpdateFrame(const dsr::events::PrepareUdateFrameEvent& prepareUpdate)
 		{
-			// works for now. I should check out focus behaviour later.
-			// Keyups dont get fired in debug probably because the window loses focus.
 			m_previousState = m_currentState;
 		}
 

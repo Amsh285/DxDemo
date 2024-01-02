@@ -22,6 +22,8 @@ namespace dsr
 			EventRegisterType<const dsr::events::WindowCloseEvent&>& GetCloseEventRegister() { return m_windowCloseEventEmitter; }
 			EventRegisterType<const dsr::events::WindowDestroyEvent&>& GetDestroyEventRegister() { return m_windowDestroyEmitter; }
 			EventRegisterType<const dsr::events::WindowResizedEvent&>& GetResizedEventRegister() { return m_windowResizedEmitter; }
+			EventRegisterType<const dsr::events::AquiredFocusEvent&>& GetAquiredFocusEventRegister() { return m_aquiredFocusEvent; }
+			EventRegisterType<const dsr::events::LooseFocusEvent&>& GetLooseFocusEventRegister() { return m_looseFocusEvent; }
 
 			EventRegisterType<const dsr::events::KeyDownEvent&>& GetKeyDownEventRegister() { return m_keyDownEventEmitter; }
 			EventRegisterType<const dsr::events::KeyUpEvent&>& GetKeyUpEventRegister() { return m_keyUpEventEmitter; }
@@ -56,6 +58,8 @@ namespace dsr
 			EventEmitterType<const dsr::events::WindowCloseEvent&> m_windowCloseEventEmitter;
 			EventEmitterType<const dsr::events::WindowDestroyEvent&> m_windowDestroyEmitter;
 			EventEmitterType<const dsr::events::WindowResizedEvent&> m_windowResizedEmitter;
+			EventEmitterType<const dsr::events::AquiredFocusEvent&> m_aquiredFocusEvent;
+			EventEmitterType<const dsr::events::LooseFocusEvent&> m_looseFocusEvent;
 
 			EventEmitterType<const dsr::events::KeyDownEvent&> m_keyDownEventEmitter;
 			EventEmitterType<const dsr::events::KeyUpEvent&> m_keyUpEventEmitter;

@@ -162,6 +162,9 @@
     <ClInclude Include="src\Windows\MouseEventTracker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Infrastructure\EventDispatcher.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Windows\Window.cpp">
@@ -300,6 +303,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Windows\MouseEventTracker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Infrastructure\EventDispatcher.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

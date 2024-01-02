@@ -17,6 +17,8 @@
 #include "DirectX/Direct3dDeviceBufferExtensions.h"
 #include "DirectX/Direct3dDeviceShaderExtensions.h"
 
+#include "Infrastructure/EventDispatcher.h"
+
 #include "SubSystems/Input/InputSystem.h"
 
 namespace dsr
@@ -37,12 +39,8 @@ namespace dsr
 		void SetActiveCamera(const std::shared_ptr<camerasystem::Camera>& camera);
 
 		std::shared_ptr<dsr::input::Input> GetInput() const;
-
-		std::shared_ptr<windows::Window> m_window;
 		std::shared_ptr<directX::Direct3dDevice> m_device;
 		std::shared_ptr<directX::rendering::Direct3dRenderer> m_renderer;
-		std::shared_ptr<windows::WindowApplication> m_windowApplication;
-
 		std::shared_ptr<camerasystem::Camera> m_mainCamera;
 		std::shared_ptr<BlenderModelLoader> m_blenderModelLoader;
 	private:
@@ -64,7 +62,10 @@ namespace dsr
 			std::shared_ptr<directX::Direct3dDevice> m_device;
 		};
 
+		std::shared_ptr<windows::Window> m_window;
+		std::shared_ptr<windows::WindowApplication> m_windowApplication;
 		std::shared_ptr<WindowManager> m_windowManager;
+		std::shared_ptr<dsr::EventDispatcher> m_eventDispatcher;
 		std::shared_ptr<dsr::input::InputSystem> m_inputSystem;
 	};
 }
