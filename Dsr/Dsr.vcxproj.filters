@@ -147,13 +147,13 @@
     <ClInclude Include="src\Events\Application\InputEvents\MouseEvents.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\SubSystems\Input\InputSystem.h">
+    <ClInclude Include="src\Systems\Input\InputSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\SubSystems\Input\Input.h">
+    <ClInclude Include="src\Systems\Input\Input.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\SubSystems\Input\KeyCode.h">
+    <ClInclude Include="src\Systems\Input\KeyCode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Windows\Input\WinInput.h">
@@ -163,6 +163,24 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Infrastructure\EventDispatcher.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\EntityComponentSystem\Entity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\EntityComponentSystem\Component.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\EntityComponentSystem\System.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\EntityComponentSystem\EngineContext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\EntityComponentSystem\EcsEngineContext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\EntityComponentSystem\EcsManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -293,10 +311,10 @@
     <ClCompile Include="src\Events\Application\InputEvents\MouseEvents.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\SubSystems\Input\InputSystem.cpp">
+    <ClCompile Include="src\Systems\Input\InputSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\SubSystems\Input\Input.cpp">
+    <ClCompile Include="src\Systems\Input\Input.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Windows\Input\WinInput.cpp">
@@ -306,6 +324,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Infrastructure\EventDispatcher.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\EntityComponentSystem\System.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\EntityComponentSystem\EngineContext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\EntityComponentSystem\EcsEngineContext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\EntityComponentSystem\EcsManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

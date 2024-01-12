@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SubSystems/Input/KeyCode.h"
+#include "Systems/Input/KeyCode.h"
 
 namespace dsr
 {

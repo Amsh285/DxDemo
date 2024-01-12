@@ -11,11 +11,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Systems\EntityComponentSystem\EcsManager.h" />
+    <ClInclude Include="src\Systems\EntityComponentSystem\EcsEngineContext.h" />
+    <ClInclude Include="src\Systems\EntityComponentSystem\EngineContext.h" />
     <ClInclude Include="src\Infrastructure\EventDispatcher.h" />
+    <ClInclude Include="src\Systems\EntityComponentSystem\Component.h" />
+    <ClInclude Include="src\Systems\EntityComponentSystem\Entity.h" />
     <ClInclude Include="src\Windows\MouseEventTracker.h" />
     <ClInclude Include="src\Windows\Input\WinInput.h" />
-    <ClInclude Include="src\SubSystems\Input\Input.h" />
-    <ClInclude Include="src\SubSystems\Input\InputSystem.h" />
+    <ClInclude Include="src\Systems\Input\Input.h" />
+    <ClInclude Include="src\Systems\Input\InputSystem.h" />
     <ClInclude Include="src\Events\Application\InputEvents\MouseEvents.h" />
     <ClInclude Include="src\InputDevices\Mouse.h" />
     <ClInclude Include="src\Events\Application\InputEvents\KeyboardEvents.h" />
@@ -50,7 +55,7 @@
     <ClInclude Include="src\DirectX\Direct3dDevice.h" />
     <ClInclude Include="src\dsrpch.h" />
     <ClInclude Include="src\ErrorHandling\dsr_error.h" />
-    <ClInclude Include="src\SubSystems\Input\KeyCode.h" />
+    <ClInclude Include="src\Systems\Input\KeyCode.h" />
     <ClInclude Include="src\Vendor\stb\stb_image.h" />
     <ClInclude Include="src\Windows\Window.h" />
     <ClInclude Include="src\Windows\WindowData.h" />
@@ -61,8 +66,18 @@
     <ClInclude Include="src\DirectX\Shader\Data\VertexShaderData.h" />
     <ClInclude Include="src\Vendor\wrappers\STBIImage.h" />
     <ClInclude Include="src\DirectX\Rendering\Data\VertexGroup.h" />
+    <ClInclude Include="src\Systems\EntityComponentSystem\System.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Systems\EntityComponentSystem\EcsManager.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="src\Systems\EntityComponentSystem\EcsEngineContext.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="src\Systems\EntityComponentSystem\EngineContext.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="src\Infrastructure\EventDispatcher.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -72,10 +87,10 @@
     <ClCompile Include="src\Windows\Input\WinInput.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="src\SubSystems\Input\Input.cpp">
+    <ClCompile Include="src\Systems\Input\Input.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="src\SubSystems\Input\InputSystem.cpp">
+    <ClCompile Include="src\Systems\Input\InputSystem.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="src\Events\Application\InputEvents\MouseEvents.cpp">
@@ -244,6 +259,9 @@
     <ClCompile Include="src\DirectX\Rendering\Data\VertexGroup.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="src\Systems\EntityComponentSystem\System.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemGroup>
   <PropertyGroup Label="Globals">

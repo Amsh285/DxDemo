@@ -3,7 +3,7 @@
 #include "InputDevices/Keyboard.h"
 #include "InputDevices/Mouse.h"
 
-#include "SubSystems/Input/KeyCode.h"
+#include "Systems/Input/KeyCode.h"
 
 namespace dsr
 {

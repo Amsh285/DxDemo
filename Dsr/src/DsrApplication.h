@@ -19,7 +19,7 @@
 
 #include "Infrastructure/EventDispatcher.h"
 
-#include "SubSystems/Input/InputSystem.h"
+#include "Systems/Input/InputSystem.h"
 
 namespace dsr
 {
