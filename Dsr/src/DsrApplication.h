@@ -19,6 +19,7 @@
 
 #include "Infrastructure/EventDispatcher.h"
 
+#include "Systems/EntityComponentSystem/EcsManager.h"
 #include "Systems/Input/InputSystem.h"
 
 namespace dsr
@@ -67,5 +68,7 @@ namespace dsr
 		std::shared_ptr<WindowManager> m_windowManager;
 		std::shared_ptr<dsr::EventDispatcher> m_eventDispatcher;
 		std::shared_ptr<dsr::input::InputSystem> m_inputSystem;
+
+		std::shared_ptr<dsr::ecs::EcsManager> m_ecsManager;
 	};
 }

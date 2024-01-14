@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Events/EventListener.h"
 #include "Events/Application/WindowEvents.h"
 
 #include "ErrorHandling/DsrResult.h"
@@ -14,7 +15,7 @@ namespace dsr
 	{
 		constexpr auto REGISTERCOMPONENT_ALREADYREGISTERED = 200000;
 
-		class EcsManager
+		class EcsManager : public events::EventListener
 		{
 		public:
 			EcsManager();

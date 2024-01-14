@@ -33,6 +33,8 @@ namespace dsr
 		m_blenderModelLoader = std::make_shared<BlenderModelLoader>();
 		m_eventDispatcher = std::make_shared<dsr::EventDispatcher>(m_window, m_windowApplication);
 		m_inputSystem = std::make_shared<dsr::input::InputSystem>(dsr::windows::CreateKeyMap());
+
+		m_ecsManager = std::make_shared<dsr::ecs::EcsManager>();
 	}
 
 	DsrResult DsrApplication::Setup()
@@ -50,6 +52,8 @@ namespace dsr
 
 		m_inputSystem->RegisterEvents(m_eventDispatcher);
 
+		m_eventDispatcher->RegisterEventListener(m_ecsManager, &dsr::ecs::EcsManager::OnUpdate);
+		
 		return DsrResult::Success("base setup complete.");
 	}
 
