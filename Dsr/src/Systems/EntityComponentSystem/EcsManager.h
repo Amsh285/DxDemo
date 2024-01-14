@@ -2,6 +2,8 @@
 
 #include "Events/Application/WindowEvents.h"
 
+#include "ErrorHandling/DsrResult.h"
+
 #include "Systems/EntityComponentSystem/EcsEngineContext.h"
 #include "Systems/EntityComponentSystem/Entity.h"
 #include "Systems/EntityComponentSystem/System.h"
@@ -10,32 +12,44 @@ namespace dsr
 {
 	namespace ecs
 	{
+		constexpr auto REGISTERCOMPONENT_ALREADYREGISTERED = 200000;
+
 		class EcsManager
 		{
 		public:
 			EcsManager();
 
 			template<class TComponent>
-			void RegisterComponent(const Entity& entity)
+			std::shared_ptr<TComponent> RegisterComponent(const Entity& entity)
 			{
 				static_assert(std::is_base_of<Component, TComponent>::value, "TComponent must be derived from Component.");
-				RegisterComponent<TComponent>(std::make_shared<TComponent>(), entity);
+
+				std::shared_ptr<TComponent> component = std::make_shared<TComponent>();
+
+				if (m_engineContext->HasComponent<TComponent>(entity))
+					return nullptr;
+
+				DsrResult registerResult = RegisterComponent<TComponent>(component, entity);
+
+				if (registerResult.GetResultStatusCode() != RESULT_SUCCESS)
+					return nullptr;
+
+				return component;
 			}
 
 			template<class TComponent>
-			void RegisterComponent(const std::shared_ptr<TComponent>& component, const Entity& entity)
+			DsrResult RegisterComponent(const std::shared_ptr<TComponent>& component, const Entity& entity)
 			{
 				static_assert(std::is_base_of<Component, TComponent>::value, "TComponent must be derived from Component.");
 
 				//only one of the same component for an entity
 				if (m_engineContext->HasComponent<TComponent>(entity))
-					return;
+					return DsrResult("Component already registered.", REGISTERCOMPONENT_ALREADYREGISTERED);
 
 				m_engineContext->AddComponent(entity, component);
 
 				std::optional<std::unordered_map<std::type_index, std::shared_ptr<Component>>> getComponentResult = m_engineContext->GetComponents(entity);
-				if (!getComponentResult.has_value())
-					return;
+				assert(getComponentResult.has_value());
 
 				const std::unordered_map<std::type_index, std::shared_ptr<Component>> componentMap = getComponentResult.value();
 
@@ -55,6 +69,8 @@ namespace dsr
 						}
 					}
 				}
+
+				return DsrResult::Success("Component registered.");
 			}
 
 			template<class TComponent>

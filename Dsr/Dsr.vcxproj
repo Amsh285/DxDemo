@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Systems\EntityComponentSystem\Components\NameComponent.h" />
     <ClInclude Include="src\Systems\EntityComponentSystem\EcsManager.h" />
     <ClInclude Include="src\Systems\EntityComponentSystem\EcsEngineContext.h" />
     <ClInclude Include="src\Systems\EntityComponentSystem\EngineContext.h" />
@@ -68,8 +69,12 @@
     <ClInclude Include="src\DirectX\Rendering\Data\VertexGroup.h" />
     <ClInclude Include="src\Systems\EntityComponentSystem\System.h" />
     <ClInclude Include="src\Systems\EntityComponentSystem\Components\TransformComponent.h" />
+    <ClInclude Include="src\Systems\EntityComponentSystem\Components\StaticMeshComponent.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Systems\EntityComponentSystem\Components\NameComponent.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="src\Systems\EntityComponentSystem\EcsManager.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -265,6 +270,9 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="src\Systems\EntityComponentSystem\Components\TransformComponent.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="src\Systems\EntityComponentSystem\Components\StaticMeshComponent.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemGroup>

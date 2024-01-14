@@ -20,7 +20,6 @@ namespace dsr
 			});
 
 		return vertexGroups;
-
 	}
 
 	void ModelConfiguration::ConfigureVertexGroup(const std::string& name, const std::function<void(std::shared_ptr<directX::rendering::VertexGroup>)>& configFunc)

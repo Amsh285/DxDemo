@@ -23,8 +23,6 @@ namespace dsr
 
 		void RemoveVertexGroup(const std::string& name) { m_vertexGroupMap.erase(name); }
 
-		
-
 		ModelConfiguration() = default;
 		ModelConfiguration(
 			const data::Transform& globalTransform,
