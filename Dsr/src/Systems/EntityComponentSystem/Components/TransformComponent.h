@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Systems/EntityComponentSystem/Component.h"
+
 namespace dsr
 {
 	namespace ecs
@@ -10,7 +12,7 @@ namespace dsr
 			DirectX::XMMATRIX Normal;
 		};
 
-		class TransformComponent
+		class TransformComponent : public Component
 		{
 		public:
 			DirectX::XMFLOAT3 GetPositionVec3() const;

@@ -1,12 +1,13 @@
 #pragma once
 
+#include "Events/EventListener.h"
 #include "Systems/EntityComponentSystem/EngineContext.h"
 
 namespace dsr
 {
 	namespace ecs
 	{
-		class System
+		class System : public dsr::events::EventListener
 		{
 		public:
 			std::function<void(const EngineContext&)> OnComponentRegistered;

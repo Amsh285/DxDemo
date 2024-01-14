@@ -1,10 +1,12 @@
 #pragma once
 
+#include "Systems/EntityComponentSystem/Component.h"
+
 namespace dsr
 {
 	namespace ecs
 	{
-		class NameComponent
+		class NameComponent : Component
 		{
 		public:
 			std::string GetName() const { return m_name; }

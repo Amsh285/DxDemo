@@ -22,7 +22,7 @@ namespace dsr
 				SetDefaultSamplerState();
 
 				return DsrResult::Success("Initializing Renderer Successful.");
-			}
+			} 
 
 			void Direct3dRenderer::SetDefaultSamplerState()
 			{

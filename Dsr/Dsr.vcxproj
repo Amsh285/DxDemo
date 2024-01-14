@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Systems\EntityComponentSystem\EcsSystems\RendererSystem.h" />
     <ClInclude Include="src\Systems\EntityComponentSystem\Components\NameComponent.h" />
     <ClInclude Include="src\Systems\EntityComponentSystem\EcsManager.h" />
     <ClInclude Include="src\Systems\EntityComponentSystem\EcsEngineContext.h" />
@@ -41,7 +42,6 @@
     <ClInclude Include="src\DirectX\Buffers\Direct3dBuffer.h" />
     <ClInclude Include="src\DirectX\Direct3dDeviceBufferExtensions.h" />
     <ClInclude Include="src\DirectX\Direct3dVertexBufferf.h" />
-    <ClInclude Include="src\DirectX\Rendering\Direct3dRendererDevice.h" />
     <ClInclude Include="src\DirectX\Shader\Direct3dShaderProgram.h" />
     <ClInclude Include="src\DirectX\Direct3dDeviceShaderExtensions.h" />
     <ClInclude Include="src\DirectX\Shader\Direct3dShaderInputLayout.h" />
@@ -70,8 +70,13 @@
     <ClInclude Include="src\Systems\EntityComponentSystem\System.h" />
     <ClInclude Include="src\Systems\EntityComponentSystem\Components\TransformComponent.h" />
     <ClInclude Include="src\Systems\EntityComponentSystem\Components\StaticMeshComponent.h" />
+    <ClInclude Include="src\Systems\EntityComponentSystem\Components\TagComponent.h" />
+    <ClInclude Include="src\Systems\EntityComponentSystem\Components\ViewProjectionComponent.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Systems\EntityComponentSystem\EcsSystems\RendererSystem.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="src\Systems\EntityComponentSystem\Components\NameComponent.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -172,10 +177,6 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="src\DirectX\Rendering\Direct3dRendererDevice.cpp">
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
-    </ClCompile>
     <ClCompile Include="src\DirectX\Shader\Direct3dShaderProgram.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
@@ -273,6 +274,12 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="src\Systems\EntityComponentSystem\Components\StaticMeshComponent.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="src\Systems\EntityComponentSystem\Components\TagComponent.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="src\Systems\EntityComponentSystem\Components\ViewProjectionComponent.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemGroup>
