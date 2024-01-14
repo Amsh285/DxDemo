@@ -67,6 +67,7 @@
     <ClInclude Include="src\Vendor\wrappers\STBIImage.h" />
     <ClInclude Include="src\DirectX\Rendering\Data\VertexGroup.h" />
     <ClInclude Include="src\Systems\EntityComponentSystem\System.h" />
+    <ClInclude Include="src\Systems\EntityComponentSystem\Components\TransformComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Systems\EntityComponentSystem\EcsManager.cpp">
@@ -261,6 +262,9 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="src\Systems\EntityComponentSystem\System.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="src\Systems\EntityComponentSystem\Components\TransformComponent.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemGroup>
