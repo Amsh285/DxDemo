@@ -1,7 +1,5 @@
 #include "dsrpch.h"
 #include "RendererSystem.h"
-#include <Systems/EntityComponentSystem/Components/TransformComponent.h>
-#include <Systems/EntityComponentSystem/Components/StaticMeshComponent.h>
 
 namespace dsr
 {
@@ -16,7 +14,7 @@ namespace dsr
 		}
 
 		RendererSystem::RendererSystem()
-			: System(std::type_index(typeid(RendererSystem)), -2000000)
+			: System(std::type_index(typeid(RendererSystem)), 2000500)
 		{
 			OnUpdate = std::bind(&RendererSystem::Update, this, std::placeholders::_1);
 		}

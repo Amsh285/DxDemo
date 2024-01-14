@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Infrastructure\DsrTypes.h" />
     <ClInclude Include="src\Systems\EntityComponentSystem\EcsSystems\RendererSystem.h" />
     <ClInclude Include="src\Systems\EntityComponentSystem\Components\NameComponent.h" />
     <ClInclude Include="src\Systems\EntityComponentSystem\EcsManager.h" />
@@ -72,6 +73,8 @@
     <ClInclude Include="src\Systems\EntityComponentSystem\Components\StaticMeshComponent.h" />
     <ClInclude Include="src\Systems\EntityComponentSystem\Components\TagComponent.h" />
     <ClInclude Include="src\Systems\EntityComponentSystem\Components\ViewProjectionComponent.h" />
+    <ClInclude Include="src\Systems\EntityComponentSystem\Components\ViewFrustumComponent.h" />
+    <ClInclude Include="src\Systems\EntityComponentSystem\EcsSystems\ViewProjectionSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Systems\EntityComponentSystem\EcsSystems\RendererSystem.cpp">
@@ -280,6 +283,12 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="src\Systems\EntityComponentSystem\Components\ViewProjectionComponent.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="src\Systems\EntityComponentSystem\Components\ViewFrustumComponent.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="src\Systems\EntityComponentSystem\EcsSystems\ViewProjectionSystem.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemGroup>

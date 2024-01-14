@@ -22,7 +22,7 @@ namespace dsr
 				pWnd->m_data->width = windowArea.right - windowArea.left;
 				pWnd->m_data->height = windowArea.bottom - windowArea.top;
 
-				dsr::events::WindowResizedEvent resizedEvent;
+				dsr::events::WindowResizedEvent resizedEvent(pWnd->m_data->clientWidth, pWnd->m_data->clientHeight);
 				pWnd->m_windowResizedEmitter.operator()(resizedEvent);
 				break;
 			}

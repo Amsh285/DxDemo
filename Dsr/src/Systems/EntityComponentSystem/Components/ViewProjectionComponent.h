@@ -6,10 +6,6 @@ namespace dsr
 {
 	namespace ecs
 	{
-		// I got it
-		// make a system which takes a TransformComponent, CameraComponent (farZ, nearZ etc..) and a ViewProjectionComponent
-		// the system will use TransformComponent and CameraComponent to calulate the matrices for ViewProjectionComponent
-
 		class ViewProjectionComponent : public Component
 		{
 		public:

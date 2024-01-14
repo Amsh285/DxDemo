@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include "DirectX/Direct3dDevice.h"
 #include "DirectX/Direct3dDeviceShaderExtensions.h"
 #include "DirectX/Shader/Data/VertexShaderData.h"
@@ -9,6 +8,8 @@
 #include "ErrorHandling/DsrResult.h"
 
 #include "Systems/EntityComponentSystem/System.h"
+#include <Systems/EntityComponentSystem/Components/TransformComponent.h>
+#include <Systems/EntityComponentSystem/Components/StaticMeshComponent.h>
 
 namespace dsr
 {
