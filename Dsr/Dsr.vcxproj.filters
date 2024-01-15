@@ -144,13 +144,13 @@
     <ClInclude Include="src\Events\Application\InputEvents\MouseEvents.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\Input\InputSystem.h">
+    <ClInclude Include="src\EngineSubSystems\Input\InputSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\Input\Input.h">
+    <ClInclude Include="src\EngineSubSystems\Input\Input.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\Input\KeyCode.h">
+    <ClInclude Include="src\EngineSubSystems\Input\KeyCode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Windows\Input\WinInput.h">
@@ -162,49 +162,49 @@
     <ClInclude Include="src\Infrastructure\EventDispatcher.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\EntityComponentSystem\Entity.h">
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\Entity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\EntityComponentSystem\Component.h">
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\Component.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\EntityComponentSystem\System.h">
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\System.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\EntityComponentSystem\EngineContext.h">
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\EngineContext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\EntityComponentSystem\EcsEngineContext.h">
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\EcsEngineContext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\EntityComponentSystem\EcsManager.h">
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\EcsManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\EntityComponentSystem\Components\TransformComponent.h">
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\Components\TransformComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\EntityComponentSystem\Components\NameComponent.h">
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\Components\NameComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\EntityComponentSystem\Components\StaticMeshComponent.h">
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\Components\StaticMeshComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\EntityComponentSystem\EcsSystems\RendererSystem.h">
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\EcsSystems\RendererSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\EntityComponentSystem\Components\TagComponent.h">
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\Components\TagComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\EntityComponentSystem\Components\ViewProjectionComponent.h">
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\Components\ViewProjectionComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\EntityComponentSystem\Components\ViewFrustumComponent.h">
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\Components\ViewFrustumComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Infrastructure\DsrTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\EntityComponentSystem\EcsSystems\ViewProjectionSystem.h">
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\EcsSystems\ViewProjectionSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -332,10 +332,10 @@
     <ClCompile Include="src\Events\Application\InputEvents\MouseEvents.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Input\InputSystem.cpp">
+    <ClCompile Include="src\EngineSubSystems\Input\InputSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Input\Input.cpp">
+    <ClCompile Include="src\EngineSubSystems\Input\Input.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Windows\Input\WinInput.cpp">
@@ -347,40 +347,40 @@
     <ClCompile Include="src\Infrastructure\EventDispatcher.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\EntityComponentSystem\System.cpp">
+    <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\System.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\EntityComponentSystem\EngineContext.cpp">
+    <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\EngineContext.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\EntityComponentSystem\EcsEngineContext.cpp">
+    <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\EcsEngineContext.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\EntityComponentSystem\EcsManager.cpp">
+    <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\EcsManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\EntityComponentSystem\Components\TransformComponent.cpp">
+    <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\Components\TransformComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\EntityComponentSystem\Components\NameComponent.cpp">
+    <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\Components\NameComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\EntityComponentSystem\Components\StaticMeshComponent.cpp">
+    <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\Components\StaticMeshComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\EntityComponentSystem\EcsSystems\RendererSystem.cpp">
+    <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\EcsSystems\RendererSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\EntityComponentSystem\Components\TagComponent.cpp">
+    <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\Components\TagComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\EntityComponentSystem\Components\ViewProjectionComponent.cpp">
+    <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\Components\ViewProjectionComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\EntityComponentSystem\Components\ViewFrustumComponent.cpp">
+    <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\Components\ViewFrustumComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\EntityComponentSystem\EcsSystems\ViewProjectionSystem.cpp">
+    <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\EcsSystems\ViewProjectionSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

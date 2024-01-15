@@ -12,18 +12,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Infrastructure\DsrTypes.h" />
-    <ClInclude Include="src\Systems\EntityComponentSystem\EcsSystems\RendererSystem.h" />
-    <ClInclude Include="src\Systems\EntityComponentSystem\Components\NameComponent.h" />
-    <ClInclude Include="src\Systems\EntityComponentSystem\EcsManager.h" />
-    <ClInclude Include="src\Systems\EntityComponentSystem\EcsEngineContext.h" />
-    <ClInclude Include="src\Systems\EntityComponentSystem\EngineContext.h" />
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\EcsSystems\RendererSystem.h" />
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\Components\NameComponent.h" />
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\EcsManager.h" />
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\EcsEngineContext.h" />
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\EngineContext.h" />
     <ClInclude Include="src\Infrastructure\EventDispatcher.h" />
-    <ClInclude Include="src\Systems\EntityComponentSystem\Component.h" />
-    <ClInclude Include="src\Systems\EntityComponentSystem\Entity.h" />
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\Component.h" />
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\Entity.h" />
     <ClInclude Include="src\Windows\MouseEventTracker.h" />
     <ClInclude Include="src\Windows\Input\WinInput.h" />
-    <ClInclude Include="src\Systems\Input\Input.h" />
-    <ClInclude Include="src\Systems\Input\InputSystem.h" />
+    <ClInclude Include="src\EngineSubSystems\Input\Input.h" />
+    <ClInclude Include="src\EngineSubSystems\Input\InputSystem.h" />
     <ClInclude Include="src\Events\Application\InputEvents\MouseEvents.h" />
     <ClInclude Include="src\InputDevices\Mouse.h" />
     <ClInclude Include="src\Events\Application\InputEvents\KeyboardEvents.h" />
@@ -57,7 +57,7 @@
     <ClInclude Include="src\DirectX\Direct3dDevice.h" />
     <ClInclude Include="src\dsrpch.h" />
     <ClInclude Include="src\ErrorHandling\dsr_error.h" />
-    <ClInclude Include="src\Systems\Input\KeyCode.h" />
+    <ClInclude Include="src\EngineSubSystems\Input\KeyCode.h" />
     <ClInclude Include="src\Vendor\stb\stb_image.h" />
     <ClInclude Include="src\Windows\Window.h" />
     <ClInclude Include="src\Windows\WindowData.h" />
@@ -68,28 +68,28 @@
     <ClInclude Include="src\DirectX\Shader\Data\VertexShaderData.h" />
     <ClInclude Include="src\Vendor\wrappers\STBIImage.h" />
     <ClInclude Include="src\DirectX\Rendering\Data\VertexGroup.h" />
-    <ClInclude Include="src\Systems\EntityComponentSystem\System.h" />
-    <ClInclude Include="src\Systems\EntityComponentSystem\Components\TransformComponent.h" />
-    <ClInclude Include="src\Systems\EntityComponentSystem\Components\StaticMeshComponent.h" />
-    <ClInclude Include="src\Systems\EntityComponentSystem\Components\TagComponent.h" />
-    <ClInclude Include="src\Systems\EntityComponentSystem\Components\ViewProjectionComponent.h" />
-    <ClInclude Include="src\Systems\EntityComponentSystem\Components\ViewFrustumComponent.h" />
-    <ClInclude Include="src\Systems\EntityComponentSystem\EcsSystems\ViewProjectionSystem.h" />
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\System.h" />
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\Components\TransformComponent.h" />
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\Components\StaticMeshComponent.h" />
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\Components\TagComponent.h" />
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\Components\ViewProjectionComponent.h" />
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\Components\ViewFrustumComponent.h" />
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\EcsSystems\ViewProjectionSystem.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Systems\EntityComponentSystem\EcsSystems\RendererSystem.cpp">
+    <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\EcsSystems\RendererSystem.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="src\Systems\EntityComponentSystem\Components\NameComponent.cpp">
+    <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\Components\NameComponent.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="src\Systems\EntityComponentSystem\EcsManager.cpp">
+    <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\EcsManager.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="src\Systems\EntityComponentSystem\EcsEngineContext.cpp">
+    <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\EcsEngineContext.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="src\Systems\EntityComponentSystem\EngineContext.cpp">
+    <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\EngineContext.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="src\Infrastructure\EventDispatcher.cpp">
@@ -101,10 +101,10 @@
     <ClCompile Include="src\Windows\Input\WinInput.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="src\Systems\Input\Input.cpp">
+    <ClCompile Include="src\EngineSubSystems\Input\Input.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="src\Systems\Input\InputSystem.cpp">
+    <ClCompile Include="src\EngineSubSystems\Input\InputSystem.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="src\Events\Application\InputEvents\MouseEvents.cpp">
@@ -270,25 +270,25 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="src\Systems\EntityComponentSystem\System.cpp">
+    <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\System.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="src\Systems\EntityComponentSystem\Components\TransformComponent.cpp">
+    <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\Components\TransformComponent.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="src\Systems\EntityComponentSystem\Components\StaticMeshComponent.cpp">
+    <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\Components\StaticMeshComponent.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="src\Systems\EntityComponentSystem\Components\TagComponent.cpp">
+    <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\Components\TagComponent.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="src\Systems\EntityComponentSystem\Components\ViewProjectionComponent.cpp">
+    <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\Components\ViewProjectionComponent.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="src\Systems\EntityComponentSystem\Components\ViewFrustumComponent.cpp">
+    <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\Components\ViewFrustumComponent.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="src\Systems\EntityComponentSystem\EcsSystems\ViewProjectionSystem.cpp">
+    <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\EcsSystems\ViewProjectionSystem.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemGroup>

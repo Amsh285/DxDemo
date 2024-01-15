@@ -3,7 +3,7 @@
 #include "DirectX/Direct3dVertexBufferf.h"
 #include "DirectX/Rendering/Data/VertexGroup.h"
 
-#include "Systems/EntityComponentSystem/Component.h"
+#include "EngineSubSystems/EntityComponentSystem/Component.h"
 
 namespace dsr
 {

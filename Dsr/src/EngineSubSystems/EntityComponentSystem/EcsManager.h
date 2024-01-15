@@ -5,9 +5,9 @@
 
 #include "ErrorHandling/DsrResult.h"
 
-#include "Systems/EntityComponentSystem/EcsEngineContext.h"
-#include "Systems/EntityComponentSystem/Entity.h"
-#include "Systems/EntityComponentSystem/System.h"
+#include "EngineSubSystems/EntityComponentSystem/EcsEngineContext.h"
+#include "EngineSubSystems/EntityComponentSystem/Entity.h"
+#include "EngineSubSystems/EntityComponentSystem/System.h"
 
 namespace dsr
 {

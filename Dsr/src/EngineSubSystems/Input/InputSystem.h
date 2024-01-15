@@ -4,7 +4,7 @@
 #include "Events/Application/InputEvents/MouseEvents.h"
 #include "Events/Application/WindowEvents.h"
 #include "Infrastructure/EventDispatcher.h"
-#include "Systems/Input/Input.h"
+#include "EngineSubSystems/Input/Input.h"
 
 namespace dsr
 {

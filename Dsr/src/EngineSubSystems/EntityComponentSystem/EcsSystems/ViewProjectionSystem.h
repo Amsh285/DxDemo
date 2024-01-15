@@ -2,10 +2,10 @@
 
 #include "Events/Application/WindowEvents.h"
 
-#include "Systems/EntityComponentSystem/System.h"
-#include <Systems/EntityComponentSystem/Components/TransformComponent.h>
-#include <Systems/EntityComponentSystem/Components/ViewFrustumComponent.h>
-#include <Systems/EntityComponentSystem/Components/ViewProjectionComponent.h>
+#include "EngineSubSystems/EntityComponentSystem/System.h"
+#include <EngineSubSystems/EntityComponentSystem/Components/TransformComponent.h>
+#include <EngineSubSystems/EntityComponentSystem/Components/ViewFrustumComponent.h>
+#include <EngineSubSystems/EntityComponentSystem/Components/ViewProjectionComponent.h>
 
 namespace dsr
 {

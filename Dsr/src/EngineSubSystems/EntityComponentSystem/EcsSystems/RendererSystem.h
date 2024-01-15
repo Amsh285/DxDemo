@@ -7,9 +7,9 @@
 
 #include "ErrorHandling/DsrResult.h"
 
-#include "Systems/EntityComponentSystem/System.h"
-#include <Systems/EntityComponentSystem/Components/TransformComponent.h>
-#include <Systems/EntityComponentSystem/Components/StaticMeshComponent.h>
+#include "EngineSubSystems/EntityComponentSystem/System.h"
+#include "EngineSubSystems/EntityComponentSystem/Components/TransformComponent.h"
+#include "EngineSubSystems/EntityComponentSystem/Components/StaticMeshComponent.h"
 
 namespace dsr
 {

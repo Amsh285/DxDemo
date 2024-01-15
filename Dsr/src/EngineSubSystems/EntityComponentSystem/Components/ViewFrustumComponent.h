@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Infrastructure/DsrTypes.h"
-#include "Systems/EntityComponentSystem/Component.h"
+#include "EngineSubSystems/EntityComponentSystem/Component.h"
 
 namespace dsr
 {

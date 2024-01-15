@@ -1,8 +1,8 @@
 #pragma once
 
 
-#include "Systems/EntityComponentSystem/Component.h"
-#include "Systems/EntityComponentSystem/Entity.h"
+#include "EngineSubSystems/EntityComponentSystem/Component.h"
+#include "EngineSubSystems/EntityComponentSystem/Entity.h"
 
 namespace dsr
 {
