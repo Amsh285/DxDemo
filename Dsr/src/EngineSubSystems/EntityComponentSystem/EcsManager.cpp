@@ -5,6 +5,16 @@ namespace dsr
 {
 	namespace ecs
 	{
+		Entity EcsManager::CreateNewEntity()
+		{
+			static unsigned lastId = 0;
+			static std::mutex entityLock;
+
+			std::lock_guard<std::mutex> guard(entityLock);
+
+			return ++lastId;
+		}
+
 		EcsManager::EcsManager()
 			: m_engineContext(std::make_shared<EcsEngineContext>())
 		{

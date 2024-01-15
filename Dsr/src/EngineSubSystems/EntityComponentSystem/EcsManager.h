@@ -18,6 +18,8 @@ namespace dsr
 		class EcsManager : public events::EventListener
 		{
 		public:
+			static Entity CreateNewEntity();
+
 			EcsManager();
 
 			template<class TComponent>
@@ -127,7 +129,7 @@ namespace dsr
 			{
 				static_assert(std::is_base_of<System, TSystem>::value, "TSystem must be derived from System");
 
-				if (std::find_if(m_systems.begin(), m_systems.end(), [&system](const std::shared_ptr<System>& sysPtr) { return sysPtr->GetType() == system; }) != m_systems.end())
+				if (std::find_if(m_systems.begin(), m_systems.end(), [&system](const std::shared_ptr<System>& sysPtr) { return sysPtr->GetType() == system->GetType(); }) != m_systems.end())
 					return;
 
 				m_systems.push_back(system);

@@ -1,5 +1,7 @@
 #include "dsrpch.h"
 #include "DsrApplication.h"
+#include <EngineSubSystems/EntityComponentSystem/Components/NameComponent.h>
+#include <EngineSubSystems/EntityComponentSystem/Components/TagComponent.h>
 
 namespace dsr
 {
@@ -35,6 +37,9 @@ namespace dsr
 		m_inputSystem = std::make_shared<dsr::input::InputSystem>(dsr::windows::CreateKeyMap());
 
 		m_ecsManager = std::make_shared<dsr::ecs::EcsManager>();
+
+		InitializeSystems();
+		InitializePredefinedEntities();
 	}
 
 	DsrResult DsrApplication::Setup()
@@ -54,6 +59,9 @@ namespace dsr
 
 		m_eventDispatcher->RegisterEventListener(m_ecsManager, &dsr::ecs::EcsManager::OnUpdate);
 		
+		SetupSystems();
+		SetupPredefinedEntities();
+
 		return DsrResult::Success("base setup complete.");
 	}
 
@@ -91,5 +99,36 @@ namespace dsr
 	std::shared_ptr<dsr::input::Input> DsrApplication::GetInput() const
 	{
 		return m_inputSystem->GetInput();
+	}
+
+	void DsrApplication::InitializeSystems()
+	{
+		m_viewProjectionSystem = std::make_shared<dsr::ecs::ViewProjectionSystem>();
+	}
+
+	void DsrApplication::InitializePredefinedEntities()
+	{
+		m_CameraEntity = m_ecsManager->CreateNewEntity();
+	}
+
+	void DsrApplication::SetupSystems()
+	{
+		m_eventDispatcher->RegisterEventListener(m_viewProjectionSystem, &dsr::ecs::ViewProjectionSystem::HandleWindowResized);
+
+		m_ecsManager->RegisterSystem(m_viewProjectionSystem);
+	}
+
+	void DsrApplication::SetupPredefinedEntities()
+	{
+		using namespace dsr::ecs;
+
+		std::shared_ptr<NameComponent> cameraName = m_ecsManager->RegisterComponent<NameComponent>(m_CameraEntity);
+		std::shared_ptr<TagComponent> cameraTag = m_ecsManager->RegisterComponent<TagComponent>(m_CameraEntity);
+		m_ecsManager->RegisterComponent<TransformComponent>(m_CameraEntity);
+		m_ecsManager->RegisterComponent<ViewFrustumComponent>(m_CameraEntity);
+		m_ecsManager->RegisterComponent<ViewProjectionComponent>(m_CameraEntity);
+
+		cameraName->SetName("MainCamera");
+		cameraTag->SetTag("Camera");
 	}
 }

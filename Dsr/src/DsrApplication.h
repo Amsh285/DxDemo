@@ -65,6 +65,11 @@ namespace dsr
 			std::shared_ptr<directX::Direct3dDevice> m_device;
 		};
 
+		void InitializeSystems();
+		void InitializePredefinedEntities();
+		void SetupSystems();
+		void SetupPredefinedEntities();
+
 		std::shared_ptr<windows::Window> m_window;
 		std::shared_ptr<windows::WindowApplication> m_windowApplication;
 		std::shared_ptr<WindowManager> m_windowManager;
@@ -73,5 +78,7 @@ namespace dsr
 
 		std::shared_ptr<dsr::ecs::EcsManager> m_ecsManager;
 
+		std::shared_ptr<dsr::ecs::ViewProjectionSystem> m_viewProjectionSystem;
+		dsr::ecs::Entity m_CameraEntity;
 	};
 }

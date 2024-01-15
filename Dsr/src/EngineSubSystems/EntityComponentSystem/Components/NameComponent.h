@@ -6,7 +6,7 @@ namespace dsr
 {
 	namespace ecs
 	{
-		class NameComponent : Component
+		class NameComponent : public Component
 		{
 		public:
 			std::string GetName() const { return m_name; }

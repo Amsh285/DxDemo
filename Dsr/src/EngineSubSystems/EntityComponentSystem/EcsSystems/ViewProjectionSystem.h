@@ -20,6 +20,8 @@ namespace dsr
 
 			void HandleWindowResized(const events::WindowResizedEvent& resizedEvent);
 			void Update(const EngineContext& context);
+
+			
 		private:
 			DirectX::XMMATRIX GetProjectionMatrix(const std::shared_ptr<ViewFrustumComponent>& viewFrustum);
 			DirectX::XMMATRIX GetViewMatrix(const std::shared_ptr<TransformComponent>& transform);

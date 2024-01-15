@@ -15,7 +15,8 @@ namespace dsr
 			template<class TComponent>
 			void AddComponent(const Entity& entity, const std::shared_ptr<TComponent>& component)
 			{
-				m_entities[entity][std::type_index(typeid(TComponent))] = component;
+				std::shared_ptr<Component> componentPtr = std::static_pointer_cast<Component>(component);
+				m_entities[entity][std::type_index(typeid(TComponent))] = componentPtr;
 			}
 
 			template<class TComponent>

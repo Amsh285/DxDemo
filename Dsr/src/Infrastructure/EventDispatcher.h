@@ -72,6 +72,14 @@ namespace dsr
 		template<class TSubType>
 		void RegisterEventListener(
 			const std::shared_ptr<dsr::events::EventListener>& instance,
+			void(TSubType::* func)(const dsr::events::WindowResizedEvent&))
+		{
+			m_window->GetResizedEventRegister().Hook(instance, func);
+		}
+
+		template<class TSubType>
+		void RegisterEventListener(
+			const std::shared_ptr<dsr::events::EventListener>& instance,
 			void(TSubType::* func)(const dsr::events::PrepareUdateFrameEvent&))
 		{
 			m_windowApplication->GetPrepareUpdateFrameEventRegister().Hook(instance, func);

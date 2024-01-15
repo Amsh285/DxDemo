@@ -47,7 +47,7 @@ namespace dsr
 		{
 			m_position = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
 			m_scale = DirectX::XMVectorSet(1.0f, 1.0f, 1.0f, 0.0f);
-			m_rotation = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+			m_rotation = DirectX::XMQuaternionIdentity();
 		}
 
 		DirectX::XMMATRIX TransformComponent::CalculateModelMatrix() const
