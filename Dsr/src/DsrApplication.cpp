@@ -53,7 +53,7 @@ namespace dsr
 
 		m_window->GetDestroyEventRegister().Hook(m_windowManager, &DsrApplication::WindowManager::OnWindowDestroy);
 		m_window->GetResizedEventRegister().Hook(m_windowManager, &DsrApplication::WindowManager::OnWindowResize);
-		m_windowApplication->GetUpdateFrameEventRegister().Hook(m_renderer, &directX::rendering::Direct3dRenderer::OnUpdate);
+		//m_windowApplication->GetUpdateFrameEventRegister().Hook(m_renderer, &directX::rendering::Direct3dRenderer::OnUpdate);
 
 		m_inputSystem->RegisterEvents(m_eventDispatcher);
 
@@ -76,7 +76,8 @@ namespace dsr
 		const int& x, const int& y,
 		const int& width, const int& height)
 		: m_window(std::make_shared<windows::Window>(windows::WindowData(title, x, y, width, height))),
-		m_windowApplication(windows::WindowApplication::Get())
+		m_windowApplication(windows::WindowApplication::Get()),
+		m_CameraEntity(0)
 	{
 	}
 
@@ -118,7 +119,7 @@ namespace dsr
 		m_eventDispatcher->RegisterEventListener(m_rendererSystem, &dsr::ecs::RendererSystem::PrepareUpdate);
 
 		m_ecsManager->RegisterSystem(m_viewProjectionSystem);
-		m_ecsManager->RegisterSystem(m_rendererSystem);
+		//m_ecsManager->RegisterSystem(m_rendererSystem);
 	}
 
 	void DsrApplication::SetupPredefinedEntities()

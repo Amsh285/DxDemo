@@ -17,12 +17,17 @@ namespace dsr
 {
 	namespace ecs
 	{
-		class RendererSystem : public System
+		// funktioniert wenn man nur von Eventlistener erbt
+		// public dsr::events::EventListener
+		// Andere vererbungen führen zu probleme. Muss mir das genauer ansehen T_T
+		class RendererSystem : public System, public dsr::events::EventListener 
 		{
 		public:
 			virtual std::vector<std::type_index> GetRequiredComponents() const override;
 			
 			RendererSystem(const std::shared_ptr<directX::Direct3dDevice>& device);
+			RendererSystem(const RendererSystem& other) = delete;
+			RendererSystem& operator=(const RendererSystem& other) = delete;
 
 			void PrepareUpdate(const events::PrepareUdateFrameEvent& prepareUpdate);
 			void Update(const EngineContext& context);
