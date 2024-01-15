@@ -104,6 +104,7 @@ namespace dsr
 	void DsrApplication::InitializeSystems()
 	{
 		m_viewProjectionSystem = std::make_shared<dsr::ecs::ViewProjectionSystem>();
+		m_rendererSystem = std::make_shared<dsr::ecs::RendererSystem>(m_device);
 	}
 
 	void DsrApplication::InitializePredefinedEntities()
@@ -114,8 +115,10 @@ namespace dsr
 	void DsrApplication::SetupSystems()
 	{
 		m_eventDispatcher->RegisterEventListener(m_viewProjectionSystem, &dsr::ecs::ViewProjectionSystem::HandleWindowResized);
+		m_eventDispatcher->RegisterEventListener(m_rendererSystem, &dsr::ecs::RendererSystem::PrepareUpdate);
 
 		m_ecsManager->RegisterSystem(m_viewProjectionSystem);
+		m_ecsManager->RegisterSystem(m_rendererSystem);
 	}
 
 	void DsrApplication::SetupPredefinedEntities()

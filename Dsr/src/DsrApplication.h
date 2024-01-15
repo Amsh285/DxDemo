@@ -20,9 +20,9 @@
 #include "Infrastructure/EventDispatcher.h"
 
 #include "EngineSubSystems/EntityComponentSystem/EcsManager.h"
+#include <EngineSubSystems/EntityComponentSystem/EcsSystems/RendererSystem.h>
 #include "EngineSubSystems/EntityComponentSystem/EcsSystems/ViewProjectionSystem.h"
 #include "EngineSubSystems/Input/InputSystem.h"
-
 
 namespace dsr
 {
@@ -79,6 +79,8 @@ namespace dsr
 		std::shared_ptr<dsr::ecs::EcsManager> m_ecsManager;
 
 		std::shared_ptr<dsr::ecs::ViewProjectionSystem> m_viewProjectionSystem;
+		std::shared_ptr<dsr::ecs::RendererSystem> m_rendererSystem;
+
 		dsr::ecs::Entity m_CameraEntity;
 	};
 }

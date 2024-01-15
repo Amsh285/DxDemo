@@ -11,6 +11,8 @@
 #include "EngineSubSystems/EntityComponentSystem/Components/TransformComponent.h"
 #include "EngineSubSystems/EntityComponentSystem/Components/StaticMeshComponent.h"
 
+#include "Events/Application/WindowEvents.h"
+
 namespace dsr
 {
 	namespace ecs
@@ -20,8 +22,9 @@ namespace dsr
 		public:
 			virtual std::vector<std::type_index> GetRequiredComponents() const override;
 			
-			RendererSystem();
+			RendererSystem(const std::shared_ptr<directX::Direct3dDevice>& device);
 
+			void PrepareUpdate(const events::PrepareUdateFrameEvent& prepareUpdate);
 			void Update(const EngineContext& context);
 		private:
 			std::shared_ptr<directX::Direct3dDevice> m_device;
