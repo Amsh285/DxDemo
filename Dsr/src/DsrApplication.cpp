@@ -119,7 +119,7 @@ namespace dsr
 		m_eventDispatcher->RegisterEventListener(m_rendererSystem, &dsr::ecs::RendererSystem::PrepareUpdate);
 
 		m_ecsManager->RegisterSystem(m_viewProjectionSystem);
-		//m_ecsManager->RegisterSystem(m_rendererSystem);
+		m_ecsManager->RegisterSystem(m_rendererSystem);
 	}
 
 	void DsrApplication::SetupPredefinedEntities()

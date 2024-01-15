@@ -20,7 +20,7 @@ namespace dsr
 		// funktioniert wenn man nur von Eventlistener erbt
 		// public dsr::events::EventListener
 		// Andere vererbungen führen zu probleme. Muss mir das genauer ansehen T_T
-		class RendererSystem : public System, public dsr::events::EventListener 
+		class RendererSystem : public System
 		{
 		public:
 			virtual std::vector<std::type_index> GetRequiredComponents() const override;

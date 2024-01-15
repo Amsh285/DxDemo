@@ -17,7 +17,6 @@ namespace dsr
 			const std::type_index& GetType() const { return m_type; }
 
 			int32_t GetSortOrder() const { return m_sortOrder; }
-			~System() = default;
 		protected:
 			System(const std::type_index& type);
 			System(const std::type_index& type, const int32_t& sortOrder);
