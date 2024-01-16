@@ -35,10 +35,13 @@ namespace dsr
 				}
 
 				dsr::events::PrepareUdateFrameEvent prepareEvent;
-				m_prepareUpdateFrameEvent.operator()(prepareEvent);
+				m_prepareUpdateFrameEmitter.operator()(prepareEvent);
 
 				dsr::events::UpdateFrameEvent event;
-				m_updateFrameEvent.operator()(event);
+				m_updateFrameEmitter.operator()(event);
+
+				dsr::events::UpdateFrameFinishedEvent updateFinishedEvent;
+				m_updateFrameFinishedEmitter.operator()(updateFinishedEvent);
 			}
 		}
 

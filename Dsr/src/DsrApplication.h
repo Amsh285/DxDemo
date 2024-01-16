@@ -45,7 +45,12 @@ namespace dsr
 		std::shared_ptr<directX::Direct3dDevice> m_device;
 		std::shared_ptr<directX::rendering::Direct3dRenderer> m_renderer;
 		std::shared_ptr<camerasystem::Camera> m_mainCamera;
+
+		std::shared_ptr<dsr::EventDispatcher> m_eventDispatcher;
 		std::shared_ptr<BlenderModelLoader> m_blenderModelLoader;
+
+		std::shared_ptr<dsr::input::InputSystem> m_inputSystem;
+		std::shared_ptr<dsr::ecs::EcsManager> m_ecsManager;
 	private:
 		class WindowManager : public events::EventListener
 		{
@@ -73,11 +78,7 @@ namespace dsr
 		std::shared_ptr<windows::Window> m_window;
 		std::shared_ptr<windows::WindowApplication> m_windowApplication;
 		std::shared_ptr<WindowManager> m_windowManager;
-		std::shared_ptr<dsr::EventDispatcher> m_eventDispatcher;
-		std::shared_ptr<dsr::input::InputSystem> m_inputSystem;
-
-		std::shared_ptr<dsr::ecs::EcsManager> m_ecsManager;
-
+		
 		std::shared_ptr<dsr::ecs::ViewProjectionSystem> m_viewProjectionSystem;
 		std::shared_ptr<dsr::ecs::RendererSystem> m_rendererSystem;
 

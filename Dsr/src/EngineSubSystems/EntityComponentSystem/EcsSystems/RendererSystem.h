@@ -29,8 +29,9 @@ namespace dsr
 			RendererSystem(const RendererSystem& other) = delete;
 			RendererSystem& operator=(const RendererSystem& other) = delete;
 
-			void PrepareUpdate(const events::PrepareUdateFrameEvent& prepareUpdate);
+			void PrepareUpdate(const events::PrepareUdateFrameEvent& args);
 			void Update(const EngineContext& context);
+			void UpdateFinished(const events::UpdateFrameFinishedEvent& args);
 		private:
 			std::shared_ptr<directX::Direct3dDevice> m_device;
 

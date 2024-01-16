@@ -116,7 +116,9 @@ namespace dsr
 	void DsrApplication::SetupSystems()
 	{
 		m_eventDispatcher->RegisterEventListener(m_viewProjectionSystem, &dsr::ecs::ViewProjectionSystem::HandleWindowResized);
+		
 		m_eventDispatcher->RegisterEventListener(m_rendererSystem, &dsr::ecs::RendererSystem::PrepareUpdate);
+		m_eventDispatcher->RegisterEventListener(m_rendererSystem, &dsr::ecs::RendererSystem::UpdateFinished);
 
 		m_ecsManager->RegisterSystem(m_viewProjectionSystem);
 		m_ecsManager->RegisterSystem(m_rendererSystem);

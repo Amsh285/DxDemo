@@ -22,12 +22,10 @@ namespace dsr
 			m_device = device;
 		}
 
-		void RendererSystem::PrepareUpdate(const events::PrepareUdateFrameEvent& prepareUpdate)
+		void RendererSystem::PrepareUpdate(const events::PrepareUdateFrameEvent& args)
 		{
 			m_device->Clear(0.0f, 0.2f, 0.4f, 1.0f);
 			m_device->SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-			m_device->SwapBuffers();
 		}
 
 		void RendererSystem::Update(const EngineContext& context)
@@ -36,6 +34,11 @@ namespace dsr
 			std::shared_ptr<StaticMeshComponent> staticMesh = context.GetComponent< StaticMeshComponent>();
 
 
+		}
+
+		void RendererSystem::UpdateFinished(const events::UpdateFrameFinishedEvent& args)
+		{
+			m_device->SwapBuffers();
 		}
 	}
 }
