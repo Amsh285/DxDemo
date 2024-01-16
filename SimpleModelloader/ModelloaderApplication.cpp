@@ -1,4 +1,5 @@
 #include "ModelloaderApplication.h"
+#include <EngineSubSystems/EntityComponentSystem/Components/NameComponent.h>
 
 constexpr auto MODELNAMES_SORC = "sorc";
 
@@ -28,7 +29,9 @@ dsr::DsrResult ModelloaderApplication::Setup()
 		return DsrResult(error.what(), error.GetResult());
 	}
 
-	AddContent(std::get<Direct3dShaderProgram>(loadDefaultShaderProgram), std::get<std::map<std::string, ModelConfiguration>>(loadContent));
+	const std::map<std::string, ModelConfiguration>& content = std::get<std::map<std::string, ModelConfiguration>>(loadContent);
+	AddContent(std::get<Direct3dShaderProgram>(loadDefaultShaderProgram), content);
+	RegisterSorcModel(content);
 
 	//m_mainCamera->Transform.Position = DirectX::XMVectorSet(0.0f, 1.0f, -1.0f, 1.0f);
 	m_mainCamera->Transform.Position = DirectX::XMVectorSet(0.0f, 1.0f, -1.0f, 1.0f);
@@ -40,6 +43,7 @@ dsr::DsrResult ModelloaderApplication::Setup()
 ModelloaderApplication::ModelloaderApplication()
 	: DsrApplication(L"Model loader", 100, 100, 1280, 768)
 {
+	m_sorcEntity = m_ecsManager->CreateNewEntity();
 }
 
 std::variant<std::map<std::string, dsr::ModelConfiguration>, dsr::dsr_error> ModelloaderApplication::LoadContent()
@@ -88,6 +92,20 @@ void ModelloaderApplication::AddContent(
 	}
 
 	m_renderer->AddUnitOfWork(uow);
+}
+
+void ModelloaderApplication::RegisterSorcModel(const std::map<std::string, dsr::ModelConfiguration>& content)
+{
+	const dsr::ModelConfiguration& sorcModel = content.at(MODELNAMES_SORC);
+
+	std::shared_ptr<dsr::ecs::NameComponent> sorcNameComponent = m_ecsManager->RegisterComponent<dsr::ecs::NameComponent>(m_sorcEntity);
+	sorcNameComponent->SetName("Sorc");
+
+	std::shared_ptr<dsr::ecs::TransformComponent> sorcTransformComponent = m_ecsManager->RegisterComponent<dsr::ecs::TransformComponent>(m_sorcEntity);
+	std::shared_ptr<dsr::ecs::StaticMeshComponent> sorcStaticMeshComponent = m_ecsManager->RegisterComponent<dsr::ecs::StaticMeshComponent>(m_sorcEntity);
+
+	sorcStaticMeshComponent->SetVertexBuffer(sorcModel.GetVertexBuffer());
+	sorcStaticMeshComponent->SetVertexGroups(sorcModel.GetVertexGroups());
 }
 
 std::variant<dsr::ModelConfiguration, dsr::dsr_error> ModelloaderApplication::LoadSorcModel()

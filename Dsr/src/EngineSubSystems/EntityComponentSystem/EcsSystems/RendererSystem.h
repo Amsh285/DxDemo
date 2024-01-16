@@ -17,9 +17,6 @@ namespace dsr
 {
 	namespace ecs
 	{
-		// funktioniert wenn man nur von Eventlistener erbt
-		// public dsr::events::EventListener
-		// Andere vererbungen führen zu probleme. Muss mir das genauer ansehen T_T
 		class RendererSystem : public System
 		{
 		public:
