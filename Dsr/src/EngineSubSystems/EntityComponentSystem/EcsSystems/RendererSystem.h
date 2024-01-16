@@ -26,10 +26,15 @@ namespace dsr
 			RendererSystem(const RendererSystem& other) = delete;
 			RendererSystem& operator=(const RendererSystem& other) = delete;
 
+			DsrResult Initialize();
+			void SetDefaultSamplerState();
+
 			void PrepareUpdate(const events::PrepareUdateFrameEvent& args);
 			void Update(const EngineContext& context);
 			void UpdateFinished(const events::UpdateFrameFinishedEvent& args);
 		private:
+			directX::Direct3dSamplerState m_defaultSamplerState;
+
 			std::shared_ptr<directX::Direct3dDevice> m_device;
 
 			std::map<size_t, directX::Direct3dBuffer> m_vsConstantBuffers;

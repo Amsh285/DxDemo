@@ -72,7 +72,7 @@ namespace dsr
 
 		void InitializeSystems();
 		void InitializePredefinedEntities();
-		void SetupSystems();
+		DsrResult SetupSystems();
 		void SetupPredefinedEntities();
 
 		std::shared_ptr<windows::Window> m_window;

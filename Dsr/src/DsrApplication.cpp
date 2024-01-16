@@ -58,8 +58,11 @@ namespace dsr
 		m_inputSystem->RegisterEvents(m_eventDispatcher);
 
 		m_eventDispatcher->RegisterEventListener(m_ecsManager, &dsr::ecs::EcsManager::OnUpdate);
-		
-		SetupSystems();
+
+		DsrResult setupSystemsResult = SetupSystems();
+		if (setupSystemsResult.GetResultStatusCode() != RESULT_SUCCESS)
+			return setupSystemsResult;
+
 		SetupPredefinedEntities();
 
 		return DsrResult::Success("base setup complete.");
@@ -113,15 +116,22 @@ namespace dsr
 		m_CameraEntity = m_ecsManager->CreateNewEntity();
 	}
 
-	void DsrApplication::SetupSystems()
+	DsrResult DsrApplication::SetupSystems()
 	{
+		DsrResult initializeRendererResult = m_rendererSystem->Initialize();
+
+		if (initializeRendererResult.GetResultStatusCode() != RESULT_SUCCESS)
+			return initializeRendererResult;
+
 		m_eventDispatcher->RegisterEventListener(m_viewProjectionSystem, &dsr::ecs::ViewProjectionSystem::HandleWindowResized);
-		
+
 		m_eventDispatcher->RegisterEventListener(m_rendererSystem, &dsr::ecs::RendererSystem::PrepareUpdate);
 		m_eventDispatcher->RegisterEventListener(m_rendererSystem, &dsr::ecs::RendererSystem::UpdateFinished);
 
 		m_ecsManager->RegisterSystem(m_viewProjectionSystem);
 		m_ecsManager->RegisterSystem(m_rendererSystem);
+
+		return DsrResult::Success("Setup Systems complete.");
 	}
 
 	void DsrApplication::SetupPredefinedEntities()
