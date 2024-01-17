@@ -1,7 +1,5 @@
 #include "dsrpch.h"
 #include "DsrApplication.h"
-#include <EngineSubSystems/EntityComponentSystem/Components/NameComponent.h>
-#include <EngineSubSystems/EntityComponentSystem/Components/TagComponent.h>
 
 namespace dsr
 {
@@ -61,21 +59,6 @@ namespace dsr
 		m_inputSystem->RegisterEvents(m_eventDispatcher);
 		m_eventDispatcher->RegisterEventListener(m_ecsManager, &dsr::ecs::EcsManager::OnUpdate);
 
-		std::variant<std::shared_ptr<directX::Direct3dShader<ID3D11VertexShader>>, dsr_error> loadDefaultVertexShaderResult
-			= directX::LoadPrecompiledShader<ID3D11VertexShader>(m_device, m_executablePath / "DefaultVertexShader.cso");
-
-		if (std::holds_alternative<dsr_error>(loadDefaultVertexShaderResult))
-		{
-			const dsr_error& error = std::get<dsr_error>(loadDefaultVertexShaderResult);
-			std::string errorMessage = "Error loading default Vertexshader.";
-			errorMessage += error.what();
-
-			//Todo: fix error numbers
-			return DsrResult(errorMessage, error.GetResult());
-		}
-
-		m_defaultVertexShader = std::get<std::shared_ptr<directX::Direct3dShader<ID3D11VertexShader>>>(loadDefaultVertexShaderResult);
-
 		DsrResult setupSystemsResult = SetupSystems();
 		if (setupSystemsResult.GetResultStatusCode() != RESULT_SUCCESS)
 			return setupSystemsResult;
@@ -97,7 +80,7 @@ namespace dsr
 		const int& width, const int& height)
 		: m_window(std::make_shared<windows::Window>(windows::WindowData(title, x, y, width, height))),
 		m_windowApplication(windows::WindowApplication::Get()),
-		m_CameraEntity(0), m_executablePath(std::filesystem::path(""))
+		m_cameraEntity(0), m_defaultShaderProgramEntity(0), m_executablePath(std::filesystem::path(""))
 	{
 	}
 
@@ -130,7 +113,8 @@ namespace dsr
 
 	void DsrApplication::InitializePredefinedEntities()
 	{
-		m_CameraEntity = m_ecsManager->CreateNewEntity();
+		m_cameraEntity = m_ecsManager->CreateNewEntity();
+		m_defaultShaderProgramEntity = m_ecsManager->CreateNewEntity();
 	}
 
 	DsrResult DsrApplication::SetupSystems()
@@ -153,15 +137,83 @@ namespace dsr
 
 	void DsrApplication::SetupPredefinedEntities()
 	{
+		SetupPredefinedMainCameraEntity();
+		SetupDefaultShaderProgramEntity();
+	}
+
+	void DsrApplication::SetupPredefinedMainCameraEntity()
+	{
 		using namespace dsr::ecs;
 
-		std::shared_ptr<NameComponent> cameraName = m_ecsManager->RegisterComponent<NameComponent>(m_CameraEntity);
-		std::shared_ptr<TagComponent> cameraTag = m_ecsManager->RegisterComponent<TagComponent>(m_CameraEntity);
-		m_ecsManager->RegisterComponent<TransformComponent>(m_CameraEntity);
-		m_ecsManager->RegisterComponent<ViewFrustumComponent>(m_CameraEntity);
-		m_ecsManager->RegisterComponent<ViewProjectionComponent>(m_CameraEntity);
+		std::shared_ptr<NameComponent> cameraName = m_ecsManager->RegisterComponent<NameComponent>(m_cameraEntity);
+		std::shared_ptr<TagComponent> cameraTag = m_ecsManager->RegisterComponent<TagComponent>(m_cameraEntity);
+		m_ecsManager->RegisterComponent<TransformComponent>(m_cameraEntity);
+		m_ecsManager->RegisterComponent<ViewFrustumComponent>(m_cameraEntity);
+		m_ecsManager->RegisterComponent<ViewProjectionComponent>(m_cameraEntity);
 
 		cameraName->SetName("MainCamera");
 		cameraTag->SetTag("Camera");
+	}
+
+	void DsrApplication::SetupDefaultShaderProgramEntity()
+	{
+		using namespace dsr::directX;
+		using namespace dsr::ecs;
+
+		Direct3dShaderInputLayout vertexShaderInputLayout;
+		vertexShaderInputLayout.AddVector3f("POSITION");
+		vertexShaderInputLayout.AddVector2f("TXCOORD");
+		vertexShaderInputLayout.AddVector3f("NORMAL");
+
+		std::variant<std::shared_ptr<directX::Direct3dShader<ID3D11VertexShader>>, dsr_error> loadDefaultVertexShaderResult
+			= directX::LoadPrecompiledShader<ID3D11VertexShader>(m_device, m_executablePath / "DefaultVertexShader.cso");
+
+		if (std::holds_alternative<dsr_error>(loadDefaultVertexShaderResult))
+		{
+			const dsr_error& error = std::get<dsr_error>(loadDefaultVertexShaderResult);
+			std::string errorMessage = "Error loading default Vertexshader. ";
+			errorMessage += error.what();
+
+			std::cout << errorMessage << std::endl;
+			return;
+		}
+
+		std::shared_ptr<directX::Direct3dShader<ID3D11VertexShader>> defaultVertexShader = std::get<std::shared_ptr<directX::Direct3dShader<ID3D11VertexShader>>>(loadDefaultVertexShaderResult);
+
+		std::variant<std::shared_ptr<directX::Direct3dShader<ID3D11PixelShader>>, dsr_error> loadDefaultPixelShaderResult
+			= directX::LoadPrecompiledShader<ID3D11PixelShader>(m_device, m_executablePath / "DefaultPixelShader.cso");
+
+		if (std::holds_alternative<dsr_error>(loadDefaultPixelShaderResult))
+		{
+			const dsr_error& error = std::get<dsr_error>(loadDefaultPixelShaderResult);
+			std::string errorMessage = "Error loading default Pixelshader. ";
+			errorMessage += error.what();
+
+			std::cout << errorMessage << std::endl;
+			return;
+		}
+
+		std::shared_ptr<directX::Direct3dShader<ID3D11PixelShader>> defaultPixelShader = std::get<std::shared_ptr<directX::Direct3dShader<ID3D11PixelShader>>>(loadDefaultPixelShaderResult);
+
+		std::variant<std::shared_ptr<Direct3dShaderProgram>, dsr_error> loadDefaultShaderProgram = CreateShaderProgramPtr(
+			m_device, defaultVertexShader, defaultPixelShader, vertexShaderInputLayout);
+
+		if (std::holds_alternative<dsr_error>(loadDefaultShaderProgram))
+		{
+			const dsr_error& error = std::get<dsr_error>(loadDefaultPixelShaderResult);
+			std::string errorMessage = "Error creating default Shaderprogram. ";
+			errorMessage += error.what();
+
+			std::cout << errorMessage << std::endl;
+			return;
+		}
+
+		std::shared_ptr<NameComponent> defaultShaderProgramName = m_ecsManager->RegisterComponent<NameComponent>(m_defaultShaderProgramEntity);
+		std::shared_ptr<TagComponent> defaultShaderProgramTag = m_ecsManager->RegisterComponent<TagComponent>(m_defaultShaderProgramEntity);
+		std::shared_ptr<ShaderProgramComponent> defaultShaderProgramComponent = m_ecsManager->RegisterComponent<ShaderProgramComponent>(m_defaultShaderProgramEntity);
+
+		defaultShaderProgramName->SetName("ShaderProgram-Default ");
+		defaultShaderProgramTag->SetTag("DefaultShaderProgram");
+		defaultShaderProgramComponent->SetShaderProgram(std::get<std::shared_ptr<Direct3dShaderProgram>>(loadDefaultShaderProgram));
 	}
 }

@@ -113,6 +113,12 @@ namespace dsr
 			return shader;
 		}
 
+		std::variant<std::shared_ptr<Direct3dShaderProgram>, dsr_error> CreateShaderProgramPtr(
+			const std::shared_ptr<Direct3dDevice> device,
+			const std::shared_ptr<Direct3dShader<ID3D11VertexShader>>& vertexShader,
+			const std::shared_ptr<Direct3dShader<ID3D11PixelShader>>& pixelShader,
+			const Direct3dShaderInputLayout& vertexShaderInputLayout);
+
 		std::variant<Direct3dShaderProgram, dsr_error> CreateShaderProgram(
 			const std::shared_ptr<Direct3dDevice> device,
 			const std::shared_ptr<Direct3dShader<ID3D11VertexShader>>& vertexShader,

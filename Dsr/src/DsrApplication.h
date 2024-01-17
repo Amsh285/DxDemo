@@ -19,9 +19,14 @@
 
 #include "Infrastructure/EventDispatcher.h"
 
+#include "EngineSubSystems/EntityComponentSystem/Components/NameComponent.h"
+#include "EngineSubSystems/EntityComponentSystem/Components/TagComponent.h"
+#include "EngineSubSystems/EntityComponentSystem/Components/ShaderProgramComponent.h"
+
 #include "EngineSubSystems/EntityComponentSystem/EcsManager.h"
-#include <EngineSubSystems/EntityComponentSystem/EcsSystems/RendererSystem.h>
+#include "EngineSubSystems/EntityComponentSystem/EcsSystems/RendererSystem.h"
 #include "EngineSubSystems/EntityComponentSystem/EcsSystems/ViewProjectionSystem.h"
+
 #include "EngineSubSystems/Input/InputSystem.h"
 
 namespace dsr
@@ -76,6 +81,8 @@ namespace dsr
 		void InitializePredefinedEntities();
 		DsrResult SetupSystems();
 		void SetupPredefinedEntities();
+		void SetupPredefinedMainCameraEntity();
+		void SetupDefaultShaderProgramEntity();
 
 		std::shared_ptr<windows::Window> m_window;
 		std::shared_ptr<windows::WindowApplication> m_windowApplication;
@@ -84,8 +91,7 @@ namespace dsr
 		std::shared_ptr<dsr::ecs::ViewProjectionSystem> m_viewProjectionSystem;
 		std::shared_ptr<dsr::ecs::RendererSystem> m_rendererSystem;
 
-		dsr::ecs::Entity m_CameraEntity;
-
-		std::shared_ptr<directX::Direct3dShader<ID3D11VertexShader>> m_defaultVertexShader;
+		dsr::ecs::Entity m_cameraEntity;
+		dsr::ecs::Entity m_defaultShaderProgramEntity;
 	};
 }

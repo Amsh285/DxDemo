@@ -81,10 +81,19 @@ namespace dsr
 			RenderTransform rt = transform->GetRenderTransform();
 			SetConstantBuffer(m_device, m_vsConstantBuffers, 2, &rt, sizeof(RenderTransform));
 
+			std::vector<Entity> defaultShaderProgramEntities = context.FindEntitiesByTag("DefaultShaderProgram");
 
+			if (defaultShaderProgramEntities.size() > 0)
+			{
+				std::shared_ptr<ShaderProgramComponent> defaultShaderProgramComponent = context.GetComponentFrom<ShaderProgramComponent>(defaultShaderProgramEntities[0]);
+				std::shared_ptr<Direct3dShaderProgram> defaultShaderProgram = defaultShaderProgramComponent->GetShaderProgram();
 
-			/*for(auto& : )*/
+				m_device->SetInputLayout(defaultShaderProgram->VertexShaderInputLayout.get());
+				/*m_device->SetVertexBuffers(0, 1, &vertexShaderRawPtr, &vertexStride, &offset);
+				m_device->SetIndexBuffer(indexBufferPtr.get());*/
 
+				m_device->UseShader(defaultShaderProgram->VertexShader->GetShaderPtr().get(), nullptr, 0);
+			}
 		}
 
 		void RendererSystem::UpdateFinished(const events::UpdateFrameFinishedEvent& args)
