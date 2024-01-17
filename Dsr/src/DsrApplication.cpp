@@ -27,8 +27,11 @@ namespace dsr
 	{
 	}
 
-	void DsrApplication::Initialize()
+	void DsrApplication::Initialize(const int& argc, const char* const* argv)
 	{
+		if (argc > 0)
+			m_executablePath = std::filesystem::path(argv[0]).parent_path();
+
 		m_device = directX::Direct3dDevice::Create(m_window);
 		m_renderer = std::make_shared<directX::rendering::Direct3dRenderer>(m_device);
 		m_windowManager = std::make_shared<WindowManager>(m_window, m_device);
@@ -56,8 +59,22 @@ namespace dsr
 		//m_windowApplication->GetUpdateFrameEventRegister().Hook(m_renderer, &directX::rendering::Direct3dRenderer::OnUpdate);
 
 		m_inputSystem->RegisterEvents(m_eventDispatcher);
-
 		m_eventDispatcher->RegisterEventListener(m_ecsManager, &dsr::ecs::EcsManager::OnUpdate);
+
+		std::variant<std::shared_ptr<directX::Direct3dShader<ID3D11VertexShader>>, dsr_error> loadDefaultVertexShaderResult
+			= directX::LoadPrecompiledShader<ID3D11VertexShader>(m_device, m_executablePath / "DefaultVertexShader.cso");
+
+		if (std::holds_alternative<dsr_error>(loadDefaultVertexShaderResult))
+		{
+			const dsr_error& error = std::get<dsr_error>(loadDefaultVertexShaderResult);
+			std::string errorMessage = "Error loading default Vertexshader.";
+			errorMessage += error.what();
+
+			//Todo: fix error numbers
+			return DsrResult(errorMessage, error.GetResult());
+		}
+
+		m_defaultVertexShader = std::get<std::shared_ptr<directX::Direct3dShader<ID3D11VertexShader>>>(loadDefaultVertexShaderResult);
 
 		DsrResult setupSystemsResult = SetupSystems();
 		if (setupSystemsResult.GetResultStatusCode() != RESULT_SUCCESS)
@@ -80,7 +97,7 @@ namespace dsr
 		const int& width, const int& height)
 		: m_window(std::make_shared<windows::Window>(windows::WindowData(title, x, y, width, height))),
 		m_windowApplication(windows::WindowApplication::Get()),
-		m_CameraEntity(0)
+		m_CameraEntity(0), m_executablePath(std::filesystem::path(""))
 	{
 	}
 

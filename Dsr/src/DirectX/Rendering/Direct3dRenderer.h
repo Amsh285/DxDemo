@@ -10,7 +10,10 @@
 
 #include "DirectX/Direct3dDevice.h"
 #include "DirectX/Direct3dDeviceShaderExtensions.h"
+
+#include "DirectX/Shader/Direct3dShader.h"
 #include "DirectX/Shader/Data/VertexShaderData.h"
+
 #include "DirectX/Textures/Direct3dSamplerState.h"
 
 namespace dsr

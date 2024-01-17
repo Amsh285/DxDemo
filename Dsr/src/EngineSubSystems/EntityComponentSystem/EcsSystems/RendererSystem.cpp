@@ -60,8 +60,8 @@ namespace dsr
 			std::shared_ptr<TransformComponent> transform = context.GetComponent<TransformComponent>();
 			std::shared_ptr<StaticMeshComponent> staticMesh = context.GetComponent<StaticMeshComponent>();
 
-			// Bad performance. Todo: create a Start Event where everything is setup.
-			// read cameras from there.
+			// i got a idea. instead of linear searching entities. Store them in a tagged map. reduce complexity to O(1)
+			// then the cameralookup can stay here!
 			std::vector<Entity> cameras = context.FindEntitiesByTag("Camera");
 
 			if (cameras.size() > 0)
@@ -72,6 +72,19 @@ namespace dsr
 				SetConstantBuffer(m_device, m_vsConstantBuffers, 0, viewProjection->GetProjectionMatrix());
 				SetConstantBuffer(m_device, m_vsConstantBuffers, 1, viewProjection->GetViewMatrix());
 			}
+			else
+			{
+				SetConstantBuffer(m_device, m_vsConstantBuffers, 0, DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(45.0f), 1.0f, 0.1f, 1000.0f));
+				SetConstantBuffer(m_device, m_vsConstantBuffers, 1, DirectX::XMMatrixIdentity());
+			}
+
+			RenderTransform rt = transform->GetRenderTransform();
+			SetConstantBuffer(m_device, m_vsConstantBuffers, 2, &rt, sizeof(RenderTransform));
+
+
+
+			/*for(auto& : )*/
+
 		}
 
 		void RendererSystem::UpdateFinished(const events::UpdateFrameFinishedEvent& args)

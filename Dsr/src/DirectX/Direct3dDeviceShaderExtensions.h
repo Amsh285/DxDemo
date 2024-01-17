@@ -16,6 +16,44 @@ namespace dsr
 #endif // DEBUG
 
 		template<class TShader>
+		std::variant<std::shared_ptr<Direct3dShader<TShader>>, dsr_error> LoadPrecompiledShader(
+			const std::shared_ptr<Direct3dDevice> device,
+			const std::filesystem::path& fileName
+		)
+		{
+			ID3DBlob* pShaderBlob = nullptr;
+
+			std::wstring wideFileName = fileName.wstring();
+			HRESULT hr = D3DReadFileToBlob(wideFileName.c_str(), &pShaderBlob);
+
+			if (FAILED(hr))
+				return dsr_error("Error reading precompiled Shader.", hr);
+
+			std::variant<TShader*, dsr_error> createShaderResult = device->CreateShader<TShader>(pShaderBlob, nullptr);
+
+			if (std::holds_alternative<dsr_error>(createShaderResult))
+			{
+				SafeRelease(pShaderBlob);
+				dsr_error createShaderError = std::get<dsr_error>(createShaderResult);
+
+				return dsr_error::Attach(
+					"error creating shader: " + std::string(wideFileName.begin(), wideFileName.end()) + ". ",
+					createShaderError
+				);
+			}
+
+			TShader* pShader = std::get<TShader*>(createShaderResult);
+			assert(pShader);
+			assert(pShaderBlob);
+
+			std::shared_ptr<TShader> shaderPtr = std::shared_ptr<TShader>(pShader, [](TShader* ptr) { SafeRelease(ptr); });
+			std::shared_ptr<ID3DBlob> shaderBlobPtr = std::shared_ptr<ID3DBlob>(pShaderBlob, [](ID3DBlob* ptr) { SafeRelease(ptr); });
+			std::shared_ptr<Direct3dShader<TShader>> shader = std::make_shared<Direct3dShader<TShader>>(shaderPtr, shaderBlobPtr);
+
+			return shader;
+		}
+
+		template<class TShader>
 		std::variant<std::shared_ptr<Direct3dShader<TShader>>, dsr_error> LoadShaderFromFile(
 			const std::shared_ptr<Direct3dDevice> device,
 			const std::wstring& fileName,

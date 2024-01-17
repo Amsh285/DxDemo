@@ -384,4 +384,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="src\DsrAssets\Shaders\DefaultVertexShader.hlsl" />
+  </ItemGroup>
 </Project>

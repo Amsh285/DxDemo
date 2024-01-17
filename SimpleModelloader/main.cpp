@@ -3,12 +3,12 @@
 
 #include "ModelloaderApplication.h"
 
-int main(int argc, char* argv[])
+int main(int argc, const char* const* argv)
 {
 	try
 	{
 		ModelloaderApplication application;
-		application.Initialize();
+		application.Initialize(argc, argv);
 
 		dsr::DsrResult setupResult = application.Setup();
 		if (setupResult.GetResultStatusCode() != RESULT_SUCCESS)
