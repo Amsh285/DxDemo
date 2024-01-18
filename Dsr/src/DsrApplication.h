@@ -7,7 +7,6 @@
 #include "Windows/WindowApplication.h"
 #include "Windows/Input/WinInput.h"
 
-#include "CameraSystem/Camera.h"
 #include "ModelLoaders/BlenderModelLoader.h"
 
 #include "DirectX/Direct3dDevice.h"
@@ -42,11 +41,8 @@ namespace dsr
 			const int& x, const int& y,
 			const int& width, const int& height);
 	protected:
-		std::shared_ptr<camerasystem::Camera> CreateCamera();
-
 		std::shared_ptr<dsr::input::Input> GetInput() const;
 		std::shared_ptr<directX::Direct3dDevice> m_device;
-		std::shared_ptr<camerasystem::Camera> m_mainCamera;
 
 		std::shared_ptr<dsr::EventDispatcher> m_eventDispatcher;
 		std::shared_ptr<BlenderModelLoader> m_blenderModelLoader;
@@ -60,9 +56,6 @@ namespace dsr
 		{
 		public:
 			void OnWindowDestroy(const events::WindowDestroyEvent& destroyEvent);
-			void OnWindowResize(const events::WindowResizedEvent& resizeEvent);
-
-			std::vector<std::shared_ptr<camerasystem::Camera>> Cameras;
 
 			WindowManager(
 				const std::shared_ptr<windows::Window>& window,

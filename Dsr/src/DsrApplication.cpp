@@ -11,13 +11,6 @@ namespace dsr
 		application->ShutDown();
 	}
 
-	void DsrApplication::WindowManager::OnWindowResize(const events::WindowResizedEvent& resizeEvent)
-	{
-		float aspectRatio = static_cast<float>(m_window->GetClientWidth()) / static_cast<float>(m_window->GetClientHeight());
-		for (std::shared_ptr<camerasystem::Camera> camera : Cameras)
-			camera->AspectRatio = aspectRatio;
-	}
-
 	DsrApplication::WindowManager::WindowManager(
 		const std::shared_ptr<windows::Window>& window,
 		const std::shared_ptr<directX::Direct3dDevice>& device)
@@ -44,11 +37,7 @@ namespace dsr
 
 	DsrResult DsrApplication::Setup()
 	{
-		m_mainCamera = CreateCamera();
-
 		m_window->GetDestroyEventRegister().Hook(m_windowManager, &DsrApplication::WindowManager::OnWindowDestroy);
-		m_window->GetResizedEventRegister().Hook(m_windowManager, &DsrApplication::WindowManager::OnWindowResize);
-		//m_windowApplication->GetUpdateFrameEventRegister().Hook(m_renderer, &directX::rendering::Direct3dRenderer::OnUpdate);
 
 		m_inputSystem->RegisterEvents(m_eventDispatcher);
 		m_eventDispatcher->RegisterEventListener(m_ecsManager, &dsr::ecs::EcsManager::OnUpdate);
@@ -76,17 +65,6 @@ namespace dsr
 		m_windowApplication(windows::WindowApplication::Get()),
 		m_cameraEntity(0), m_defaultShaderProgramEntity(0), m_executablePath(std::filesystem::path(""))
 	{
-	}
-
-	std::shared_ptr<camerasystem::Camera> DsrApplication::CreateCamera()
-	{
-		std::shared_ptr<camerasystem::Camera> camera = std::make_shared<camerasystem::Camera>();
-
-		float aspectRatio = static_cast<float>(m_window->GetClientWidth()) / static_cast<float>(m_window->GetClientHeight());
-		camera->AspectRatio = aspectRatio;
-
-		m_windowManager->Cameras.push_back(camera);
-		return camera;
 	}
 
 	std::shared_ptr<dsr::input::Input> DsrApplication::GetInput() const
