@@ -20,6 +20,13 @@ namespace dsr
 
 				std::shared_ptr<Component> componentPtr = std::static_pointer_cast<Component>(component);
 				m_entityComponents[entity][std::type_index(typeid(TComponent))] = componentPtr;
+				
+				if (std::type_index(typeid(TComponent)) == std::type_index(typeid(TagComponent)))
+				{
+					auto tagComponentPtr = std::static_pointer_cast<TagComponent>(componentPtr);
+					std::string tag = tagComponentPtr->GetTag();
+					m_taggedEntities[tag].push_back(entity);
+				}
 			}
 
 			template<class TComponent>
@@ -28,7 +35,20 @@ namespace dsr
 				if (!HasComponent<TComponent>(entity))
 					return;
 
-				m_entityComponents.at(entity).erase(std::type_index(typeid(TComponent)));
+				if (std::type_index(typeid(TComponent)) == std::type_index(typeid(TagComponent)))
+				{
+					std::shared_ptr<Component> componentPtr = m_entityComponents.at(entity).at(std::type_index(typeid(TComponent)));
+					auto tagComponentPtr = std::static_pointer_cast<TagComponent>(componentPtr);
+					std::string tag = tagComponentPtr->GetTag();
+					 
+					std::vector<Entity>& entities = m_taggedEntities.at(tag);
+					auto it = std::find(entities.begin(), entities.end(), entity);
+					entities.erase(it);
+
+					m_entityComponents.at(entity).erase(std::type_index(typeid(TComponent)));
+				}
+				else
+					m_entityComponents.at(entity).erase(std::type_index(typeid(TComponent)));
 			}
 		};
 	}

@@ -13,17 +13,12 @@ namespace dsr
 
 		std::vector<Entity> EngineContext::FindEntitiesByTag(const std::string& tag) const
 		{
-			std::vector<Entity> matches;
+			auto it = m_taggedEntities.find(tag);
 
-			for (auto pair : m_entityComponents)
-			{
-				std::shared_ptr<TagComponent> tagComponent = GetComponentFrom<TagComponent>(pair.first);
-				
-				if (tagComponent && tagComponent->GetTag() == tag)
-					matches.push_back(pair.first);
-			}
+			if (it == m_taggedEntities.end())
+				return std::vector<Entity>();
 
-			return matches;
+			return it->second;
 		}
 
 		std::optional<std::unordered_map<std::type_index, std::shared_ptr<Component>>> EngineContext::GetComponents(const Entity& entity) const

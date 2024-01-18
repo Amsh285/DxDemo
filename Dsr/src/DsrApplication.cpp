@@ -113,13 +113,12 @@ namespace dsr
 		using namespace dsr::ecs;
 
 		std::shared_ptr<NameComponent> cameraName = m_ecsManager->RegisterComponent<NameComponent>(m_cameraEntity);
-		std::shared_ptr<TagComponent> cameraTag = m_ecsManager->RegisterComponent<TagComponent>(m_cameraEntity);
+		std::shared_ptr<TagComponent> cameraTag = m_ecsManager->RegisterComponent<TagComponent>(m_cameraEntity, "Camera");
 		m_ecsManager->RegisterComponent<TransformComponent>(m_cameraEntity);
 		m_ecsManager->RegisterComponent<ViewFrustumComponent>(m_cameraEntity);
 		m_ecsManager->RegisterComponent<ViewProjectionComponent>(m_cameraEntity);
 
 		cameraName->SetName("MainCamera");
-		cameraTag->SetTag("Camera");
 	}
 
 	void DsrApplication::SetupDefaultShaderProgramEntity()
@@ -176,11 +175,10 @@ namespace dsr
 		}
 
 		std::shared_ptr<NameComponent> defaultShaderProgramName = m_ecsManager->RegisterComponent<NameComponent>(m_defaultShaderProgramEntity);
-		std::shared_ptr<TagComponent> defaultShaderProgramTag = m_ecsManager->RegisterComponent<TagComponent>(m_defaultShaderProgramEntity);
+		std::shared_ptr<TagComponent> defaultShaderProgramTag = m_ecsManager->RegisterComponent<TagComponent>(m_defaultShaderProgramEntity, "DefaultShaderProgram");
 		std::shared_ptr<ShaderProgramComponent> defaultShaderProgramComponent = m_ecsManager->RegisterComponent<ShaderProgramComponent>(m_defaultShaderProgramEntity);
 
 		defaultShaderProgramName->SetName("ShaderProgram-Default ");
-		defaultShaderProgramTag->SetTag("DefaultShaderProgram");
 		defaultShaderProgramComponent->SetShaderProgram(std::get<std::shared_ptr<Direct3dShaderProgram>>(loadDefaultShaderProgram));
 	}
 }

@@ -42,6 +42,25 @@ namespace dsr
 				return component;
 			}
 
+			template<class TComponent, class ...TArgs>
+			std::shared_ptr<TComponent> RegisterComponent(const Entity& entity, TArgs... args)
+			{
+				static_assert(std::is_base_of<Component, TComponent>::value, "TComponent must be derived from Component.");
+
+				//only one of the same component for an entity
+				if (m_engineContext->HasComponent<TComponent>(entity))
+					return nullptr;
+
+				auto componentPtr = std::make_shared<TComponent>(args...);
+				
+				DsrResult registerResult = RegisterComponent<TComponent>(componentPtr, entity);
+
+				if (registerResult.GetResultStatusCode() != RESULT_SUCCESS)
+					return nullptr;
+
+				return componentPtr;
+			}
+
 			template<class TComponent>
 			DsrResult RegisterComponent(const std::shared_ptr<TComponent>& component, const Entity& entity)
 			{
