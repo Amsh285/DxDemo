@@ -1,7 +1,6 @@
 #include "dsrpch.h"
 #include "RendererSystem.h"
 
-
 namespace dsr
 {
 	namespace ecs
@@ -55,50 +54,83 @@ namespace dsr
 
 		void RendererSystem::Update(const EngineContext& context)
 		{
-			using namespace directX;
+			using namespace dsr::directX;
 
 			std::shared_ptr<TransformComponent> transform = context.GetComponent<TransformComponent>();
 			std::shared_ptr<StaticMeshComponent> staticMesh = context.GetComponent<StaticMeshComponent>();
 
 			// i got a idea. instead of linear searching entities. Store them in a tagged map. reduce complexity to O(1)
-			// then the cameralookup can stay here!
+			// then tag lookups aren´t problematic!
 			std::vector<Entity> cameras = context.FindEntitiesByTag("Camera");
-
-			if (cameras.size() > 0)
-			{
-				Entity cameraEntity = cameras[0];
-				std::shared_ptr<ViewProjectionComponent> viewProjection = context.GetComponentFrom<ViewProjectionComponent>(cameraEntity);
-
-				SetConstantBuffer(m_device, m_vsConstantBuffers, 0, viewProjection->GetProjectionMatrix());
-				SetConstantBuffer(m_device, m_vsConstantBuffers, 1, viewProjection->GetViewMatrix());
-			}
-			else
-			{
-				SetConstantBuffer(m_device, m_vsConstantBuffers, 0, DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(45.0f), 1.0f, 0.1f, 1000.0f));
-				SetConstantBuffer(m_device, m_vsConstantBuffers, 1, DirectX::XMMatrixIdentity());
-			}
-
-			RenderTransform rt = transform->GetRenderTransform();
-			SetConstantBuffer(m_device, m_vsConstantBuffers, 2, &rt, sizeof(RenderTransform));
-
 			std::vector<Entity> defaultShaderProgramEntities = context.FindEntitiesByTag("DefaultShaderProgram");
 
-			if (defaultShaderProgramEntities.size() > 0)
+			if (cameras.size() < 1 || defaultShaderProgramEntities.size() < 1)
+				return;
+
+			SetupMvp(context, cameras[0], transform->GetRenderTransform());
+
+			std::shared_ptr<ShaderProgramComponent> defaultShaderProgramComponent = context.GetComponentFrom<ShaderProgramComponent>(defaultShaderProgramEntities[0]);
+			std::shared_ptr<Direct3dShaderProgram> defaultShaderProgram = defaultShaderProgramComponent->GetShaderProgram();
+
+			m_device->SetInputLayout(defaultShaderProgram->VertexShaderInputLayout.get());
+
+			Direct3dVertexBufferf vertexBuffer = staticMesh->GetVertexBuffer();
+			Direct3dShaderInputLayout layout = vertexBuffer.GetLayout();
+			uint32_t vertexStride = layout.GetTotalStride();
+			uint32_t offset = 0;
+
+			std::shared_ptr<ID3D11Buffer> vertexBufferPtr = vertexBuffer.GetVertexBuffer().GetBufferPtr();
+			ID3D11Buffer* vertexShaderRawPtr = vertexBufferPtr.get();
+
+			m_device->SetVertexBuffers(0, 1, &vertexShaderRawPtr, &vertexStride, &offset);
+
+			std::shared_ptr<ID3D11Buffer> indexBufferPtr = vertexBuffer.GetIndexBuffer().GetBufferPtr();
+			m_device->SetIndexBuffer(indexBufferPtr.get());
+
+			m_device->UseShader(defaultShaderProgram->VertexShader->GetShaderPtr().get(), nullptr, 0);
+
+			for (std::shared_ptr<rendering::VertexGroup> vertexGroup : staticMesh->GetVertexGroups())
 			{
-				std::shared_ptr<ShaderProgramComponent> defaultShaderProgramComponent = context.GetComponentFrom<ShaderProgramComponent>(defaultShaderProgramEntities[0]);
-				std::shared_ptr<Direct3dShaderProgram> defaultShaderProgram = defaultShaderProgramComponent->GetShaderProgram();
+				if(vertexGroup->PixelShader)
+					m_device->UseShader(vertexGroup->PixelShader->GetShaderPtr().get(), nullptr, 0);
+				else
+					m_device->UseShader(defaultShaderProgram->PixelShader->GetShaderPtr().get(), nullptr, 0);
 
-				m_device->SetInputLayout(defaultShaderProgram->VertexShaderInputLayout.get());
-				/*m_device->SetVertexBuffers(0, 1, &vertexShaderRawPtr, &vertexStride, &offset);
-				m_device->SetIndexBuffer(indexBufferPtr.get());*/
+				std::shared_ptr<TransformComponent> cameraTransform = context.GetComponentFrom<TransformComponent>(cameras[0]);
 
-				m_device->UseShader(defaultShaderProgram->VertexShader->GetShaderPtr().get(), nullptr, 0);
+				DirectX::XMStoreFloat4(&vertexGroup->PSData.CameraPosition, cameraTransform->GetPosition());
+				SetConstantBuffer(m_device, m_psConstantBuffers, 0, &vertexGroup->PSData, sizeof(PixelShaderData));
+
+				ApplyConstantBuffers<ID3D11PixelShader>();
+				SetupTextures(vertexGroup);
+				m_device->DrawIndexed(vertexGroup->IndexCount, vertexGroup->StartIndexLocation, 0);
 			}
 		}
 
 		void RendererSystem::UpdateFinished(const events::UpdateFrameFinishedEvent& args)
 		{
 			m_device->SwapBuffers();
+		}
+
+		void RendererSystem::SetupMvp(const EngineContext& context, const Entity& camera, const RenderTransform& renderTransform)
+		{
+			std::shared_ptr<ViewProjectionComponent> viewProjection = context.GetComponentFrom<ViewProjectionComponent>(camera);
+
+			SetConstantBuffer(m_device, m_vsConstantBuffers, 0, viewProjection->GetProjectionMatrix());
+			SetConstantBuffer(m_device, m_vsConstantBuffers, 1, viewProjection->GetViewMatrix());
+			SetConstantBuffer(m_device, m_vsConstantBuffers, 2, &renderTransform, sizeof(RenderTransform));
+			ApplyConstantBuffers<ID3D11VertexShader>();
+		}
+
+		void RendererSystem::SetupTextures(std::shared_ptr<dsr::directX::rendering::VertexGroup> vertexGroup)
+		{
+			using namespace dsr::directX;
+
+			std::vector<ID3D11ShaderResourceView*> psResourceViews;
+			for (const Direct3dShaderTexture2D& texture : vertexGroup->PSTextures2D)
+				psResourceViews.push_back(texture.GetShaderResourceViewPtr().get());
+
+			m_device->SetShaderResources<ID3D11PixelShader>(0, psResourceViews.size(), psResourceViews.data());
 		}
 	}
 }

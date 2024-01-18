@@ -37,6 +37,13 @@ dsr::DsrResult ModelloaderApplication::Setup()
 	m_mainCamera->Transform.Position = DirectX::XMVectorSet(0.0f, 1.0f, -1.0f, 1.0f);
 	//m_mainCamera->Transform.Position = DirectX::XMVectorSet(0.0f, 1.0f, -10.0f, 1.0f);
 
+	const std::shared_ptr<dsr::ecs::EngineContext> engineContext = m_ecsManager->GetEngineContext();
+	std::vector<dsr::ecs::Entity> cameraEntities = engineContext->FindEntitiesByTag("Camera");
+	std::shared_ptr<dsr::ecs::TransformComponent> cameraTransform = engineContext->GetComponentFrom< dsr::ecs::TransformComponent>(cameraEntities[0]);
+
+	DirectX::XMFLOAT3 cameraPosition = DirectX::XMFLOAT3(0.0f, 1.0f, -1.0f);
+	cameraTransform->SetPosition(cameraPosition);
+
 	return dsr::DsrResult::Success("Setup Successful.");
 }
 
@@ -106,6 +113,8 @@ void ModelloaderApplication::RegisterSorcModel(const std::map<std::string, dsr::
 
 	sorcStaticMeshComponent->SetVertexBuffer(sorcModel.GetVertexBuffer());
 	sorcStaticMeshComponent->SetVertexGroups(sorcModel.GetVertexGroups());
+
+	sorcTransformComponent->SetRotation(DirectX::XMQuaternionRotationRollPitchYaw(0.0f, DirectX::XMConvertToRadians(90.0f), 0.0f));
 }
 
 std::variant<dsr::ModelConfiguration, dsr::dsr_error> ModelloaderApplication::LoadSorcModel()

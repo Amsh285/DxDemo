@@ -20,6 +20,8 @@ namespace dsr
 		public:
 			static Entity CreateNewEntity();
 
+			std::shared_ptr<EngineContext> GetEngineContext() const { return m_engineContext; }
+
 			EcsManager();
 
 			template<class TComponent>
