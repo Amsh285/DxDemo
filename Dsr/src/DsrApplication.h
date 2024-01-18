@@ -11,7 +11,6 @@
 #include "ModelLoaders/BlenderModelLoader.h"
 
 #include "DirectX/Direct3dDevice.h"
-#include "DirectX/Rendering/Direct3dRenderer.h"
 #include "DirectX/Shader/Direct3dShaderProgram.h"
 
 #include "DirectX/Direct3dDeviceBufferExtensions.h"
@@ -44,11 +43,9 @@ namespace dsr
 			const int& width, const int& height);
 	protected:
 		std::shared_ptr<camerasystem::Camera> CreateCamera();
-		void SetActiveCamera(const std::shared_ptr<camerasystem::Camera>& camera);
 
 		std::shared_ptr<dsr::input::Input> GetInput() const;
 		std::shared_ptr<directX::Direct3dDevice> m_device;
-		std::shared_ptr<directX::rendering::Direct3dRenderer> m_renderer;
 		std::shared_ptr<camerasystem::Camera> m_mainCamera;
 
 		std::shared_ptr<dsr::EventDispatcher> m_eventDispatcher;

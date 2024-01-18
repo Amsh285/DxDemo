@@ -13,9 +13,6 @@ public:
 	ModelloaderApplication();
 private:
 	std::variant<std::map<std::string, dsr::ModelConfiguration>, dsr::dsr_error> LoadContent();
-	void AddContent(
-		const dsr::directX::Direct3dShaderProgram& defaultShader,
-		const std::map<std::string, dsr::ModelConfiguration>& content);
 
 	void RegisterSorcModel(const std::map<std::string, dsr::ModelConfiguration>& content);
 

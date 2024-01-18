@@ -31,7 +31,6 @@ namespace dsr
 			m_executablePath = std::filesystem::path(argv[0]).parent_path();
 
 		m_device = directX::Direct3dDevice::Create(m_window);
-		m_renderer = std::make_shared<directX::rendering::Direct3dRenderer>(m_device);
 		m_windowManager = std::make_shared<WindowManager>(m_window, m_device);
 		m_blenderModelLoader = std::make_shared<BlenderModelLoader>();
 		m_eventDispatcher = std::make_shared<dsr::EventDispatcher>(m_window, m_windowApplication);
@@ -45,12 +44,7 @@ namespace dsr
 
 	DsrResult DsrApplication::Setup()
 	{
-		DsrResult renderInitResult = m_renderer->Initialize();
-		if (renderInitResult.GetResultStatusCode() != RESULT_SUCCESS)
-			return renderInitResult;
-
 		m_mainCamera = CreateCamera();
-		SetActiveCamera(m_mainCamera);
 
 		m_window->GetDestroyEventRegister().Hook(m_windowManager, &DsrApplication::WindowManager::OnWindowDestroy);
 		m_window->GetResizedEventRegister().Hook(m_windowManager, &DsrApplication::WindowManager::OnWindowResize);
@@ -93,11 +87,6 @@ namespace dsr
 
 		m_windowManager->Cameras.push_back(camera);
 		return camera;
-	}
-
-	void DsrApplication::SetActiveCamera(const std::shared_ptr<camerasystem::Camera>& camera)
-	{
-		m_renderer->SetActiveCamera(camera);
 	}
 
 	std::shared_ptr<dsr::input::Input> DsrApplication::GetInput() const

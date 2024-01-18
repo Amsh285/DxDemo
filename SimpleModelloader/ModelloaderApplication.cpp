@@ -30,12 +30,7 @@ dsr::DsrResult ModelloaderApplication::Setup()
 	}
 
 	const std::map<std::string, ModelConfiguration>& content = std::get<std::map<std::string, ModelConfiguration>>(loadContent);
-	AddContent(std::get<Direct3dShaderProgram>(loadDefaultShaderProgram), content);
 	RegisterSorcModel(content);
-
-	//m_mainCamera->Transform.Position = DirectX::XMVectorSet(0.0f, 1.0f, -1.0f, 1.0f);
-	m_mainCamera->Transform.Position = DirectX::XMVectorSet(0.0f, 1.0f, -1.0f, 1.0f);
-	//m_mainCamera->Transform.Position = DirectX::XMVectorSet(0.0f, 1.0f, -10.0f, 1.0f);
 
 	const std::shared_ptr<dsr::ecs::EngineContext> engineContext = m_ecsManager->GetEngineContext();
 	std::vector<dsr::ecs::Entity> cameraEntities = engineContext->FindEntitiesByTag("Camera");
@@ -76,29 +71,6 @@ std::variant<std::map<std::string, dsr::ModelConfiguration>, dsr::dsr_error> Mod
 
 	models[MODELNAMES_SORC] = sorcModel;
 	return models;
-}
-
-void ModelloaderApplication::AddContent(
-	const dsr::directX::Direct3dShaderProgram& defaultShader,
-	const std::map<std::string, dsr::ModelConfiguration>& content)
-{
-	using namespace dsr;
-	using namespace dsr::directX;
-	using namespace dsr::directX::rendering;
-
-	rendering::Direct3dRenderUoW uow(defaultShader);
-
-	for (const auto& item : content)
-	{
-		rendering::RenderData uowData(item.second.GetVertexBuffer());
-		uowData.Modelname = item.first;
-		uowData.VertexGroups = item.second.GetVertexGroups();
-		uowData.Transform = item.second.GlobalTransform;
-
-		uow.RenderData.push_back(uowData);
-	}
-
-	m_renderer->AddUnitOfWork(uow);
 }
 
 void ModelloaderApplication::RegisterSorcModel(const std::map<std::string, dsr::ModelConfiguration>& content)
