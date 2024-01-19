@@ -50,7 +50,7 @@ namespace dsr
 
 		void EcsManager::UpdateSystemEntityAssignment(const std::shared_ptr<System>& system)
 		{
-			for (auto& entity : m_engineContext->GetEntities())
+			for (auto& entity : m_engineContext->GetEntityComponents())
 			{
 				if (HasComponentTypeIntersection(system, entity.second))
 					m_systemEntities[system->GetType()].push_back(entity.first);

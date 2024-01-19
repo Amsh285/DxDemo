@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\Components\ShaderProgramComponent.h" />
     <ClInclude Include="src\Infrastructure\DsrTypes.h" />
     <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\EcsSystems\RendererSystem.h" />
     <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\Components\NameComponent.h" />
@@ -36,7 +37,6 @@
     <ClInclude Include="src\DirectX\Textures\Direct3dShaderTexture2D.h" />
     <ClInclude Include="src\ModelLoaders\BlenderMTLLoader.h" />
     <ClInclude Include="src\ModelLoaders\BlenderModelLoader.h" />
-    <ClInclude Include="src\CameraSystem\Camera.h" />
     <ClInclude Include="src\DsrApplication.h" />
     <ClInclude Include="src\ErrorHandling\DsrResult.h" />
     <ClInclude Include="src\DirectX\Rendering\Direct3dRenderUoW.h" />
@@ -47,7 +47,6 @@
     <ClInclude Include="src\DirectX\Direct3dDeviceShaderExtensions.h" />
     <ClInclude Include="src\DirectX\Shader\Direct3dShaderInputLayout.h" />
     <ClInclude Include="src\DirectX\Shader\Direct3dShader.h" />
-    <ClInclude Include="src\DirectX\Rendering\Direct3dRenderer.h" />
     <ClInclude Include="src\ErrorHandling\NotFoundError.h" />
     <ClInclude Include="src\Events\Application\WindowEvents.h" />
     <ClInclude Include="src\Events\EventListener.h" />
@@ -77,6 +76,10 @@
     <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\EcsSystems\ViewProjectionSystem.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\Components\ShaderProgramComponent.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\EcsSystems\RendererSystem.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -153,10 +156,6 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="src\CameraSystem\Camera.cpp">
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
-    </ClCompile>
     <ClCompile Include="src\DsrApplication.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
@@ -193,10 +192,6 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="src\DirectX\Shader\Direct3dShader.cpp">
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
-    </ClCompile>
-    <ClCompile Include="src\DirectX\Rendering\Direct3dRenderer.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -291,6 +286,22 @@
     <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\EcsSystems\ViewProjectionSystem.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="src\DsrAssets\Shaders\DefaultPixelShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <DeploymentContent>true</DeploymentContent>
+    </FxCompile>
+    <FxCompile Include="src\DsrAssets\Shaders\DefaultVertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <DeploymentContent>true</DeploymentContent>
+    </FxCompile>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

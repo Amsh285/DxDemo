@@ -1,5 +1,9 @@
 #pragma once
 
+#include "Components/TagComponent.h"
+#include "Components/ViewProjectionComponent.h"
+
+#include "DirectX/Direct3dDeviceShaderExtensions.h"
 
 #include "EngineSubSystems/EntityComponentSystem/Component.h"
 #include "EngineSubSystems/EntityComponentSystem/Entity.h"
@@ -29,13 +33,21 @@ namespace dsr
 				if (!Exists(entity))
 					return false;
 
-				return m_entities.at(entity).find(std::type_index(typeid(TComponent))) != m_entities.at(entity).end();
+				return m_entityComponents.at(entity).find(std::type_index(typeid(TComponent))) != m_entityComponents.at(entity).end();
 			}
+
+			std::vector<Entity> FindEntitiesByTag(const std::string& tag) const;
 
 			template<class TComponent>
 			std::shared_ptr<TComponent> GetComponent() const
 			{
-				std::optional<std::unordered_map<std::type_index, std::shared_ptr<Component>>> componentSearchResult = GetComponents(m_currentEntity);
+				return GetComponentFrom<TComponent>(m_currentEntity);
+			}
+
+			template<class TComponent>
+			std::shared_ptr<TComponent> GetComponentFrom(const Entity& entity) const
+			{
+				std::optional<std::unordered_map<std::type_index, std::shared_ptr<Component>>> componentSearchResult = GetComponents(entity);
 
 				if (!componentSearchResult.has_value())
 					return nullptr;
@@ -51,10 +63,10 @@ namespace dsr
 			}
 
 			std::optional<std::unordered_map<std::type_index, std::shared_ptr<Component>>> GetComponents(const Entity& entity) const;
-
 		protected:
 			Entity m_currentEntity = 0;
-			std::unordered_map<Entity, std::unordered_map<std::type_index, std::shared_ptr<Component>>> m_entities;
+			std::unordered_map<std::string, std::vector<Entity>> m_taggedEntities;
+			std::unordered_map<Entity, std::unordered_map<std::type_index, std::shared_ptr<Component>>> m_entityComponents;
 		private:
 		};
 	}

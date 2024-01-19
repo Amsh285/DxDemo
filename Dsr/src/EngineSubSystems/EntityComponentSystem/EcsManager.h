@@ -20,6 +20,8 @@ namespace dsr
 		public:
 			static Entity CreateNewEntity();
 
+			std::shared_ptr<EngineContext> GetEngineContext() const { return m_engineContext; }
+
 			EcsManager();
 
 			template<class TComponent>
@@ -38,6 +40,25 @@ namespace dsr
 					return nullptr;
 
 				return component;
+			}
+
+			template<class TComponent, class ...TArgs>
+			std::shared_ptr<TComponent> RegisterComponent(const Entity& entity, TArgs... args)
+			{
+				static_assert(std::is_base_of<Component, TComponent>::value, "TComponent must be derived from Component.");
+
+				//only one of the same component for an entity
+				if (m_engineContext->HasComponent<TComponent>(entity))
+					return nullptr;
+
+				auto componentPtr = std::make_shared<TComponent>(args...);
+				
+				DsrResult registerResult = RegisterComponent<TComponent>(componentPtr, entity);
+
+				if (registerResult.GetResultStatusCode() != RESULT_SUCCESS)
+					return nullptr;
+
+				return componentPtr;
 			}
 
 			template<class TComponent>

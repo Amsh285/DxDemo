@@ -51,9 +51,6 @@
     <ClInclude Include="src\Windows\EventListeners\WindowEventListener.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\DirectX\Rendering\Direct3dRenderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\DirectX\Shader\Direct3dShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -88,9 +85,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\DsrApplication.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\CameraSystem\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ModelLoaders\BlenderModelLoader.h">
@@ -207,6 +201,9 @@
     <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\EcsSystems\ViewProjectionSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\Components\ShaderProgramComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Windows\Window.cpp">
@@ -240,9 +237,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Windows\EventListeners\WindowEventListener.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\DirectX\Rendering\Direct3dRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\DirectX\Shader\Direct3dShader.cpp">
@@ -279,9 +273,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\DsrApplication.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CameraSystem\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ModelLoaders\BlenderModelLoader.cpp">
@@ -383,5 +374,12 @@
     <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\EcsSystems\ViewProjectionSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\Components\ShaderProgramComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="src\DsrAssets\Shaders\DefaultVertexShader.hlsl" />
+    <FxCompile Include="src\DsrAssets\Shaders\DefaultPixelShader.hlsl" />
   </ItemGroup>
 </Project>

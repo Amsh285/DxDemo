@@ -40,7 +40,7 @@ namespace dsr
 		DirectX::XMMATRIX ViewProjectionSystem::GetProjectionMatrix(const std::shared_ptr<ViewFrustumComponent>& viewFrustum)
 		{
 			return DirectX::XMMatrixPerspectiveFovLH(
-				viewFrustum->GetFieldOfViewY(),
+				DirectX::XMConvertToRadians(viewFrustum->GetFieldOfViewY()),
 				m_aspecRatio,
 				viewFrustum->GetNearZ(),
 				viewFrustum->GetFarZ()

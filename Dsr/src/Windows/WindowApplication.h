@@ -12,8 +12,9 @@ namespace dsr
 		public:
 			static std::shared_ptr<WindowApplication> Get();
 
-			EventRegisterType<const dsr::events::PrepareUdateFrameEvent&>& GetPrepareUpdateFrameEventRegister() { return m_prepareUpdateFrameEvent; }
-			EventRegisterType<const dsr::events::UpdateFrameEvent&>& GetUpdateFrameEventRegister() { return m_updateFrameEvent; }
+			EventRegisterType<const dsr::events::PrepareUdateFrameEvent&>& GetPrepareUpdateFrameEventRegister() { return m_prepareUpdateFrameEmitter; }
+			EventRegisterType<const dsr::events::UpdateFrameEvent&>& GetUpdateFrameEventRegister() { return m_updateFrameEmitter; }
+			EventRegisterType<const dsr::events::UpdateFrameFinishedEvent&>& GetUpdateFrameFinishedRegister() { return m_updateFrameFinishedEmitter; }
 
 			void PeekMessages();
 			void ShutDown();
@@ -22,8 +23,9 @@ namespace dsr
 			{
 			}
 
-			EventEmitterType<const dsr::events::PrepareUdateFrameEvent&> m_prepareUpdateFrameEvent;
-			EventEmitterType<const dsr::events::UpdateFrameEvent&> m_updateFrameEvent;
+			EventEmitterType<const dsr::events::PrepareUdateFrameEvent&> m_prepareUpdateFrameEmitter;
+			EventEmitterType<const dsr::events::UpdateFrameEvent&> m_updateFrameEmitter;
+			EventEmitterType<const dsr::events::UpdateFrameFinishedEvent&> m_updateFrameFinishedEmitter;
 
 			static std::shared_ptr<WindowApplication> m_instance;
 			static std::mutex m_appMutex;

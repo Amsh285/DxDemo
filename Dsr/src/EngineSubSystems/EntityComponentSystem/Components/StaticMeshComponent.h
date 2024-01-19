@@ -9,7 +9,7 @@ namespace dsr
 {
 	namespace ecs
 	{
-		class StaticMeshComponent : Component
+		class StaticMeshComponent : public Component
 		{
 		public:
 			std::vector<std::shared_ptr<directX::rendering::VertexGroup>> GetVertexGroups() const { return m_vertexGroups; }

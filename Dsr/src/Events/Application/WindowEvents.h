@@ -44,5 +44,9 @@ namespace dsr
 		class UpdateFrameEvent : public IEvent
 		{
 		};
+
+		class UpdateFrameFinishedEvent : public IEvent
+		{
+		};
 	}
 }

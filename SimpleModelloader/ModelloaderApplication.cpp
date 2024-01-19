@@ -1,4 +1,5 @@
 #include "ModelloaderApplication.h"
+#include <EngineSubSystems/EntityComponentSystem/Components/NameComponent.h>
 
 constexpr auto MODELNAMES_SORC = "sorc";
 
@@ -28,11 +29,15 @@ dsr::DsrResult ModelloaderApplication::Setup()
 		return DsrResult(error.what(), error.GetResult());
 	}
 
-	AddContent(std::get<Direct3dShaderProgram>(loadDefaultShaderProgram), std::get<std::map<std::string, ModelConfiguration>>(loadContent));
+	const std::map<std::string, ModelConfiguration>& content = std::get<std::map<std::string, ModelConfiguration>>(loadContent);
+	RegisterSorcModel(content);
 
-	//m_mainCamera->Transform.Position = DirectX::XMVectorSet(0.0f, 1.0f, -1.0f, 1.0f);
-	m_mainCamera->Transform.Position = DirectX::XMVectorSet(0.0f, 1.0f, -1.0f, 1.0f);
-	//m_mainCamera->Transform.Position = DirectX::XMVectorSet(0.0f, 1.0f, -10.0f, 1.0f);
+	const std::shared_ptr<dsr::ecs::EngineContext> engineContext = m_ecsManager->GetEngineContext();
+	std::vector<dsr::ecs::Entity> cameraEntities = engineContext->FindEntitiesByTag("Camera");
+	std::shared_ptr<dsr::ecs::TransformComponent> cameraTransform = engineContext->GetComponentFrom< dsr::ecs::TransformComponent>(cameraEntities[0]);
+
+	DirectX::XMFLOAT3 cameraPosition = DirectX::XMFLOAT3(0.0f, 1.0f, -1.0f);
+	cameraTransform->SetPosition(cameraPosition);
 
 	return dsr::DsrResult::Success("Setup Successful.");
 }
@@ -40,6 +45,7 @@ dsr::DsrResult ModelloaderApplication::Setup()
 ModelloaderApplication::ModelloaderApplication()
 	: DsrApplication(L"Model loader", 100, 100, 1280, 768)
 {
+	m_sorcEntity = m_ecsManager->CreateNewEntity();
 }
 
 std::variant<std::map<std::string, dsr::ModelConfiguration>, dsr::dsr_error> ModelloaderApplication::LoadContent()
@@ -67,27 +73,20 @@ std::variant<std::map<std::string, dsr::ModelConfiguration>, dsr::dsr_error> Mod
 	return models;
 }
 
-void ModelloaderApplication::AddContent(
-	const dsr::directX::Direct3dShaderProgram& defaultShader,
-	const std::map<std::string, dsr::ModelConfiguration>& content)
+void ModelloaderApplication::RegisterSorcModel(const std::map<std::string, dsr::ModelConfiguration>& content)
 {
-	using namespace dsr;
-	using namespace dsr::directX;
-	using namespace dsr::directX::rendering;
+	const dsr::ModelConfiguration& sorcModel = content.at(MODELNAMES_SORC);
 
-	rendering::Direct3dRenderUoW uow(defaultShader);
+	std::shared_ptr<dsr::ecs::NameComponent> sorcNameComponent = m_ecsManager->RegisterComponent<dsr::ecs::NameComponent>(m_sorcEntity);
+	sorcNameComponent->SetName("Sorc");
 
-	for (const auto& item : content)
-	{
-		rendering::RenderData uowData(item.second.GetVertexBuffer());
-		uowData.Modelname = item.first;
-		uowData.VertexGroups = item.second.GetVertexGroups();
-		uowData.Transform = item.second.GlobalTransform;
+	std::shared_ptr<dsr::ecs::TransformComponent> sorcTransformComponent = m_ecsManager->RegisterComponent<dsr::ecs::TransformComponent>(m_sorcEntity);
+	std::shared_ptr<dsr::ecs::StaticMeshComponent> sorcStaticMeshComponent = m_ecsManager->RegisterComponent<dsr::ecs::StaticMeshComponent>(m_sorcEntity);
 
-		uow.RenderData.push_back(uowData);
-	}
+	sorcStaticMeshComponent->SetVertexBuffer(sorcModel.GetVertexBuffer());
+	sorcStaticMeshComponent->SetVertexGroups(sorcModel.GetVertexGroups());
 
-	m_renderer->AddUnitOfWork(uow);
+	sorcTransformComponent->SetRotation(DirectX::XMQuaternionRotationRollPitchYaw(0.0f, DirectX::XMConvertToRadians(90.0f), 0.0f));
 }
 
 std::variant<dsr::ModelConfiguration, dsr::dsr_error> ModelloaderApplication::LoadSorcModel()

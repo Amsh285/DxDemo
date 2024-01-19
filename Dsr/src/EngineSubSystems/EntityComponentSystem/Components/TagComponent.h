@@ -10,7 +10,8 @@ namespace dsr
 		{
 		public:
 			std::string GetTag() const { return m_tag; }
-			void SetTag(const std::string& tag) { m_tag = tag; }
+
+			TagComponent(const std::string& tag);
 		private:
 			std::string m_tag;
 		};

@@ -92,6 +92,14 @@ namespace dsr
 		{
 			m_windowApplication->GetUpdateFrameEventRegister().Hook(instance, func);
 		}
+
+		template<class TSubType>
+		void RegisterEventListener(
+			const std::shared_ptr<dsr::events::EventListener>& instance,
+			void(TSubType::* func)(const dsr::events::UpdateFrameFinishedEvent&))
+		{
+			m_windowApplication->GetUpdateFrameFinishedRegister().Hook(instance, func);
+		}
 	private:
 		std::shared_ptr<dsr::windows::Window> m_window;
 		std::shared_ptr<dsr::windows::WindowApplication> m_windowApplication;
