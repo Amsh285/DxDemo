@@ -79,6 +79,17 @@ namespace dsr
 				pWnd->m_mouseUpEventEmitter.operator()(event);
 				break;
 			}
+			case WM_MOUSEWHEEL:
+			{
+				int32_t x = GET_X_LPARAM(lParam);
+				int32_t y = GET_Y_LPARAM(lParam);
+				int16_t deltaZ = GET_WHEEL_DELTA_WPARAM(wParam);
+
+				std::cout << "mousewheel: " << deltaZ << std::endl;
+				dsr::events::MouseWheelEvent event(x, y, deltaZ);
+				pWnd->m_mouseWheelEventEmitter.operator()(event);
+				break;
+			}
 			case WM_MOUSEMOVE:
 			{
 				int32_t x = GET_X_LPARAM(lParam);

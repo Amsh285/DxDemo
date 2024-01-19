@@ -19,6 +19,7 @@ namespace dsr
 		public:
 			HWND GetWindowHandle() const { return m_windowHandle; }
 
+			// maybe better to return and store them as shared pointers. returning references is not very safe.
 			EventRegisterType<const dsr::events::WindowCloseEvent&>& GetCloseEventRegister() { return m_windowCloseEventEmitter; }
 			EventRegisterType<const dsr::events::WindowDestroyEvent&>& GetDestroyEventRegister() { return m_windowDestroyEmitter; }
 			EventRegisterType<const dsr::events::WindowResizedEvent&>& GetResizedEventRegister() { return m_windowResizedEmitter; }
@@ -30,6 +31,7 @@ namespace dsr
 
 			EventRegisterType<const dsr::events::MouseDownEvent&>& GetMouseDownEventRegister() { return m_mouseDownEventEmitter; }
 			EventRegisterType<const dsr::events::MouseUpEvent&>& GetMouseUpEventRegister() { return m_mouseUpEventEmitter; }
+			EventRegisterType<const dsr::events::MouseWheelEvent&>& GetMouseWheelEventRegister() { return m_mouseWheelEventEmitter; }
 			EventRegisterType<const dsr::events::MouseMoveEvent&>& GetMouseMoveEventRegister() { return m_mouseMoveEventEmitter; }
 			EventRegisterType<const dsr::events::MouseHoverEvent&>& GetMouseHoverEventRegister() { return m_mouseHoverEventEmitter; }
 			EventRegisterType<const dsr::events::MouseLeaveEvent&>& GetMouseLeaveEventRegister() { return m_mouseLeaveEventEmitter; }
@@ -66,6 +68,7 @@ namespace dsr
 
 			EventEmitterType<const dsr::events::MouseDownEvent&> m_mouseDownEventEmitter;
 			EventEmitterType<const dsr::events::MouseUpEvent&> m_mouseUpEventEmitter;
+			EventEmitterType<const dsr::events::MouseWheelEvent&> m_mouseWheelEventEmitter;
 			EventEmitterType<const dsr::events::MouseMoveEvent&> m_mouseMoveEventEmitter;
 			EventEmitterType<const dsr::events::MouseHoverEvent&> m_mouseHoverEventEmitter;
 			EventEmitterType<const dsr::events::MouseLeaveEvent&> m_mouseLeaveEventEmitter;

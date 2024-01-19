@@ -9,11 +9,22 @@ namespace dsr
 {
 	namespace input
 	{
+		enum class KeyState
+		{
+			Down,
+			Hold,
+			Up
+		};
+
 		class Input
 		{
 		public:
 			std::shared_ptr<dsr::inputdevices::Keyboard> GetKeyboard() const { return m_keyboard; }
 			std::shared_ptr<dsr::inputdevices::Mouse> GetMouse() const { return m_mouse; }
+
+			bool GetKeyDown(const KeyCode& key) const;
+			bool GetKeyHold(const KeyCode& key) const;
+			bool GetKeyUp(const KeyCode& key) const;
 
 			Input(
 				const std::shared_ptr<dsr::inputdevices::Keyboard>& keyboard,
@@ -22,7 +33,9 @@ namespace dsr
 			);
 			Input(const Input& other) = delete;
 			Input& operator=(const Input& other) = delete;
-		protected:
+		private:
+			bool GetKey(const KeyCode& key, const KeyState& state) const;
+
 			std::shared_ptr<dsr::inputdevices::Keyboard> m_keyboard;
 			std::shared_ptr<dsr::inputdevices::Mouse> m_mouse;
 			std::unordered_map<KeyCode, uint16_t> m_keyMap;

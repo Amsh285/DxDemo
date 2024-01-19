@@ -27,7 +27,7 @@ namespace dsr
 		class MouseEvent : public IEvent
 		{
 		public:
-			const MousePosition& GetPosition() const { return m_position; }
+			MousePosition GetPosition() const { return m_position; }
 
 			MouseEvent(const int32_t& x, const int32_t& y) : m_position(MousePosition(x, y)) {}
 			MouseEvent(const MousePosition& position) : m_position(position) {}
@@ -38,7 +38,7 @@ namespace dsr
 		class MouseKeyEvent : public MouseEvent
 		{
 		public:
-			const uint16_t& GetKeyCode() const { return m_keyCode; }
+			uint16_t GetKeyCode() const { return m_keyCode; }
 
 			MouseKeyEvent(const int32_t& x, const int32_t& y, const uint16_t& keyCode)
 				: MouseEvent(x, y), m_keyCode(keyCode)
@@ -117,6 +117,24 @@ namespace dsr
 		{
 		public:
 		private:
+		};
+
+		class MouseWheelEvent : public MouseEvent
+		{
+		public:
+			int16_t GetDeltaZ() const { return m_deltaZ; }
+
+			MouseWheelEvent(const int32_t& x, const int32_t& y, const int16_t& deltaZ)
+				: MouseEvent(x, y), m_deltaZ(deltaZ)
+			{
+			}
+
+			MouseWheelEvent(const MousePosition& position, const int16_t& deltaZ)
+				: MouseEvent(position), m_deltaZ(deltaZ)
+			{
+			}
+		private:
+			int16_t m_deltaZ;
 		};
 	}
 }
