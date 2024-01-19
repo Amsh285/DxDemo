@@ -45,7 +45,7 @@ namespace dsr
 					return false;
 			}
 
-			return true;
+			return !requiredComponents.empty();
 		}
 
 		void EcsManager::UpdateSystemEntityAssignment(const std::shared_ptr<System>& system)

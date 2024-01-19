@@ -59,8 +59,6 @@ namespace dsr
 			std::shared_ptr<TransformComponent> transform = context.GetComponent<TransformComponent>();
 			std::shared_ptr<StaticMeshComponent> staticMesh = context.GetComponent<StaticMeshComponent>();
 
-			// i got a idea. instead of linear searching entities. Store them in a tagged map. reduce complexity to O(1)
-			// then tag lookups aren´t problematic!
 			std::vector<Entity> cameras = context.FindEntitiesByTag("Camera");
 			std::vector<Entity> defaultShaderProgramEntities = context.FindEntitiesByTag("DefaultShaderProgram");
 
