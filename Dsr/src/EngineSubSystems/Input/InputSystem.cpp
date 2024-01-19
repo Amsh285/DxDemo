@@ -22,11 +22,12 @@ namespace dsr
 
 			dispatcher->RegisterEventListener(m_mouse, &Mouse::OnMouseDown);
 			dispatcher->RegisterEventListener(m_mouse, &Mouse::OnMouseUp);
+			dispatcher->RegisterEventListener(m_mouse, &Mouse::OnMouseWheelRotated);
 			dispatcher->RegisterEventListener(m_mouse, &Mouse::OnMouseMove);
 			dispatcher->RegisterEventListener(m_mouse, &Mouse::OnLooseFocus);
 
-			dispatcher->RegisterEventListener(m_keyboard, &Keyboard::OnPrepareUpdateFrame);
-			dispatcher->RegisterEventListener(m_mouse, &Mouse::OnPrepareUpdateFrame);
+			dispatcher->RegisterEventListener(m_keyboard, &Keyboard::OnUpdateFrameFinished);
+			dispatcher->RegisterEventListener(m_mouse, &Mouse::OnUpdateFrameFinished);
 		}
 	}
 }

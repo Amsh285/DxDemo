@@ -24,4 +24,22 @@ void CameraControllerSystem::Update(const dsr::ecs::EngineContext& context)
 		return;
 
 	
+	/*if (m_input->GetKeyDown(dsr::input::KeyCode::MouseLeft))
+		std::cout << "Chopper down njiaj" << std::endl;
+
+	if (m_input->GetKeyHold(dsr::input::KeyCode::MouseLeft))
+		std::cout << "Get to the Chopper!!!" << std::endl;
+
+	if (m_input->GetKeyUp(dsr::input::KeyCode::MouseLeft))
+		std::cout << "Chopper Up njiaj" << std::endl;*/
+
+
+	if (m_input->GetKeyDown(dsr::input::KeyCode::A))
+		std::cout << "Chopper down njiaj" << std::endl;
+
+	if (m_input->GetKeyHold(dsr::input::KeyCode::A))
+		std::cout << "Get to the Chopper!!!" << std::endl;
+
+	if (m_input->GetKeyUp(dsr::input::KeyCode::A))
+		std::cout << "Chopper Up njiaj" << std::endl;
 }

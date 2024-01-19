@@ -27,7 +27,7 @@ namespace dsr
 		}
 
 		Mouse::Mouse()
-			: m_currentKeyState(0), m_previousKeyState(0)
+			: m_currentKeyState(0), m_previousKeyState(0), m_mousewheelDeltaZ(0)
 		{
 		}
 
@@ -43,6 +43,12 @@ namespace dsr
 			m_currentPosition = mouseUp.GetPosition();
 		}
 
+		void Mouse::OnMouseWheelRotated(const dsr::events::MouseWheelEvent& mouseWheel)
+		{
+			m_mousewheelDeltaZ = mouseWheel.GetDeltaZ();
+			m_currentPosition = mouseWheel.GetPosition();
+		}
+
 		void Mouse::OnMouseMove(const dsr::events::MouseMoveEvent& mouseMove)
 		{
 			m_currentPosition = mouseMove.GetPosition();
@@ -54,7 +60,7 @@ namespace dsr
 			m_currentKeyState = m_previousKeyState = 0x0000;
 		}
 
-		void Mouse::OnPrepareUpdateFrame(const dsr::events::PrepareUdateFrameEvent& prepareUpdate)
+		void Mouse::OnUpdateFrameFinished(const dsr::events::UpdateFrameFinishedEvent& updateFinished)
 		{
 			m_previousKeyState = m_currentKeyState;
 			m_previousPosition = m_currentPosition;

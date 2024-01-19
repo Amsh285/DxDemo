@@ -56,6 +56,14 @@ namespace dsr
 		template<class TSubType>
 		void RegisterEventListener(
 			const std::shared_ptr<dsr::events::EventListener>& instance,
+			void(TSubType::* func)(const dsr::events::MouseWheelEvent&))
+		{
+			m_window->GetMouseWheelEventRegister().Hook(instance, func);
+		}
+
+		template<class TSubType>
+		void RegisterEventListener(
+			const std::shared_ptr<dsr::events::EventListener>& instance,
 			void(TSubType::* func)(const dsr::events::MouseMoveEvent&))
 		{
 			m_window->GetMouseMoveEventRegister().Hook(instance, func);
