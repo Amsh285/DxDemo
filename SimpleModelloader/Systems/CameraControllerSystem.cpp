@@ -48,17 +48,17 @@ void CameraControllerSystem::Update(const dsr::ecs::EngineContext& context)
 		XMINT2 delta = XMINT2(currentPosition.x - center.x, currentPosition.y - center.y);
 
 		XMVECTOR translation = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
-		
+
 		bool movesOnXAxis = abs(delta.x) >= threshold.x, movesOnYAxis = abs(delta.y) >= threshold.y;
 		bool movesOnAnyAxis = movesOnXAxis || movesOnYAxis;
 
 		if (movesOnXAxis)
 			translation = XMVectorSetX(translation, delta.x * (-1));
 
-		if(movesOnYAxis)
+		if (movesOnYAxis)
 			translation = XMVectorSetY(translation, delta.y);
 
-		translation = XMVector2Normalize(translation);
+		translation = XMVector3Normalize(translation);
 
 		std::shared_ptr<TransformComponent> cameraTransform = context.GetComponentFrom<TransformComponent>(cameraEntities[0]);
 		cameraTransform->SetPosition(XMVectorAdd(cameraTransform->GetPosition(), translation * speed));
@@ -66,6 +66,41 @@ void CameraControllerSystem::Update(const dsr::ecs::EngineContext& context)
 		if (movesOnAnyAxis)
 			cameraControllerData->MouseMiddleCenter = XMINT2(position.X, position.Y);
 	}
+	else if (m_input->GetKeyDown(KeyCode::MouseRight))
+	{
+		MousePosition position = m_input->GetMouse()->GetCurrentPosition();
+		cameraControllerData->MouseRightCenter = XMINT2(position.X, position.Y);
+	}
+	else if (m_input->GetKeyHold(KeyCode::MouseRight))
+	{
+		constexpr float speed = 0.05f;
+		constexpr XMINT2 threshold = XMINT2(5, 5);
 
+		MousePosition position = m_input->GetMouse()->GetCurrentPosition();
 
+		XMINT2 center = cameraControllerData->MouseRightCenter;
+		XMINT2 currentPosition = XMINT2(position.X, position.Y);
+		XMINT2 delta = XMINT2(currentPosition.x - center.x, currentPosition.y - center.y);
+
+		bool movesOnXAxis = abs(delta.x) >= threshold.x, movesOnYAxis = abs(delta.y) >= threshold.y;
+		bool movesOnAnyAxis = movesOnXAxis || movesOnYAxis;
+
+		if (movesOnXAxis)
+			cameraControllerData->MouseRightRotations.x = fmod(cameraControllerData->MouseRightRotations.x + static_cast<float>(delta.x) * speed, 360.0f);
+
+		if(movesOnYAxis)
+			cameraControllerData->MouseRightRotations.y = fmod(cameraControllerData->MouseRightRotations.y + static_cast<float>(delta.y) * speed, 360.0f);
+
+		if (movesOnAnyAxis)
+		{
+			std::shared_ptr<TransformComponent> cameraTransform = context.GetComponentFrom<TransformComponent>(cameraEntities[0]);
+			cameraTransform->SetRotation(
+				XMQuaternionRotationRollPitchYaw(
+					XMConvertToRadians(cameraControllerData->MouseRightRotations.y),
+					XMConvertToRadians(cameraControllerData->MouseRightRotations.x),
+					0.0f));
+
+			cameraControllerData->MouseRightCenter = XMINT2(position.X, position.Y);
+		}
+	}
 }
