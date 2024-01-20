@@ -17,7 +17,8 @@ namespace dsr
 		public:
 			DirectX::XMFLOAT3 GetPositionVec3() const;
 			DirectX::XMVECTOR GetPosition() const { return m_position; }
-			void SetPosition(const DirectX::XMFLOAT3& position);
+			void SetPositionVec3(const DirectX::XMFLOAT3& position);
+			void SetPosition(const DirectX::XMVECTOR& vec);
 
 			DirectX::XMFLOAT3 GetScaleVec3() const;
 			DirectX::XMVECTOR GetScale() const { return m_scale; }

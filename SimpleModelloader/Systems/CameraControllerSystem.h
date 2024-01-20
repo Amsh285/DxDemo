@@ -5,6 +5,7 @@
 
 #include "EngineSubSystems/EntityComponentSystem/Entity.h"
 #include "EngineSubSystems/EntityComponentSystem/System.h"
+#include "EngineSubSystems/EntityComponentSystem/Components/TransformComponent.h"
 #include "EngineSubSystems/Input/Input.h"
 
 class CameraControllerSystem : public dsr::ecs::System

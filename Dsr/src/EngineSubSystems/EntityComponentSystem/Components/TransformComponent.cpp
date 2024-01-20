@@ -11,9 +11,14 @@ namespace dsr
 			return XMFLOAT3(XMVectorGetX(m_position), XMVectorGetY(m_position), XMVectorGetZ(m_position));
 		}
 
-		void TransformComponent::SetPosition(const DirectX::XMFLOAT3& position)
+		void TransformComponent::SetPositionVec3(const DirectX::XMFLOAT3& position)
 		{
 			m_position = DirectX::XMVectorSet(position.x, position.y, position.z, 1.0f);
+		}
+
+		void TransformComponent::SetPosition(const DirectX::XMVECTOR& vec)
+		{
+			m_position = vec;
 		}
 
 		DirectX::XMFLOAT3 TransformComponent::GetScaleVec3() const

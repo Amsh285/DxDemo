@@ -39,7 +39,7 @@ dsr::DsrResult ModelloaderApplication::Setup()
 	std::shared_ptr<dsr::ecs::TransformComponent> cameraTransform = engineContext->GetComponentFrom< dsr::ecs::TransformComponent>(cameraEntities[0]);
 
 	DirectX::XMFLOAT3 cameraPosition = DirectX::XMFLOAT3(0.0f, 1.0f, -1.0f);
-	cameraTransform->SetPosition(cameraPosition);
+	cameraTransform->SetPositionVec3(cameraPosition);
 
 	return dsr::DsrResult::Success("Setup Successful.");
 }
