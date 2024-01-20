@@ -6,7 +6,7 @@
 class CameraControllerComponent : public dsr::ecs::Component
 {
 public:
-	DirectX::XMVECTOR MouseMiddleCenter;
+	DirectX::XMINT2 MouseMiddleCenter;
 private:
 };
 

@@ -30,34 +30,42 @@ void CameraControllerSystem::Update(const dsr::ecs::EngineContext& context)
 
 	XMVECTOR forwardVector = XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
 	XMVECTOR upVector = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-	
+
 	if (m_input->GetKeyDown(KeyCode::MouseMiddle))
 	{
 		MousePosition position = m_input->GetMouse()->GetCurrentPosition();
-		cameraControllerData->MouseMiddleCenter = XMVectorSet(position.X, position.Y, 0.0f, 0.0f);
+		cameraControllerData->MouseMiddleCenter = XMINT2(position.X, position.Y);
 	}
 	else if (m_input->GetKeyHold(KeyCode::MouseMiddle))
 	{
-		constexpr float speed = 0.0001f;
+		constexpr float speed = 0.01f;
+		constexpr XMINT2 threshold = XMINT2(5, 5);
 
 		MousePosition position = m_input->GetMouse()->GetCurrentPosition();
-		XMVECTOR targetPosition = XMVectorSet(position.X, position.Y, 0.0f, 0.0f);
 
-		XMVECTOR targetDirection = XMVectorSubtract(targetPosition, cameraControllerData->MouseMiddleCenter);
-		XMVECTOR targetDirectionNorm = DirectX::XMVector3Normalize(targetDirection);
+		XMINT2 center = cameraControllerData->MouseMiddleCenter;
+		XMINT2 currentPosition = XMINT2(position.X, position.Y);
+		XMINT2 delta = XMINT2(currentPosition.x - center.x, currentPosition.y - center.y);
 
-		//Todo: use pixel deltas instead and move only after a certain threshold
+		XMVECTOR translation = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+		
+		bool movesOnXAxis = abs(delta.x) >= threshold.x, movesOnYAxis = abs(delta.y) >= threshold.y;
+		bool movesOnAnyAxis = movesOnXAxis || movesOnYAxis;
 
-		/*if (XMVectorGetX(XMVector3Length(targetDirectionNorm)) > 0.2f)
-		{
-			std::shared_ptr<TransformComponent> cameraTransform = context.GetComponentFrom<TransformComponent>(cameraEntities[0]);
-			XMVECTOR cameraPosition = cameraTransform->GetPosition();
+		if (movesOnXAxis)
+			translation = XMVectorSetX(translation, delta.x * (-1));
 
-			XMVECTOR newCameraPosition = XMVectorAdd(cameraPosition, targetDirectionNorm * speed);
-			cameraTransform->SetPosition(newCameraPosition);
-			cameraControllerData->MouseMiddleCenter = newCameraPosition;
-		}*/
+		if(movesOnYAxis)
+			translation = XMVectorSetY(translation, delta.y);
+
+		translation = XMVector2Normalize(translation);
+
+		std::shared_ptr<TransformComponent> cameraTransform = context.GetComponentFrom<TransformComponent>(cameraEntities[0]);
+		cameraTransform->SetPosition(XMVectorAdd(cameraTransform->GetPosition(), translation * speed));
+
+		if (movesOnAnyAxis)
+			cameraControllerData->MouseMiddleCenter = XMINT2(position.X, position.Y);
 	}
 
-	
+
 }

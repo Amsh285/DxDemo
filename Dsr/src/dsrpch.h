@@ -2,6 +2,7 @@
 
 #include <assert.h>
 #include <bitset>
+#include <cmath>
 #include <iostream>
 #include <fstream>
 #include <filesystem>
