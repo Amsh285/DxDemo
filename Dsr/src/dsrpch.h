@@ -1,8 +1,8 @@
 #pragma once
 
-
-
 #include <assert.h>
+#include <bitset>
+#include <cmath>
 #include <iostream>
 #include <fstream>
 #include <filesystem>
@@ -13,6 +13,7 @@
 #include <optional>
 #include <stdexcept>
 #include <string>
+#include <typeindex>
 #include <unordered_map>
 #include <variant>
 #include <vector>

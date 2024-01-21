@@ -22,13 +22,99 @@ namespace dsr
 				pWnd->m_data->width = windowArea.right - windowArea.left;
 				pWnd->m_data->height = windowArea.bottom - windowArea.top;
 
-				dsr::events::WindowResizedEvent resizedEvent;
+				dsr::events::WindowResizedEvent resizedEvent(pWnd->m_data->clientWidth, pWnd->m_data->clientHeight);
 				pWnd->m_windowResizedEmitter.operator()(resizedEvent);
 				break;
 			}
-			case WM_LBUTTONDOWN:
+			case WM_SETFOCUS:
 			{
-				std::cout << "ka" << std::endl;
+				dsr::events::AquiredFocusEvent event;
+				pWnd->m_aquiredFocusEvent.operator()(event);
+				break;
+			}
+			case WM_KILLFOCUS:
+			{
+				dsr::events::LooseFocusEvent event;
+				pWnd->m_looseFocusEvent.operator()(event);
+				break;
+			}
+			case WM_MOUSEHOVER:
+			{
+				int32_t x = GET_X_LPARAM(lParam);
+				int32_t y = GET_Y_LPARAM(lParam);
+
+				dsr::events::MouseHoverEvent event(x, y);
+				pWnd->m_mouseHoverEventEmitter.operator()(event);
+				break;
+			}
+			case WM_MOUSELEAVE:
+			{
+				dsr::events::MouseLeaveEvent event;
+				pWnd->m_mouseLeaveEventEmitter.operator()(event);
+				break;
+			}
+			case WM_LBUTTONDOWN:
+			case WM_MBUTTONDOWN:
+			case WM_RBUTTONDOWN:
+			{
+				int32_t x = GET_X_LPARAM(lParam);
+				int32_t y = GET_Y_LPARAM(lParam);
+				WORD mouseButtonState = LOWORD(wParam);
+
+				std::cout << "mousedown: " << mouseButtonState << std::endl;
+				dsr::events::MouseDownEvent event(x, y, mouseButtonState);
+				pWnd->m_mouseDownEventEmitter.operator()(event);
+				break;
+			}
+			case WM_LBUTTONUP:
+			case WM_MBUTTONUP:
+			case WM_RBUTTONUP:
+			{
+				int32_t x = GET_X_LPARAM(lParam);
+				int32_t y = GET_Y_LPARAM(lParam);
+				WORD mouseButtonState = LOWORD(wParam);
+
+				std::cout << "mouseup: " << mouseButtonState << std::endl;
+				dsr::events::MouseUpEvent event(x, y, mouseButtonState);
+				pWnd->m_mouseUpEventEmitter.operator()(event);
+				break;
+			}
+			case WM_MOUSEWHEEL:
+			{
+				int32_t x = GET_X_LPARAM(lParam);
+				int32_t y = GET_Y_LPARAM(lParam);
+				int16_t deltaZ = GET_WHEEL_DELTA_WPARAM(wParam);
+
+				std::cout << "mousewheel: " << deltaZ << std::endl;
+				dsr::events::MouseWheelEvent event(x, y, deltaZ);
+				pWnd->m_mouseWheelEventEmitter.operator()(event);
+				break;
+			}
+			case WM_MOUSEMOVE:
+			{
+				int32_t x = GET_X_LPARAM(lParam);
+				int32_t y = GET_Y_LPARAM(lParam);
+
+				// https://stackoverflow.com/questions/27272944/popup-window-on-wm-mousehover-in-win32-api-how-to-close-it
+				// https://www.gamedev.net/forums/topic/594773-c-win32-detect-when-the-mouse-leaves-my-app-window/4770224/
+				dsr::events::MouseMoveEvent event(x, y);
+				pWnd->m_mouseMoveEventEmitter.operator()(event);
+				break;
+			}
+			case WM_KEYDOWN:
+			{
+				std::uint8_t keyCode = LOBYTE(wParam);
+				std::cout << "Keydown keyCode: " << static_cast<std::uint32_t>(keyCode) << std::endl;
+
+				pWnd->m_keyDownEventEmitter.operator()(dsr::events::KeyDownEvent(keyCode));
+				break;
+			}
+			case WM_KEYUP:
+			{
+				std::uint8_t keyCode = LOBYTE(wParam);
+				std::cout << "-------------------Keyup keyCode: " << static_cast<std::uint32_t>(keyCode) << std::endl;
+
+				pWnd->m_keyUpEventEmitter.operator()(dsr::events::KeyUpEvent(keyCode));
 				break;
 			}
 			case WM_CLOSE:
@@ -46,8 +132,6 @@ namespace dsr
 			default:
 				break;
 			}
-
-			//std::cout << "message: " << message << std::endl;
 
 			return DefWindowProc(windowHandle, message, wParam, lParam);
 		}
@@ -126,6 +210,11 @@ namespace dsr
 			assert(m_windowHandle);
 
 			SetWindowLongPtr(m_windowHandle, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
+
+			m_mouseEventTracker = std::make_shared<MouseEventTracker>(m_windowHandle);
+			m_mouseMoveEventEmitter.Hook(m_mouseEventTracker, &MouseEventTracker::OnMouseMove);
+			m_mouseHoverEventEmitter.Hook(m_mouseEventTracker, &MouseEventTracker::OnMouseHover);
+			m_mouseLeaveEventEmitter.Hook(m_mouseEventTracker, &MouseEventTracker::OnMouseLeave);
 		}
 
 		Window::~Window()

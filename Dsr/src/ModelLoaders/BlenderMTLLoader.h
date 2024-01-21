@@ -39,6 +39,21 @@ namespace dsr
 		std::string MapBump; // map_Bump
 		float BumpMultiplier; // -bm same line as map_Bump
 		std::string MapDiffuse; // map_Kd
+
+		BlenderMaterialData()
+		{
+			SpecularExponent = 0.0f;
+			AmbientColor = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+
+			// probably every member should be float4. Look at this later
+			DiffuseColor = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
+			EmissiveColor = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+			SpecularColor = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+			OpticalDensity = 0.0f;
+			DissolveFactor = 0.0f;
+			IlluminationModel = 4;
+			BumpMultiplier = 0.0f;
+		}
 	};
 
 	class BlenderMTLLoader
