@@ -45,7 +45,7 @@ namespace dsr
 
 		void Mouse::OnMouseWheelRotated(const dsr::events::MouseWheelEvent& mouseWheel)
 		{
-			m_mousewheelDeltaZ = mouseWheel.GetDeltaZ();
+			m_mousewheelDeltaZ = mouseWheel.GetDeltaZ() / MouseWheelRotationDelta;
 			m_currentPosition = mouseWheel.GetPosition();
 		}
 
@@ -64,6 +64,7 @@ namespace dsr
 		{
 			m_previousKeyState = m_currentKeyState;
 			m_previousPosition = m_currentPosition;
+			m_mousewheelDeltaZ = 0.0f;
 		}
 	}
 }

@@ -9,7 +9,8 @@ public:
 	DirectX::XMINT2 MouseMiddleCenter;
 
 	DirectX::XMINT2 MouseRightCenter;
-	DirectX::XMFLOAT3 MouseRightRotations;
+	float MouseRightYaw;
+	float MouseRightPitch;
 
 	CameraControllerComponent();
 private:

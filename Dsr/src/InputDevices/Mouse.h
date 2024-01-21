@@ -13,7 +13,7 @@ constexpr auto MouseWheelRotationDelta = 120;
 		class Mouse : public dsr::events::EventListener
 		{
 		public:
-			int16_t GetMouseWheelRotationDeltaZ() const { return m_mousewheelDeltaZ; }
+			float GetMouseWheelRotationDeltaZ() const { return m_mousewheelDeltaZ; }
 			dsr::events::MousePosition GetCurrentPosition() const { return m_currentPosition; }
 			dsr::events::MousePosition GetPreviousPosition() const { return m_previousPosition; }
 
@@ -31,7 +31,7 @@ constexpr auto MouseWheelRotationDelta = 120;
 			void OnLooseFocus(const dsr::events::LooseFocusEvent& looseFocus);
 			void OnUpdateFrameFinished(const dsr::events::UpdateFrameFinishedEvent& updateFinished);
 		private:
-			int16_t m_mousewheelDeltaZ;
+			float m_mousewheelDeltaZ;
 			uint16_t m_currentKeyState, m_previousKeyState;
 			dsr::events::MousePosition m_currentPosition, m_previousPosition;
 		};

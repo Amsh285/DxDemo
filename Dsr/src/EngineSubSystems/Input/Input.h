@@ -22,6 +22,8 @@ namespace dsr
 			std::shared_ptr<dsr::inputdevices::Keyboard> GetKeyboard() const { return m_keyboard; }
 			std::shared_ptr<dsr::inputdevices::Mouse> GetMouse() const { return m_mouse; }
 
+			float GetMouseWheelRotationDeltaZ() const { return m_mouse->GetMouseWheelRotationDeltaZ(); }
+
 			bool GetKeyDown(const KeyCode& key) const;
 			bool GetKeyHold(const KeyCode& key) const;
 			bool GetKeyUp(const KeyCode& key) const;
