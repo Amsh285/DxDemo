@@ -12,7 +12,7 @@ dsr::DsrResult ModelloaderApplication::Setup()
 	dsr::DsrResult baseResult = DsrApplication::Setup();
 	if (baseResult.GetResultStatusCode() != RESULT_SUCCESS)
 		return baseResult;
-
+	3
 	SetupSystems();
 
 	std::variant<std::map<std::string, ModelConfiguration>, dsr::dsr_error> loadContent = LoadContent();
@@ -22,13 +22,6 @@ dsr::DsrResult ModelloaderApplication::Setup()
 		std::string errorMessage = "Error loading Content: ";
 		errorMessage += error.what();
 		return DsrResult(errorMessage, error.GetResult());
-	}
-
-	std::variant<Direct3dShaderProgram, dsr_error> loadDefaultShaderProgram = LoadDefaultShaderProgram();
-	if (std::holds_alternative<dsr_error>(loadDefaultShaderProgram))
-	{
-		const dsr_error& error = std::get<dsr_error>(loadDefaultShaderProgram);
-		return DsrResult(error.what(), error.GetResult());
 	}
 
 	const std::map<std::string, ModelConfiguration>& content = std::get<std::map<std::string, ModelConfiguration>>(loadContent);
@@ -393,46 +386,6 @@ std::variant<dsr::ModelConfiguration, dsr::dsr_error> ModelloaderApplication::Lo
 
 
 	return sorcModel;
-}
-
-std::variant<dsr::directX::Direct3dShaderProgram, dsr::dsr_error> ModelloaderApplication::LoadDefaultShaderProgram()
-{
-	using namespace dsr;
-	using namespace dsr::directX;
-
-	std::variant<std::shared_ptr<Direct3dShader<ID3D11VertexShader>>, dsr_error> loadVertexShader = LoadShaderFromFile<ID3D11VertexShader>(m_device, L"Assets/VertexShader.hlsl", "vs_5_0");
-	std::variant<std::shared_ptr<Direct3dShader<ID3D11PixelShader>>, dsr::dsr_error> loadPixelShader = LoadShaderFromFile<ID3D11PixelShader>(m_device, L"Assets/PixelShader.hlsl", "ps_5_0");
-
-	if (std::holds_alternative<dsr_error>(loadVertexShader))
-	{
-		dsr_error error = std::get<dsr_error>(loadVertexShader);
-		return dsr_error::Attach("Could not load VertexShader. ", error);
-	}
-
-	if (std::holds_alternative<dsr_error>(loadPixelShader))
-	{
-		dsr_error error = std::get<dsr_error>(loadPixelShader);
-		return dsr_error::Attach("Could not load PixelShader. ", error);
-	}
-
-	auto vertexShader = std::get<std::shared_ptr<Direct3dShader<ID3D11VertexShader>>>(loadVertexShader);
-	auto pixelShader = std::get<std::shared_ptr<Direct3dShader<ID3D11PixelShader>>>(loadPixelShader);
-
-	Direct3dShaderInputLayout vertexShaderInputLayout;
-	vertexShaderInputLayout.AddVector3f("POSITION");
-	vertexShaderInputLayout.AddVector2f("TXCOORD");
-	vertexShaderInputLayout.AddVector3f("NORMAL");
-
-	std::variant<Direct3dShaderProgram, dsr_error> loadShaderProgram = CreateShaderProgram(
-		m_device, vertexShader, pixelShader, vertexShaderInputLayout);
-
-	if (std::holds_alternative<dsr_error>(loadShaderProgram))
-	{
-		dsr_error error = std::get<dsr_error>(loadShaderProgram);
-		return dsr_error::Attach("Could not load Shaderprogram. ", error);
-	}
-
-	return std::get<Direct3dShaderProgram>(loadShaderProgram);
 }
 
 std::optional<dsr::directX::Direct3dShaderTexture2D> ModelloaderApplication::LoadTexture(const std::filesystem::path& fileName, const std::string& group, const uint32_t& miscFlags)
