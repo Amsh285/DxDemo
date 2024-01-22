@@ -4,7 +4,7 @@
 
 std::vector<std::type_index> CameraControllerSystem::GetRequiredComponents() const
 {
-	return { std::type_index(typeid(CameraControllerComponent)) };
+	return { std::type_index(typeid(CameraControllerComponent)), std::type_index(typeid(dsr::ecs::TransformComponent))};
 }
 
 CameraControllerSystem::CameraControllerSystem(const std::shared_ptr<dsr::input::Input>& input)
@@ -23,10 +23,7 @@ void CameraControllerSystem::Update(const dsr::ecs::EngineContext& context)
 	using namespace dsr::input;
 
 	std::shared_ptr<CameraControllerComponent> cameraControllerData = context.GetComponent<CameraControllerComponent>();
-	std::vector<Entity> cameraEntities = context.FindEntitiesByTag("Camera");
-
-	if (cameraEntities.size() < 1)
-		return;
+	std::shared_ptr<TransformComponent> cameraTransform = context.GetComponent<TransformComponent>();
 
 	int16_t deltaZ = m_input->GetMouseWheelRotationDeltaZ();
 
@@ -58,8 +55,6 @@ void CameraControllerSystem::Update(const dsr::ecs::EngineContext& context)
 		forward = XMVector3Rotate(forward, quaternion);
 		up = XMVector3Rotate(up, quaternion);
 		XMVECTOR side = XMVector3Cross(up, forward);
-
-		std::shared_ptr<TransformComponent> cameraTransform = context.GetComponentFrom<TransformComponent>(cameraEntities[0]);
 
 		if (movesOnXAxis)
 		{
@@ -106,7 +101,6 @@ void CameraControllerSystem::Update(const dsr::ecs::EngineContext& context)
 
 		if (movesOnAnyAxis)
 		{
-			std::shared_ptr<TransformComponent> cameraTransform = context.GetComponentFrom<TransformComponent>(cameraEntities[0]);
 			cameraTransform->SetRotation(
 				XMQuaternionRotationRollPitchYaw(
 					XMConvertToRadians(cameraControllerData->MouseRightPitch),
@@ -129,7 +123,6 @@ void CameraControllerSystem::Update(const dsr::ecs::EngineContext& context)
 		forward = XMVector3Rotate(forward, rotation);
 		forward = XMVectorScale(forward, deltaZ * speed);
 
-		std::shared_ptr<TransformComponent> cameraTransform = context.GetComponentFrom<TransformComponent>(cameraEntities[0]);
 		XMVECTOR position = XMVectorAdd(forward, cameraTransform->GetPosition());
 		cameraTransform->SetPosition(position);
 	}

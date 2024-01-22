@@ -50,6 +50,8 @@ namespace dsr
 		std::shared_ptr<dsr::input::InputSystem> m_inputSystem;
 		std::shared_ptr<dsr::ecs::EcsManager> m_ecsManager;
 
+		dsr::ecs::Entity m_cameraEntity;
+
 		std::filesystem::path m_executablePath;
 	private:
 		class WindowManager : public events::EventListener
@@ -81,7 +83,6 @@ namespace dsr
 		std::shared_ptr<dsr::ecs::ViewProjectionSystem> m_viewProjectionSystem;
 		std::shared_ptr<dsr::ecs::RendererSystem> m_rendererSystem;
 
-		dsr::ecs::Entity m_cameraEntity;
 		dsr::ecs::Entity m_defaultShaderProgramEntity;
 	};
 }

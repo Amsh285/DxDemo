@@ -30,5 +30,4 @@ private:
 	std::optional<dsr::directX::Direct3dShaderTexture2D> LoadTexture(const std::filesystem::path& fileName, const std::string& group = "", const uint32_t& miscFlags = 0);
 
 	dsr::ecs::Entity m_sorcEntity;
-	dsr::ecs::Entity m_camerControllerDataEntity;
 };

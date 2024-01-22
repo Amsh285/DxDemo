@@ -48,7 +48,6 @@ ModelloaderApplication::ModelloaderApplication()
 	: DsrApplication(L"Model loader", 100, 100, 1280, 768)
 {
 	m_sorcEntity = m_ecsManager->CreateNewEntity();
-	m_camerControllerDataEntity = m_ecsManager->CreateNewEntity();
 }
 
 void ModelloaderApplication::SetupSystems()
@@ -65,8 +64,7 @@ void ModelloaderApplication::RegisterCameraSytem()
 
 void ModelloaderApplication::RegisterCameraComponent()
 {
-	m_ecsManager->RegisterComponent<dsr::ecs::TagComponent>(m_camerControllerDataEntity, "CameraControllerData");
-	m_ecsManager->RegisterComponent<CameraControllerComponent>(m_camerControllerDataEntity);
+	m_ecsManager->RegisterComponent<CameraControllerComponent>(m_cameraEntity);
 }
 
 std::variant<std::map<std::string, dsr::ModelConfiguration>, dsr::dsr_error> ModelloaderApplication::LoadContent()
