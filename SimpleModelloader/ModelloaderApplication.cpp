@@ -12,7 +12,7 @@ dsr::DsrResult ModelloaderApplication::Setup()
 	dsr::DsrResult baseResult = DsrApplication::Setup();
 	if (baseResult.GetResultStatusCode() != RESULT_SUCCESS)
 		return baseResult;
-	3
+
 	SetupSystems();
 
 	std::variant<std::map<std::string, ModelConfiguration>, dsr::dsr_error> loadContent = LoadContent();
