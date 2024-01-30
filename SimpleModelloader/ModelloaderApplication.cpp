@@ -27,9 +27,8 @@ dsr::DsrResult ModelloaderApplication::Setup()
 	const std::map<std::string, ModelConfiguration>& content = std::get<std::map<std::string, ModelConfiguration>>(loadContent);
 	RegisterSorcModel(content);
 
-	const std::shared_ptr<dsr::ecs::EngineContext> engineContext = m_ecsManager->GetEngineContext();
-	std::vector<dsr::ecs::Entity> cameraEntities = engineContext->FindEntitiesByTag("Camera");
-	std::shared_ptr<dsr::ecs::TransformComponent> cameraTransform = engineContext->GetComponentFrom< dsr::ecs::TransformComponent>(cameraEntities[0]);
+	std::vector<dsr::ecs::Entity> cameraEntities = m_ecsManager->FindEntitiesByTag("Camera");
+	std::shared_ptr<dsr::ecs::TransformComponent> cameraTransform = m_ecsManager->GetComponentFrom<dsr::ecs::TransformComponent>(cameraEntities[0]);
 
 	DirectX::XMFLOAT3 cameraPosition = DirectX::XMFLOAT3(0.0f, 1.0f, -1.0f);
 	cameraTransform->SetPositionVec3(cameraPosition);
