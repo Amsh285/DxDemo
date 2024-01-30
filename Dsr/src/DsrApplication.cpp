@@ -53,6 +53,9 @@ namespace dsr
 
 	void DsrApplication::Run()
 	{
+		m_ecsManager->OrderSystems();
+		m_ecsManager->RaiseSystemStartEvents();
+
 		m_window->Show();
 		m_windowApplication->PeekMessages();
 	}

@@ -20,9 +20,15 @@ namespace dsr
 		public:
 			static Entity CreateNewEntity();
 
-			std::shared_ptr<EngineContext> GetEngineContext() const { return m_engineContext; }
+			std::vector<Entity> FindEntitiesByTag(const std::string& tag) const { return m_engineContext->FindEntitiesByTag(tag); }
+
+			template<class TComponent>
+			std::shared_ptr<TComponent> GetComponentFrom(const Entity& entity) const { return m_engineContext->GetComponentFrom<TComponent>(entity); }
 
 			EcsManager();
+
+			void OrderSystems();
+			void RaiseSystemStartEvents();
 
 			template<class TComponent>
 			std::shared_ptr<TComponent> RegisterComponent(const Entity& entity)
@@ -142,7 +148,6 @@ namespace dsr
 				std::shared_ptr<TSystem> sys = std::make_shared<TSystem>();
 				m_systems.push_back(sys);
 				UpdateSystemEntityAssignment(sys);
-				OrderSystems();
 			}
 
 			template<class TSystem>
@@ -155,7 +160,6 @@ namespace dsr
 
 				m_systems.push_back(system);
 				UpdateSystemEntityAssignment(system);
-				OrderSystems();
 			}
 
 			template<class TSystem>
@@ -179,7 +183,6 @@ namespace dsr
 		private:
 			bool HasComponentTypeIntersection(const std::shared_ptr<System>& system, const std::unordered_map<std::type_index, std::shared_ptr<Component>>& componentMap);
 			void UpdateSystemEntityAssignment(const std::shared_ptr<System>& system);
-			void OrderSystems();
 
 			std::shared_ptr<EcsEngineContext> m_engineContext;
 
