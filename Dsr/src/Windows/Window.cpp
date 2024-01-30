@@ -61,7 +61,6 @@ namespace dsr
 				int32_t y = GET_Y_LPARAM(lParam);
 				WORD mouseButtonState = LOWORD(wParam);
 
-				std::cout << "mousedown: " << mouseButtonState << std::endl;
 				dsr::events::MouseDownEvent event(x, y, mouseButtonState);
 				pWnd->m_mouseDownEventEmitter.operator()(event);
 				break;
@@ -74,7 +73,6 @@ namespace dsr
 				int32_t y = GET_Y_LPARAM(lParam);
 				WORD mouseButtonState = LOWORD(wParam);
 
-				std::cout << "mouseup: " << mouseButtonState << std::endl;
 				dsr::events::MouseUpEvent event(x, y, mouseButtonState);
 				pWnd->m_mouseUpEventEmitter.operator()(event);
 				break;
@@ -85,7 +83,6 @@ namespace dsr
 				int32_t y = GET_Y_LPARAM(lParam);
 				int16_t deltaZ = GET_WHEEL_DELTA_WPARAM(wParam);
 
-				std::cout << "mousewheel: " << deltaZ << std::endl;
 				dsr::events::MouseWheelEvent event(x, y, deltaZ);
 				pWnd->m_mouseWheelEventEmitter.operator()(event);
 				break;
@@ -104,7 +101,6 @@ namespace dsr
 			case WM_KEYDOWN:
 			{
 				std::uint8_t keyCode = LOBYTE(wParam);
-				std::cout << "Keydown keyCode: " << static_cast<std::uint32_t>(keyCode) << std::endl;
 
 				pWnd->m_keyDownEventEmitter.operator()(dsr::events::KeyDownEvent(keyCode));
 				break;
@@ -112,7 +108,6 @@ namespace dsr
 			case WM_KEYUP:
 			{
 				std::uint8_t keyCode = LOBYTE(wParam);
-				std::cout << "-------------------Keyup keyCode: " << static_cast<std::uint32_t>(keyCode) << std::endl;
 
 				pWnd->m_keyUpEventEmitter.operator()(dsr::events::KeyUpEvent(keyCode));
 				break;

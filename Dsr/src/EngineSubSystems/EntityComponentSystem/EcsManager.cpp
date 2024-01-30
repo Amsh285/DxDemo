@@ -20,6 +20,34 @@ namespace dsr
 		{
 		}
 
+		void EcsManager::OrderSystems()
+		{
+			std::sort(
+				m_systems.begin(),
+				m_systems.end(),
+				[](const std::shared_ptr<System>& left, const std::shared_ptr<System>& right) {
+					return left->GetSortOrder() < right->GetSortOrder();
+				});
+		}
+
+		void EcsManager::RaiseSystemStartEvents()
+		{
+			for (auto it = m_systems.begin(); it != m_systems.end(); ++it)
+			{
+				if ((*it)->OnStart)
+				{
+					std::shared_ptr<System> system = *it;
+					std::vector<Entity> entities = m_systemEntities[system->GetType()];
+
+					for (Entity& entity : entities)
+					{
+						m_engineContext->SetCurrentEntity(entity);
+						system->OnStart(*m_engineContext);
+					}
+				}
+			}
+		}
+
 		void EcsManager::OnUpdate(const dsr::events::UpdateFrameEvent& updateFrameEvent)
 		{
 			for (auto it = m_systems.begin(); it != m_systems.end(); ++it)
@@ -55,16 +83,6 @@ namespace dsr
 				if (HasComponentTypeIntersection(system, entity.second))
 					m_systemEntities[system->GetType()].push_back(entity.first);
 			}
-		}
-
-		void EcsManager::OrderSystems()
-		{
-			std::sort(
-				m_systems.begin(),
-				m_systems.end(),
-				[](const std::shared_ptr<System>& left, const std::shared_ptr<System>& right) {
-					return left->GetSortOrder() < right->GetSortOrder();
-				});
 		}
 	}
 }
