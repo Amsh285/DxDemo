@@ -1,5 +1,7 @@
 #pragma once
 
+#include "EngineSubSystems/Time/FrameDelta.h"
+
 #include "Events/EventEmitter.h"
 #include "Events/Application/WindowEvents.h"
 

@@ -2,6 +2,7 @@
 
 #include <assert.h>
 #include <bitset>
+#include <chrono>
 #include <cmath>
 #include <iostream>
 #include <fstream>
@@ -40,4 +41,6 @@ inline void SafeRelease(T& ptr)
     }
 }
 
-
+#ifdef min
+#undef min
+#endif
