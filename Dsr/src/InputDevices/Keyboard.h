@@ -2,6 +2,7 @@
 
 #include "Events/Application/InputEvents/KeyboardEvents.h"
 #include "Events/Application/WindowEvents.h"
+#include "Events/Application/FrameEvents.h"
 #include "Events/EventListener.h"
 
 namespace dsr

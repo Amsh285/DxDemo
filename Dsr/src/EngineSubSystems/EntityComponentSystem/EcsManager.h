@@ -2,6 +2,7 @@
 
 #include "Events/EventListener.h"
 #include "Events/Application/WindowEvents.h"
+#include "Events/Application/FrameEvents.h"
 
 #include "ErrorHandling/DsrResult.h"
 

@@ -46,7 +46,7 @@ namespace dsr
 			m_device->SetSamplers<ID3D11PixelShader>(0, 1, &state);
 		}
 
-		void RendererSystem::PrepareUpdate(const events::PrepareUdateFrameEvent& args)
+		void RendererSystem::PrepareUpdate(const events::PrepareUpdateFrameEvent& args)
 		{
 			m_device->Clear(0.0f, 0.2f, 0.4f, 1.0f);
 			m_device->SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

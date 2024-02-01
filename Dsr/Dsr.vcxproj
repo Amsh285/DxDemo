@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\EngineSubSystems\Time\FrameDelta.h" />
+    <ClInclude Include="src\Events\Application\FrameEvents.h" />
     <ClInclude Include="src\Infrastructure\Duration.h" />
     <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\Components\ShaderProgramComponent.h" />
     <ClInclude Include="src\Infrastructure\DsrTypes.h" />

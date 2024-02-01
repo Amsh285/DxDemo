@@ -36,17 +36,5 @@ namespace dsr
 		class LooseFocusEvent : public IEvent
 		{
 		};
-
-		class PrepareUdateFrameEvent : public IEvent
-		{
-		};
-
-		class UpdateFrameEvent : public IEvent
-		{
-		};
-
-		class UpdateFrameFinishedEvent : public IEvent
-		{
-		};
 	}
 }
