@@ -26,6 +26,7 @@
 #include "EngineSubSystems/EntityComponentSystem/EcsSystems/ViewProjectionSystem.h"
 
 #include "EngineSubSystems/Input/InputSystem.h"
+#include "EngineSubSystems/Time/Time.h"
 
 namespace dsr
 {
@@ -49,6 +50,7 @@ namespace dsr
 
 		std::shared_ptr<dsr::input::InputSystem> m_inputSystem;
 		std::shared_ptr<dsr::ecs::EcsManager> m_ecsManager;
+		std::shared_ptr<dsr::time::Time> m_time;
 
 		dsr::ecs::Entity m_cameraEntity;
 

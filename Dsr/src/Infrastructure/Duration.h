@@ -15,6 +15,7 @@ namespace dsr
 		std::chrono::duration<float, std::micro> Micro() const { return m_duration; }
 		std::chrono::duration<float, std::nano> Nano() const { return m_duration; }
 
+		Duration();
 		explicit Duration(const std::chrono::duration<float, std::nano>& duration);
 
 		Duration Capped(const std::chrono::duration<float, std::nano>& cap) const;

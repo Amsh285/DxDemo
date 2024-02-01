@@ -3,6 +3,11 @@
 
 namespace dsr
 {
+	Duration::Duration()
+		: m_duration(0.0f)
+	{
+	}
+
 	Duration::Duration(const std::chrono::duration<float, std::nano>& duration)
 		: m_duration(duration)
 	{

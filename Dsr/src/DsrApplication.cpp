@@ -27,9 +27,10 @@ namespace dsr
 		m_windowManager = std::make_shared<WindowManager>(m_window, m_device);
 		m_blenderModelLoader = std::make_shared<BlenderModelLoader>();
 		m_eventDispatcher = std::make_shared<dsr::EventDispatcher>(m_window, m_windowApplication);
-		m_inputSystem = std::make_shared<dsr::input::InputSystem>(dsr::windows::CreateKeyMap());
 
+		m_inputSystem = std::make_shared<dsr::input::InputSystem>(dsr::windows::CreateKeyMap());
 		m_ecsManager = std::make_shared<dsr::ecs::EcsManager>();
+		m_time = std::make_shared<dsr::time::Time>();
 
 		InitializeSystems();
 		InitializePredefinedEntities();
@@ -41,6 +42,7 @@ namespace dsr
 
 		m_inputSystem->RegisterEvents(m_eventDispatcher);
 		m_eventDispatcher->RegisterEventListener(m_ecsManager, &dsr::ecs::EcsManager::OnUpdate);
+		m_eventDispatcher->RegisterEventListener(m_time, &dsr::time::Time::OnPrepareUpdateFrame);
 
 		DsrResult setupSystemsResult = SetupSystems();
 		if (setupSystemsResult.GetResultStatusCode() != RESULT_SUCCESS)
