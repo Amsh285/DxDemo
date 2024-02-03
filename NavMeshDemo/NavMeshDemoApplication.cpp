@@ -13,4 +13,3 @@ dsr::DsrResult NavMeshDemoApplication::Setup()
 
 	return dsr::DsrResult::Success("");
 }
-
