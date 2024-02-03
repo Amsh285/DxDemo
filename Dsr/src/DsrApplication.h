@@ -41,6 +41,7 @@ namespace dsr
 			const std::wstring& title,
 			const int& x, const int& y,
 			const int& width, const int& height);
+		virtual ~DsrApplication() = default;
 	protected:
 		std::shared_ptr<dsr::input::Input> GetInput() const;
 		std::shared_ptr<directX::Direct3dDevice> m_device;
