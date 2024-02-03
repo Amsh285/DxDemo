@@ -16,6 +16,44 @@ namespace dsr
 #endif // DEBUG
 
 		template<class TShader>
+		std::variant<std::shared_ptr<Direct3dShader<TShader>>, dsr_error> LoadPrecompiledShader(
+			const std::shared_ptr<Direct3dDevice> device,
+			const std::filesystem::path& fileName
+		)
+		{
+			ID3DBlob* pShaderBlob = nullptr;
+
+			std::wstring wideFileName = fileName.wstring();
+			HRESULT hr = D3DReadFileToBlob(wideFileName.c_str(), &pShaderBlob);
+
+			if (FAILED(hr))
+				return dsr_error("Error reading precompiled Shader.", hr);
+
+			std::variant<TShader*, dsr_error> createShaderResult = device->CreateShader<TShader>(pShaderBlob, nullptr);
+
+			if (std::holds_alternative<dsr_error>(createShaderResult))
+			{
+				SafeRelease(pShaderBlob);
+				dsr_error createShaderError = std::get<dsr_error>(createShaderResult);
+
+				return dsr_error::Attach(
+					"error creating shader: " + std::string(wideFileName.begin(), wideFileName.end()) + ". ",
+					createShaderError
+				);
+			}
+
+			TShader* pShader = std::get<TShader*>(createShaderResult);
+			assert(pShader);
+			assert(pShaderBlob);
+
+			std::shared_ptr<TShader> shaderPtr = std::shared_ptr<TShader>(pShader, [](TShader* ptr) { SafeRelease(ptr); });
+			std::shared_ptr<ID3DBlob> shaderBlobPtr = std::shared_ptr<ID3DBlob>(pShaderBlob, [](ID3DBlob* ptr) { SafeRelease(ptr); });
+			std::shared_ptr<Direct3dShader<TShader>> shader = std::make_shared<Direct3dShader<TShader>>(shaderPtr, shaderBlobPtr);
+
+			return shader;
+		}
+
+		template<class TShader>
 		std::variant<std::shared_ptr<Direct3dShader<TShader>>, dsr_error> LoadShaderFromFile(
 			const std::shared_ptr<Direct3dDevice> device,
 			const std::wstring& fileName,
@@ -75,6 +113,12 @@ namespace dsr
 			return shader;
 		}
 
+		std::variant<std::shared_ptr<Direct3dShaderProgram>, dsr_error> CreateShaderProgramPtr(
+			const std::shared_ptr<Direct3dDevice> device,
+			const std::shared_ptr<Direct3dShader<ID3D11VertexShader>>& vertexShader,
+			const std::shared_ptr<Direct3dShader<ID3D11PixelShader>>& pixelShader,
+			const Direct3dShaderInputLayout& vertexShaderInputLayout);
+
 		std::variant<Direct3dShaderProgram, dsr_error> CreateShaderProgram(
 			const std::shared_ptr<Direct3dDevice> device,
 			const std::shared_ptr<Direct3dShader<ID3D11VertexShader>>& vertexShader,
@@ -82,50 +126,17 @@ namespace dsr
 			const Direct3dShaderInputLayout& vertexShaderInputLayout
 		);
 
-		template<class TShader>
 		DsrResult SetConstantBuffer(
 			const std::shared_ptr<Direct3dDevice> device,
-			std::shared_ptr<Direct3dShader<TShader>> target,
+			std::map<size_t, Direct3dBuffer>& target,
 			const size_t& bRegister,
-			const DirectX::XMMATRIX& value
-		);
+			const DirectX::XMMATRIX& value);
 
-		template<class TShader>
 		DsrResult SetConstantBuffer(
 			const std::shared_ptr<Direct3dDevice> device,
-			std::shared_ptr<Direct3dShader<TShader>> target,
+			std::map<size_t, Direct3dBuffer>& target,
 			const size_t& bRegister,
-			const DirectX::XMMATRIX& value)
-		{
-			auto it = target->ConstantBuffers.find(bRegister);
-
-			if (it == target->ConstantBuffers.end())
-			{
-				D3D11_SUBRESOURCE_DATA subResourceData;
-				ZeroMemory(&subResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
-				subResourceData.pSysMem = &value;
-
-				std::variant<Direct3dBuffer, dsr_error> createConstantBufferResult = Direct3dBuffer::CreateConstantBuffer(
-					device,
-					sizeof(DirectX::XMMATRIX),
-					0, 0, D3D11_USAGE_DEFAULT,
-					subResourceData);
-
-				if (std::holds_alternative<dsr_error>(createConstantBufferResult))
-				{
-					const dsr_error& error = std::get<dsr_error>(createConstantBufferResult);
-					return DsrResult(error.what(), error.GetResult());
-				}
-
-				target->ConstantBuffers[bRegister] = std::get<Direct3dBuffer>(createConstantBufferResult);
-			}
-			else
-			{
-				std::shared_ptr<ID3D11Buffer> bufferPtr = it->second.GetBufferPtr();
-				device->UpdateSubResource(bufferPtr.get(), 0, nullptr, &value, 0, 0);
-			}
-
-			return DsrResult::Success("Constant buffer setup successful.");
-		}
+			const void* dataPtr,
+			const size_t& dataSize);
 	}
 }

@@ -149,6 +149,20 @@ namespace dsr
 			return device;
 		}
 
+		std::variant<ID3D11Texture2D*, dsr_error> Direct3dDevice::CreateTexture2D(const D3D11_TEXTURE2D_DESC* pDesc, const D3D11_SUBRESOURCE_DATA* pInitialData) const
+		{
+			ID3D11Texture2D* texPtr = nullptr;
+			HRESULT result = m_device->CreateTexture2D(pDesc, pInitialData, &texPtr);
+
+			if (FAILED(result))
+			{
+				SafeRelease(texPtr);
+				return dsr_error("Error device was unable to create the Texture2D.", result);
+			}
+
+			return texPtr;
+		}
+
 		std::variant<ID3D11Buffer*, dsr::dsr_error> Direct3dDevice::CreateBuffer(const D3D11_BUFFER_DESC* pDesc, const D3D11_SUBRESOURCE_DATA* pInitialData) const
 		{
 			ID3D11Buffer* buffer = nullptr;
@@ -161,6 +175,39 @@ namespace dsr
 			}
 
 			return buffer;
+		}
+
+		std::variant<ID3D11ShaderResourceView*, dsr_error> Direct3dDevice::CreateShaderResourceView(ID3D11Resource* pResource, const D3D11_SHADER_RESOURCE_VIEW_DESC* pDesc)
+		{
+			ID3D11ShaderResourceView* resourceViewPtr = nullptr;
+
+			HRESULT result = m_device->CreateShaderResourceView(pResource, pDesc, &resourceViewPtr);
+			if (FAILED(result))
+			{
+				SafeRelease(resourceViewPtr);
+				return dsr_error("Error device was unable to create the ShaderResourceView.", result);
+			}
+
+			return resourceViewPtr;
+		}
+
+		void Direct3dDevice::GenerateMips(ID3D11ShaderResourceView* pShaderResourceView)
+		{
+			m_deviceContext->GenerateMips(pShaderResourceView);
+		}
+
+		std::variant<ID3D11SamplerState*, dsr_error> Direct3dDevice::CreateSamplerState(const D3D11_SAMPLER_DESC* pSamplerDesc)
+		{
+			ID3D11SamplerState* samplerStatePtr = nullptr;
+
+			HRESULT result = m_device->CreateSamplerState(pSamplerDesc, &samplerStatePtr);
+			if (FAILED(result))
+			{
+				SafeRelease(samplerStatePtr);
+				return dsr_error("Error device was unable to create the SamplerState.", result);
+			}
+
+			return samplerStatePtr;
 		}
 
 		void Direct3dDevice::UpdateSubResource(ID3D11Resource* resourcePtr, const uint32_t& dstSubResource, const D3D11_BOX* pDstBox, const void* dataPtr, const uint32_t& srcRowPitch, const uint32_t& srcDepthPitch)

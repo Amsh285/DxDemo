@@ -1,15 +1,20 @@
 #pragma once
 
 #include <assert.h>
+#include <bitset>
+#include <chrono>
+#include <cmath>
 #include <iostream>
 #include <fstream>
 #include <filesystem>
+#include <functional>
 #include <map>
 #include <memory>
 #include <mutex>
 #include <optional>
 #include <stdexcept>
 #include <string>
+#include <typeindex>
 #include <unordered_map>
 #include <variant>
 #include <vector>
@@ -35,3 +40,7 @@ inline void SafeRelease(T& ptr)
         ptr = NULL;
     }
 }
+
+#ifdef min
+#undef min
+#endif

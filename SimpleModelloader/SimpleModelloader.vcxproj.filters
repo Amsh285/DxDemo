@@ -21,10 +21,25 @@
     <ClCompile Include="ModelloaderApplication.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Systems\CameraControllerSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\CameraControllerComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ModelloaderApplication.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Systems\CameraControllerSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\CameraControllerComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Assets\VertexShader.hlsl" />
   </ItemGroup>
 </Project>

@@ -15,9 +15,23 @@ namespace dsr
 		public:
 			static DevicePtr Create(const WindowPtr& window);
 
+			std::variant<ID3D11Texture2D*, dsr_error> CreateTexture2D(
+				const D3D11_TEXTURE2D_DESC* pDesc,
+				const D3D11_SUBRESOURCE_DATA* pInitialData
+			) const;
+
 			std::variant<ID3D11Buffer*, dsr::dsr_error> CreateBuffer(
 				const D3D11_BUFFER_DESC* pDesc,
 				const D3D11_SUBRESOURCE_DATA* pInitialData) const;
+
+			std::variant<ID3D11ShaderResourceView*, dsr_error> CreateShaderResourceView(
+				ID3D11Resource* pResource,
+				const D3D11_SHADER_RESOURCE_VIEW_DESC* pDesc
+			);
+
+			void GenerateMips(ID3D11ShaderResourceView* pShaderResourceView);
+
+			std::variant<ID3D11SamplerState*, dsr_error> CreateSamplerState(const D3D11_SAMPLER_DESC* pSamplerDesc);
 
 			void UpdateSubResource(
 				ID3D11Resource* resourcePtr,
@@ -102,6 +116,30 @@ namespace dsr
 			void UseConstantBuffers<ID3D11VertexShader>(const uint32_t& startSlot, const uint32_t& numBuffers, ID3D11Buffer* const* ppConstantBuffers)
 			{
 				m_deviceContext->VSSetConstantBuffers(startSlot, numBuffers, ppConstantBuffers);
+			}
+
+			template<>
+			void UseConstantBuffers<ID3D11PixelShader>(const uint32_t& startSlot, const uint32_t& numBuffers, ID3D11Buffer* const* ppConstantBuffers)
+			{
+				m_deviceContext->PSSetConstantBuffers(startSlot, numBuffers, ppConstantBuffers);
+			}
+
+			template<class TShader>
+			void SetSamplers(const uint32_t& startSlot, const uint32_t& numSamplers, ID3D11SamplerState* const* ppSamplers);
+
+			template<>
+			void SetSamplers<ID3D11PixelShader>(const uint32_t& startSlot, const uint32_t& numSamplers, ID3D11SamplerState* const* ppSamplers)
+			{
+				m_deviceContext->PSSetSamplers(startSlot, numSamplers, ppSamplers);
+			}
+
+			template<class TShader>
+			void SetShaderResources(const uint32_t& startSlot, const uint32_t& numViews, ID3D11ShaderResourceView* const* ppShaderResourceViews);
+
+			template<>
+			void SetShaderResources<ID3D11PixelShader>(const uint32_t& startSlot, const uint32_t& numViews, ID3D11ShaderResourceView* const* ppShaderResourceViews)
+			{
+				m_deviceContext->PSSetShaderResources(startSlot, numViews, ppShaderResourceViews);
 			}
 
 			void SetViewports(const uint32_t& numViewports, const D3D11_VIEWPORT* pViewports);

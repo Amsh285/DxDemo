@@ -10,10 +10,26 @@ namespace dsr
 			using namespace DirectX;
 
 			XMMATRIX matTranslate = XMMatrixTranslationFromVector(Position);
-			XMMATRIX matRotate = XMMatrixRotationRollPitchYawFromVector(Rotation);
+
+			XMVECTOR quaternion = XMQuaternionRotationRollPitchYaw(
+				XMConvertToRadians(XMVectorGetX(Rotation)),
+				XMConvertToRadians(XMVectorGetY(Rotation)),
+				XMConvertToRadians(XMVectorGetZ(Rotation)));
+			XMMATRIX matRotate = XMMatrixRotationQuaternion(quaternion);
 			XMMATRIX matScale = XMMatrixScaling(XMVectorGetX(Scale), XMVectorGetY(Scale), XMVectorGetZ(Scale));
 
 			return matTranslate * matScale * matRotate;
+		}
+
+		DirectX::XMMATRIX Transform::CalculateNormalMatrix() const
+		{
+			using namespace DirectX;
+
+			XMMATRIX model = CalculateModelMatrix();
+			XMVECTOR determinant = XMMatrixDeterminant(model);
+
+			// http://www.lighthouse3d.com/tutorials/glsl-12-tutorial/the-normal-matrix/
+			return XMMatrixTranspose(XMMatrixInverse(&determinant, model));
 		}
 
 		Transform::Transform()
