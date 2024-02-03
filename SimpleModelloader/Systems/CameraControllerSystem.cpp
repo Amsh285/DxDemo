@@ -1,15 +1,16 @@
 #include "CameraControllerSystem.h"
 
-
-
 std::vector<std::type_index> CameraControllerSystem::GetRequiredComponents() const
 {
 	return { std::type_index(typeid(CameraControllerComponent)), std::type_index(typeid(dsr::ecs::TransformComponent))};
 }
 
-CameraControllerSystem::CameraControllerSystem(const std::shared_ptr<dsr::input::Input>& input)
+CameraControllerSystem::CameraControllerSystem(
+	const std::shared_ptr<dsr::input::Input>& input,
+	const std::shared_ptr<dsr::time::Time>& time)
 	: dsr::ecs::System(std::type_index(typeid(CameraControllerSystem))),
-	m_input(input)
+	m_input(input),
+	m_time(time)
 {
 	OnUpdate = std::bind(&CameraControllerSystem::Update, this, std::placeholders::_1);
 }
@@ -34,7 +35,7 @@ void CameraControllerSystem::Update(const dsr::ecs::EngineContext& context)
 	}
 	else if (m_input->GetKeyHold(KeyCode::MouseMiddle))
 	{
-		constexpr float speed = 0.001f;
+		constexpr float speed = 2.0f;
 		constexpr XMINT2 threshold = XMINT2(5, 5);
 
 		MousePosition position = m_input->GetMouse()->GetCurrentPosition();
@@ -56,16 +57,20 @@ void CameraControllerSystem::Update(const dsr::ecs::EngineContext& context)
 		up = XMVector3Rotate(up, quaternion);
 		XMVECTOR side = XMVector3Cross(up, forward);
 
+		float deltaTimeSeconds = m_time->GetDeltaTime()
+			.Capped(std::chrono::duration<float>(1))
+			.Seconds();
+
 		if (movesOnXAxis)
 		{
-			side = XMVectorScale(side, delta.x * speed);
+			side = XMVectorScale(side, delta.x * speed * deltaTimeSeconds);
 			side = XMVectorNegate(side);
 			cameraTransform->SetPosition(XMVectorAdd(cameraTransform->GetPosition(), side));
 		}
 
 		if (movesOnYAxis)
 		{
-			up = XMVectorScale(up, delta.y * speed);
+			up = XMVectorScale(up, delta.y * speed * deltaTimeSeconds);
 			cameraTransform->SetPosition(XMVectorAdd(cameraTransform->GetPosition(), up));
 		}
 
@@ -81,7 +86,7 @@ void CameraControllerSystem::Update(const dsr::ecs::EngineContext& context)
 	}
 	else if (m_input->GetKeyHold(KeyCode::MouseRight))
 	{
-		constexpr float speed = 0.05f;
+		constexpr float speed = 70.0f;
 		constexpr XMINT2 threshold = XMINT2(5, 5);
 
 		MousePosition position = m_input->GetMouse()->GetCurrentPosition();
@@ -93,11 +98,15 @@ void CameraControllerSystem::Update(const dsr::ecs::EngineContext& context)
 		bool movesOnXAxis = abs(delta.x) >= threshold.x, movesOnYAxis = abs(delta.y) >= threshold.y;
 		bool movesOnAnyAxis = movesOnXAxis || movesOnYAxis;
 
+		float deltaTimeSeconds = m_time->GetDeltaTime()
+			.Capped(std::chrono::duration<float>(1))
+			.Seconds();
+
 		if (movesOnXAxis)
-			cameraControllerData->MouseRightYaw = fmod(cameraControllerData->MouseRightYaw + static_cast<float>(delta.x) * speed, 360.0f);
+			cameraControllerData->MouseRightYaw = fmod(cameraControllerData->MouseRightYaw + static_cast<float>(delta.x) * speed * deltaTimeSeconds, 360.0f);
 
 		if (movesOnYAxis)
-			cameraControllerData->MouseRightPitch = fmod(cameraControllerData->MouseRightPitch + static_cast<float>(delta.y) * speed, 360.0f);
+			cameraControllerData->MouseRightPitch = fmod(cameraControllerData->MouseRightPitch + static_cast<float>(delta.y) * speed * deltaTimeSeconds, 360.0f);
 
 		if (movesOnAnyAxis)
 		{
@@ -112,7 +121,10 @@ void CameraControllerSystem::Update(const dsr::ecs::EngineContext& context)
 	}
 	else if (abs(deltaZ) >= 0.1f)
 	{
-		constexpr float speed = 0.1f;
+		constexpr float speed = 100.0f;
+		float deltaTimeSeconds = m_time->GetDeltaTime()
+			.Capped(std::chrono::duration<float>(1))
+			.Seconds();
 
 		XMVECTOR forward = XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
 		XMVECTOR rotation = XMQuaternionRotationRollPitchYaw(
@@ -121,7 +133,7 @@ void CameraControllerSystem::Update(const dsr::ecs::EngineContext& context)
 			0.0f);
 
 		forward = XMVector3Rotate(forward, rotation);
-		forward = XMVectorScale(forward, deltaZ * speed);
+		forward = XMVectorScale(forward, deltaZ * speed * deltaTimeSeconds);
 
 		XMVECTOR position = XMVectorAdd(forward, cameraTransform->GetPosition());
 		cameraTransform->SetPosition(position);

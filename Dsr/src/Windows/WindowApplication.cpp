@@ -21,7 +21,10 @@ namespace dsr
 
 		void WindowApplication::PeekMessages()
 		{
+			using namespace std::chrono;
+
 			MSG message = { 0 };
+			dsr::time::FrameDelta frameDelta;
 
 			while (true)
 			{
@@ -34,13 +37,15 @@ namespace dsr
 						break;
 				}
 
-				dsr::events::PrepareUdateFrameEvent prepareEvent;
+				dsr::Duration deltaTime = frameDelta.Update();
+
+				dsr::events::PrepareUpdateFrameEvent prepareEvent(deltaTime);
 				m_prepareUpdateFrameEmitter.operator()(prepareEvent);
 
-				dsr::events::UpdateFrameEvent event;
+				dsr::events::UpdateFrameEvent event(deltaTime);
 				m_updateFrameEmitter.operator()(event);
 
-				dsr::events::UpdateFrameFinishedEvent updateFinishedEvent;
+				dsr::events::UpdateFrameFinishedEvent updateFinishedEvent(deltaTime);
 				m_updateFrameFinishedEmitter.operator()(updateFinishedEvent);
 			}
 		}

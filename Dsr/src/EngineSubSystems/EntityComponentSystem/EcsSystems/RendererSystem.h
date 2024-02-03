@@ -13,6 +13,7 @@
 #include "EngineSubSystems/EntityComponentSystem/Components/TransformComponent.h"
 
 #include "Events/Application/WindowEvents.h"
+#include "Events/Application/FrameEvents.h"
 
 namespace dsr
 {
@@ -30,7 +31,7 @@ namespace dsr
 			DsrResult Initialize();
 			void SetDefaultSamplerState();
 
-			void PrepareUpdate(const events::PrepareUdateFrameEvent& args);
+			void PrepareUpdate(const events::PrepareUpdateFrameEvent& args);
 			void Update(const EngineContext& context);
 			void UpdateFinished(const events::UpdateFrameFinishedEvent& args);
 		private:

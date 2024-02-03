@@ -2,6 +2,7 @@
 
 #include "Events/EventListener.h"
 #include "Events/Application/WindowEvents.h"
+#include "Events/Application/FrameEvents.h"
 #include "Events/Application/InputEvents/KeyboardEvents.h"
 #include "Events/Application/InputEvents/MouseEvents.h"
 
@@ -88,7 +89,7 @@ namespace dsr
 		template<class TSubType>
 		void RegisterEventListener(
 			const std::shared_ptr<dsr::events::EventListener>& instance,
-			void(TSubType::* func)(const dsr::events::PrepareUdateFrameEvent&))
+			void(TSubType::* func)(const dsr::events::PrepareUpdateFrameEvent&))
 		{
 			m_windowApplication->GetPrepareUpdateFrameEventRegister().Hook(instance, func);
 		}
