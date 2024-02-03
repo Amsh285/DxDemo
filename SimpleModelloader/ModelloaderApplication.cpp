@@ -50,7 +50,7 @@ void ModelloaderApplication::SetupSystems()
 
 void ModelloaderApplication::RegisterCameraSytem()
 {
-	m_camerController = std::make_shared<CameraControllerSystem>(GetInput());
+	m_camerController = std::make_shared<CameraControllerSystem>(GetInput(), m_time);
 	m_ecsManager->RegisterSystem(m_camerController);
 }
 
