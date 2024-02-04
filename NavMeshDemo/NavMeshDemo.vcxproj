@@ -131,11 +131,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Components\CameraControllerComponent.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NavMeshDemoApplication.cpp" />
+    <ClCompile Include="Systems\CameraControllerSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Components\CameraControllerComponent.h" />
     <ClInclude Include="NavMeshDemoApplication.h" />
+    <ClInclude Include="Systems\CameraControllerSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Dsr\Dsr.vcxproj">

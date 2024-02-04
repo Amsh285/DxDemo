@@ -39,6 +39,14 @@ void NavMeshDemoApplication::RegisterMapModel(const dsr::ModelConfiguration& map
 	mesh->SetVertexGroups(map.GetVertexGroups());
 }
 
+void NavMeshDemoApplication::RegisterCameraController()
+{
+	m_cameraControllerSystem = std::make_shared<CameraControllerSystem>(GetInput(), m_time);
+	m_ecsManager->RegisterSystem(m_cameraControllerSystem);
+
+	m_ecsManager->RegisterComponent<CameraControllerComponent>(m_cameraEntity);
+}
+
 dsr::DsrResult NavMeshDemoApplication::Setup()
 {
 	using namespace dsr;
@@ -60,6 +68,7 @@ dsr::DsrResult NavMeshDemoApplication::Setup()
 
 	ModelConfiguration config = std::get<ModelConfiguration>(loadMapResult);
 	RegisterMapModel(config);
+	RegisterCameraController();
 
 	std::vector<dsr::ecs::Entity> cameraEntities = m_ecsManager->FindEntitiesByTag("Camera");
 	std::shared_ptr<dsr::ecs::TransformComponent> cameraTransform = m_ecsManager->GetComponentFrom<dsr::ecs::TransformComponent>(cameraEntities[0]);
