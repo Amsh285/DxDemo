@@ -39,7 +39,7 @@ dsr::DsrResult ModelloaderApplication::Setup()
 ModelloaderApplication::ModelloaderApplication()
 	: DsrApplication(L"Model loader", 100, 100, 1280, 768)
 {
-	m_sorcEntity = m_ecsManager->CreateNewEntity();
+	m_sorcEntity = dsr::ecs::EcsManager::CreateNewEntity();
 }
 
 void ModelloaderApplication::SetupSystems()
