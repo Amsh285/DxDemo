@@ -1,11 +1,11 @@
 #include "dsrpch.h"
-#include "RendererSystem.h"
+#include "StaticMeshRendererSystem.h"
 
 namespace dsr
 {
 	namespace ecs
 	{
-		std::vector<std::type_index> RendererSystem::GetRequiredComponents() const
+		std::vector<std::type_index> StaticMeshRendererSystem::GetRequiredComponents() const
 		{
 			return {
 				std::type_index(typeid(TransformComponent)),
@@ -13,15 +13,14 @@ namespace dsr
 			};
 		}
 
-		RendererSystem::RendererSystem(const std::shared_ptr<directX::Direct3dDevice>& device)
-			: System(std::type_index(typeid(RendererSystem)), 2000500)
+		StaticMeshRendererSystem::StaticMeshRendererSystem(const std::shared_ptr<directX::Direct3dDevice>& device)
+			: RendererSystem(std::type_index(typeid(StaticMeshRendererSystem)), 2000500)
 		{
-			OnUpdate = std::bind(&RendererSystem::Update, this, std::placeholders::_1);
-
+			OnUpdate = std::bind(&StaticMeshRendererSystem::Update, this, std::placeholders::_1);
 			m_device = device;
 		}
 
-		DsrResult RendererSystem::Initialize()
+		DsrResult StaticMeshRendererSystem::Initialize()
 		{
 			using namespace directX;
 
@@ -40,19 +39,19 @@ namespace dsr
 			return DsrResult::Success("Initializing Renderer Successful.");
 		}
 
-		void RendererSystem::SetDefaultSamplerState()
+		void StaticMeshRendererSystem::SetDefaultSamplerState()
 		{
 			ID3D11SamplerState* state = m_defaultSamplerState.GetSamplerStatePtr().get();
 			m_device->SetSamplers<ID3D11PixelShader>(0, 1, &state);
 		}
 
-		void RendererSystem::PrepareUpdate(const events::PrepareUpdateFrameEvent& args)
+		void StaticMeshRendererSystem::PrepareUpdate(const events::PrepareUpdateFrameEvent& args)
 		{
 			m_device->Clear(0.0f, 0.2f, 0.4f, 1.0f);
 			m_device->SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		}
 
-		void RendererSystem::Update(const EngineContext& context)
+		void StaticMeshRendererSystem::Update(const EngineContext& context)
 		{
 			using namespace dsr::directX;
 
@@ -105,12 +104,12 @@ namespace dsr
 			}
 		}
 
-		void RendererSystem::UpdateFinished(const events::UpdateFrameFinishedEvent& args)
+		void StaticMeshRendererSystem::UpdateFinished(const events::UpdateFrameFinishedEvent& args)
 		{
 			m_device->SwapBuffers();
 		}
 
-		void RendererSystem::SetupMvp(const EngineContext& context, const Entity& camera, const RenderTransform& renderTransform)
+		void StaticMeshRendererSystem::SetupMvp(const EngineContext& context, const Entity& camera, const RenderTransform& renderTransform)
 		{
 			std::shared_ptr<ViewProjectionComponent> viewProjection = context.GetComponentFrom<ViewProjectionComponent>(camera);
 
@@ -120,7 +119,7 @@ namespace dsr
 			ApplyConstantBuffers<ID3D11VertexShader>();
 		}
 
-		void RendererSystem::SetupTextures(std::shared_ptr<dsr::directX::rendering::VertexGroup> vertexGroup)
+		void StaticMeshRendererSystem::SetupTextures(std::shared_ptr<dsr::directX::rendering::VertexGroup> vertexGroup)
 		{
 			using namespace dsr::directX;
 

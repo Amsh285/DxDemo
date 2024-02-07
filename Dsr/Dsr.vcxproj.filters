@@ -183,7 +183,7 @@
     <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\Components\StaticMeshComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\EcsSystems\RendererSystem.h">
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\EcsSystems\Renderers\StaticMeshRendererSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\Components\TagComponent.h">
@@ -214,6 +214,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Events\Application\FrameEvents.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\Components\LineListComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\EcsSystems\Renderers\RendererSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -371,7 +377,7 @@
     <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\Components\StaticMeshComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\EcsSystems\RendererSystem.cpp">
+    <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\EcsSystems\Renderers\StaticMeshRendererSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\Components\TagComponent.cpp">
@@ -396,6 +402,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\EngineSubSystems\Time\Time.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\Components\LineListComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\EcsSystems\Renderers\RendererSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

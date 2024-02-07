@@ -102,6 +102,8 @@ void CameraControllerSystem::Update(const dsr::ecs::EngineContext& context)
 			.Capped(std::chrono::duration<float>(1))
 			.Seconds();
 
+		// Todo: check delta values low deltas lead to stuttering
+		// maybe try to increase threshold
 		if (movesOnXAxis)
 			cameraControllerData->MouseRightYaw = fmod(cameraControllerData->MouseRightYaw + static_cast<float>(delta.x) * speed * deltaTimeSeconds, 360.0f);
 

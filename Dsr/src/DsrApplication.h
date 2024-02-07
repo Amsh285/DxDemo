@@ -22,8 +22,8 @@
 #include "EngineSubSystems/EntityComponentSystem/Components/ShaderProgramComponent.h"
 
 #include "EngineSubSystems/EntityComponentSystem/EcsManager.h"
-#include "EngineSubSystems/EntityComponentSystem/EcsSystems/RendererSystem.h"
 #include "EngineSubSystems/EntityComponentSystem/EcsSystems/ViewProjectionSystem.h"
+#include "EngineSubSystems/EntityComponentSystem/EcsSystems/Renderers/StaticMeshRendererSystem.h"
 
 #include "EngineSubSystems/Input/InputSystem.h"
 #include "EngineSubSystems/Time/Time.h"
@@ -73,7 +73,6 @@ namespace dsr
 		};
 
 		void InitializeSystems();
-		void InitializePredefinedEntities();
 		DsrResult SetupSystems();
 		void SetupPredefinedEntities();
 		void SetupPredefinedMainCameraEntity();
@@ -84,7 +83,7 @@ namespace dsr
 		std::shared_ptr<WindowManager> m_windowManager;
 
 		std::shared_ptr<dsr::ecs::ViewProjectionSystem> m_viewProjectionSystem;
-		std::shared_ptr<dsr::ecs::RendererSystem> m_rendererSystem;
+		std::shared_ptr<dsr::ecs::StaticMeshRendererSystem> m_staticMeshRendererSystem;
 
 		dsr::ecs::Entity m_defaultShaderProgramEntity;
 	};

@@ -42,6 +42,7 @@ namespace dsr
 
 		m_inputSystem->RegisterEvents(m_eventDispatcher);
 		m_eventDispatcher->RegisterEventListener(m_ecsManager, &dsr::ecs::EcsManager::OnUpdate);
+		m_eventDispatcher->RegisterEventListener(m_ecsManager, &dsr::ecs::EcsManager::OnRendererUpdate);
 		m_eventDispatcher->RegisterEventListener(m_time, &dsr::time::Time::OnPrepareUpdateFrame);
 
 		DsrResult setupSystemsResult = SetupSystems();
@@ -68,7 +69,7 @@ namespace dsr
 		const int& width, const int& height)
 		: m_window(std::make_shared<windows::Window>(windows::WindowData(title, x, y, width, height))),
 		m_windowApplication(windows::WindowApplication::Get()),
-		m_cameraEntity(0), m_defaultShaderProgramEntity(0), m_executablePath(std::filesystem::path(""))
+		m_cameraEntity(dsr::ecs::EcsManager::CreateNewEntity()), m_defaultShaderProgramEntity(dsr::ecs::EcsManager::CreateNewEntity()), m_executablePath(std::filesystem::path(""))
 	{
 	}
 
@@ -80,29 +81,23 @@ namespace dsr
 	void DsrApplication::InitializeSystems()
 	{
 		m_viewProjectionSystem = std::make_shared<dsr::ecs::ViewProjectionSystem>();
-		m_rendererSystem = std::make_shared<dsr::ecs::RendererSystem>(m_device);
-	}
-
-	void DsrApplication::InitializePredefinedEntities()
-	{
-		m_cameraEntity = m_ecsManager->CreateNewEntity();
-		m_defaultShaderProgramEntity = m_ecsManager->CreateNewEntity();
+		m_staticMeshRendererSystem = std::make_shared<dsr::ecs::StaticMeshRendererSystem>(m_device);
 	}
 
 	DsrResult DsrApplication::SetupSystems()
 	{
-		DsrResult initializeRendererResult = m_rendererSystem->Initialize();
+		DsrResult initializeRendererResult = m_staticMeshRendererSystem->Initialize();
 
 		if (initializeRendererResult.GetResultStatusCode() != RESULT_SUCCESS)
 			return initializeRendererResult;
 
 		m_eventDispatcher->RegisterEventListener(m_viewProjectionSystem, &dsr::ecs::ViewProjectionSystem::HandleWindowResized);
 
-		m_eventDispatcher->RegisterEventListener(m_rendererSystem, &dsr::ecs::RendererSystem::PrepareUpdate);
-		m_eventDispatcher->RegisterEventListener(m_rendererSystem, &dsr::ecs::RendererSystem::UpdateFinished);
+		m_eventDispatcher->RegisterEventListener(m_staticMeshRendererSystem, &dsr::ecs::StaticMeshRendererSystem::PrepareUpdate);
+		m_eventDispatcher->RegisterEventListener(m_staticMeshRendererSystem, &dsr::ecs::StaticMeshRendererSystem::UpdateFinished);
 
 		m_ecsManager->RegisterSystem(m_viewProjectionSystem);
-		m_ecsManager->RegisterSystem(m_rendererSystem);
+		m_ecsManager->RegisterSystem(m_staticMeshRendererSystem);
 
 		return DsrResult::Success("Setup Systems complete.");
 	}

@@ -10,9 +10,6 @@ namespace dsr
 		class System : public dsr::events::EventListener
 		{
 		public:
-			std::function<void(const EngineContext&)> OnComponentRegistered;
-			std::function<void(const EngineContext&)> OnComponentRemoved;
-
 			std::function<void(const EngineContext&)> OnStart;
 			std::function<void(const EngineContext&)> OnUpdate = [](const EngineContext&) {};
 			virtual std::vector<std::type_index> GetRequiredComponents() const = 0;

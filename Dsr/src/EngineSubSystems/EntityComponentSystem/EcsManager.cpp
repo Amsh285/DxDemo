@@ -63,6 +63,23 @@ namespace dsr
 			}
 		}
 
+		void EcsManager::OnRendererUpdate(const dsr::events::UpdateFrameEvent& updateFrameEvent)
+		{
+			for (auto it = m_renderers.begin(); it != m_renderers.end(); ++it)
+			{
+				std::shared_ptr<RendererSystem> renderer = *it;
+				renderer->OnPrepareRendererUpdate();
+
+				std::vector<Entity> entities = m_systemEntities[renderer->GetType()];
+
+				for (Entity& entity : entities)
+				{
+					m_engineContext->SetCurrentEntity(entity);
+					renderer->OnUpdate(*m_engineContext);
+				}
+			}
+		}
+
 		bool EcsManager::HasComponentTypeIntersection(const std::shared_ptr<System>& system, const std::unordered_map<std::type_index, std::shared_ptr<Component>>& componentMap)
 		{
 			const std::vector<std::type_index>& requiredComponents = system->GetRequiredComponents();
@@ -82,6 +99,20 @@ namespace dsr
 			{
 				if (HasComponentTypeIntersection(system, entity.second))
 					m_systemEntities[system->GetType()].push_back(entity.first);
+			}
+		}
+
+		void EcsManager::UpdateSystemEntityAssignment(
+			const std::shared_ptr<System>& system,
+			const std::unordered_map<std::type_index, std::shared_ptr<Component>>& componentMap,
+			const Entity& entity)
+		{
+			std::vector<Entity>& systemEntityVector = m_systemEntities[system->GetType()];
+
+			//check if the entity is already registered for the current system and if the componentmap of the entity has the components needed by the current system.
+			if (std::find(systemEntityVector.begin(), systemEntityVector.end(), entity) == systemEntityVector.end() && HasComponentTypeIntersection(system, componentMap))
+			{
+				systemEntityVector.push_back(entity);
 			}
 		}
 	}
