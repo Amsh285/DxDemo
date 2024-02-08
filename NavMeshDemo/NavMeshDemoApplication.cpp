@@ -5,6 +5,7 @@ NavMeshDemoApplication::NavMeshDemoApplication()
 	: DsrApplication(L"Nav Mesh Demo", 100, 100, 1280, 768)
 {
 	m_mapEntity = dsr::ecs::EcsManager::CreateNewEntity();
+	m_lineEntity = dsr::ecs::EcsManager::CreateNewEntity();
 }
 
 std::variant<dsr::ModelConfiguration, dsr::dsr_error> NavMeshDemoApplication::LoadMapModel()
@@ -39,6 +40,13 @@ void NavMeshDemoApplication::RegisterMapModel(const dsr::ModelConfiguration& map
 	mesh->SetVertexGroups(map.GetVertexGroups());
 }
 
+void NavMeshDemoApplication::RegisterLineEntity()
+{
+	std::shared_ptr<dsr::ecs::LineListComponent> lines = m_ecsManager->RegisterComponent<dsr::ecs::LineListComponent>(m_lineEntity);
+	lines->LineList.push_back(dsr::Vertex3FP4FC(DirectX::XMFLOAT3(0.0f, -10.0f, 0.0f), DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f)));
+	lines->LineList.push_back(dsr::Vertex3FP4FC(DirectX::XMFLOAT3(0.0f, 10.0f, 0.0f), DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f)));
+}
+
 void NavMeshDemoApplication::RegisterCameraController()
 {
 	m_cameraControllerSystem = std::make_shared<CameraControllerSystem>(GetInput(), m_time);
@@ -68,6 +76,7 @@ dsr::DsrResult NavMeshDemoApplication::Setup()
 
 	ModelConfiguration config = std::get<ModelConfiguration>(loadMapResult);
 	RegisterMapModel(config);
+	RegisterLineEntity();
 	RegisterCameraController();
 
 	std::vector<dsr::ecs::Entity> cameraEntities = m_ecsManager->FindEntitiesByTag("Camera");

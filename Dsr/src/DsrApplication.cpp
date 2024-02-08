@@ -81,6 +81,7 @@ namespace dsr
 	{
 		m_viewProjectionSystem = std::make_shared<dsr::ecs::ViewProjectionSystem>();
 		m_staticMeshRendererSystem = std::make_shared<dsr::ecs::StaticMeshRendererSystem>(m_device);
+		m_lineListRendererSystem = std::make_shared<dsr::ecs::LineListRendererSystem>(m_device);
 	}
 
 	DsrResult DsrApplication::SetupSystems()
@@ -94,6 +95,7 @@ namespace dsr
 
 		m_ecsManager->RegisterSystem(m_viewProjectionSystem);
 		m_ecsManager->RegisterSystem(m_staticMeshRendererSystem);
+		m_ecsManager->RegisterSystem(m_lineListRendererSystem);
 
 		return DsrResult::Success("Setup Systems complete.");
 	}

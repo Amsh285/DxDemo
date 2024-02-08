@@ -18,5 +18,10 @@ namespace dsr
 			: Position(0.0f, 0.0f, 0.0f), Color(1.0f, 1.0f, 1.0f, 1.0f)
 		{
 		}
+
+		Vertex3FP4FC(const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT4& color)
+			: Position(position), Color(color)
+		{
+		}
 	};
 }

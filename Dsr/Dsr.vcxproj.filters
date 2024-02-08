@@ -222,6 +222,9 @@
     <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\EcsSystems\Renderers\RendererSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\EcsSystems\Renderers\LineListRendererSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Windows\Window.cpp">
@@ -408,6 +411,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\EcsSystems\Renderers\RendererSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\EcsSystems\Renderers\LineListRendererSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
