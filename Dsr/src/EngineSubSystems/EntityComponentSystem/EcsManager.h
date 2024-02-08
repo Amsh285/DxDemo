@@ -1,5 +1,7 @@
 #pragma once
 
+#include "DirectX/Direct3dDevice.h"
+
 #include "Events/EventListener.h"
 #include "Events/Application/WindowEvents.h"
 #include "Events/Application/FrameEvents.h"
@@ -27,7 +29,7 @@ namespace dsr
 			template<class TComponent>
 			std::shared_ptr<TComponent> GetComponentFrom(const Entity& entity) const { return m_engineContext->GetComponentFrom<TComponent>(entity); }
 
-			EcsManager();
+			EcsManager(const std::shared_ptr<directX::Direct3dDevice>& device);
 
 			void OrderSystems();
 			void RaiseSystemStartEvents();
@@ -197,6 +199,7 @@ namespace dsr
 
 			std::shared_ptr<EcsEngineContext> m_engineContext;
 
+			std::shared_ptr<directX::Direct3dDevice> m_device;
 			std::vector<std::shared_ptr<System>> m_systems;
 			std::vector<std::shared_ptr<RendererSystem>> m_renderers;
 			std::unordered_map<std::type_index, std::vector<Entity>> m_systemEntities;

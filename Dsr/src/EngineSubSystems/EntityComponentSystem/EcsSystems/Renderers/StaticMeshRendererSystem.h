@@ -32,9 +32,8 @@ namespace dsr
 			DsrResult Initialize();
 			void SetDefaultSamplerState();
 
-			void PrepareUpdate(const events::PrepareUpdateFrameEvent& args);
+			void PrepareRendererUpdate();
 			void Update(const EngineContext& context);
-			void UpdateFinished(const events::UpdateFrameFinishedEvent& args);
 		private:
 			template<class TShader>
 			void ApplyConstantBuffers();

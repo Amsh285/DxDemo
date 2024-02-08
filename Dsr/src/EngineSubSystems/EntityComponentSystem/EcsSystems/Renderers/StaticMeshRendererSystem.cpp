@@ -17,6 +17,7 @@ namespace dsr
 			: RendererSystem(std::type_index(typeid(StaticMeshRendererSystem)), 2000500)
 		{
 			OnUpdate = std::bind(&StaticMeshRendererSystem::Update, this, std::placeholders::_1);
+			OnPrepareRendererUpdate = std::bind(&StaticMeshRendererSystem::PrepareRendererUpdate, this);
 			m_device = device;
 		}
 
@@ -45,9 +46,8 @@ namespace dsr
 			m_device->SetSamplers<ID3D11PixelShader>(0, 1, &state);
 		}
 
-		void StaticMeshRendererSystem::PrepareUpdate(const events::PrepareUpdateFrameEvent& args)
+		void StaticMeshRendererSystem::PrepareRendererUpdate()
 		{
-			m_device->Clear(0.0f, 0.2f, 0.4f, 1.0f);
 			m_device->SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		}
 
@@ -102,11 +102,6 @@ namespace dsr
 				SetupTextures(vertexGroup);
 				m_device->DrawIndexed(vertexGroup->IndexCount, vertexGroup->StartIndexLocation, 0);
 			}
-		}
-
-		void StaticMeshRendererSystem::UpdateFinished(const events::UpdateFrameFinishedEvent& args)
-		{
-			m_device->SwapBuffers();
 		}
 
 		void StaticMeshRendererSystem::SetupMvp(const EngineContext& context, const Entity& camera, const RenderTransform& renderTransform)

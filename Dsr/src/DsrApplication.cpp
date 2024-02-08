@@ -29,11 +29,10 @@ namespace dsr
 		m_eventDispatcher = std::make_shared<dsr::EventDispatcher>(m_window, m_windowApplication);
 
 		m_inputSystem = std::make_shared<dsr::input::InputSystem>(dsr::windows::CreateKeyMap());
-		m_ecsManager = std::make_shared<dsr::ecs::EcsManager>();
+		m_ecsManager = std::make_shared<dsr::ecs::EcsManager>(m_device);
 		m_time = std::make_shared<dsr::time::Time>();
 
 		InitializeSystems();
-		InitializePredefinedEntities();
 	}
 
 	DsrResult DsrApplication::Setup()
@@ -92,9 +91,6 @@ namespace dsr
 			return initializeRendererResult;
 
 		m_eventDispatcher->RegisterEventListener(m_viewProjectionSystem, &dsr::ecs::ViewProjectionSystem::HandleWindowResized);
-
-		m_eventDispatcher->RegisterEventListener(m_staticMeshRendererSystem, &dsr::ecs::StaticMeshRendererSystem::PrepareUpdate);
-		m_eventDispatcher->RegisterEventListener(m_staticMeshRendererSystem, &dsr::ecs::StaticMeshRendererSystem::UpdateFinished);
 
 		m_ecsManager->RegisterSystem(m_viewProjectionSystem);
 		m_ecsManager->RegisterSystem(m_staticMeshRendererSystem);

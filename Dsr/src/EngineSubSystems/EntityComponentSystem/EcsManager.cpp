@@ -15,8 +15,8 @@ namespace dsr
 			return ++lastId;
 		}
 
-		EcsManager::EcsManager()
-			: m_engineContext(std::make_shared<EcsEngineContext>())
+		EcsManager::EcsManager(const std::shared_ptr<directX::Direct3dDevice>& device)
+			: m_device(device), m_engineContext(std::make_shared<EcsEngineContext>())
 		{
 		}
 
@@ -65,6 +65,8 @@ namespace dsr
 
 		void EcsManager::OnRendererUpdate(const dsr::events::UpdateFrameEvent& updateFrameEvent)
 		{
+			m_device->Clear(0.0f, 0.2f, 0.4f, 1.0f);
+
 			for (auto it = m_renderers.begin(); it != m_renderers.end(); ++it)
 			{
 				std::shared_ptr<RendererSystem> renderer = *it;
@@ -78,6 +80,8 @@ namespace dsr
 					renderer->OnUpdate(*m_engineContext);
 				}
 			}
+
+			m_device->SwapBuffers();
 		}
 
 		bool EcsManager::HasComponentTypeIntersection(const std::shared_ptr<System>& system, const std::unordered_map<std::type_index, std::shared_ptr<Component>>& componentMap)
