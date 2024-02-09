@@ -1,6 +1,7 @@
 #include "dsrpch.h"
 #include "LineListRendererSystem.h"
 
+
 namespace dsr
 {
 	namespace ecs
@@ -14,8 +15,30 @@ namespace dsr
 			: RendererSystem(std::type_index(typeid(LineListRendererSystem))),
 			m_device(device)
 		{
+			OnStart = std::bind(&LineListRendererSystem::Startup, this, std::placeholders::_1);
 			OnUpdate = std::bind(&LineListRendererSystem::Update, this, std::placeholders::_1);
 			OnPrepareRendererUpdate = std::bind(&LineListRendererSystem::PrepareRendererUpdate, this);
+		}
+
+		void LineListRendererSystem::Startup(const EngineContext& context)
+		{
+			std::vector<Entity> matches = context.FindEntitiesByTag("LineListShaderProgram");
+
+			if (matches.empty())
+			{
+				//Todo: warn here when we have a logging framework.
+				return;
+			}
+				
+			std::shared_ptr<ShaderProgramComponent> program = context.GetComponentFrom<ShaderProgramComponent>(matches[0]);
+
+			if (!program)
+			{
+				//Todo: same
+				return;
+			}
+
+			m_shaderProgram = program->GetShaderProgram();
 		}
 
 		void LineListRendererSystem::PrepareRendererUpdate()

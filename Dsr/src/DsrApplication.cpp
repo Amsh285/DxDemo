@@ -68,7 +68,10 @@ namespace dsr
 		const int& width, const int& height)
 		: m_window(std::make_shared<windows::Window>(windows::WindowData(title, x, y, width, height))),
 		m_windowApplication(windows::WindowApplication::Get()),
-		m_cameraEntity(dsr::ecs::EcsManager::CreateNewEntity()), m_defaultShaderProgramEntity(dsr::ecs::EcsManager::CreateNewEntity()), m_executablePath(std::filesystem::path(""))
+		m_cameraEntity(dsr::ecs::EcsManager::CreateNewEntity()),
+		m_defaultShaderProgramEntity(dsr::ecs::EcsManager::CreateNewEntity()),
+		m_lineListShaderProgramEntity(dsr::ecs::EcsManager::CreateNewEntity()),
+		m_executablePath(std::filesystem::path(""))
 	{
 	}
 
@@ -104,6 +107,7 @@ namespace dsr
 	{
 		SetupPredefinedMainCameraEntity();
 		SetupDefaultShaderProgramEntity();
+		SetupLineListShaderProgramEntity();
 	}
 
 	void DsrApplication::SetupPredefinedMainCameraEntity()
@@ -164,7 +168,7 @@ namespace dsr
 
 		if (std::holds_alternative<dsr_error>(loadDefaultShaderProgram))
 		{
-			const dsr_error& error = std::get<dsr_error>(loadDefaultPixelShaderResult);
+			const dsr_error& error = std::get<dsr_error>(loadDefaultShaderProgram);
 			std::string errorMessage = "Error creating default Shaderprogram. ";
 			errorMessage += error.what();
 
@@ -176,7 +180,66 @@ namespace dsr
 		std::shared_ptr<TagComponent> defaultShaderProgramTag = m_ecsManager->RegisterComponent<TagComponent>(m_defaultShaderProgramEntity, "DefaultShaderProgram");
 		std::shared_ptr<ShaderProgramComponent> defaultShaderProgramComponent = m_ecsManager->RegisterComponent<ShaderProgramComponent>(m_defaultShaderProgramEntity);
 
-		defaultShaderProgramName->SetName("ShaderProgram-Default ");
+		defaultShaderProgramName->SetName("ShaderProgram-Default");
 		defaultShaderProgramComponent->SetShaderProgram(std::get<std::shared_ptr<Direct3dShaderProgram>>(loadDefaultShaderProgram));
+	}
+
+	void DsrApplication::SetupLineListShaderProgramEntity()
+	{
+		using namespace dsr::directX;
+		using namespace dsr::ecs;
+
+		Direct3dShaderInputLayout vertexShaderInputLayout;
+		vertexShaderInputLayout.AddVector3f("POSITION");
+		vertexShaderInputLayout.AddVector4f("COLOR");
+
+		std::variant<std::shared_ptr<directX::Direct3dShader<ID3D11VertexShader>>, dsr_error> loadVertexShaderResult
+			= directX::LoadPrecompiledShader<ID3D11VertexShader>(m_device, m_executablePath / "VSLineList.cso");
+
+		if (std::holds_alternative<dsr_error>(loadVertexShaderResult))
+		{
+			const dsr_error& error = std::get<dsr_error>(loadVertexShaderResult);
+			std::string errorMessage = "Error loading LineList Vertexshader. ";
+			errorMessage += error.what();
+
+			std::cout << errorMessage << std::endl;
+			return;
+		}
+
+		std::shared_ptr<directX::Direct3dShader<ID3D11VertexShader>> vertexShader = std::get<std::shared_ptr<directX::Direct3dShader<ID3D11VertexShader>>>(loadVertexShaderResult);
+
+		std::variant<std::shared_ptr<directX::Direct3dShader<ID3D11PixelShader>>, dsr_error> loadPixelShaderResult
+			= directX::LoadPrecompiledShader<ID3D11PixelShader>(m_device, m_executablePath / "PSLineList.cso");
+
+		if (std::holds_alternative<dsr_error>(loadPixelShaderResult))
+		{
+			const dsr_error& error = std::get<dsr_error>(loadPixelShaderResult);
+			std::string errorMessage = "Error loading LineList Pixelshader. ";
+			errorMessage += error.what();
+
+			std::cout << errorMessage << std::endl;
+			return;
+		}
+
+		std::shared_ptr<directX::Direct3dShader<ID3D11PixelShader>> pixelShader = std::get<std::shared_ptr<directX::Direct3dShader<ID3D11PixelShader>>>(loadPixelShaderResult);
+
+		std::variant<std::shared_ptr<Direct3dShaderProgram>, dsr_error> loadShaderProgram = CreateShaderProgramPtr(
+			m_device, vertexShader, pixelShader, vertexShaderInputLayout);
+
+		if (std::holds_alternative<dsr_error>(loadShaderProgram))
+		{
+			const dsr_error& error = std::get<dsr_error>(loadShaderProgram);
+			std::string errorMessage = "Error creating LineList Shaderprogram. ";
+			errorMessage += error.what();
+
+			std::cout << errorMessage << std::endl;
+			return;
+		}
+
+		m_ecsManager->RegisterComponent<NameComponent>(m_lineListShaderProgramEntity, "ShaderProgram-LineList");
+		m_ecsManager->RegisterComponent<TagComponent>(m_lineListShaderProgramEntity, "LineListShaderProgram");
+		std::shared_ptr<ShaderProgramComponent> shaderProgramComponent = m_ecsManager->RegisterComponent<ShaderProgramComponent>(m_lineListShaderProgramEntity);
+
+		shaderProgramComponent->SetShaderProgram(std::get<std::shared_ptr<Direct3dShaderProgram>>(loadShaderProgram));
 	}
 }

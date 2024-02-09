@@ -420,5 +420,7 @@
   <ItemGroup>
     <FxCompile Include="src\DsrAssets\Shaders\DefaultVertexShader.hlsl" />
     <FxCompile Include="src\DsrAssets\Shaders\DefaultPixelShader.hlsl" />
+    <FxCompile Include="src\DsrAssets\Shaders\VSLineList.hlsl" />
+    <FxCompile Include="src\DsrAssets\Shaders\PSLineList.hlsl" />
   </ItemGroup>
 </Project>

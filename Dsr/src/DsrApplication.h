@@ -78,6 +78,7 @@ namespace dsr
 		void SetupPredefinedEntities();
 		void SetupPredefinedMainCameraEntity();
 		void SetupDefaultShaderProgramEntity();
+		void SetupLineListShaderProgramEntity();
 
 		std::shared_ptr<windows::Window> m_window;
 		std::shared_ptr<windows::WindowApplication> m_windowApplication;
@@ -88,5 +89,6 @@ namespace dsr
 		std::shared_ptr<dsr::ecs::LineListRendererSystem> m_lineListRendererSystem;
 
 		dsr::ecs::Entity m_defaultShaderProgramEntity;
+		dsr::ecs::Entity m_lineListShaderProgramEntity;
 	};
 }

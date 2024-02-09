@@ -36,14 +36,17 @@ namespace dsr
 			{
 				if ((*it)->OnStart)
 				{
-					std::shared_ptr<System> system = *it;
-					std::vector<Entity> entities = m_systemEntities[system->GetType()];
+					m_engineContext->SetCurrentEntity(0);
+					(*it)->OnStart(*m_engineContext);
+				}
+			}
 
-					for (Entity& entity : entities)
-					{
-						m_engineContext->SetCurrentEntity(entity);
-						system->OnStart(*m_engineContext);
-					}
+			for (auto it = m_renderers.begin(); it != m_renderers.end(); ++it)
+			{
+				if ((*it)->OnStart)
+				{
+					m_engineContext->SetCurrentEntity(0);
+					(*it)->OnStart(*m_engineContext);
 				}
 			}
 		}
