@@ -32,12 +32,14 @@ namespace dsr
 
 		void EcsManager::RaiseSystemStartEvents()
 		{
+			m_engineContext->SetCurrentEntity(0);
+			EngineStartupContext startupContext(m_engineContext);
+
 			for (auto it = m_systems.begin(); it != m_systems.end(); ++it)
 			{
 				if ((*it)->OnStart)
 				{
-					m_engineContext->SetCurrentEntity(0);
-					(*it)->OnStart(*m_engineContext);
+					(*it)->OnStart(startupContext);
 				}
 			}
 
@@ -45,8 +47,7 @@ namespace dsr
 			{
 				if ((*it)->OnStart)
 				{
-					m_engineContext->SetCurrentEntity(0);
-					(*it)->OnStart(*m_engineContext);
+					(*it)->OnStart(startupContext);
 				}
 			}
 		}

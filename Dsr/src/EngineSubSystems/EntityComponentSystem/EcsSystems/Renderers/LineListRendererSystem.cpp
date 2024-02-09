@@ -20,7 +20,7 @@ namespace dsr
 			OnPrepareRendererUpdate = std::bind(&LineListRendererSystem::PrepareRendererUpdate, this);
 		}
 
-		void LineListRendererSystem::Startup(const EngineContext& context)
+		void LineListRendererSystem::Startup(const EngineStartupContext& context)
 		{
 			std::vector<Entity> matches = context.FindEntitiesByTag("LineListShaderProgram");
 

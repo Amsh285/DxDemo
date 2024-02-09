@@ -19,7 +19,7 @@ namespace dsr
 
 			LineListRendererSystem(const std::shared_ptr<directX::Direct3dDevice>& device);
 
-			void Startup(const EngineContext& context);
+			void Startup(const EngineStartupContext& context);
 			void PrepareRendererUpdate();
 			void Update(const EngineContext& context);
 		private:
