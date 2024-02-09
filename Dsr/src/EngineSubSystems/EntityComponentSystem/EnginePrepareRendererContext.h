@@ -6,10 +6,10 @@ namespace dsr
 {
 	namespace ecs
 	{
-		class EngineStartupContext final
+		class EnginePrepareRendererContext
 		{
 		public:
-			explicit EngineStartupContext(const std::shared_ptr<EngineContext>& context);
+			explicit EnginePrepareRendererContext(const std::shared_ptr<EngineContext>& context);
 
 			std::vector<Entity> FindEntitiesByTag(const std::string& tag) const;
 

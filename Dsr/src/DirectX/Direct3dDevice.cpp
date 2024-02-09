@@ -287,6 +287,11 @@ namespace dsr
 			m_swapChain->Present(0, 0);
 		}
 
+		void Direct3dDevice::Draw(const uint32_t& vertexCount, const uint32_t& startVertexLocation)
+		{
+			m_deviceContext->Draw(vertexCount, startVertexLocation);
+		}
+
 		void Direct3dDevice::DrawIndexed(const uint32_t& indexCount, const uint32_t& startIndexLocation, const uint32_t& baseVertexLocation)
 		{
 			m_deviceContext->DrawIndexed(indexCount, startIndexLocation, baseVertexLocation);

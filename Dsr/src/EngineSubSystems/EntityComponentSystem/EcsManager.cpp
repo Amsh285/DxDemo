@@ -74,7 +74,9 @@ namespace dsr
 			for (auto it = m_renderers.begin(); it != m_renderers.end(); ++it)
 			{
 				std::shared_ptr<RendererSystem> renderer = *it;
-				renderer->OnPrepareRendererUpdate();
+
+				m_engineContext->SetCurrentEntity(0);
+				renderer->OnPrepareRendererUpdate(EnginePrepareRendererContext(m_engineContext));
 
 				std::vector<Entity> entities = m_systemEntities[renderer->GetType()];
 

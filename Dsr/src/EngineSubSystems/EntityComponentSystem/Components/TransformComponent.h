@@ -10,6 +10,11 @@ namespace dsr
 		{
 			DirectX::XMMATRIX Model;
 			DirectX::XMMATRIX Normal;
+
+			RenderTransform()
+				: Model(DirectX::XMMatrixIdentity()), Normal(DirectX::XMMatrixIdentity())
+			{
+			}
 		};
 
 		class TransformComponent : public Component

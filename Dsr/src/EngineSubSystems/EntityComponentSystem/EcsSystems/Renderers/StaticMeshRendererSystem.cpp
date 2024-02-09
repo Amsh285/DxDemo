@@ -16,8 +16,9 @@ namespace dsr
 		StaticMeshRendererSystem::StaticMeshRendererSystem(const std::shared_ptr<directX::Direct3dDevice>& device)
 			: RendererSystem(std::type_index(typeid(StaticMeshRendererSystem)), 2000500)
 		{
+			OnStart = std::bind(&StaticMeshRendererSystem::Startup, this, std::placeholders::_1);
 			OnUpdate = std::bind(&StaticMeshRendererSystem::Update, this, std::placeholders::_1);
-			OnPrepareRendererUpdate = std::bind(&StaticMeshRendererSystem::PrepareRendererUpdate, this);
+			OnPrepareRendererUpdate = std::bind(&StaticMeshRendererSystem::PrepareRendererUpdate, this, std::placeholders::_1);
 			m_device = device;
 		}
 
@@ -46,7 +47,11 @@ namespace dsr
 			m_device->SetSamplers<ID3D11PixelShader>(0, 1, &state);
 		}
 
-		void StaticMeshRendererSystem::PrepareRendererUpdate()
+		void StaticMeshRendererSystem::Startup(const EngineStartupContext& context)
+		{
+		}
+
+		void StaticMeshRendererSystem::PrepareRendererUpdate(const EnginePrepareRendererContext& context)
 		{
 			m_device->SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		}
@@ -88,7 +93,7 @@ namespace dsr
 
 			for (std::shared_ptr<rendering::VertexGroup> vertexGroup : staticMesh->GetVertexGroups())
 			{
-				if(vertexGroup->PixelShader)
+				if (vertexGroup->PixelShader)
 					m_device->UseShader(vertexGroup->PixelShader->GetShaderPtr().get(), nullptr, 0);
 				else
 					m_device->UseShader(defaultShaderProgram->PixelShader->GetShaderPtr().get(), nullptr, 0);

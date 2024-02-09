@@ -34,7 +34,7 @@ void NavMeshDemoApplication::RegisterMapModel(const dsr::ModelConfiguration& map
 	m_ecsManager->RegisterComponent<NameComponent>(m_mapEntity, "map");
 	m_ecsManager->RegisterComponent<TagComponent>(m_mapEntity, "map");
 	m_ecsManager->RegisterComponent<TransformComponent>(m_mapEntity);
-	
+
 	std::shared_ptr<StaticMeshComponent> mesh = m_ecsManager->RegisterComponent<StaticMeshComponent>(m_mapEntity);
 	mesh->SetVertexBuffer(map.GetVertexBuffer());
 	mesh->SetVertexGroups(map.GetVertexGroups());
@@ -42,9 +42,44 @@ void NavMeshDemoApplication::RegisterMapModel(const dsr::ModelConfiguration& map
 
 void NavMeshDemoApplication::RegisterLineEntity()
 {
+	using namespace dsr;
+	using namespace dsr::directX;
+
 	std::shared_ptr<dsr::ecs::LineListComponent> lines = m_ecsManager->RegisterComponent<dsr::ecs::LineListComponent>(m_lineEntity);
-	lines->LineList.push_back(dsr::Vertex3FP4FC(DirectX::XMFLOAT3(0.0f, -10.0f, 0.0f), DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f)));
-	lines->LineList.push_back(dsr::Vertex3FP4FC(DirectX::XMFLOAT3(0.0f, 10.0f, 0.0f), DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f)));
+
+	std::vector<Vertex3FP4FC> lineList;
+	lineList.push_back(dsr::Vertex3FP4FC(DirectX::XMFLOAT3(0.0f, -100.0f, 0.0f), DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f)));
+	lineList.push_back(dsr::Vertex3FP4FC(DirectX::XMFLOAT3(0.0f, 100.0f, 0.0f), DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f)));
+
+	std::vector<float> vertexData;
+
+	for (const Vertex3FP4FC& vertex : lineList)
+	{
+		vertexData.push_back(vertex.Position.x);
+		vertexData.push_back(vertex.Position.y);
+		vertexData.push_back(vertex.Position.z);
+
+		vertexData.push_back(vertex.Color.x);
+		vertexData.push_back(vertex.Color.y);
+		vertexData.push_back(vertex.Color.z);
+		vertexData.push_back(vertex.Color.w);
+	}
+
+	std::variant<Direct3dBuffer, dsr_error> createVertexBuffer = Direct3dBuffer::CreateVertexBufferf(m_device, vertexData);
+	if (std::holds_alternative<dsr_error>(createVertexBuffer))
+	{
+		const dsr_error& err = std::get<dsr_error>(createVertexBuffer);
+		std::cout << "error creatingVertexBuffer for LineData: " << err.what() << std::endl;
+		return;
+	}
+
+	Direct3dShaderInputLayout inputLayout;
+	inputLayout.AddVector3f("POSITION");
+	inputLayout.AddVector4f("COLOR");
+
+	lines->SetVertexCount(lineList.size());
+	lines->SetVertexBuffer(std::get<Direct3dBuffer>(createVertexBuffer));
+	lines->SetVertexShaderInputLayout(inputLayout);
 }
 
 void NavMeshDemoApplication::RegisterCameraController()

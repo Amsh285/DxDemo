@@ -9,6 +9,7 @@
 #include "ErrorHandling/DsrResult.h"
 
 #include "EngineSubSystems/EntityComponentSystem/EcsEngineContext.h"
+#include "EngineSubSystems/EntityComponentSystem/EnginePrepareRendererContext.h"
 #include "EngineSubSystems/EntityComponentSystem/EngineStartupContext.h"
 #include "EngineSubSystems/EntityComponentSystem/Entity.h"
 #include "EngineSubSystems/EntityComponentSystem/System.h"

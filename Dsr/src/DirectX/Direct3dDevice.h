@@ -147,6 +147,7 @@ namespace dsr
 			void Clear(const float& r, const float& g, const float& b, const float& a);
 			void SwapBuffers();
 
+			void Draw(const uint32_t& vertexCount, const uint32_t& startVertexLocation);
 			void DrawIndexed(const uint32_t& indexCount, const uint32_t& startIndexLocation, const uint32_t& baseVertexLocation);
 
 			Direct3dDevice(const Direct3dDevice& other) = delete;

@@ -7,6 +7,8 @@
 
 #include "ErrorHandling/DsrResult.h"
 
+#include "EngineSubSystems/EntityComponentSystem/EnginePrepareRendererContext.h"
+#include "EngineSubSystems/EntityComponentSystem/EngineStartupContext.h"
 #include "EngineSubSystems/EntityComponentSystem/System.h"
 #include "EngineSubSystems/EntityComponentSystem/Components/ShaderProgramComponent.h"
 #include "EngineSubSystems/EntityComponentSystem/Components/StaticMeshComponent.h"
@@ -32,7 +34,8 @@ namespace dsr
 			DsrResult Initialize();
 			void SetDefaultSamplerState();
 
-			void PrepareRendererUpdate();
+			void Startup(const EngineStartupContext& context);
+			void PrepareRendererUpdate(const EnginePrepareRendererContext& context);
 			void Update(const EngineContext& context);
 		private:
 			template<class TShader>
