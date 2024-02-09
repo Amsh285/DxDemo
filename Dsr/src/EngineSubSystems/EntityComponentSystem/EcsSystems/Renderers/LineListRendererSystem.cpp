@@ -90,7 +90,6 @@ namespace dsr
 			SetConstantBuffer(m_device, m_vsConstantBuffers, 2, &renderTransform, sizeof(RenderTransform));
 			ApplyConstantBuffers<ID3D11VertexShader>();
 
-
 			Direct3dBuffer vertexBuffer = lines->GetVertexBuffer();
 			Direct3dShaderInputLayout layout = lines->GetVertexShaderInputLayout();
 			uint32_t vertexStride = layout.GetTotalStride();
