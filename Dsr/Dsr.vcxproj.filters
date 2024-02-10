@@ -231,6 +231,12 @@
     <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\EnginePrepareRendererContext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\EcsSystems\Renderers\WireframeRendererSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\Components\WireframeMeshComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Windows\Window.cpp">
@@ -426,6 +432,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\EnginePrepareRendererContext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\EcsSystems\Renderers\WireframeRendererSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\Components\WireframeMeshComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

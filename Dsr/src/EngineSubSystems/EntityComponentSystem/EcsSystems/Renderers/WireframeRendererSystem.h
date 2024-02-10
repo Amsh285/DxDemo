@@ -1,38 +1,29 @@
 #pragma once
 
 #include "DirectX/Direct3dDevice.h"
-#include "DirectX/Direct3dDeviceShaderExtensions.h"
-#include "DirectX/Shader/Data/VertexShaderData.h"
-#include "DirectX/Textures/Direct3dSamplerState.h"
 
-#include "ErrorHandling/DsrResult.h"
 
+#include "EngineSubSystems/EntityComponentSystem/EngineContext.h"
 #include "EngineSubSystems/EntityComponentSystem/EnginePrepareRendererContext.h"
 #include "EngineSubSystems/EntityComponentSystem/EngineStartupContext.h"
-#include "EngineSubSystems/EntityComponentSystem/System.h"
+
 #include "EngineSubSystems/EntityComponentSystem/Components/ShaderProgramComponent.h"
-#include "EngineSubSystems/EntityComponentSystem/Components/StaticMeshComponent.h"
 #include "EngineSubSystems/EntityComponentSystem/Components/TransformComponent.h"
+#include "EngineSubSystems/EntityComponentSystem/Components/WireframeMeshComponent.h"
+
 #include "EngineSubSystems/EntityComponentSystem/EcsSystems/Renderers/RendererSystem.h"
 
-#include "Events/Application/WindowEvents.h"
-#include "Events/Application/FrameEvents.h"
 
 namespace dsr
 {
 	namespace ecs
 	{
-		class StaticMeshRendererSystem final : public RendererSystem
+		class WireframeRendererSystem final : public RendererSystem
 		{
 		public:
 			virtual std::vector<std::type_index> GetRequiredComponents() const override;
 
-			StaticMeshRendererSystem(const std::shared_ptr<directX::Direct3dDevice>& device);
-			StaticMeshRendererSystem(const StaticMeshRendererSystem& other) = delete;
-			StaticMeshRendererSystem& operator=(const StaticMeshRendererSystem& other) = delete;
-
-			DsrResult Initialize();
-			void SetDefaultSamplerState();
+			WireframeRendererSystem(const std::shared_ptr<directX::Direct3dDevice>& device);
 
 			void Startup(const EngineStartupContext& context);
 			void PrepareRendererUpdate(const EnginePrepareRendererContext& context);
@@ -61,15 +52,15 @@ namespace dsr
 				m_device->UseConstantBuffers<ID3D11PixelShader>(0, psConstantBuffers.size(), psConstantBuffers.data());
 			}
 
-			void SetupMvp(const EngineContext& context, const Entity& camera, const RenderTransform& renderTransform);
-			void SetupTextures(std::shared_ptr<dsr::directX::rendering::VertexGroup> vertexGroup);
-
-			directX::Direct3dSamplerState m_defaultSamplerState;
+			void BindVertexBuffer(const dsr::directX::Direct3dVertexBufferf& vertexBuffer);
 
 			std::shared_ptr<directX::Direct3dDevice> m_device;
+			std::shared_ptr<directX::Direct3dShaderProgram> m_shaderProgram;
 
 			std::map<size_t, directX::Direct3dBuffer> m_vsConstantBuffers;
 			std::map<size_t, directX::Direct3dBuffer> m_psConstantBuffers;
+			std::shared_ptr<ID3D11RasterizerState> m_rasterizerState;
+			std::shared_ptr<TransformComponent> m_cameraTransform;
 		};
 	}
 }

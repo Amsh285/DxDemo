@@ -54,6 +54,9 @@ namespace dsr
 		void StaticMeshRendererSystem::PrepareRendererUpdate(const EnginePrepareRendererContext& context)
 		{
 			m_device->SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			
+			SetDefaultSamplerState();
+			m_device->SetDefaultRasterizerState();
 		}
 
 		void StaticMeshRendererSystem::Update(const EngineContext& context)

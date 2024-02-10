@@ -25,6 +25,7 @@
 #include "EngineSubSystems/EntityComponentSystem/EcsSystems/ViewProjectionSystem.h"
 #include "EngineSubSystems/EntityComponentSystem/EcsSystems/Renderers/LineListRendererSystem.h"
 #include "EngineSubSystems/EntityComponentSystem/EcsSystems/Renderers/StaticMeshRendererSystem.h"
+#include "EngineSubSystems/EntityComponentSystem/EcsSystems/Renderers/WireframeRendererSystem.h"
 
 #include "EngineSubSystems/Input/InputSystem.h"
 #include "EngineSubSystems/Time/Time.h"
@@ -87,6 +88,7 @@ namespace dsr
 		std::shared_ptr<dsr::ecs::ViewProjectionSystem> m_viewProjectionSystem;
 		std::shared_ptr<dsr::ecs::StaticMeshRendererSystem> m_staticMeshRendererSystem;
 		std::shared_ptr<dsr::ecs::LineListRendererSystem> m_lineListRendererSystem;
+		std::shared_ptr<dsr::ecs::WireframeRendererSystem> m_wireframeRendererSystem;
 
 		dsr::ecs::Entity m_defaultShaderProgramEntity;
 		dsr::ecs::Entity m_lineListShaderProgramEntity;
