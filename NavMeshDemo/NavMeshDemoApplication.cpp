@@ -14,7 +14,7 @@ std::variant<dsr::ModelConfiguration, dsr::dsr_error> NavMeshDemoApplication::Lo
 	using namespace dsr::directX;
 	using namespace dsr::directX::rendering;
 
-	std::variant<ModelConfiguration, dsr_error> loadMapResult = LoadWavefrontModel(
+	std::variant<ModelConfiguration, dsr_error> loadMapResult = LoadWavefrontModelConfiguration(
 		m_device,
 		m_blenderModelLoader,
 		"Assets/",
