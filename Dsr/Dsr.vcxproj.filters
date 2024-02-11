@@ -237,6 +237,9 @@
     <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\Components\WireframeMeshComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Data\Face.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Windows\Window.cpp">
@@ -438,6 +441,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\Components\WireframeMeshComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Data\Face.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

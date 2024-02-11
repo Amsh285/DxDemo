@@ -5,6 +5,7 @@ NavMeshDemoApplication::NavMeshDemoApplication()
 	: DsrApplication(L"Nav Mesh Demo", 100, 100, 1280, 768)
 {
 	m_mapEntity = dsr::ecs::EcsManager::CreateNewEntity();
+	m_mapFaceNormalsEntity = dsr::ecs::EcsManager::CreateNewEntity();
 	m_lineEntity = dsr::ecs::EcsManager::CreateNewEntity();
 }
 
@@ -14,12 +15,20 @@ std::variant<dsr::ModelConfiguration, dsr::dsr_error> NavMeshDemoApplication::Lo
 	using namespace dsr::directX;
 	using namespace dsr::directX::rendering;
 
-	std::variant<ModelConfiguration, dsr_error> loadMapResult = LoadWavefrontModelConfiguration(
-		m_device,
-		m_blenderModelLoader,
+	std::variant<std::shared_ptr<WavefrontModel>, dsr_error> loadMapWfResult = LoadWavefrontModel(m_blenderModelLoader,
 		"Assets/",
 		"map.wf",
 		"map.mtl");
+
+	if (std::holds_alternative<dsr_error>(loadMapWfResult))
+		return std::get<dsr_error>(loadMapWfResult);
+
+	m_mapModel = std::get<std::shared_ptr<WavefrontModel>>(loadMapWfResult);
+
+	std::variant<ModelConfiguration, dsr_error> loadMapResult = LoadWavefrontModelConfiguration(
+		m_device,
+		m_mapModel
+	);
 
 	if (std::holds_alternative<dsr_error>(loadMapResult))
 		return std::get<dsr_error>(loadMapResult);
@@ -82,6 +91,54 @@ void NavMeshDemoApplication::RegisterLineEntity()
 	lines->SetVertexShaderInputLayout(inputLayout);
 }
 
+void NavMeshDemoApplication::RegisterMapFaceNormalsEntity()
+{
+	using namespace dsr;
+	using namespace dsr::directX;
+	using namespace dsr::directX::rendering;
+
+	std::vector<Face> mapFaces = GetFaceData(m_mapModel);
+	std::vector<float> vertexData;
+
+	for (const Face& face : mapFaces)
+	{
+		vertexData.push_back(face.Centroid.x);
+		vertexData.push_back(face.Centroid.y);
+		vertexData.push_back(face.Centroid.z);
+
+		vertexData.push_back(0.0f);
+		vertexData.push_back(1.0f);
+		vertexData.push_back(0.0f);
+		vertexData.push_back(1.0f);
+
+		vertexData.push_back(face.Centroid.x + face.Normal.x);
+		vertexData.push_back(face.Centroid.y + face.Normal.y);
+		vertexData.push_back(face.Centroid.z + face.Normal.z);
+
+		vertexData.push_back(0.0f);
+		vertexData.push_back(1.0f);
+		vertexData.push_back(0.0f);
+		vertexData.push_back(1.0f);
+	}
+
+	std::variant<Direct3dBuffer, dsr_error> createVertexBuffer = Direct3dBuffer::CreateVertexBufferf(m_device, vertexData);
+	if (std::holds_alternative<dsr_error>(createVertexBuffer))
+	{
+		const dsr_error& err = std::get<dsr_error>(createVertexBuffer);
+		std::cout << "error creatingVertexBuffer for MapFaceNormals: " << err.what() << std::endl;
+		return;
+	}
+
+	Direct3dShaderInputLayout inputLayout;
+	inputLayout.AddVector3f("POSITION");
+	inputLayout.AddVector4f("COLOR");
+
+	std::shared_ptr<dsr::ecs::LineListComponent> lines = m_ecsManager->RegisterComponent<dsr::ecs::LineListComponent>(m_mapFaceNormalsEntity);
+	lines->SetVertexCount(mapFaces.size() * 2);
+	lines->SetVertexBuffer(std::get<Direct3dBuffer>(createVertexBuffer));
+	lines->SetVertexShaderInputLayout(inputLayout);
+}
+
 void NavMeshDemoApplication::RegisterCameraController()
 {
 	m_cameraControllerSystem = std::make_shared<CameraControllerSystem>(GetInput(), m_time);
@@ -112,6 +169,7 @@ dsr::DsrResult NavMeshDemoApplication::Setup()
 	ModelConfiguration config = std::get<ModelConfiguration>(loadMapResult);
 	RegisterMapModel(config);
 	RegisterLineEntity();
+	RegisterMapFaceNormalsEntity();
 	RegisterCameraController();
 
 	std::vector<dsr::ecs::Entity> cameraEntities = m_ecsManager->FindEntitiesByTag("Camera");

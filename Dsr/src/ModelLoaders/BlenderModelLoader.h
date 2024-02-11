@@ -63,7 +63,7 @@ constexpr auto ERROR_PARSEMODELFILE_INVALIDUSEMATERIALINSTRUCTIONFORMAT = 1020;
 	class BlenderModelLoader
 	{
 	public:
-		std::variant<WavefrontModel, dsr_error> Load(
+		std::variant<std::shared_ptr<WavefrontModel>, dsr_error> Load(
 			const std::filesystem::path& modelPath,
 			const std::filesystem::path& materialPath);
 	private:

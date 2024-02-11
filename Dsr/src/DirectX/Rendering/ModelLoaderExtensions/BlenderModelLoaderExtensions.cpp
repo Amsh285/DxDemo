@@ -7,7 +7,7 @@ namespace dsr
 	{
 		namespace rendering
 		{
-			std::variant<WavefrontModel, dsr_error> LoadWavefrontModel(
+			std::variant<std::shared_ptr<WavefrontModel>, dsr_error> LoadWavefrontModel(
 				std::shared_ptr<BlenderModelLoader> modelLoader,
 				const std::filesystem::path& baseDirectory,
 				const std::filesystem::path& modelPath,
@@ -26,7 +26,7 @@ namespace dsr
 				using namespace dsr;
 				using namespace dsr::directX;
 
-				std::variant<WavefrontModel, dsr_error> loadModel = LoadWavefrontModel(
+				std::variant<std::shared_ptr<WavefrontModel>, dsr_error> loadModel = LoadWavefrontModel(
 					modelLoader,
 					baseDirectory,
 					modelPath,
@@ -36,13 +36,13 @@ namespace dsr
 				if (std::holds_alternative<dsr_error>(loadModel))
 					return dsr::dsr_error::Attach("Error loading blendermodel: ", std::get<dsr_error>(loadModel));
 
-				const WavefrontModel& model = std::get<WavefrontModel>(loadModel);
+				std::shared_ptr<WavefrontModel> model = std::get<std::shared_ptr<WavefrontModel>>(loadModel);
 				return LoadWavefrontModelConfiguration(device, model);
 			}
 
 			std::variant<ModelConfiguration, dsr_error> LoadWavefrontModelConfiguration(
 				std::shared_ptr<Direct3dDevice> device,
-				const WavefrontModel& model)
+				const std::shared_ptr<WavefrontModel> model)
 			{
 				Direct3dShaderInputLayout inputLayout;
 				inputLayout.AddVector3f("POSITION");
@@ -51,7 +51,7 @@ namespace dsr
 
 				std::vector<float> vertexBuffer;
 
-				for (const Vertex3FP2FTx3FN& vertex : model.VertexBuffer)
+				for (const Vertex3FP2FTx3FN& vertex : model->VertexBuffer)
 				{
 					vertexBuffer.push_back(vertex.Position.x);
 					vertexBuffer.push_back(vertex.Position.y);
@@ -67,19 +67,55 @@ namespace dsr
 
 				std::unordered_map<std::string, std::shared_ptr<VertexGroup>> namedVertexGroups = MapModel(model);
 
-				std::variant<Direct3dVertexBufferf, dsr_error> loadVertexData = SetupVertexBufferf(device, vertexBuffer, model.IndexBuffer, inputLayout);
+				std::variant<Direct3dVertexBufferf, dsr_error> loadVertexData = SetupVertexBufferf(device, vertexBuffer, model->IndexBuffer, inputLayout);
 				if (std::holds_alternative<dsr_error>(loadVertexData))
 					return dsr_error::Attach("Error setup vertexbuffer: ", std::get<dsr_error>(loadVertexData));
 
 				return ModelConfiguration(dsr::data::Transform(), std::get<Direct3dVertexBufferf>(loadVertexData), namedVertexGroups);
 			}
 
-			std::unordered_map<std::string, std::shared_ptr<VertexGroup>> MapModel(const WavefrontModel& model)
+			std::vector<Face> GetFaceData(const std::shared_ptr<WavefrontModel> model)
+			{
+				using namespace DirectX;
+
+				if (model->IndexBuffer.size() % 3 != 0)
+				{
+					// Todo Log warn xD
+					return std::vector<Face>();
+				}
+
+				std::vector<Face> faces;
+
+				for (std::size_t i = 0; i < model->IndexBuffer.size(); i += 3)
+				{
+					const Vertex3FP2FTx3FN& v1 = model->VertexBuffer[model->IndexBuffer[i]];
+					const Vertex3FP2FTx3FN& v2 = model->VertexBuffer[model->IndexBuffer[i + 1]];
+					const Vertex3FP2FTx3FN& v3 = model->VertexBuffer[model->IndexBuffer[i + 2]];
+
+					XMVECTOR u = XMVectorSubtract(XMLoadFloat3(&v1.Position), XMLoadFloat3(&v2.Position));
+					XMVECTOR v = XMVectorSubtract(XMLoadFloat3(&v3.Position), XMLoadFloat3(&v2.Position));
+
+					Face f;
+					XMStoreFloat3(&f.Normal, XMVector3Normalize(XMVector3Cross(u, v)));
+
+					f.Centroid = XMFLOAT3(
+						(v1.Position.x + v2.Position.x + v3.Position.x) / 3.0f,
+						(v1.Position.y + v2.Position.y + v3.Position.y) / 3.0f,
+						(v1.Position.z + v2.Position.z + v3.Position.z) / 3.0f
+					);
+
+					faces.push_back(f);
+				}
+
+				return faces;
+			}
+
+			std::unordered_map<std::string, std::shared_ptr<VertexGroup>> MapModel(const std::shared_ptr<WavefrontModel> model)
 			{
 				std::unordered_map<std::string, std::shared_ptr<VertexGroup>> namedVertexGroups;
 				uint32_t sortOrder = 0;
 
-				for (const auto& item : model.MaterialGroups)
+				for (const auto& item : model->MaterialGroups)
 				{
 					std::shared_ptr<VertexGroup> group = std::make_shared<VertexGroup>();
 					group->StartIndexLocation = item.StartIndexLocation;

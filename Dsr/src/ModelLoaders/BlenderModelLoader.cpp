@@ -3,7 +3,7 @@
 
 namespace dsr
 {
-	std::variant<WavefrontModel, dsr_error> BlenderModelLoader::Load(
+	std::variant<std::shared_ptr<WavefrontModel>, dsr_error> BlenderModelLoader::Load(
 		const std::filesystem::path& path,
 		const std::filesystem::path& materialPath)
 	{
@@ -198,7 +198,12 @@ namespace dsr
 			lastGroup.IndexCount = indexBuffer.size() - lastGroup.StartIndexLocation;
 		}
 
-		return WavefrontModel{ vertexBuffer, indexBuffer, materialGroups };
+		std::shared_ptr<WavefrontModel> model = std::make_shared<WavefrontModel>();
+		model->VertexBuffer = vertexBuffer;
+		model->IndexBuffer = indexBuffer;
+		model->MaterialGroups = materialGroups;
+
+		return model;
 	}
 
 	void BlenderModelLoader::ApplyVertexToBuffers(
