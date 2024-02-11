@@ -69,7 +69,7 @@ namespace dsr
 
 		void EcsManager::OnRendererUpdate(const dsr::events::UpdateFrameEvent& updateFrameEvent)
 		{
-			m_device->Clear(0.0f, 0.2f, 0.4f, 1.0f);
+			m_device->Clear(0.3f, 0.3f, 0.3f, 1.0f);
 
 			for (auto it = m_renderers.begin(); it != m_renderers.end(); ++it)
 			{
