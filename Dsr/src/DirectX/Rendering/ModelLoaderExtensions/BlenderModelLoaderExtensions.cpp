@@ -92,8 +92,8 @@ namespace dsr
 					const Vertex3FP2FTx3FN& v2 = model->VertexBuffer[model->IndexBuffer[i + 1]];
 					const Vertex3FP2FTx3FN& v3 = model->VertexBuffer[model->IndexBuffer[i + 2]];
 
-					XMVECTOR u = XMVectorSubtract(XMLoadFloat3(&v1.Position), XMLoadFloat3(&v2.Position));
-					XMVECTOR v = XMVectorSubtract(XMLoadFloat3(&v3.Position), XMLoadFloat3(&v2.Position));
+					XMVECTOR u = XMVectorSubtract(XMLoadFloat3(&v3.Position), XMLoadFloat3(&v2.Position));
+					XMVECTOR v = XMVectorSubtract(XMLoadFloat3(&v1.Position), XMLoadFloat3(&v2.Position));
 
 					Face f;
 					XMStoreFloat3(&f.Normal, XMVector3Normalize(XMVector3Cross(u, v)));
