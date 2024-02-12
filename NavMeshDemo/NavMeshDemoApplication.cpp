@@ -47,11 +47,11 @@ std::variant<dsr::ModelConfiguration, dsr::dsr_error> NavMeshDemoApplication::Lo
 
 	//Todo: Default VertexGroup
 	WavefrontModelMaterialGroup group;
-	group.IndexCount = m_mapUpperSurfaceModel->IndexBuffer.size();
+	group.IndexCount = m_mapUpperSurfaceModel->Mesh->IndexBuffer.size();
 	group.StartIndexLocation = 0;
 	group.MaterialName = "mat";
 	group.MaterialData.SpecularColor = XMFLOAT3(0.8f, 0.8f, 0.8f);
-	group.MaterialData.DiffuseColor = XMFLOAT4(0.6f, 0.0f, 0.0f, 1.0f);
+	group.MaterialData.DiffuseColor = XMFLOAT4(0.8f, 0.0f, 0.0f, 1.0f);
 	m_mapUpperSurfaceModel->MaterialGroups.push_back(group);
 
 	return LoadWavefrontModelConfiguration(
@@ -93,19 +93,20 @@ void NavMeshDemoApplication::RegisterMapUpperSurfaceModel(const dsr::ModelConfig
 void NavMeshDemoApplication::RegisterLineEntity()
 {
 	using namespace dsr;
+	using namespace dsr::data;
 	using namespace dsr::directX;
 
 	std::shared_ptr<dsr::ecs::LineListComponent> lines = m_ecsManager->RegisterComponent<dsr::ecs::LineListComponent>(m_lineEntity);
 
 	std::vector<Vertex3FP4FC> lineList;
-	lineList.push_back(dsr::Vertex3FP4FC(DirectX::XMFLOAT3(0.0f, -100.0f, 0.0f), DirectX::XMFLOAT4(0.0f, 0.8f, 0.0f, 1.0f)));
-	lineList.push_back(dsr::Vertex3FP4FC(DirectX::XMFLOAT3(0.0f, 100.0f, 0.0f), DirectX::XMFLOAT4(0.0f, 0.8f, 0.0f, 1.0f)));
+	lineList.push_back(Vertex3FP4FC(DirectX::XMFLOAT3(0.0f, -100.0f, 0.0f), DirectX::XMFLOAT4(0.0f, 0.8f, 0.0f, 1.0f)));
+	lineList.push_back(Vertex3FP4FC(DirectX::XMFLOAT3(0.0f, 100.0f, 0.0f), DirectX::XMFLOAT4(0.0f, 0.8f, 0.0f, 1.0f)));
 
-	lineList.push_back(dsr::Vertex3FP4FC(DirectX::XMFLOAT3(0.0f, 0.0f, -100.0f), DirectX::XMFLOAT4(0.0f, 0.0f, 0.8f, 1.0f)));
-	lineList.push_back(dsr::Vertex3FP4FC(DirectX::XMFLOAT3(0.0f, 0.0f, 100.0f), DirectX::XMFLOAT4(0.0f, 0.0f, 0.8f, 1.0f)));
+	lineList.push_back(Vertex3FP4FC(DirectX::XMFLOAT3(0.0f, 0.0f, -100.0f), DirectX::XMFLOAT4(0.0f, 0.0f, 0.8f, 1.0f)));
+	lineList.push_back(Vertex3FP4FC(DirectX::XMFLOAT3(0.0f, 0.0f, 100.0f), DirectX::XMFLOAT4(0.0f, 0.0f, 0.8f, 1.0f)));
 
-	lineList.push_back(dsr::Vertex3FP4FC(DirectX::XMFLOAT3(-100.0f, 0.0f, 0.0f), DirectX::XMFLOAT4(0.8f, 0.0f, 0.0f, 1.0f)));
-	lineList.push_back(dsr::Vertex3FP4FC(DirectX::XMFLOAT3(100.0f, 0.0f, 0.0f), DirectX::XMFLOAT4(0.8f, 0.0f, 0.0f, 1.0f)));
+	lineList.push_back(Vertex3FP4FC(DirectX::XMFLOAT3(-100.0f, 0.0f, 0.0f), DirectX::XMFLOAT4(0.8f, 0.0f, 0.0f, 1.0f)));
+	lineList.push_back(Vertex3FP4FC(DirectX::XMFLOAT3(100.0f, 0.0f, 0.0f), DirectX::XMFLOAT4(0.8f, 0.0f, 0.0f, 1.0f)));
 
 	std::vector<float> vertexData;
 
@@ -141,6 +142,7 @@ void NavMeshDemoApplication::RegisterLineEntity()
 void NavMeshDemoApplication::RegisterMapFaceNormalsEntity()
 {
 	using namespace dsr;
+	using namespace dsr::data;
 	using namespace dsr::directX;
 	using namespace dsr::directX::rendering;
 

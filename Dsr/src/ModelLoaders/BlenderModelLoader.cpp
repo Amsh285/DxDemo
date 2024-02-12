@@ -51,7 +51,7 @@ namespace dsr
 		std::vector<DirectX::XMFLOAT2> vertexTxCoords;
 		std::vector<DirectX::XMFLOAT3> vertexNormals;
 
-		std::vector<Vertex3FP2FTx3FN> vertexBuffer;
+		std::vector<dsr::data::Vertex3FP2FTx3FN> vertexBuffer;
 		std::vector<uint32_t> indexBuffer;
 
 		uint32_t rowIndex = 3, startIndexLocation = 0;
@@ -199,8 +199,8 @@ namespace dsr
 		}
 
 		std::shared_ptr<WavefrontModel> model = std::make_shared<WavefrontModel>();
-		model->VertexBuffer = vertexBuffer;
-		model->IndexBuffer = indexBuffer;
+		model->Mesh->VertexBuffer = vertexBuffer;
+		model->Mesh->IndexBuffer = indexBuffer;
 		model->MaterialGroups = materialGroups;
 
 		return model;
@@ -208,7 +208,7 @@ namespace dsr
 
 	void BlenderModelLoader::ApplyVertexToBuffers(
 		const FaceVertex& vertexIndexData,
-		std::vector<Vertex3FP2FTx3FN>& vertexBuffer,
+		std::vector<dsr::data::Vertex3FP2FTx3FN>& vertexBuffer,
 		std::vector<uint32_t>& indexBuffer,
 		std::vector<DirectX::XMFLOAT3>& vertexPositions,
 		std::vector<DirectX::XMFLOAT2>& vertexTxCoords,
@@ -228,7 +228,7 @@ namespace dsr
 			const DirectX::XMFLOAT2& vertexTxCoord = vertexTxCoords[vertexIndexData.TxCoordIndex];
 			const DirectX::XMFLOAT3& vertexNormal = vertexNormals[vertexIndexData.NormalIndex];
 
-			Vertex3FP2FTx3FN vertex{ vertexPosition, vertexTxCoord, vertexNormal };
+			dsr::data::Vertex3FP2FTx3FN vertex{ vertexPosition, vertexTxCoord, vertexNormal };
 			vertexBuffer.push_back(vertex);
 			indexBuffer.push_back(vertexIndex);
 			storedinidces[vertexIndexData] = vertexIndex;

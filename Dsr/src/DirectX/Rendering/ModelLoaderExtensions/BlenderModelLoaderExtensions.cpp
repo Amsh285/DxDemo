@@ -51,7 +51,7 @@ namespace dsr
 
 				std::vector<float> vertexBuffer;
 
-				for (const Vertex3FP2FTx3FN& vertex : model->VertexBuffer)
+				for (const dsr::data::Vertex3FP2FTx3FN& vertex : model->Mesh->VertexBuffer)
 				{
 					vertexBuffer.push_back(vertex.Position.x);
 					vertexBuffer.push_back(vertex.Position.y);
@@ -67,18 +67,20 @@ namespace dsr
 
 				std::unordered_map<std::string, std::shared_ptr<VertexGroup>> namedVertexGroups = MapModel(model);
 
-				std::variant<Direct3dVertexBufferf, dsr_error> loadVertexData = SetupVertexBufferf(device, vertexBuffer, model->IndexBuffer, inputLayout);
+				std::variant<Direct3dVertexBufferf, dsr_error> loadVertexData = SetupVertexBufferf(device, vertexBuffer, model->Mesh->IndexBuffer, inputLayout);
 				if (std::holds_alternative<dsr_error>(loadVertexData))
 					return dsr_error::Attach("Error setup vertexbuffer: ", std::get<dsr_error>(loadVertexData));
 
 				return ModelConfiguration(dsr::data::Transform(), std::get<Direct3dVertexBufferf>(loadVertexData), namedVertexGroups);
 			}
 
-			std::vector<Face> GetFaceData(const std::shared_ptr<WavefrontModel> model)
+			std::vector<dsr::data::Face> GetFaceData(const std::shared_ptr<WavefrontModel> model)
 			{
+				using namespace dsr::data;
+
 				using namespace DirectX;
 
-				if (model->IndexBuffer.size() % 3 != 0)
+				if (model->Mesh->IndexBuffer.size() % 3 != 0)
 				{
 					// Todo Log warn xD
 					return std::vector<Face>();
@@ -86,11 +88,11 @@ namespace dsr
 
 				std::vector<Face> faces;
 
-				for (std::size_t i = 0; i < model->IndexBuffer.size(); i += 3)
+				for (std::size_t i = 0; i < model->Mesh->IndexBuffer.size(); i += 3)
 				{
-					const Vertex3FP2FTx3FN& v1 = model->VertexBuffer[model->IndexBuffer[i]];
-					const Vertex3FP2FTx3FN& v2 = model->VertexBuffer[model->IndexBuffer[i + 1]];
-					const Vertex3FP2FTx3FN& v3 = model->VertexBuffer[model->IndexBuffer[i + 2]];
+					const Vertex3FP2FTx3FN& v1 = model->Mesh->VertexBuffer[model->Mesh->IndexBuffer[i]];
+					const Vertex3FP2FTx3FN& v2 = model->Mesh->VertexBuffer[model->Mesh->IndexBuffer[i + 1]];
+					const Vertex3FP2FTx3FN& v3 = model->Mesh->VertexBuffer[model->Mesh->IndexBuffer[i + 2]];
 
 					XMVECTOR u = XMVectorSubtract(XMLoadFloat3(&v3.Position), XMLoadFloat3(&v2.Position));
 					XMVECTOR v = XMVectorSubtract(XMLoadFloat3(&v1.Position), XMLoadFloat3(&v2.Position));
@@ -112,9 +114,11 @@ namespace dsr
 
 			std::shared_ptr<dsr::WavefrontModel> FilterUpperSurface(const std::shared_ptr<dsr::WavefrontModel> targetMesh, const float& thresholdAngle, const DirectX::XMVECTOR& upvector)
 			{
+				using namespace dsr::data;
+
 				using namespace DirectX;
 
-				if (targetMesh->IndexBuffer.size() % 3 != 0)
+				if (targetMesh->Mesh->IndexBuffer.size() % 3 != 0)
 				{
 					// log
 					return std::make_shared<dsr::WavefrontModel>();
@@ -125,11 +129,11 @@ namespace dsr
 
 				uint32_t index = 0;
 
-				for (int i = 0; i < targetMesh->IndexBuffer.size(); i += 3)
+				for (int i = 0; i < targetMesh->Mesh->IndexBuffer.size(); i += 3)
 				{
-					const Vertex3FP2FTx3FN& v1 = targetMesh->VertexBuffer[targetMesh->IndexBuffer[i]];
-					const Vertex3FP2FTx3FN& v2 = targetMesh->VertexBuffer[targetMesh->IndexBuffer[i + 1]];
-					const Vertex3FP2FTx3FN& v3 = targetMesh->VertexBuffer[targetMesh->IndexBuffer[i + 2]];
+					const Vertex3FP2FTx3FN& v1 = targetMesh->Mesh->VertexBuffer[targetMesh->Mesh->IndexBuffer[i]];
+					const Vertex3FP2FTx3FN& v2 = targetMesh->Mesh->VertexBuffer[targetMesh->Mesh->IndexBuffer[i + 1]];
+					const Vertex3FP2FTx3FN& v3 = targetMesh->Mesh->VertexBuffer[targetMesh->Mesh->IndexBuffer[i + 2]];
 
 					XMVECTOR u = XMVectorSubtract(XMLoadFloat3(&v3.Position), XMLoadFloat3(&v2.Position));
 					XMVECTOR v = XMVectorSubtract(XMLoadFloat3(&v1.Position), XMLoadFloat3(&v2.Position));
@@ -161,8 +165,8 @@ namespace dsr
 				}
 
 				std::shared_ptr<WavefrontModel> model = std::make_shared<WavefrontModel>();
-				model->VertexBuffer = vertexBuffer;
-				model->IndexBuffer = indexBuffer;
+				model->Mesh->VertexBuffer = vertexBuffer;
+				model->Mesh->IndexBuffer = indexBuffer;
 				return model;
 			}
 

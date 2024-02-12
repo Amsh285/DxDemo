@@ -1,7 +1,10 @@
 #pragma once
 
 #include "Data/Vertex.h"
+#include "Data/Structures/StaticMesh.h"
+
 #include "ErrorHandling/dsr_error.h"
+
 #include "ModelLoaders/BlenderMTLLoader.h"
 
 namespace dsr
@@ -24,9 +27,13 @@ constexpr auto ERROR_PARSEMODELFILE_INVALIDUSEMATERIALINSTRUCTIONFORMAT = 1020;
 
 	struct WavefrontModel
 	{
-		std::vector<Vertex3FP2FTx3FN> VertexBuffer;
-		std::vector<uint32_t> IndexBuffer;
+		std::shared_ptr<dsr::data::StaticMesh<dsr::data::Vertex3FP2FTx3FN>> Mesh;
 		std::vector<WavefrontModelMaterialGroup> MaterialGroups;
+
+		WavefrontModel()
+			: Mesh(std::make_shared<dsr::data::StaticMesh<dsr::data::Vertex3FP2FTx3FN>>())
+		{
+		}
 	};
 
 	struct FaceVertex
@@ -69,7 +76,7 @@ constexpr auto ERROR_PARSEMODELFILE_INVALIDUSEMATERIALINSTRUCTIONFORMAT = 1020;
 	private:
 		void ApplyVertexToBuffers(
 			const FaceVertex& vertexIndexData,
-			std::vector<Vertex3FP2FTx3FN>& vertexBuffer,
+			std::vector<dsr::data::Vertex3FP2FTx3FN>& vertexBuffer,
 			std::vector<uint32_t>& indexBuffer,
 			std::vector<DirectX::XMFLOAT3>& vertexPositions,
 			std::vector<DirectX::XMFLOAT2>& vertexTxCoords,

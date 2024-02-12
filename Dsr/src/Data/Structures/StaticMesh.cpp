@@ -1,5 +1,5 @@
 #include "dsrpch.h"
-#include "Vertex.h"
+#include "StaticMesh.h"
 
 namespace dsr
 {

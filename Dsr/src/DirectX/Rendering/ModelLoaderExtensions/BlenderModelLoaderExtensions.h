@@ -34,7 +34,7 @@ namespace dsr
 				const std::shared_ptr<WavefrontModel> model
 			);
 
-			std::vector<Face> GetFaceData(const std::shared_ptr<WavefrontModel> model);
+			std::vector<dsr::data::Face> GetFaceData(const std::shared_ptr<WavefrontModel> model);
 
 			std::shared_ptr<dsr::WavefrontModel> FilterUpperSurface(
 				const std::shared_ptr<dsr::WavefrontModel> targetMesh,

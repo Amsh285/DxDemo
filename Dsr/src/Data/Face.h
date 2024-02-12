@@ -2,15 +2,18 @@
 
 namespace dsr
 {
-	struct Face
+	namespace data
 	{
-		DirectX::XMFLOAT3 Centroid;
-		DirectX::XMFLOAT3 Normal;
+		struct Face
+		{
+			DirectX::XMFLOAT3 Centroid;
+			DirectX::XMFLOAT3 Normal;
 
-		Face();
-		Face(
-			const DirectX::XMFLOAT3& centroid,
-			const DirectX::XMFLOAT3& normal
-		);
-	};
+			Face();
+			Face(
+				const DirectX::XMFLOAT3& centroid,
+				const DirectX::XMFLOAT3& normal
+			);
+		};
+	}
 }
