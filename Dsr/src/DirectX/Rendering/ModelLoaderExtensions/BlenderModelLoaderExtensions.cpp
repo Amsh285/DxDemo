@@ -110,6 +110,62 @@ namespace dsr
 				return faces;
 			}
 
+			std::shared_ptr<dsr::WavefrontModel> FilterUpperSurface(const std::shared_ptr<dsr::WavefrontModel> targetMesh, const float& thresholdAngle, const DirectX::XMVECTOR& upvector)
+			{
+				using namespace DirectX;
+
+				if (targetMesh->IndexBuffer.size() % 3 != 0)
+				{
+					// log
+					return std::make_shared<dsr::WavefrontModel>();
+				}
+
+				std::vector<Vertex3FP2FTx3FN> vertexBuffer;
+				std::vector<uint32_t> indexBuffer;
+
+				uint32_t index = 0;
+
+				for (int i = 0; i < targetMesh->IndexBuffer.size(); i += 3)
+				{
+					const Vertex3FP2FTx3FN& v1 = targetMesh->VertexBuffer[targetMesh->IndexBuffer[i]];
+					const Vertex3FP2FTx3FN& v2 = targetMesh->VertexBuffer[targetMesh->IndexBuffer[i + 1]];
+					const Vertex3FP2FTx3FN& v3 = targetMesh->VertexBuffer[targetMesh->IndexBuffer[i + 2]];
+
+					XMVECTOR u = XMVectorSubtract(XMLoadFloat3(&v3.Position), XMLoadFloat3(&v2.Position));
+					XMVECTOR v = XMVectorSubtract(XMLoadFloat3(&v1.Position), XMLoadFloat3(&v2.Position));
+
+					XMVECTOR faceNormal = XMVector3Normalize(XMVector3Cross(u, v));
+
+					float angleRadiants = std::atan2(XMVectorGetX(XMVector3Length(XMVector3Cross(faceNormal, upvector))), XMVectorGetX(XMVector3Dot(upvector, faceNormal)));
+					float angle = XMConvertToDegrees(angleRadiants);
+
+					if (angle <= thresholdAngle)
+					{
+						vertexBuffer.push_back(v1);
+						vertexBuffer.push_back(v2);
+						vertexBuffer.push_back(v3);
+
+						/*vertex2
+							vertex1
+							vertex0
+							vertex3
+							vertex2
+							vertex0*/
+
+						indexBuffer.push_back(index + 2);
+						indexBuffer.push_back(index + 1);
+						indexBuffer.push_back(index);
+
+						index += 3;
+					}
+				}
+
+				std::shared_ptr<WavefrontModel> model = std::make_shared<WavefrontModel>();
+				model->VertexBuffer = vertexBuffer;
+				model->IndexBuffer = indexBuffer;
+				return model;
+			}
+
 			std::unordered_map<std::string, std::shared_ptr<VertexGroup>> MapModel(const std::shared_ptr<WavefrontModel> model)
 			{
 				std::unordered_map<std::string, std::shared_ptr<VertexGroup>> namedVertexGroups;

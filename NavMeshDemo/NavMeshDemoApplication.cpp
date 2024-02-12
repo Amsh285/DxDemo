@@ -6,6 +6,7 @@ NavMeshDemoApplication::NavMeshDemoApplication()
 {
 	m_mapEntity = dsr::ecs::EcsManager::CreateNewEntity();
 	m_mapFaceNormalsEntity = dsr::ecs::EcsManager::CreateNewEntity();
+	m_mapUpperSurfaceEntity = dsr::ecs::EcsManager::CreateNewEntity();
 	m_lineEntity = dsr::ecs::EcsManager::CreateNewEntity();
 }
 
@@ -25,15 +26,38 @@ std::variant<dsr::ModelConfiguration, dsr::dsr_error> NavMeshDemoApplication::Lo
 
 	m_mapModel = std::get<std::shared_ptr<WavefrontModel>>(loadMapWfResult);
 
-	std::variant<ModelConfiguration, dsr_error> loadMapResult = LoadWavefrontModelConfiguration(
+	return LoadWavefrontModelConfiguration(
 		m_device,
 		m_mapModel
 	);
+}
 
-	if (std::holds_alternative<dsr_error>(loadMapResult))
-		return std::get<dsr_error>(loadMapResult);
+std::variant<dsr::ModelConfiguration, dsr::dsr_error> NavMeshDemoApplication::LoadMapUpperSurfaceModel()
+{
+	using namespace dsr;
+	using namespace dsr::directX;
+	using namespace dsr::directX::rendering;
 
-	return std::get<ModelConfiguration>(loadMapResult);
+	using namespace DirectX;
+
+	m_mapUpperSurfaceModel = FilterUpperSurface(
+		m_mapModel,
+		45.0f
+	);
+
+	//Todo: Default VertexGroup
+	WavefrontModelMaterialGroup group;
+	group.IndexCount = m_mapUpperSurfaceModel->IndexBuffer.size();
+	group.StartIndexLocation = 0;
+	group.MaterialName = "mat";
+	group.MaterialData.SpecularColor = XMFLOAT3(0.8f, 0.8f, 0.8f);
+	group.MaterialData.DiffuseColor = XMFLOAT4(0.6f, 0.0f, 0.0f, 1.0f);
+	m_mapUpperSurfaceModel->MaterialGroups.push_back(group);
+
+	return LoadWavefrontModelConfiguration(
+		m_device,
+		m_mapUpperSurfaceModel
+	);
 }
 
 void NavMeshDemoApplication::RegisterMapModel(const dsr::ModelConfiguration& map)
@@ -47,6 +71,23 @@ void NavMeshDemoApplication::RegisterMapModel(const dsr::ModelConfiguration& map
 	std::shared_ptr<StaticMeshComponent> mesh = m_ecsManager->RegisterComponent<StaticMeshComponent>(m_mapEntity);
 	mesh->SetVertexBuffer(map.GetVertexBuffer());
 	mesh->SetVertexGroups(map.GetVertexGroups());
+}
+
+void NavMeshDemoApplication::RegisterMapUpperSurfaceModel(const dsr::ModelConfiguration& mapUpperSurface)
+{
+	using namespace dsr::ecs;
+
+	// still not completly right stuff gets culled check that later
+	// the mesh seems to be looking alright at least
+
+	m_ecsManager->RegisterComponent<NameComponent>(m_mapUpperSurfaceEntity, "map upper surface");
+	m_ecsManager->RegisterComponent<TagComponent>(m_mapUpperSurfaceEntity, "map_upper_surface");
+	std::shared_ptr<TransformComponent> transform = m_ecsManager->RegisterComponent<TransformComponent>(m_mapUpperSurfaceEntity);
+	transform->SetPosition(DirectX::XMVectorSet(0.0f, 40.0f, 0.0f, 1.0f));
+
+	std::shared_ptr<StaticMeshComponent> mesh = m_ecsManager->RegisterComponent<StaticMeshComponent>(m_mapUpperSurfaceEntity);
+	mesh->SetVertexBuffer(mapUpperSurface.GetVertexBuffer());
+	mesh->SetVertexGroups(mapUpperSurface.GetVertexGroups());
 }
 
 void NavMeshDemoApplication::RegisterLineEntity()
@@ -173,11 +214,24 @@ dsr::DsrResult NavMeshDemoApplication::Setup()
 	}
 
 	ModelConfiguration config = std::get<ModelConfiguration>(loadMapResult);
+
+	std::variant<ModelConfiguration, dsr_error> loadMapUpperSurfaceResult = LoadMapUpperSurfaceModel();
+	if (std::holds_alternative<dsr_error>(loadMapUpperSurfaceResult))
+	{
+		const dsr_error& error = std::get<dsr_error>(loadMapUpperSurfaceResult);
+		std::string errorMessage = "Error loading Map Upper Surface: ";
+		errorMessage += error.what();
+		return DsrResult(errorMessage, error.GetResult());
+	}
+
+	ModelConfiguration mapUpperSurfaceConfig = std::get<ModelConfiguration>(loadMapUpperSurfaceResult);
+
 	RegisterMapModel(config);
+	RegisterMapUpperSurfaceModel(mapUpperSurfaceConfig);
 	RegisterLineEntity();
 	RegisterMapFaceNormalsEntity();
 	RegisterCameraController();
-
+	
 	std::vector<dsr::ecs::Entity> cameraEntities = m_ecsManager->FindEntitiesByTag("Camera");
 	std::shared_ptr<dsr::ecs::TransformComponent> cameraTransform = m_ecsManager->GetComponentFrom<dsr::ecs::TransformComponent>(cameraEntities[0]);
 
