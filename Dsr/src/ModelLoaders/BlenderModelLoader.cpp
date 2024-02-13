@@ -199,8 +199,8 @@ namespace dsr
 		}
 
 		std::shared_ptr<WavefrontModel> model = std::make_shared<WavefrontModel>();
-		model->Mesh->VertexBuffer = vertexBuffer;
-		model->Mesh->IndexBuffer = indexBuffer;
+		model->Mesh->SetVertexBuffer(vertexBuffer);
+		model->Mesh->SetIndexBuffer(indexBuffer);
 		model->MaterialGroups = materialGroups;
 
 		return model;

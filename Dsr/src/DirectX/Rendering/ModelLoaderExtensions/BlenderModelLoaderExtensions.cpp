@@ -44,14 +44,17 @@ namespace dsr
 				std::shared_ptr<Direct3dDevice> device,
 				const std::shared_ptr<WavefrontModel> model)
 			{
+				using namespace dsr::data;
+
 				Direct3dShaderInputLayout inputLayout;
 				inputLayout.AddVector3f("POSITION");
 				inputLayout.AddVector2f("TXCOORD");
 				inputLayout.AddVector3f("NORMAL");
 
+				const std::vector<Vertex3FP2FTx3FN>& srcVertexBuffer = model->Mesh->GetVertexBuffer();
 				std::vector<float> vertexBuffer;
 
-				for (const dsr::data::Vertex3FP2FTx3FN& vertex : model->Mesh->VertexBuffer)
+				for (const dsr::data::Vertex3FP2FTx3FN& vertex : srcVertexBuffer)
 				{
 					vertexBuffer.push_back(vertex.Position.x);
 					vertexBuffer.push_back(vertex.Position.y);
@@ -67,7 +70,7 @@ namespace dsr
 
 				std::unordered_map<std::string, std::shared_ptr<VertexGroup>> namedVertexGroups = MapModel(model);
 
-				std::variant<Direct3dVertexBufferf, dsr_error> loadVertexData = SetupVertexBufferf(device, vertexBuffer, model->Mesh->IndexBuffer, inputLayout);
+				std::variant<Direct3dVertexBufferf, dsr_error> loadVertexData = SetupVertexBufferf(device, vertexBuffer, model->Mesh->GetIndexBuffer(), inputLayout);
 				if (std::holds_alternative<dsr_error>(loadVertexData))
 					return dsr_error::Attach("Error setup vertexbuffer: ", std::get<dsr_error>(loadVertexData));
 
@@ -80,7 +83,10 @@ namespace dsr
 
 				using namespace DirectX;
 
-				if (model->Mesh->IndexBuffer.size() % 3 != 0)
+				const std::vector<Vertex3FP2FTx3FN>& vertexBuffer = model->Mesh->GetVertexBuffer();
+				const std::vector<uint32_t>& indexBuffer = model->Mesh->GetIndexBuffer();
+
+				if (indexBuffer.size() % 3 != 0)
 				{
 					// Todo Log warn xD
 					return std::vector<Face>();
@@ -88,11 +94,12 @@ namespace dsr
 
 				std::vector<Face> faces;
 
-				for (std::size_t i = 0; i < model->Mesh->IndexBuffer.size(); i += 3)
+				for (std::size_t i = 0; i < indexBuffer.size(); i += 3)
 				{
-					const Vertex3FP2FTx3FN& v1 = model->Mesh->VertexBuffer[model->Mesh->IndexBuffer[i]];
-					const Vertex3FP2FTx3FN& v2 = model->Mesh->VertexBuffer[model->Mesh->IndexBuffer[i + 1]];
-					const Vertex3FP2FTx3FN& v3 = model->Mesh->VertexBuffer[model->Mesh->IndexBuffer[i + 2]];
+					
+					const Vertex3FP2FTx3FN& v1 = vertexBuffer[indexBuffer[i]];
+					const Vertex3FP2FTx3FN& v2 = vertexBuffer[indexBuffer[i + 1]];
+					const Vertex3FP2FTx3FN& v3 = vertexBuffer[indexBuffer[i + 2]];
 
 					XMVECTOR u = XMVectorSubtract(XMLoadFloat3(&v3.Position), XMLoadFloat3(&v2.Position));
 					XMVECTOR v = XMVectorSubtract(XMLoadFloat3(&v1.Position), XMLoadFloat3(&v2.Position));
@@ -118,22 +125,25 @@ namespace dsr
 
 				using namespace DirectX;
 
-				if (targetMesh->Mesh->IndexBuffer.size() % 3 != 0)
+				const std::vector<Vertex3FP2FTx3FN>& sourceVertexBuffer = targetMesh->Mesh->GetVertexBuffer();
+				const std::vector<uint32_t>& sourceIndexBuffer = targetMesh->Mesh->GetIndexBuffer();
+
+				if (sourceIndexBuffer.size() % 3 != 0)
 				{
 					// log
 					return std::make_shared<dsr::WavefrontModel>();
 				}
 
-				std::vector<Vertex3FP2FTx3FN> vertexBuffer;
-				std::vector<uint32_t> indexBuffer;
+				std::vector<Vertex3FP2FTx3FN> targetVertexBuffer;
+				std::vector<uint32_t> targetIndexBuffer;
 
 				uint32_t index = 0;
 
-				for (int i = 0; i < targetMesh->Mesh->IndexBuffer.size(); i += 3)
+				for (int i = 0; i < sourceIndexBuffer.size(); i += 3)
 				{
-					const Vertex3FP2FTx3FN& v1 = targetMesh->Mesh->VertexBuffer[targetMesh->Mesh->IndexBuffer[i]];
-					const Vertex3FP2FTx3FN& v2 = targetMesh->Mesh->VertexBuffer[targetMesh->Mesh->IndexBuffer[i + 1]];
-					const Vertex3FP2FTx3FN& v3 = targetMesh->Mesh->VertexBuffer[targetMesh->Mesh->IndexBuffer[i + 2]];
+					const Vertex3FP2FTx3FN& v1 = sourceVertexBuffer[sourceIndexBuffer[i]];
+					const Vertex3FP2FTx3FN& v2 = sourceVertexBuffer[sourceIndexBuffer[i + 1]];
+					const Vertex3FP2FTx3FN& v3 = sourceVertexBuffer[sourceIndexBuffer[i + 2]];
 
 					XMVECTOR u = XMVectorSubtract(XMLoadFloat3(&v3.Position), XMLoadFloat3(&v2.Position));
 					XMVECTOR v = XMVectorSubtract(XMLoadFloat3(&v1.Position), XMLoadFloat3(&v2.Position));
@@ -145,9 +155,9 @@ namespace dsr
 
 					if (angle <= thresholdAngle)
 					{
-						vertexBuffer.push_back(v1);
-						vertexBuffer.push_back(v2);
-						vertexBuffer.push_back(v3);
+						targetVertexBuffer.push_back(v1);
+						targetVertexBuffer.push_back(v2);
+						targetVertexBuffer.push_back(v3);
 
 						/*vertex2
 							vertex1
@@ -156,18 +166,18 @@ namespace dsr
 							vertex2
 							vertex0*/
 
-						indexBuffer.push_back(index + 2);
-						indexBuffer.push_back(index + 1);
-						indexBuffer.push_back(index);
+						targetIndexBuffer.push_back(index + 2);
+						targetIndexBuffer.push_back(index + 1);
+						targetIndexBuffer.push_back(index);
 
 						index += 3;
 					}
 				}
 
-				std::shared_ptr<WavefrontModel> model = std::make_shared<WavefrontModel>();
-				model->Mesh->VertexBuffer = vertexBuffer;
-				model->Mesh->IndexBuffer = indexBuffer;
-				return model;
+				std::shared_ptr<WavefrontModel> resultModel = std::make_shared<WavefrontModel>();
+				resultModel->Mesh->SetVertexBuffer(targetVertexBuffer);
+				resultModel->Mesh->SetIndexBuffer(targetIndexBuffer);
+				return resultModel;
 			}
 
 			std::unordered_map<std::string, std::shared_ptr<VertexGroup>> MapModel(const std::shared_ptr<WavefrontModel> model)

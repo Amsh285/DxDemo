@@ -47,7 +47,7 @@ std::variant<dsr::ModelConfiguration, dsr::dsr_error> NavMeshDemoApplication::Lo
 
 	//Todo: Default VertexGroup
 	WavefrontModelMaterialGroup group;
-	group.IndexCount = m_mapUpperSurfaceModel->Mesh->IndexBuffer.size();
+	group.IndexCount = m_mapUpperSurfaceModel->Mesh->GetIndexBuffer().size();
 	group.StartIndexLocation = 0;
 	group.MaterialName = "mat";
 	group.MaterialData.SpecularColor = XMFLOAT3(0.8f, 0.8f, 0.8f);
