@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Data\Face.h" />
+    <ClInclude Include="src\Data\Manipulation\StaticMeshExtensions.h" />
     <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\EnginePrepareRendererContext.h" />
     <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\EngineStartupContext.h" />
     <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\EcsSystems\Renderers\LineListRendererSystem.h" />
@@ -91,6 +92,7 @@
     <ClCompile Include="src\Data\Face.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="src\Data\Manipulation\StaticMeshExtensions.cpp" />
     <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\EnginePrepareRendererContext.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
