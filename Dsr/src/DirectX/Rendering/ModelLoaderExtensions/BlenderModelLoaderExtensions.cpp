@@ -166,9 +166,13 @@ namespace dsr
 							vertex2
 							vertex0*/
 
-						targetIndexBuffer.push_back(index + 2);
+						/*targetIndexBuffer.push_back(index + 2);
 						targetIndexBuffer.push_back(index + 1);
+						targetIndexBuffer.push_back(index);*/
+
 						targetIndexBuffer.push_back(index);
+						targetIndexBuffer.push_back(index + 1);
+						targetIndexBuffer.push_back(index + 2);
 
 						index += 3;
 					}

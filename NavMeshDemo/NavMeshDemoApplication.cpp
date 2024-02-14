@@ -35,10 +35,19 @@ std::variant<dsr::ModelConfiguration, dsr::dsr_error> NavMeshDemoApplication::Lo
 std::variant<dsr::ModelConfiguration, dsr::dsr_error> NavMeshDemoApplication::LoadMapUpperSurfaceModel()
 {
 	using namespace dsr;
+
+	using namespace dsr::data;
+	using namespace dsr::data::manipulation;
+
 	using namespace dsr::directX;
 	using namespace dsr::directX::rendering;
 
 	using namespace DirectX;
+
+	std::shared_ptr<StaticMesh<Vertex3FP2FTx3FN>> filteredMesh = FilterByNormalAngles(
+		m_mapModel->Mesh,
+		45.0f
+	);
 
 	m_mapUpperSurfaceModel = FilterUpperSurface(
 		m_mapModel,

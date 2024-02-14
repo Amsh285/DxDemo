@@ -3,7 +3,10 @@
 #include "dsrpch.h"
 #include "DsrApplication.h"
 
+#include "Data/Manipulation/StaticMeshExtensions.h"
+
 #include "DirectX/Rendering/ModelLoaderExtensions/BlenderModelLoaderExtensions.h"
+
 #include "Systems/CameraControllerSystem.h"
 
 class NavMeshDemoApplication : public dsr::DsrApplication
