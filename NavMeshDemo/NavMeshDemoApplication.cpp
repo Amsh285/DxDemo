@@ -44,6 +44,7 @@ std::variant<dsr::ModelConfiguration, dsr::dsr_error> NavMeshDemoApplication::Lo
 
 	using namespace DirectX;
 
+	// better..  still need a good way to fix backfaceculling here. but that can wait for now
 	std::shared_ptr<StaticMesh<Vertex3FP2FTx3FN>> filteredMesh = FilterByNormalAngles(
 		m_mapModel->Mesh,
 		45.0f

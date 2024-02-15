@@ -36,11 +36,6 @@ namespace dsr
 
 			std::vector<dsr::data::Face> GetFaceData(const std::shared_ptr<WavefrontModel> model);
 
-			std::shared_ptr<dsr::WavefrontModel> FilterUpperSurface(
-				const std::shared_ptr<dsr::WavefrontModel> targetMesh,
-				const float& thresholdAngle,
-				const DirectX::XMVECTOR& upvector = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
-
 			std::unordered_map<std::string, std::shared_ptr<VertexGroup>> MapModel(const std::shared_ptr<WavefrontModel> model);
 		}
 	}
