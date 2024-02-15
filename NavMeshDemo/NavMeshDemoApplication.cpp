@@ -49,10 +49,8 @@ std::variant<dsr::ModelConfiguration, dsr::dsr_error> NavMeshDemoApplication::Lo
 		45.0f
 	);
 
-	m_mapUpperSurfaceModel = FilterUpperSurface(
-		m_mapModel,
-		45.0f
-	);
+	m_mapUpperSurfaceModel = std::make_shared<WavefrontModel>();
+	m_mapUpperSurfaceModel->Mesh = filteredMesh;
 
 	//Todo: Default VertexGroup
 	WavefrontModelMaterialGroup group;
