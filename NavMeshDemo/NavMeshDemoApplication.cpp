@@ -93,9 +93,16 @@ void NavMeshDemoApplication::RegisterMapUpperSurfaceModel(const dsr::ModelConfig
 	std::shared_ptr<TransformComponent> transform = m_ecsManager->RegisterComponent<TransformComponent>(m_mapUpperSurfaceEntity);
 	transform->SetPosition(DirectX::XMVectorSet(0.0f, 40.0f, 0.0f, 1.0f));
 
-	std::shared_ptr<StaticMeshComponent> mesh = m_ecsManager->RegisterComponent<StaticMeshComponent>(m_mapUpperSurfaceEntity);
+	/*std::shared_ptr<StaticMeshComponent> mesh = m_ecsManager->RegisterComponent<StaticMeshComponent>(m_mapUpperSurfaceEntity);
+	mesh->SetVertexBuffer(mapUpperSurface.GetVertexBuffer());
+	mesh->SetVertexGroups(mapUpperSurface.GetVertexGroups());*/
+
+	std::shared_ptr<StaticMeshComponent> mesh = std::make_shared<StaticMeshComponent>();
 	mesh->SetVertexBuffer(mapUpperSurface.GetVertexBuffer());
 	mesh->SetVertexGroups(mapUpperSurface.GetVertexGroups());
+
+	std::shared_ptr<WireframeMeshComponent> wireframe= m_ecsManager->RegisterComponent<WireframeMeshComponent>(m_mapUpperSurfaceEntity);
+	wireframe->SetMesh(mesh);
 }
 
 void NavMeshDemoApplication::RegisterLineEntity()

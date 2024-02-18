@@ -30,6 +30,7 @@ namespace dsr
 			rasterizerDesc.FillMode = D3D11_FILL_WIREFRAME;
 			rasterizerDesc.CullMode = D3D11_CULL_NONE;
 			rasterizerDesc.DepthClipEnable = true;
+			//rasterizerDesc.FrontCounterClockwise = false;
 
 			std::variant<ID3D11RasterizerState*, dsr_error> createRasterizerStateResult = m_device->CreateRasterizerState(&rasterizerDesc);
 
@@ -59,7 +60,7 @@ namespace dsr
 
 		void WireframeRendererSystem::PrepareRendererUpdate(const EnginePrepareRendererContext& context)
 		{
-			m_device->SetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			m_device->SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 			if (m_rasterizerState)
 				m_device->SetRasterizerState(m_rasterizerState.get());
@@ -144,6 +145,9 @@ namespace dsr
 			ID3D11Buffer* vertexShaderRawPtr = vertexBufferPtr.get();
 
 			m_device->SetVertexBuffers(0, 1, &vertexShaderRawPtr, &vertexStride, &offset);
+
+			std::shared_ptr<ID3D11Buffer> indexBufferPtr = vertexBuffer.GetIndexBuffer().GetBufferPtr();
+			m_device->SetIndexBuffer(indexBufferPtr.get());
 		}
 	}
 }
