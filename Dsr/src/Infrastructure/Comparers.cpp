@@ -7,6 +7,7 @@ namespace dsr
 	{
 		using namespace DirectX;
 
+		//check epsilon
 		return XMVector4Equal(XMVectorNearEqual(lhs, rhs, XMVectorReplicate(1e-6f)), XMVectorTrueInt()) != 0;
 	}
 }

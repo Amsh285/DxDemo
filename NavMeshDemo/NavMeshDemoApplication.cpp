@@ -49,7 +49,10 @@ std::variant<dsr::ModelConfiguration, dsr::dsr_error> NavMeshDemoApplication::Lo
 		XMConvertToRadians(45.0f)
 	);
 
-	std::shared_ptr<StaticMesh<Vertex3FP2FTx3FN>> subdivided = SubDivide(filteredMesh);
+	//std::shared_ptr<StaticMesh<Vertex3FP2FTx3FN>> subdivided = SubDivide(filteredMesh);
+	/*filteredMesh = SubDivide(filteredMesh);
+	filteredMesh = SubDivide(filteredMesh);
+	filteredMesh = SubDivide(filteredMesh);*/
 
 	m_mapUpperSurfaceModel = std::make_shared<WavefrontModel>();
 	m_mapUpperSurfaceModel->Mesh = filteredMesh;

@@ -19,6 +19,15 @@ namespace dsr
 				std::vector<uint32_t>& subdividedIndexBuffer
 			);
 
+			void SetSubdivisionData(
+				const DirectX::XMVECTOR& edgeSplitPoint,
+				const Vertex3FP2FTx3FN& splitVertex,
+				uint32_t& index,
+				std::unordered_map<DirectX::XMVECTOR, uint32_t, XMVectorHasher, XMVectorEqualComparer>& splitMap,
+				std::vector<Vertex3FP2FTx3FN>& subdividedVertexBuffer,
+				std::vector<uint32_t>& subdividedIndexBuffer
+			);
+
 			std::shared_ptr<StaticMesh<Vertex3FP2FTx3FN>> SubDivide(const std::shared_ptr<StaticMesh<Vertex3FP2FTx3FN>> sourceMesh)
 			{
 				using namespace DirectX;
@@ -39,7 +48,6 @@ namespace dsr
 
 				uint32_t index = 0;
 				std::unordered_map<uint32_t, uint32_t> indexMap;
-
 				std::unordered_map<XMVECTOR, uint32_t, XMVectorHasher, XMVectorEqualComparer> splitMap;
 
 				for (size_t i = 0; i < sourceIndexBuffer.size(); i += 3)
@@ -69,6 +77,7 @@ namespace dsr
 						subDivisionData.A = { vertex1, v1, sourceIndexBuffer[i + 1] };
 						subDivisionData.B = { vertex2, v2, sourceIndexBuffer[i + 2] };
 						subDivisionData.C = { vertex0, v0, sourceIndexBuffer[i] };
+						largestAngle = angle;
 					}
 
 					u = XMVectorSubtract(v0, v2);
@@ -80,7 +89,10 @@ namespace dsr
 						subDivisionData.A = { vertex2, v2, sourceIndexBuffer[i + 2] };
 						subDivisionData.B = { vertex0, v0, sourceIndexBuffer[i] };
 						subDivisionData.C = { vertex1, v1, sourceIndexBuffer[i + 1] };
+						largestAngle = angle;
 					}
+
+					std::cout << largestAngle << std::endl;
 
 					// Get the new Subdivision Splitvector
 					XMVECTOR edge = XMVectorSubtract(subDivisionData.B.Position, subDivisionData.C.Position);
@@ -107,10 +119,11 @@ namespace dsr
 
 					SetSubdivisionData(subDivisionData.A, index, indexMap, subdividedVertexBuffer, subdividedIndexBuffer);
 					SetSubdivisionData(subDivisionData.B, index, indexMap, subdividedVertexBuffer, subdividedIndexBuffer);
-
-
-					// a , b, w
-					// a, c, w
+					SetSubdivisionData(edgeSplitPoint, splitVertex, index, splitMap, subdividedVertexBuffer, subdividedIndexBuffer);
+					
+					SetSubdivisionData(subDivisionData.A, index, indexMap, subdividedVertexBuffer, subdividedIndexBuffer);
+					SetSubdivisionData(edgeSplitPoint, splitVertex, index, splitMap, subdividedVertexBuffer, subdividedIndexBuffer);
+					SetSubdivisionData(subDivisionData.C, index, indexMap, subdividedVertexBuffer, subdividedIndexBuffer);
 				}
 
 				subdividedMesh->SetVertexBuffer(subdividedVertexBuffer);
@@ -135,6 +148,30 @@ namespace dsr
 					indexMap[subDivisionData.IndexBufferLocation] = newIndex;
 					subdividedIndexBuffer.push_back(newIndex);
 					subdividedVertexBuffer.push_back(subDivisionData.Vertex);
+				}
+				else
+				{
+					subdividedIndexBuffer.push_back(it->second);
+				}
+			}
+
+			void SetSubdivisionData(
+				const DirectX::XMVECTOR& edgeSplitPoint,
+				const Vertex3FP2FTx3FN& splitVertex,
+				uint32_t& index,
+				std::unordered_map<DirectX::XMVECTOR, uint32_t, XMVectorHasher, XMVectorEqualComparer>& splitMap,
+				std::vector<Vertex3FP2FTx3FN>& subdividedVertexBuffer,
+				std::vector<uint32_t>& subdividedIndexBuffer
+			)
+			{
+				auto it = splitMap.find(edgeSplitPoint);
+
+				if (it == splitMap.end())
+				{
+					uint32_t newIndex = index++;
+					splitMap[edgeSplitPoint] = newIndex;
+					subdividedIndexBuffer.push_back(newIndex);
+					subdividedVertexBuffer.push_back(splitVertex);
 				}
 				else
 				{
