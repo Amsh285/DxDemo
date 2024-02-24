@@ -246,6 +246,12 @@
     <ClInclude Include="src\Data\WindingOrder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Data\Manipulation\StaticMeshExtData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Infrastructure\Comparers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Windows\Window.cpp">
@@ -453,6 +459,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Data\Manipulation\StaticMeshExtensions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Data\Manipulation\StaticMeshExtData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Infrastructure\Comparers.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

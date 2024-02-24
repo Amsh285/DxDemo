@@ -44,11 +44,12 @@ std::variant<dsr::ModelConfiguration, dsr::dsr_error> NavMeshDemoApplication::Lo
 
 	using namespace DirectX;
 
-	// better..  still need a good way to fix backfaceculling here. but that can wait for now
 	std::shared_ptr<StaticMesh<Vertex3FP2FTx3FN>> filteredMesh = FilterByNormalAngles(
 		m_mapModel->Mesh,
-		45.0f
+		XMConvertToRadians(45.0f)
 	);
+
+	std::shared_ptr<StaticMesh<Vertex3FP2FTx3FN>> subdivided = SubDivide(filteredMesh);
 
 	m_mapUpperSurfaceModel = std::make_shared<WavefrontModel>();
 	m_mapUpperSurfaceModel->Mesh = filteredMesh;
@@ -101,7 +102,7 @@ void NavMeshDemoApplication::RegisterMapUpperSurfaceModel(const dsr::ModelConfig
 	mesh->SetVertexBuffer(mapUpperSurface.GetVertexBuffer());
 	mesh->SetVertexGroups(mapUpperSurface.GetVertexGroups());
 
-	std::shared_ptr<WireframeMeshComponent> wireframe= m_ecsManager->RegisterComponent<WireframeMeshComponent>(m_mapUpperSurfaceEntity);
+	std::shared_ptr<WireframeMeshComponent> wireframe = m_ecsManager->RegisterComponent<WireframeMeshComponent>(m_mapUpperSurfaceEntity);
 	wireframe->SetMesh(mesh);
 }
 
@@ -248,7 +249,7 @@ dsr::DsrResult NavMeshDemoApplication::Setup()
 	RegisterLineEntity();
 	RegisterMapFaceNormalsEntity();
 	RegisterCameraController();
-	
+
 	std::vector<dsr::ecs::Entity> cameraEntities = m_ecsManager->FindEntitiesByTag("Camera");
 	std::shared_ptr<dsr::ecs::TransformComponent> cameraTransform = m_ecsManager->GetComponentFrom<dsr::ecs::TransformComponent>(cameraEntities[0]);
 

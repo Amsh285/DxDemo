@@ -1,6 +1,9 @@
 #pragma once
 
+#include "Data/Vertex.h"
 #include "Data/Structures/StaticMesh.h"
+
+#include "Infrastructure/DsrTypes.h"
 
 namespace dsr
 {
@@ -11,7 +14,7 @@ namespace dsr
 			template<class TVertex>
 			std::shared_ptr<StaticMesh<TVertex>> FilterByNormalAngles(
 				const std::shared_ptr<StaticMesh<TVertex>> sourceMesh,
-				const float& thresholdAngle,
+				const Radiansf& thresholdAngle,
 				const DirectX::XMVECTOR& comparisonNormal = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f))
 			{
 				using namespace DirectX;
@@ -21,7 +24,6 @@ namespace dsr
 
 				if (sourceIndexBuffer.size() % 3 != 0)
 				{
-					// Todo Log warn xD
 					return std::make_shared<StaticMesh<TVertex>>();
 				}
 
@@ -43,10 +45,9 @@ namespace dsr
 
 					XMVECTOR faceNormal = XMVector3Normalize(XMVector3Cross(u, v));
 
-					float angleRadiants = std::atan2(XMVectorGetX(XMVector3Length(XMVector3Cross(faceNormal, comparisonNormal))), XMVectorGetX(XMVector3Dot(faceNormal, comparisonNormal)));
-					float angle = XMConvertToDegrees(angleRadiants);
+					float angleRadians = std::atan2(XMVectorGetX(XMVector3Length(XMVector3Cross(faceNormal, comparisonNormal))), XMVectorGetX(XMVector3Dot(faceNormal, comparisonNormal)));
 
-					if (angle <= thresholdAngle)
+					if (angleRadians <= thresholdAngle)
 					{
 						for (size_t j = i; j < i + 3; j++)
 						{
@@ -68,6 +69,8 @@ namespace dsr
 				filteredMesh->SetWindingOrder(sourceMesh->GetWindingOrder());
 				return filteredMesh;
 			}
+
+			std::shared_ptr<StaticMesh<Vertex3FP2FTx3FN>> SubDivide(const std::shared_ptr<StaticMesh<Vertex3FP2FTx3FN>> sourceMesh);
 		}
 	}
 }

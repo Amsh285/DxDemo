@@ -21,6 +21,7 @@
     <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\Components\LineListComponent.h" />
     <ClInclude Include="src\EngineSubSystems\Time\FrameDelta.h" />
     <ClInclude Include="src\Events\Application\FrameEvents.h" />
+    <ClInclude Include="src\Infrastructure\Comparers.h" />
     <ClInclude Include="src\Infrastructure\Duration.h" />
     <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\Components\ShaderProgramComponent.h" />
     <ClInclude Include="src\Infrastructure\DsrTypes.h" />
@@ -88,6 +89,7 @@
     <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\EcsSystems\Renderers\WireframeRendererSystem.h" />
     <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\Components\WireframeMeshComponent.h" />
     <ClInclude Include="src\Data\Structures\StaticMesh.h" />
+    <ClInclude Include="src\Data\Manipulation\StaticMeshExtData.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Data\Face.cpp">
@@ -114,6 +116,9 @@
     <ClCompile Include="src\EngineSubSystems\Time\FrameDelta.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="src\Infrastructure\Comparers.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="src\Infrastructure\Duration.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
@@ -336,6 +341,9 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="src\Data\Structures\StaticMesh.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="src\Data\Manipulation\StaticMeshExtData.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemGroup>
