@@ -23,7 +23,7 @@ namespace dsr
 				const DirectX::XMVECTOR& edgeSplitPoint,
 				const Vertex3FP2FTx3FN& splitVertex,
 				uint32_t& index,
-				std::unordered_map<DirectX::XMVECTOR, uint32_t, XMVectorHasher, XMVectorEqualComparer>& splitMap,
+				std::unordered_map<DirectX::XMVECTOR, uint32_t, XMVectorHasher, XMVectorEqualComparer<1e-6f>>& splitMap,
 				std::vector<Vertex3FP2FTx3FN>& subdividedVertexBuffer,
 				std::vector<uint32_t>& subdividedIndexBuffer
 			);
@@ -48,7 +48,7 @@ namespace dsr
 
 				uint32_t index = 0;
 				std::unordered_map<uint32_t, uint32_t> indexMap;
-				std::unordered_map<XMVECTOR, uint32_t, XMVectorHasher, XMVectorEqualComparer> splitMap;
+				std::unordered_map<XMVECTOR, uint32_t, XMVectorHasher, XMVectorEqualComparer<1e-6f>> splitMap;
 
 				for (size_t i = 0; i < sourceIndexBuffer.size(); i += 3)
 				{
@@ -159,7 +159,7 @@ namespace dsr
 				const DirectX::XMVECTOR& edgeSplitPoint,
 				const Vertex3FP2FTx3FN& splitVertex,
 				uint32_t& index,
-				std::unordered_map<DirectX::XMVECTOR, uint32_t, XMVectorHasher, XMVectorEqualComparer>& splitMap,
+				std::unordered_map<DirectX::XMVECTOR, uint32_t, XMVectorHasher, XMVectorEqualComparer<1e-6f>>& splitMap,
 				std::vector<Vertex3FP2FTx3FN>& subdividedVertexBuffer,
 				std::vector<uint32_t>& subdividedIndexBuffer
 			)

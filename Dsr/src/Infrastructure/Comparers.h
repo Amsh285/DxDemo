@@ -28,8 +28,15 @@ namespace dsr
         }
     };
 
+    template<float epsilon>
 	struct XMVectorEqualComparer
 	{
-		bool operator()(const DirectX::XMVECTOR& lhs, const DirectX::XMVECTOR& rhs) const;
+		bool operator()(const DirectX::XMVECTOR& lhs, const DirectX::XMVECTOR& rhs) const
+        {
+            using namespace DirectX;
+
+            bool consideredEqual = XMVector4NearEqual(lhs, rhs, XMVectorReplicate(epsilon));
+            return consideredEqual;
+        }
 	};
 }
