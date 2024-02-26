@@ -92,8 +92,6 @@ namespace dsr
 						largestAngle = angle;
 					}
 
-					std::cout << largestAngle << std::endl;
-
 					// Get the new Subdivision Splitvector
 					XMVECTOR edge = XMVectorSubtract(subDivisionData.B.Position, subDivisionData.C.Position);
 					edge = XMVectorScale(edge, 0.5f);

@@ -51,6 +51,7 @@ std::variant<dsr::ModelConfiguration, dsr::dsr_error> NavMeshDemoApplication::Lo
 
 	//std::shared_ptr<StaticMesh<Vertex3FP2FTx3FN>> subdivided = SubDivide(filteredMesh);
 	filteredMesh = SubDivide(filteredMesh);
+	std::unordered_map<uint32_t, std::set<uint32_t>> adjacencyList = filteredMesh->GetAdjacencyList();
 	/*filteredMesh = SubDivide(filteredMesh);
 	filteredMesh = SubDivide(filteredMesh);
 	filteredMesh = SubDivide(filteredMesh);*/
