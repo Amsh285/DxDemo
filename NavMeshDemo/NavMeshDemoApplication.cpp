@@ -52,9 +52,7 @@ std::variant<dsr::ModelConfiguration, dsr::dsr_error> NavMeshDemoApplication::Lo
 	//std::shared_ptr<StaticMesh<Vertex3FP2FTx3FN>> subdivided = SubDivide(filteredMesh);
 	filteredMesh = SubDivide(filteredMesh);
 	std::unordered_map<uint32_t, std::set<uint32_t>> adjacencyList = filteredMesh->GetAdjacencyList();
-	/*filteredMesh = SubDivide(filteredMesh);
-	filteredMesh = SubDivide(filteredMesh);
-	filteredMesh = SubDivide(filteredMesh);*/
+
 
 	m_mapUpperSurfaceModel = std::make_shared<WavefrontModel>();
 	m_mapUpperSurfaceModel->Mesh = filteredMesh;
@@ -90,9 +88,6 @@ void NavMeshDemoApplication::RegisterMapModel(const dsr::ModelConfiguration& map
 void NavMeshDemoApplication::RegisterMapUpperSurfaceModel(const dsr::ModelConfiguration& mapUpperSurface)
 {
 	using namespace dsr::ecs;
-
-	// still not completly right stuff gets culled check that later
-	// the mesh seems to be looking alright at least
 
 	m_ecsManager->RegisterComponent<NameComponent>(m_mapUpperSurfaceEntity, "map upper surface");
 	m_ecsManager->RegisterComponent<TagComponent>(m_mapUpperSurfaceEntity, "map_upper_surface");
@@ -262,6 +257,4 @@ dsr::DsrResult NavMeshDemoApplication::Setup()
 	cameraTransform->SetPositionVec3(cameraPosition);
 
 	return dsr::DsrResult::Success("Setup Successful.");
-
-	return dsr::DsrResult::Success("");
 }

@@ -252,6 +252,9 @@
     <ClInclude Include="src\Infrastructure\Comparers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Data\Pathfinding\AStarSearch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Windows\Window.cpp">
@@ -465,6 +468,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Infrastructure\Comparers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Data\Pathfinding\AStarSearch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
