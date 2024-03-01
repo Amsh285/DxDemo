@@ -43,6 +43,7 @@ namespace dsr
 			class AStarStaticMeshPathfinder
 			{
 			public:
+				AStarStaticMeshPathfinder(const StaticMesh<Vertex3FP2FTx3FN>& sourceMesh);
 				AStarStaticMeshPathfinder(const StaticMesh<Vertex3F>& sourceMesh);
 
 				std::vector<uint32_t> SearchIndexPath(const uint32_t& startIndex, const uint32_t& goalIndex);

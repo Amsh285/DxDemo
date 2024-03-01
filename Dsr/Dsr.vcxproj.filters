@@ -252,7 +252,7 @@
     <ClInclude Include="src\Infrastructure\Comparers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Data\Pathfinding\AStarSearch.h">
+    <ClInclude Include="src\Data\Pathfinding\AStarStaticMeshPathfinder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -470,7 +470,7 @@
     <ClCompile Include="src\Infrastructure\Comparers.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Data\Pathfinding\AStarSearch.cpp">
+    <ClCompile Include="src\Data\Pathfinding\AStarStaticMeshPathfinder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

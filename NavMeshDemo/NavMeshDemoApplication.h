@@ -4,6 +4,7 @@
 #include "DsrApplication.h"
 
 #include "Data/Manipulation/StaticMeshExtensions.h"
+#include "Data/Pathfinding/AStarStaticMeshPathfinder.h"
 
 #include "DirectX/Rendering/ModelLoaderExtensions/BlenderModelLoaderExtensions.h"
 
@@ -21,6 +22,7 @@ private:
 	dsr::ecs::Entity m_mapUpperSurfaceEntity;
 	dsr::ecs::Entity m_lineEntity;
 	dsr::ecs::Entity m_pathMarkersEntity;
+	dsr::ecs::Entity m_pathEntity;
 
 	std::shared_ptr<CameraControllerSystem> m_cameraControllerSystem;
 	std::variant<dsr::ModelConfiguration, dsr::dsr_error> LoadMapModel();
@@ -30,6 +32,7 @@ private:
 	void RegisterMapUpperSurfaceModel(const dsr::ModelConfiguration& mapUpperSurface);
 	void RegisterLineEntity();
 	void RegisterStartEndMarkerEntities();
+	void RegisterPathEntity();
 	void RegisterMapFaceNormalsEntity();
 	void RegisterCameraController();
 

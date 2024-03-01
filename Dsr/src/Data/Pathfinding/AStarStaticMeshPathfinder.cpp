@@ -1,5 +1,5 @@
 #include "dsrpch.h"
-#include "AStarSearch.h"
+#include "AStarStaticMeshPathfinder.h"
 
 namespace dsr
 {
@@ -7,6 +7,15 @@ namespace dsr
 	{
 		namespace pathfinding
 		{
+			AStarStaticMeshPathfinder::AStarStaticMeshPathfinder(const StaticMesh<Vertex3FP2FTx3FN>& sourceMesh)
+				: m_adjacencyList(sourceMesh.GetAdjacencyList())
+			{
+				for (const Vertex3FP2FTx3FN& v : sourceMesh.GetVertexBuffer())
+				{
+					m_vertexBuffer.push_back(Vertex3F(v.Position));
+				}
+			}
+
 			AStarStaticMeshPathfinder::AStarStaticMeshPathfinder(const StaticMesh<Vertex3F>& sourceMesh)
 				: m_vertexBuffer(sourceMesh.GetVertexBuffer()), m_adjacencyList(sourceMesh.GetAdjacencyList())
 			{
@@ -59,9 +68,12 @@ namespace dsr
 
 						const XMVECTOR qPosition = XMLoadFloat3(&m_vertexBuffer[q.Index].Position);
 						const XMVECTOR adjacentPosition = XMLoadFloat3(&m_vertexBuffer[adjacentIndex].Position);
+						XMVECTOR deltaQ = XMVectorSubtract(qPosition, adjacentPosition);
+						XMVECTOR deltaGoal = XMVectorSubtract(goalPosition, adjacentPosition);
 
-						float g = parentPath.back().G + XMVectorGetX(XMVector3Dot(qPosition, adjacentPosition));
-						float h = XMVectorGetX(XMVector3Dot(goalPosition, adjacentPosition));
+						float parentG = parentPath.empty() ? 0.0f : parentPath.back().G;
+						float g = parentG + XMVectorGetX(XMVector3Dot(deltaQ, deltaQ));
+						float h = XMVectorGetX(XMVector3Dot(deltaGoal, deltaGoal));
 
 						NodeIB adjacentnode(adjacentIndex, g, h);
 
