@@ -15,8 +15,14 @@
 //static constexpr auto EndIndex = 29;
 ////static constexpr auto EndIndex = 30;
 
-static constexpr auto StartIndex = 0;
-static constexpr auto EndIndex = 49;
+static constexpr auto StartIndex = 49;
+static constexpr auto EndIndex = 31;
+//static constexpr auto EndIndex = 30;
+
+
+//safe working version:
+//static constexpr auto StartIndex = 0;
+//static constexpr auto EndIndex = 49;
 
 NavMeshDemoApplication::NavMeshDemoApplication()
 	: DsrApplication(L"Nav Mesh Demo", 100, 100, 1280, 768)
@@ -264,19 +270,19 @@ void NavMeshDemoApplication::RegisterPathEntity()
 
 	using namespace DirectX;
 
-	/*auto adList = m_mapUpperSurfaceModel->Mesh->GetAdjacencyList();
+	//auto adList = m_mapUpperSurfaceModel->Mesh->GetAdjacencyList();
 
-	for (auto pair : adList)
-	{
-		std::cout << pair.first;
+	//for (auto pair : adList)
+	//{
+	//	std::cout << pair.first;
 
-		for (auto item : pair.second)
-		{
-			std::cout << " " << item << " ";
-		}
+	//	for (auto item : pair.second)
+	//	{
+	//		std::cout << " " << item << " ";
+	//	}
 
-		std::cout << std::endl;
-	}*/
+	//	std::cout << std::endl;
+	//}
 
 	const std::vector<Vertex3FP2FTx3FN>& vertexBuffer = m_mapUpperSurfaceModel->Mesh->GetVertexBuffer();
 
