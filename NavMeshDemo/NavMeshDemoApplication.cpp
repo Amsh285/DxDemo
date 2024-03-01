@@ -205,7 +205,7 @@ void NavMeshDemoApplication::RegisterStartEndMarkerEntities()
 
 	vertexData.push_back(1.0f);
 	vertexData.push_back(0.0f);
-	vertexData.push_back(0.0f);
+	vertexData.push_back(1.0f);
 	vertexData.push_back(1.0f);
 
 	vertexData.push_back(XMVectorGetX(startdown));
@@ -214,7 +214,7 @@ void NavMeshDemoApplication::RegisterStartEndMarkerEntities()
 
 	vertexData.push_back(1.0f);
 	vertexData.push_back(0.0f);
-	vertexData.push_back(0.0f);
+	vertexData.push_back(1.0f);
 	vertexData.push_back(1.0f);
 
 	vertexData.push_back(XMVectorGetX(endUp));
@@ -223,7 +223,7 @@ void NavMeshDemoApplication::RegisterStartEndMarkerEntities()
 
 	vertexData.push_back(1.0f);
 	vertexData.push_back(0.0f);
-	vertexData.push_back(0.0f);
+	vertexData.push_back(1.0f);
 	vertexData.push_back(1.0f);
 
 	vertexData.push_back(XMVectorGetX(endDown));
@@ -232,7 +232,7 @@ void NavMeshDemoApplication::RegisterStartEndMarkerEntities()
 
 	vertexData.push_back(1.0f);
 	vertexData.push_back(0.0f);
-	vertexData.push_back(0.0f);
+	vertexData.push_back(1.0f);
 	vertexData.push_back(1.0f);
 
 	std::variant<Direct3dBuffer, dsr_error> createVertexBuffer = Direct3dBuffer::CreateVertexBufferf(m_device, vertexData);
@@ -307,7 +307,7 @@ void NavMeshDemoApplication::RegisterPathEntity()
 
 		vertexData.push_back(1.0f);
 		vertexData.push_back(0.0f);
-		vertexData.push_back(0.0f);
+		vertexData.push_back(1.0f);
 		vertexData.push_back(1.0f);
 
 		vertexData.push_back(XMVectorGetX(v1));
@@ -316,7 +316,7 @@ void NavMeshDemoApplication::RegisterPathEntity()
 
 		vertexData.push_back(1.0f);
 		vertexData.push_back(0.0f);
-		vertexData.push_back(0.0f);
+		vertexData.push_back(1.0f);
 		vertexData.push_back(1.0f);
 	}
 
