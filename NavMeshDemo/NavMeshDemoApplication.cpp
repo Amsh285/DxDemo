@@ -8,6 +8,7 @@ NavMeshDemoApplication::NavMeshDemoApplication()
 	m_mapFaceNormalsEntity = dsr::ecs::EcsManager::CreateNewEntity();
 	m_mapUpperSurfaceEntity = dsr::ecs::EcsManager::CreateNewEntity();
 	m_lineEntity = dsr::ecs::EcsManager::CreateNewEntity();
+	m_pathMarkersEntity = dsr::ecs::EcsManager::CreateNewEntity();
 }
 
 std::variant<dsr::ModelConfiguration, dsr::dsr_error> NavMeshDemoApplication::LoadMapModel()
@@ -155,6 +156,90 @@ void NavMeshDemoApplication::RegisterLineEntity()
 	lines->SetVertexShaderInputLayout(inputLayout);
 }
 
+void NavMeshDemoApplication::RegisterStartEndMarkerEntities()
+{
+	using namespace dsr;
+	using namespace dsr::data;
+	using namespace dsr::directX;
+	using namespace dsr::ecs;
+
+	using namespace DirectX;
+
+	std::shared_ptr<TransformComponent> surfaceTransform = m_ecsManager->GetComponentFrom<TransformComponent>(m_mapUpperSurfaceEntity);
+	XMFLOAT3 surfacePosition = surfaceTransform->GetPositionVec3();
+	XMMATRIX surfaceTransformationMatrix = XMMatrixTranslation(surfacePosition.x, surfacePosition.y, surfacePosition.z);
+
+	const std::vector<Vertex3FP2FTx3FN>& vertexBuffer = m_mapUpperSurfaceModel->Mesh->GetVertexBuffer();
+
+	Vertex3FP2FTx3FN start = vertexBuffer[0];
+	XMVECTOR startUp = XMVectorAdd(XMLoadFloat3(&start.Position), XMVectorScale(XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f), 3.0f));
+	XMVECTOR startdown = XMVectorAdd(XMLoadFloat3(&start.Position), XMVectorScale(XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f), -3.0f));
+	startUp = XMVector3Transform(startUp, surfaceTransformationMatrix);
+	startdown = XMVector3Transform(startdown, surfaceTransformationMatrix);
+
+	Vertex3FP2FTx3FN end = vertexBuffer[36];
+	XMVECTOR endUp = XMVectorAdd(XMLoadFloat3(&end.Position), XMVectorScale(XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f), 3.0f));
+	XMVECTOR endDown = XMVectorAdd(XMLoadFloat3(&end.Position), XMVectorScale(XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f), -3.0f));
+	endUp = XMVector3Transform(endUp, surfaceTransformationMatrix);
+	endDown = XMVector3Transform(endDown, surfaceTransformationMatrix);
+
+	std::vector<float> vertexData;
+
+	vertexData.push_back(XMVectorGetX(startUp));
+	vertexData.push_back(XMVectorGetY(startUp));
+	vertexData.push_back(XMVectorGetZ(startUp));
+
+	vertexData.push_back(1.0f);
+	vertexData.push_back(0.0f);
+	vertexData.push_back(0.0f);
+	vertexData.push_back(1.0f);
+
+	vertexData.push_back(XMVectorGetX(startdown));
+	vertexData.push_back(XMVectorGetY(startdown));
+	vertexData.push_back(XMVectorGetZ(startdown));
+
+	vertexData.push_back(1.0f);
+	vertexData.push_back(0.0f);
+	vertexData.push_back(0.0f);
+	vertexData.push_back(1.0f);
+
+	vertexData.push_back(XMVectorGetX(endUp));
+	vertexData.push_back(XMVectorGetY(endUp));
+	vertexData.push_back(XMVectorGetZ(endUp));
+
+	vertexData.push_back(1.0f);
+	vertexData.push_back(0.0f);
+	vertexData.push_back(0.0f);
+	vertexData.push_back(1.0f);
+
+	vertexData.push_back(XMVectorGetX(endDown));
+	vertexData.push_back(XMVectorGetY(endDown));
+	vertexData.push_back(XMVectorGetZ(endDown));
+
+	vertexData.push_back(1.0f);
+	vertexData.push_back(0.0f);
+	vertexData.push_back(0.0f);
+	vertexData.push_back(1.0f);
+
+	std::variant<Direct3dBuffer, dsr_error> createVertexBuffer = Direct3dBuffer::CreateVertexBufferf(m_device, vertexData);
+	if (std::holds_alternative<dsr_error>(createVertexBuffer))
+	{
+		const dsr_error& err = std::get<dsr_error>(createVertexBuffer);
+		std::cout << "error creatingVertexBuffer for pathmarker LineData: " << err.what() << std::endl;
+		return;
+	}
+
+	Direct3dShaderInputLayout inputLayout;
+	inputLayout.AddVector3f("POSITION");
+	inputLayout.AddVector4f("COLOR");
+
+	std::shared_ptr<dsr::ecs::LineListComponent> lines = m_ecsManager->RegisterComponent<dsr::ecs::LineListComponent>(m_pathMarkersEntity);
+
+	lines->SetVertexCount(vertexData.size() / 7);
+	lines->SetVertexBuffer(std::get<Direct3dBuffer>(createVertexBuffer));
+	lines->SetVertexShaderInputLayout(inputLayout);
+}
+
 void NavMeshDemoApplication::RegisterMapFaceNormalsEntity()
 {
 	using namespace dsr;
@@ -247,6 +332,7 @@ dsr::DsrResult NavMeshDemoApplication::Setup()
 	RegisterMapModel(config);
 	RegisterMapUpperSurfaceModel(mapUpperSurfaceConfig);
 	RegisterLineEntity();
+	RegisterStartEndMarkerEntities();
 	RegisterMapFaceNormalsEntity();
 	RegisterCameraController();
 
