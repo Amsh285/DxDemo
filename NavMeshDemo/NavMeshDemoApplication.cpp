@@ -16,8 +16,8 @@
 ////static constexpr auto EndIndex = 30;
 
 static constexpr auto StartIndex = 49;
-static constexpr auto EndIndex = 31;
-//static constexpr auto EndIndex = 30;
+//static constexpr auto EndIndex = 31;
+static constexpr auto EndIndex = 30;
 
 
 //safe working version:
@@ -264,6 +264,7 @@ void NavMeshDemoApplication::RegisterPathEntity()
 {
 	using namespace dsr;
 	using namespace dsr::data;
+	using namespace dsr::data::manipulation;
 	using namespace dsr::data::pathfinding;
 	using namespace dsr::directX;
 	using namespace dsr::ecs;
@@ -284,13 +285,24 @@ void NavMeshDemoApplication::RegisterPathEntity()
 	//	std::cout << std::endl;
 	//}
 
-	const std::vector<Vertex3FP2FTx3FN>& vertexBuffer = m_mapUpperSurfaceModel->Mesh->GetVertexBuffer();
+	StaticMesh<Vertex3F> distinctMesh = FilterDistinct(*m_mapUpperSurfaceModel->Mesh);
+	/*for (auto pair : distinctMesh.GetAdjacencyList())
+	{
+		std::cout << pair.first;
 
-	// some paths cannot be reached this could indicate export or filter error
-	// printing the adjacency list shows that some triangles are closed which lead to dead ends.
-	// I have to check if this is a blender related problem or if the export or filter functions has an error.
-	// For now just display a traversable path as POC. It works in principle...
-	AStarStaticMeshPathfinder pathfinder(*m_mapUpperSurfaceModel->Mesh);
+		for (auto item : pair.second)
+		{
+			std::cout << " " << item << " ";
+		}
+
+		std::cout << std::endl;
+	}*/
+
+	const std::vector<Vertex3F>& vertexBuffer = distinctMesh.GetVertexBuffer();
+
+
+
+	AStarStaticMeshPathfinder pathfinder(distinctMesh);
 	std::vector<uint32_t> path = pathfinder.SearchIndexPath(StartIndex, EndIndex);
 
 	std::shared_ptr<TransformComponent> surfaceTransform = m_ecsManager->GetComponentFrom<TransformComponent>(m_mapUpperSurfaceEntity);
