@@ -1,38 +1,23 @@
 #include "NavMeshDemoApplication.h"
 
-//static constexpr auto StartIndex = 0;
-//static constexpr auto EndIndex = 36;
-
-//// 29 25  28  30
-//// 30 28  29 das ist zu...
-//static constexpr auto StartIndex = 0;
-//
-////static constexpr auto EndIndex = 29;
-////static constexpr auto EndIndex = 25;
-////static constexpr auto EndIndex = 28;
-////static constexpr auto EndIndex = 30;
-//
-//static constexpr auto EndIndex = 29;
-////static constexpr auto EndIndex = 30;
-
 static constexpr auto StartIndex = 49;
-//static constexpr auto EndIndex = 31;
 static constexpr auto EndIndex = 30;
 
-
-//safe working version:
-//static constexpr auto StartIndex = 0;
-//static constexpr auto EndIndex = 49;
+static constexpr auto StartIndexSubDivided = 578;
+static constexpr auto EndIndexSubDivided = 320;
 
 NavMeshDemoApplication::NavMeshDemoApplication()
 	: DsrApplication(L"Nav Mesh Demo", 100, 100, 1280, 768)
 {
-	m_mapEntity = dsr::ecs::EcsManager::CreateNewEntity();
-	m_mapFaceNormalsEntity = dsr::ecs::EcsManager::CreateNewEntity();
-	m_mapUpperSurfaceEntity = dsr::ecs::EcsManager::CreateNewEntity();
-	m_lineEntity = dsr::ecs::EcsManager::CreateNewEntity();
-	m_pathMarkersEntity = dsr::ecs::EcsManager::CreateNewEntity();
-	m_pathEntity = dsr::ecs::EcsManager::CreateNewEntity();
+	using namespace dsr::ecs;
+
+	m_mapEntity = EcsManager::CreateNewEntity();
+	m_mapFaceNormalsEntity = EcsManager::CreateNewEntity();
+	m_mapUpperSurfaceEntity = EcsManager::CreateNewEntity();
+	m_mapUpperSurfaceSubDividedEntity = EcsManager::CreateNewEntity();
+	m_lineEntity = EcsManager::CreateNewEntity();
+	m_pathMarkersEntity = EcsManager::CreateNewEntity();
+	m_pathEntity = EcsManager::CreateNewEntity();
 }
 
 std::variant<dsr::ModelConfiguration, dsr::dsr_error> NavMeshDemoApplication::LoadMapModel()
@@ -74,11 +59,6 @@ std::variant<dsr::ModelConfiguration, dsr::dsr_error> NavMeshDemoApplication::Lo
 		XMConvertToRadians(45.0f)
 	);
 
-	//std::shared_ptr<StaticMesh<Vertex3FP2FTx3FN>> subdivided = SubDivide(filteredMesh);
-	/*filteredMesh = SubDivide(filteredMesh);*/
-	std::unordered_map<uint32_t, std::set<uint32_t>> adjacencyList = filteredMesh->GetAdjacencyList();
-
-
 	m_mapUpperSurfaceModel = std::make_shared<WavefrontModel>();
 	m_mapUpperSurfaceModel->Mesh = filteredMesh;
 
@@ -115,7 +95,6 @@ void NavMeshDemoApplication::RegisterMapUpperSurfaceModel(const dsr::ModelConfig
 	using namespace dsr::ecs;
 
 	m_ecsManager->RegisterComponent<NameComponent>(m_mapUpperSurfaceEntity, "map upper surface");
-	m_ecsManager->RegisterComponent<TagComponent>(m_mapUpperSurfaceEntity, "map_upper_surface");
 	std::shared_ptr<TransformComponent> transform = m_ecsManager->RegisterComponent<TransformComponent>(m_mapUpperSurfaceEntity);
 	transform->SetPosition(DirectX::XMVectorSet(0.0f, 40.0f, 0.0f, 1.0f));
 
@@ -124,6 +103,61 @@ void NavMeshDemoApplication::RegisterMapUpperSurfaceModel(const dsr::ModelConfig
 	mesh->SetVertexGroups(mapUpperSurface.GetVertexGroups());
 
 	std::shared_ptr<WireframeMeshComponent> wireframe = m_ecsManager->RegisterComponent<WireframeMeshComponent>(m_mapUpperSurfaceEntity);
+	wireframe->SetMesh(mesh);
+}
+
+void NavMeshDemoApplication::RegisterMapUpperSurfaceSubDividedModel()
+{
+	using namespace dsr;
+
+	using namespace dsr::data;
+	using namespace dsr::data::manipulation;
+
+	using namespace dsr::directX::rendering;
+
+	using namespace dsr::ecs;
+
+	using namespace DirectX;
+
+	// fix that... not really effective
+	m_mapUpperSurfaceSubDividedModel = std::make_shared<WavefrontModel>();
+	m_mapUpperSurfaceSubDividedModel->Mesh = SubDivide(m_mapUpperSurfaceModel->Mesh);
+	m_mapUpperSurfaceSubDividedModel->Mesh = SubDivide(m_mapUpperSurfaceSubDividedModel->Mesh);
+	m_mapUpperSurfaceSubDividedModel->Mesh = SubDivide(m_mapUpperSurfaceSubDividedModel->Mesh);
+	m_mapUpperSurfaceSubDividedModel->Mesh = SubDivide(m_mapUpperSurfaceSubDividedModel->Mesh);
+
+	WavefrontModelMaterialGroup group;
+	group.IndexCount = m_mapUpperSurfaceSubDividedModel->Mesh->GetIndexBuffer().size();
+	group.StartIndexLocation = 0;
+	group.MaterialName = "mat";
+	group.MaterialData.SpecularColor = XMFLOAT3(0.8f, 0.8f, 0.8f);
+	group.MaterialData.DiffuseColor = XMFLOAT4(0.8f, 0.0f, 0.0f, 1.0f);
+	m_mapUpperSurfaceSubDividedModel->MaterialGroups.push_back(group);
+
+
+	std::variant<ModelConfiguration, dsr_error> loadSurfaceResult = LoadWavefrontModelConfiguration(
+		m_device,
+		m_mapUpperSurfaceSubDividedModel
+	);
+
+	if (std::holds_alternative<dsr_error>(loadSurfaceResult))
+	{
+		const dsr_error& error = std::get<dsr_error>(loadSurfaceResult);
+		std::cout << "Failed to load Subdivided Upper Surface: " << error.what() << std::endl;
+		return;
+	}
+
+	ModelConfiguration model = std::get<ModelConfiguration>(loadSurfaceResult);
+	
+	m_ecsManager->RegisterComponent<NameComponent>(m_mapUpperSurfaceSubDividedEntity, "Subdivided Upper Surface");
+	std::shared_ptr<TransformComponent> transform = m_ecsManager->RegisterComponent<TransformComponent>(m_mapUpperSurfaceSubDividedEntity);
+	transform->SetPosition(DirectX::XMVectorSet(0.0f, 80.0f, 0.0f, 1.0f));
+
+	std::shared_ptr<StaticMeshComponent> mesh = std::make_shared<StaticMeshComponent>();
+	mesh->SetVertexBuffer(model.GetVertexBuffer());
+	mesh->SetVertexGroups(model.GetVertexGroups());
+
+	std::shared_ptr<WireframeMeshComponent> wireframe = m_ecsManager->RegisterComponent<WireframeMeshComponent>(m_mapUpperSurfaceSubDividedEntity);
 	wireframe->SetMesh(mesh);
 }
 
@@ -191,55 +225,23 @@ void NavMeshDemoApplication::RegisterStartEndMarkerEntities()
 
 	const std::vector<Vertex3FP2FTx3FN>& vertexBuffer = m_mapUpperSurfaceModel->Mesh->GetVertexBuffer();
 
-	Vertex3FP2FTx3FN start = vertexBuffer[StartIndex];
-	XMVECTOR startUp = XMVectorAdd(XMLoadFloat3(&start.Position), XMVectorScale(XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f), 3.0f));
-	XMVECTOR startdown = XMVectorAdd(XMLoadFloat3(&start.Position), XMVectorScale(XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f), -3.0f));
-	startUp = XMVector3Transform(startUp, surfaceTransformationMatrix);
-	startdown = XMVector3Transform(startdown, surfaceTransformationMatrix);
-
-	Vertex3FP2FTx3FN end = vertexBuffer[EndIndex];
-	XMVECTOR endUp = XMVectorAdd(XMLoadFloat3(&end.Position), XMVectorScale(XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f), 3.0f));
-	XMVECTOR endDown = XMVectorAdd(XMLoadFloat3(&end.Position), XMVectorScale(XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f), -3.0f));
-	endUp = XMVector3Transform(endUp, surfaceTransformationMatrix);
-	endDown = XMVector3Transform(endDown, surfaceTransformationMatrix);
-
 	std::vector<float> vertexData;
+	AddMarkerLine(vertexBuffer[StartIndex], surfaceTransformationMatrix, vertexData);
+	AddMarkerLine(vertexBuffer[EndIndex], surfaceTransformationMatrix, vertexData);
 
-	vertexData.push_back(XMVectorGetX(startUp));
-	vertexData.push_back(XMVectorGetY(startUp));
-	vertexData.push_back(XMVectorGetZ(startUp));
+	std::shared_ptr<TransformComponent> surfaceSubDividedTransform = m_ecsManager->GetComponentFrom<TransformComponent>(m_mapUpperSurfaceSubDividedEntity);
+	XMFLOAT3 surfaceSubDividedPosition = surfaceSubDividedTransform->GetPositionVec3();
+	XMMATRIX surfaceSubDividedTransformationMatrix = XMMatrixTranslation(surfaceSubDividedPosition.x, surfaceSubDividedPosition.y, surfaceSubDividedPosition.z);
 
-	vertexData.push_back(1.0f);
-	vertexData.push_back(0.0f);
-	vertexData.push_back(1.0f);
-	vertexData.push_back(1.0f);
+	const std::vector<Vertex3FP2FTx3FN>& vertexBufferSubDivided = m_mapUpperSurfaceSubDividedModel->Mesh->GetVertexBuffer();
+	AddMarkerLine(vertexBufferSubDivided[StartIndexSubDivided], surfaceSubDividedTransformationMatrix, vertexData);
+	AddMarkerLine(vertexBufferSubDivided[EndIndexSubDivided], surfaceSubDividedTransformationMatrix, vertexData);
 
-	vertexData.push_back(XMVectorGetX(startdown));
-	vertexData.push_back(XMVectorGetY(startdown));
-	vertexData.push_back(XMVectorGetZ(startdown));
+	/*for (size_t i = 0; i < vertexBufferSubDivided.size(); i++)
+	{
+		std::cout << i << " " << vertexBufferSubDivided[i].Position.x << " " << vertexBufferSubDivided[i].Position.y << " " << vertexBufferSubDivided[i].Position.z << " " << std::endl;
+	}*/
 
-	vertexData.push_back(1.0f);
-	vertexData.push_back(0.0f);
-	vertexData.push_back(1.0f);
-	vertexData.push_back(1.0f);
-
-	vertexData.push_back(XMVectorGetX(endUp));
-	vertexData.push_back(XMVectorGetY(endUp));
-	vertexData.push_back(XMVectorGetZ(endUp));
-
-	vertexData.push_back(1.0f);
-	vertexData.push_back(0.0f);
-	vertexData.push_back(1.0f);
-	vertexData.push_back(1.0f);
-
-	vertexData.push_back(XMVectorGetX(endDown));
-	vertexData.push_back(XMVectorGetY(endDown));
-	vertexData.push_back(XMVectorGetZ(endDown));
-
-	vertexData.push_back(1.0f);
-	vertexData.push_back(0.0f);
-	vertexData.push_back(1.0f);
-	vertexData.push_back(1.0f);
 
 	std::variant<Direct3dBuffer, dsr_error> createVertexBuffer = Direct3dBuffer::CreateVertexBufferf(m_device, vertexData);
 	if (std::holds_alternative<dsr_error>(createVertexBuffer))
@@ -299,8 +301,6 @@ void NavMeshDemoApplication::RegisterPathEntity()
 	}*/
 
 	const std::vector<Vertex3F>& vertexBuffer = distinctMesh.GetVertexBuffer();
-
-
 
 	AStarStaticMeshPathfinder pathfinder(distinctMesh);
 	std::vector<uint32_t> path = pathfinder.SearchIndexPath(StartIndex, EndIndex);
@@ -414,6 +414,36 @@ void NavMeshDemoApplication::RegisterCameraController()
 	m_ecsManager->RegisterComponent<CameraControllerComponent>(m_cameraEntity);
 }
 
+void NavMeshDemoApplication::AddMarkerLine(const dsr::data::Vertex3FP2FTx3FN& vertex, const DirectX::XMMATRIX& transform, std::vector<float>& vertexBufferData)
+{
+	using namespace dsr::data;
+
+	using namespace DirectX;
+
+	XMVECTOR up = XMVectorAdd(XMLoadFloat3(&vertex.Position), XMVectorSet(0.0f, 3.0f, 0.0f, 0.0f));
+	XMVECTOR down = XMVectorAdd(XMLoadFloat3(&vertex.Position), XMVectorSet(0.0f, -3.0f, 0.0f, 0.0f));
+	up = XMVector3Transform(up, transform);
+	down = XMVector3Transform(down, transform);
+
+	vertexBufferData.push_back(XMVectorGetX(up));
+	vertexBufferData.push_back(XMVectorGetY(up));
+	vertexBufferData.push_back(XMVectorGetZ(up));
+
+	vertexBufferData.push_back(1.0f);
+	vertexBufferData.push_back(0.0f);
+	vertexBufferData.push_back(1.0f);
+	vertexBufferData.push_back(1.0f);
+
+	vertexBufferData.push_back(XMVectorGetX(down));
+	vertexBufferData.push_back(XMVectorGetY(down));
+	vertexBufferData.push_back(XMVectorGetZ(down));
+
+	vertexBufferData.push_back(1.0f);
+	vertexBufferData.push_back(0.0f);
+	vertexBufferData.push_back(1.0f);
+	vertexBufferData.push_back(1.0f);
+}
+
 dsr::DsrResult NavMeshDemoApplication::Setup()
 {
 	using namespace dsr;
@@ -448,6 +478,7 @@ dsr::DsrResult NavMeshDemoApplication::Setup()
 
 	RegisterMapModel(config);
 	RegisterMapUpperSurfaceModel(mapUpperSurfaceConfig);
+	RegisterMapUpperSurfaceSubDividedModel();
 	RegisterLineEntity();
 	RegisterStartEndMarkerEntities();
 	RegisterPathEntity();
