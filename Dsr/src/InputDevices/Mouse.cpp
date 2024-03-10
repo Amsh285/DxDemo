@@ -23,7 +23,7 @@ namespace dsr
 
 		bool Mouse::IsMoving() const
 		{
-			return !m_currentPosition.Equals(m_previousPosition);
+			return !m_currentClientAreaPosition.Equals(m_previousClientAreaPosition);
 		}
 
 		Mouse::Mouse()
@@ -34,13 +34,13 @@ namespace dsr
 		void Mouse::OnMouseDown(const dsr::events::MouseDownEvent& mouseDown)
 		{
 			m_currentKeyState = mouseDown.GetKeyCode();
-			m_currentPosition = mouseDown.GetPosition();
+			m_currentClientAreaPosition = mouseDown.GetPosition();
 		}
 
 		void Mouse::OnMouseUp(const dsr::events::MouseUpEvent& mouseUp)
 		{
 			m_currentKeyState = mouseUp.GetKeyCode();
-			m_currentPosition = mouseUp.GetPosition();
+			m_currentClientAreaPosition = mouseUp.GetPosition();
 		}
 
 		void Mouse::OnMouseWheelRotated(const dsr::events::MouseWheelEvent& mouseWheel)
@@ -50,7 +50,7 @@ namespace dsr
 
 		void Mouse::OnMouseMove(const dsr::events::MouseMoveEvent& mouseMove)
 		{
-			m_currentPosition = mouseMove.GetPosition();
+			m_currentClientAreaPosition = mouseMove.GetPosition();
 		}
 
 		void Mouse::OnLooseFocus(const dsr::events::LooseFocusEvent& looseFocus)
@@ -62,7 +62,7 @@ namespace dsr
 		void Mouse::OnUpdateFrameFinished(const dsr::events::UpdateFrameFinishedEvent& updateFinished)
 		{
 			m_previousKeyState = m_currentKeyState;
-			m_previousPosition = m_currentPosition;
+			m_previousClientAreaPosition = m_currentClientAreaPosition;
 			m_mousewheelDeltaZ = 0.0f;
 		}
 	}

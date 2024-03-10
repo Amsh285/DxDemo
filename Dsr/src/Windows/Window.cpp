@@ -83,6 +83,9 @@ namespace dsr
 				int32_t y = GET_Y_LPARAM(lParam);
 				int16_t deltaZ = GET_WHEEL_DELTA_WPARAM(wParam);
 
+				// GetCursorPos
+				// ScreenToClient
+
 				dsr::events::MouseWheelEvent event(x, y, deltaZ);
 				pWnd->m_mouseWheelEventEmitter.operator()(event);
 				break;

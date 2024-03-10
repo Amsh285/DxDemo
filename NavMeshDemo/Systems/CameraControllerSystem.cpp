@@ -31,7 +31,7 @@ void CameraControllerSystem::Update(const dsr::ecs::EngineContext& context)
 	if (m_input->GetKeyDown(KeyCode::MouseMiddle))
 	{
 		std::cout << "------Mouse Middle Down" << std::endl;
-		MousePosition position = m_input->GetMouse()->GetCurrentPosition();
+		MousePosition position = m_input->GetMouse()->GetCurrentClientAreaPosition();
 		cameraControllerData->MouseMiddleCenter = XMINT2(position.X, position.Y);
 	}
 	else if (m_input->GetKeyHold(KeyCode::MouseMiddle))
@@ -40,7 +40,7 @@ void CameraControllerSystem::Update(const dsr::ecs::EngineContext& context)
 		constexpr float speed = 80.0f;
 		constexpr XMINT2 threshold = XMINT2(5, 5);
 
-		MousePosition position = m_input->GetMouse()->GetCurrentPosition();
+		MousePosition position = m_input->GetMouse()->GetCurrentClientAreaPosition();
 
 		XMINT2 center = cameraControllerData->MouseMiddleCenter;
 		XMINT2 currentPosition = XMINT2(position.X, position.Y);
@@ -84,7 +84,7 @@ void CameraControllerSystem::Update(const dsr::ecs::EngineContext& context)
 	else if (m_input->GetKeyDown(KeyCode::MouseRight))
 	{
 		std::cout << "------Mouse Right Down" << std::endl;
-		MousePosition position = m_input->GetMouse()->GetCurrentPosition();
+		MousePosition position = m_input->GetMouse()->GetCurrentClientAreaPosition();
 		cameraControllerData->MouseRightCenter = XMINT2(position.X, position.Y);
 	}
 	else if (m_input->GetKeyHold(KeyCode::MouseRight))
@@ -92,7 +92,7 @@ void CameraControllerSystem::Update(const dsr::ecs::EngineContext& context)
 		constexpr float speed = 200.0f;
 		constexpr XMINT2 threshold = XMINT2(5, 5);
 
-		MousePosition position = m_input->GetMouse()->GetCurrentPosition();
+		MousePosition position = m_input->GetMouse()->GetCurrentClientAreaPosition();
 
 		XMINT2 center = cameraControllerData->MouseRightCenter;
 		XMINT2 currentPosition = XMINT2(position.X, position.Y);
