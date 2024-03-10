@@ -30,13 +30,11 @@ void CameraControllerSystem::Update(const dsr::ecs::EngineContext& context)
 
 	if (m_input->GetKeyDown(KeyCode::MouseMiddle))
 	{
-		std::cout << "------Mouse Middle Down" << std::endl;
 		MousePosition position = m_input->GetMouse()->GetCurrentClientAreaPosition();
 		cameraControllerData->MouseMiddleCenter = XMINT2(position.X, position.Y);
 	}
 	else if (m_input->GetKeyHold(KeyCode::MouseMiddle))
 	{
-		/*std::cout << "------MIDDLE Hold" << std::endl;*/
 		constexpr float speed = 80.0f;
 		constexpr XMINT2 threshold = XMINT2(5, 5);
 
@@ -83,7 +81,6 @@ void CameraControllerSystem::Update(const dsr::ecs::EngineContext& context)
 	}
 	else if (m_input->GetKeyDown(KeyCode::MouseRight))
 	{
-		std::cout << "------Mouse Right Down" << std::endl;
 		MousePosition position = m_input->GetMouse()->GetCurrentClientAreaPosition();
 		cameraControllerData->MouseRightCenter = XMINT2(position.X, position.Y);
 	}
@@ -128,7 +125,6 @@ void CameraControllerSystem::Update(const dsr::ecs::EngineContext& context)
 	}
 	else if (abs(deltaZ) >= 0.1f)
 	{
-		std::cout << "------Delta Z Down" << std::endl;
 		constexpr float speed = 3000.0f;
 		float deltaTimeSeconds = m_time->GetDeltaTime()
 			.Capped(std::chrono::duration<float>(1))
