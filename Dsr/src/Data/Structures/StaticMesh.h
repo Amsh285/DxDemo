@@ -2,6 +2,8 @@
 
 #include "Data/WindingOrder.h"
 
+#include "Infrastructure/Comparers.h"
+
 namespace dsr
 {
 	namespace data
@@ -49,32 +51,6 @@ namespace dsr
 
 			for (size_t i = 0; i < m_indexBuffer.size(); i += 3)
 			{
-				////each vertex from the current triangle is adjacent to each other
-				//adjacencyList[m_indexBuffer[i]].insert(m_indexBuffer[i + 1]);
-				//adjacencyList[m_indexBuffer[i]].insert(m_indexBuffer[i + 2]);
-
-				//adjacencyList[m_indexBuffer[i + 1]].insert(m_indexBuffer[i]);
-				//adjacencyList[m_indexBuffer[i + 1]].insert(m_indexBuffer[i + 2]);
-
-				//adjacencyList[m_indexBuffer[i + 2]].insert(m_indexBuffer[i]);
-				//adjacencyList[m_indexBuffer[i + 2]].insert(m_indexBuffer[i + 1]);
-
-				//// look for triangles after the current triangle
-				//for (size_t j = i + 3; j < m_indexBuffer.size(); j += 3)
-				//{
-				//	InsertAdjacentIndices(i, j, adjacencyList);
-				//	InsertAdjacentIndices(i + 1, j, adjacencyList);
-				//	InsertAdjacentIndices(i + 2, j, adjacencyList);
-				//}
-
-				//// look for triangles before the current triangle
-				//for (size_t j = 0; j < i; j += 3)
-				//{
-				//	InsertAdjacentIndices(i, j, adjacencyList);
-				//	InsertAdjacentIndices(i + 1, j, adjacencyList);
-				//	InsertAdjacentIndices(i + 2, j, adjacencyList);
-				//}
-
 				for (size_t j = 0; j < m_indexBuffer.size(); j += 3)
 				{
 					InsertAdjacentIndices(i, j, adjacencyList);
@@ -93,21 +69,63 @@ namespace dsr
 			std::unordered_map<uint32_t, std::set<uint32_t>>& adjacencyList
 		) const
 		{
-			if (m_indexBuffer[currentTrianlgeIndex] == m_indexBuffer[nextTriangleIndex])
+			using namespace DirectX;
+
+			static dsr::XMVectorEqualComparer<1e-6f> comparer;
+
+			/*Note:
+			* 
+			* this implementation relies only on indices which is wrong because vertices can be neighbours even if they are
+			* different
+			* e.g.:
+			* 
+			* v1:
+			* position: x=-2.74569201 y=8.71415329 z=1.83298802
+			* normal: x=-0.00000000 y=1.00000000 z=0.00000000
+			* v2:
+			* position: x=-2.74569201 y=8.71415329 z=1.83298802
+			* normal: x=-0.00000000 y=0.894999981 z=-0.446099997
+			* 
+			* Both vertices are different yet they share the same position. Computing a adjacencylist
+			* these vertices have to be considered equal, even if they are technically not.
+			*/
+
+			XMVECTOR currentVertex = XMLoadFloat3(&m_vertexBuffer[m_indexBuffer[currentTrianlgeIndex]].Position);
+			XMVECTOR v0 = XMLoadFloat3(&m_vertexBuffer[m_indexBuffer[nextTriangleIndex]].Position);
+			XMVECTOR v1 = XMLoadFloat3(&m_vertexBuffer[m_indexBuffer[nextTriangleIndex + 1]].Position);
+			XMVECTOR v2 = XMLoadFloat3(&m_vertexBuffer[m_indexBuffer[nextTriangleIndex + 2]].Position);
+
+			if (comparer.operator()(currentVertex, v0))
 			{
 				adjacencyList[m_indexBuffer[currentTrianlgeIndex]].insert(m_indexBuffer[nextTriangleIndex + 1]);
 				adjacencyList[m_indexBuffer[currentTrianlgeIndex]].insert(m_indexBuffer[nextTriangleIndex + 2]);
 			}
-			else if (m_indexBuffer[currentTrianlgeIndex] == m_indexBuffer[nextTriangleIndex + 1])
+			else if (comparer.operator()(currentVertex, v1))
 			{
 				adjacencyList[m_indexBuffer[currentTrianlgeIndex]].insert(m_indexBuffer[nextTriangleIndex]);
 				adjacencyList[m_indexBuffer[currentTrianlgeIndex]].insert(m_indexBuffer[nextTriangleIndex + 2]);
 			}
-			else if (m_indexBuffer[currentTrianlgeIndex] == m_indexBuffer[nextTriangleIndex + 2])
+			else if (comparer.operator()(currentVertex, v2))
 			{
 				adjacencyList[m_indexBuffer[currentTrianlgeIndex]].insert(m_indexBuffer[nextTriangleIndex]);
 				adjacencyList[m_indexBuffer[currentTrianlgeIndex]].insert(m_indexBuffer[nextTriangleIndex + 1]);
 			}
+
+			/*if (currentIndexIB == m_indexBuffer[nextTriangleIndex])
+			{
+				adjacencyList[m_indexBuffer[currentTrianlgeIndex]].insert(m_indexBuffer[nextTriangleIndex + 1]);
+				adjacencyList[m_indexBuffer[currentTrianlgeIndex]].insert(m_indexBuffer[nextTriangleIndex + 2]);
+			}
+			else if (currentIndexIB == m_indexBuffer[nextTriangleIndex + 1])
+			{
+				adjacencyList[m_indexBuffer[currentTrianlgeIndex]].insert(m_indexBuffer[nextTriangleIndex]);
+				adjacencyList[m_indexBuffer[currentTrianlgeIndex]].insert(m_indexBuffer[nextTriangleIndex + 2]);
+			}
+			else if (currentIndexIB == m_indexBuffer[nextTriangleIndex + 2])
+			{
+				adjacencyList[m_indexBuffer[currentTrianlgeIndex]].insert(m_indexBuffer[nextTriangleIndex]);
+				adjacencyList[m_indexBuffer[currentTrianlgeIndex]].insert(m_indexBuffer[nextTriangleIndex + 1]);
+			}*/
 		}
 	}
 }

@@ -28,6 +28,58 @@ namespace dsr
 				std::vector<uint32_t>& subdividedIndexBuffer
 			);
 
+
+			struct IndexBufferChangeEntry
+			{
+				uint32_t OldValue;
+				uint32_t NewValue;
+			};
+
+			StaticMesh<Vertex3F> FilterDistinct(const StaticMesh<Vertex3FP2FTx3FN>& sourceMesh)
+			{
+				using namespace DirectX;
+
+				static dsr::XMVectorEqualComparer<1e-6f> comparer;
+
+				const std::vector<Vertex3FP2FTx3FN>& vertexBuffer = sourceMesh.GetVertexBuffer();
+				std::vector<uint32_t> indices = sourceMesh.GetIndexBuffer();
+				std::unordered_map<size_t, IndexBufferChangeEntry> duplicateIndices;
+
+				for (size_t i = 0; i < indices.size(); i++)
+				{
+					if (duplicateIndices.find(i) != duplicateIndices.end())
+						continue;
+
+					uint32_t currentIndex = indices[i];
+					XMVECTOR v0 = XMLoadFloat3(&vertexBuffer[currentIndex].Position);
+
+					for (size_t j = 0; j < indices.size(); j++)
+					{
+						if (i == j)
+							continue;
+
+						uint32_t nextIndex = indices[j];
+						XMVECTOR v1 = XMLoadFloat3(&vertexBuffer[nextIndex].Position);
+
+						if (comparer.operator()(v0, v1) && currentIndex != nextIndex)
+						{
+							duplicateIndices[j] = { nextIndex, currentIndex };
+							indices[j] = currentIndex;
+						}
+					}
+				}
+
+				std::vector<Vertex3F> vertices;
+
+				for (const Vertex3FP2FTx3FN& v : vertexBuffer)
+					vertices.push_back(Vertex3F(v.Position));
+
+				StaticMesh<Vertex3F> filteredMesh;
+				filteredMesh.SetVertexBuffer(vertices);
+				filteredMesh.SetIndexBuffer(indices);
+				return filteredMesh;
+			}
+
 			std::shared_ptr<StaticMesh<Vertex3FP2FTx3FN>> SubDivide(const std::shared_ptr<StaticMesh<Vertex3FP2FTx3FN>> sourceMesh)
 			{
 				using namespace DirectX;
@@ -118,7 +170,7 @@ namespace dsr
 					SetSubdivisionData(subDivisionData.A, index, indexMap, subdividedVertexBuffer, subdividedIndexBuffer);
 					SetSubdivisionData(subDivisionData.B, index, indexMap, subdividedVertexBuffer, subdividedIndexBuffer);
 					SetSubdivisionData(edgeSplitPoint, splitVertex, index, splitMap, subdividedVertexBuffer, subdividedIndexBuffer);
-					
+
 					SetSubdivisionData(subDivisionData.A, index, indexMap, subdividedVertexBuffer, subdividedIndexBuffer);
 					SetSubdivisionData(edgeSplitPoint, splitVertex, index, splitMap, subdividedVertexBuffer, subdividedIndexBuffer);
 					SetSubdivisionData(subDivisionData.C, index, indexMap, subdividedVertexBuffer, subdividedIndexBuffer);

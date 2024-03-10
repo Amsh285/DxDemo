@@ -20,6 +20,7 @@ private:
 	dsr::ecs::Entity m_mapEntity;
 	dsr::ecs::Entity m_mapFaceNormalsEntity;
 	dsr::ecs::Entity m_mapUpperSurfaceEntity;
+	dsr::ecs::Entity m_mapUpperSurfaceSubDividedEntity;
 	dsr::ecs::Entity m_lineEntity;
 	dsr::ecs::Entity m_pathMarkersEntity;
 	dsr::ecs::Entity m_pathEntity;
@@ -30,12 +31,16 @@ private:
 
 	void RegisterMapModel(const dsr::ModelConfiguration& map);
 	void RegisterMapUpperSurfaceModel(const dsr::ModelConfiguration& mapUpperSurface);
+	void RegisterMapUpperSurfaceSubDividedModel();
 	void RegisterLineEntity();
 	void RegisterStartEndMarkerEntities();
 	void RegisterPathEntity();
 	void RegisterMapFaceNormalsEntity();
 	void RegisterCameraController();
 
+	void AddMarkerLine(const dsr::data::Vertex3FP2FTx3FN& vertex, const DirectX::XMMATRIX& transform, std::vector<float>& vertexBufferData);
+
 	std::shared_ptr<dsr::WavefrontModel> m_mapModel;
 	std::shared_ptr<dsr::WavefrontModel> m_mapUpperSurfaceModel;
+	std::shared_ptr<dsr::WavefrontModel> m_mapUpperSurfaceSubDividedModel;
 };
