@@ -18,6 +18,9 @@ public:
 		const std::shared_ptr<dsr::input::Input>& input,
 		const std::shared_ptr<dsr::time::Time>& time);
 
+	CameraControllerSystem(const CameraControllerSystem& other) = delete;
+	CameraControllerSystem& operator=(const CameraControllerSystem& other) = delete;
+
 	void Update(const dsr::ecs::EngineContext& context);
 private:
 	std::shared_ptr<dsr::input::Input> m_input;

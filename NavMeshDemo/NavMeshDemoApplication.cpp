@@ -237,12 +237,6 @@ void NavMeshDemoApplication::RegisterStartEndMarkerEntities()
 	AddMarkerLine(vertexBufferSubDivided[StartIndexSubDivided], surfaceSubDividedTransformationMatrix, vertexData);
 	AddMarkerLine(vertexBufferSubDivided[EndIndexSubDivided], surfaceSubDividedTransformationMatrix, vertexData);
 
-	/*for (size_t i = 0; i < vertexBufferSubDivided.size(); i++)
-	{
-		std::cout << i << " " << vertexBufferSubDivided[i].Position.x << " " << vertexBufferSubDivided[i].Position.y << " " << vertexBufferSubDivided[i].Position.z << " " << std::endl;
-	}*/
-
-
 	std::variant<Direct3dBuffer, dsr_error> createVertexBuffer = Direct3dBuffer::CreateVertexBufferf(m_device, vertexData);
 	if (std::holds_alternative<dsr_error>(createVertexBuffer))
 	{
@@ -286,6 +280,10 @@ void NavMeshDemoApplication::RegisterPathEntity()
 
 	//	std::cout << std::endl;
 	//}
+
+	/*StaticMesh<Vertex3F> distincSubDivision = FilterDistinct(*m_mapUpperSurfaceSubDividedModel->Mesh);
+	AStarStaticMeshPathfinder pathfinderSubDivision(distincSubDivision);
+	std::vector<uint32_t> pathSubDivided = pathfinderSubDivision.SearchIndexPath(StartIndexSubDivided, EndIndexSubDivided);*/
 
 	StaticMesh<Vertex3F> distinctMesh = FilterDistinct(*m_mapUpperSurfaceModel->Mesh);
 	/*for (auto pair : distinctMesh.GetAdjacencyList())
