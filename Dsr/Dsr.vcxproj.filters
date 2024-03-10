@@ -114,9 +114,6 @@
     <ClInclude Include="src\DirectX\Rendering\ModelLoaderExtensions\BlenderModelLoaderExtensions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Data\Material.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\DirectX\Textures\Direct3dSamplerState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -183,7 +180,7 @@
     <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\Components\StaticMeshComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\EcsSystems\RendererSystem.h">
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\EcsSystems\Renderers\StaticMeshRendererSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\Components\TagComponent.h">
@@ -214,6 +211,48 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Events\Application\FrameEvents.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\Components\LineListComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\EcsSystems\Renderers\RendererSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\EcsSystems\Renderers\LineListRendererSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\EngineStartupContext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\EnginePrepareRendererContext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\EcsSystems\Renderers\WireframeRendererSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\Components\WireframeMeshComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Data\Face.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Data\Structures\StaticMesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Data\Manipulation\StaticMeshExtensions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Data\WindingOrder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Data\Manipulation\StaticMeshExtData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Infrastructure\Comparers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Data\Pathfinding\AStarStaticMeshPathfinder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -311,9 +350,6 @@
     <ClCompile Include="src\DirectX\Rendering\ModelLoaderExtensions\BlenderModelLoaderExtensions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Data\Material.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\DirectX\Textures\Direct3dSamplerState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -371,7 +407,7 @@
     <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\Components\StaticMeshComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\EcsSystems\RendererSystem.cpp">
+    <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\EcsSystems\Renderers\StaticMeshRendererSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\Components\TagComponent.cpp">
@@ -398,9 +434,50 @@
     <ClCompile Include="src\EngineSubSystems\Time\Time.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\Components\LineListComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\EcsSystems\Renderers\RendererSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\EcsSystems\Renderers\LineListRendererSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\EngineStartupContext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\EnginePrepareRendererContext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\EcsSystems\Renderers\WireframeRendererSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\Components\WireframeMeshComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Data\Face.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Data\Structures\StaticMesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Data\Manipulation\StaticMeshExtensions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Data\Manipulation\StaticMeshExtData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Infrastructure\Comparers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Data\Pathfinding\AStarStaticMeshPathfinder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="src\DsrAssets\Shaders\DefaultVertexShader.hlsl" />
     <FxCompile Include="src\DsrAssets\Shaders\DefaultPixelShader.hlsl" />
+    <FxCompile Include="src\DsrAssets\Shaders\VSLineList.hlsl" />
+    <FxCompile Include="src\DsrAssets\Shaders\PSLineList.hlsl" />
   </ItemGroup>
 </Project>

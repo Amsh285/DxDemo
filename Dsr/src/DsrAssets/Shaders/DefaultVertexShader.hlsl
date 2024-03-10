@@ -41,7 +41,8 @@ VertexShaderOutput main(VertexBufferData IN)
 
     output.normalMatrix = normalMatrix;
     output.fragPosition = mul(worldMatrix, float4(IN.position, 1.0f));
-    output.normal = mul(normalMatrix, IN.normal);
+    //output.normal = mul(normalMatrix, IN.normal);
+    output.normal = mul(normalMatrix, float4(IN.normal.xyz, 0.0f));
 
     output.color = float4(0.6f, 0.6f, 0.6f, 1.0f);
     output.texCoord = IN.texCoord;

@@ -31,6 +31,7 @@ namespace dsr
 
 			void GenerateMips(ID3D11ShaderResourceView* pShaderResourceView);
 
+		std::variant<ID3D11RasterizerState*, dsr_error> CreateRasterizerState(const D3D11_RASTERIZER_DESC* pRasterizerDesc);
 			std::variant<ID3D11SamplerState*, dsr_error> CreateSamplerState(const D3D11_SAMPLER_DESC* pSamplerDesc);
 
 			void UpdateSubResource(
@@ -142,11 +143,14 @@ namespace dsr
 				m_deviceContext->PSSetShaderResources(startSlot, numViews, ppShaderResourceViews);
 			}
 
+			void SetDefaultRasterizerState();
+			void SetRasterizerState(ID3D11RasterizerState* pRasterizerState);
 			void SetViewports(const uint32_t& numViewports, const D3D11_VIEWPORT* pViewports);
 
 			void Clear(const float& r, const float& g, const float& b, const float& a);
 			void SwapBuffers();
 
+			void Draw(const uint32_t& vertexCount, const uint32_t& startVertexLocation);
 			void DrawIndexed(const uint32_t& indexCount, const uint32_t& startIndexLocation, const uint32_t& baseVertexLocation);
 
 			Direct3dDevice(const Direct3dDevice& other) = delete;

@@ -22,8 +22,10 @@
 #include "EngineSubSystems/EntityComponentSystem/Components/ShaderProgramComponent.h"
 
 #include "EngineSubSystems/EntityComponentSystem/EcsManager.h"
-#include "EngineSubSystems/EntityComponentSystem/EcsSystems/RendererSystem.h"
 #include "EngineSubSystems/EntityComponentSystem/EcsSystems/ViewProjectionSystem.h"
+#include "EngineSubSystems/EntityComponentSystem/EcsSystems/Renderers/LineListRendererSystem.h"
+#include "EngineSubSystems/EntityComponentSystem/EcsSystems/Renderers/StaticMeshRendererSystem.h"
+#include "EngineSubSystems/EntityComponentSystem/EcsSystems/Renderers/WireframeRendererSystem.h"
 
 #include "EngineSubSystems/Input/InputSystem.h"
 #include "EngineSubSystems/Time/Time.h"
@@ -41,6 +43,7 @@ namespace dsr
 			const std::wstring& title,
 			const int& x, const int& y,
 			const int& width, const int& height);
+		virtual ~DsrApplication() = default;
 	protected:
 		std::shared_ptr<dsr::input::Input> GetInput() const;
 		std::shared_ptr<directX::Direct3dDevice> m_device;
@@ -72,19 +75,22 @@ namespace dsr
 		};
 
 		void InitializeSystems();
-		void InitializePredefinedEntities();
 		DsrResult SetupSystems();
 		void SetupPredefinedEntities();
 		void SetupPredefinedMainCameraEntity();
 		void SetupDefaultShaderProgramEntity();
+		void SetupLineListShaderProgramEntity();
 
 		std::shared_ptr<windows::Window> m_window;
 		std::shared_ptr<windows::WindowApplication> m_windowApplication;
 		std::shared_ptr<WindowManager> m_windowManager;
 
 		std::shared_ptr<dsr::ecs::ViewProjectionSystem> m_viewProjectionSystem;
-		std::shared_ptr<dsr::ecs::RendererSystem> m_rendererSystem;
+		std::shared_ptr<dsr::ecs::StaticMeshRendererSystem> m_staticMeshRendererSystem;
+		std::shared_ptr<dsr::ecs::LineListRendererSystem> m_lineListRendererSystem;
+		std::shared_ptr<dsr::ecs::WireframeRendererSystem> m_wireframeRendererSystem;
 
 		dsr::ecs::Entity m_defaultShaderProgramEntity;
+		dsr::ecs::Entity m_lineListShaderProgramEntity;
 	};
 }

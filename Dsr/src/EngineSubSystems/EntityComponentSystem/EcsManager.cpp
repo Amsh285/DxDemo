@@ -15,8 +15,8 @@ namespace dsr
 			return ++lastId;
 		}
 
-		EcsManager::EcsManager()
-			: m_engineContext(std::make_shared<EcsEngineContext>())
+		EcsManager::EcsManager(const std::shared_ptr<directX::Direct3dDevice>& device)
+			: m_device(device), m_engineContext(std::make_shared<EcsEngineContext>())
 		{
 		}
 
@@ -32,18 +32,22 @@ namespace dsr
 
 		void EcsManager::RaiseSystemStartEvents()
 		{
+			m_engineContext->SetCurrentEntity(0);
+			EngineStartupContext startupContext(m_engineContext);
+
 			for (auto it = m_systems.begin(); it != m_systems.end(); ++it)
 			{
 				if ((*it)->OnStart)
 				{
-					std::shared_ptr<System> system = *it;
-					std::vector<Entity> entities = m_systemEntities[system->GetType()];
+					(*it)->OnStart(startupContext);
+				}
+			}
 
-					for (Entity& entity : entities)
-					{
-						m_engineContext->SetCurrentEntity(entity);
-						system->OnStart(*m_engineContext);
-					}
+			for (auto it = m_renderers.begin(); it != m_renderers.end(); ++it)
+			{
+				if ((*it)->OnStart)
+				{
+					(*it)->OnStart(startupContext);
 				}
 			}
 		}
@@ -61,6 +65,29 @@ namespace dsr
 					system->OnUpdate(*m_engineContext);
 				}
 			}
+		}
+
+		void EcsManager::OnRendererUpdate(const dsr::events::UpdateFrameEvent& updateFrameEvent)
+		{
+			m_device->Clear(0.3f, 0.3f, 0.3f, 1.0f);
+
+			for (auto it = m_renderers.begin(); it != m_renderers.end(); ++it)
+			{
+				std::shared_ptr<RendererSystem> renderer = *it;
+
+				m_engineContext->SetCurrentEntity(0);
+				renderer->OnPrepareRendererUpdate(EnginePrepareRendererContext(m_engineContext));
+
+				std::vector<Entity> entities = m_systemEntities[renderer->GetType()];
+
+				for (Entity& entity : entities)
+				{
+					m_engineContext->SetCurrentEntity(entity);
+					renderer->OnUpdate(*m_engineContext);
+				}
+			}
+
+			m_device->SwapBuffers();
 		}
 
 		bool EcsManager::HasComponentTypeIntersection(const std::shared_ptr<System>& system, const std::unordered_map<std::type_index, std::shared_ptr<Component>>& componentMap)
@@ -82,6 +109,20 @@ namespace dsr
 			{
 				if (HasComponentTypeIntersection(system, entity.second))
 					m_systemEntities[system->GetType()].push_back(entity.first);
+			}
+		}
+
+		void EcsManager::UpdateSystemEntityAssignment(
+			const std::shared_ptr<System>& system,
+			const std::unordered_map<std::type_index, std::shared_ptr<Component>>& componentMap,
+			const Entity& entity)
+		{
+			std::vector<Entity>& systemEntityVector = m_systemEntities[system->GetType()];
+
+			//check if the entity is already registered for the current system and if the componentmap of the entity has the components needed by the current system.
+			if (std::find(systemEntityVector.begin(), systemEntityVector.end(), entity) == systemEntityVector.end() && HasComponentTypeIntersection(system, componentMap))
+			{
+				systemEntityVector.push_back(entity);
 			}
 		}
 	}

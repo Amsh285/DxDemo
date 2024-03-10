@@ -1,5 +1,7 @@
 #pragma once
 
+#include "DirectX/Direct3dDevice.h"
+
 #include "Events/EventListener.h"
 #include "Events/Application/WindowEvents.h"
 #include "Events/Application/FrameEvents.h"
@@ -7,8 +9,11 @@
 #include "ErrorHandling/DsrResult.h"
 
 #include "EngineSubSystems/EntityComponentSystem/EcsEngineContext.h"
+#include "EngineSubSystems/EntityComponentSystem/EnginePrepareRendererContext.h"
+#include "EngineSubSystems/EntityComponentSystem/EngineStartupContext.h"
 #include "EngineSubSystems/EntityComponentSystem/Entity.h"
 #include "EngineSubSystems/EntityComponentSystem/System.h"
+#include "EngineSubSystems/EntityComponentSystem/EcsSystems/Renderers/RendererSystem.h"
 
 namespace dsr
 {
@@ -26,7 +31,7 @@ namespace dsr
 			template<class TComponent>
 			std::shared_ptr<TComponent> GetComponentFrom(const Entity& entity) const { return m_engineContext->GetComponentFrom<TComponent>(entity); }
 
-			EcsManager();
+			EcsManager(const std::shared_ptr<directX::Direct3dDevice>& device);
 
 			void OrderSystems();
 			void RaiseSystemStartEvents();
@@ -86,19 +91,12 @@ namespace dsr
 
 				for (std::shared_ptr<System>& system : m_systems)
 				{
-					std::vector<Entity>& systemEntityVector = m_systemEntities[system->GetType()];
+					UpdateSystemEntityAssignment(system, componentMap, entity);
+				}
 
-					//check if the entity is already registered for the current system and if the componentmap of the entity has the components needed by the current system.
-					if (std::find(systemEntityVector.begin(), systemEntityVector.end(), entity) == systemEntityVector.end() && HasComponentTypeIntersection(system, componentMap))
-					{
-						systemEntityVector.push_back(entity);
-
-						if (system->OnComponentRegistered)
-						{
-							m_engineContext->SetCurrentEntity(entity);
-							system->OnComponentRegistered(*m_engineContext);
-						}
-					}
+				for (std::shared_ptr<RendererSystem>& renderer : m_renderers)
+				{
+					UpdateSystemEntityAssignment(renderer, componentMap, entity);
 				}
 
 				return DsrResult::Success("Component registered.");
@@ -126,12 +124,6 @@ namespace dsr
 					if (hasMatchingEntityId && hasMatchingTypeIndex)
 					{
 						assignedEntities.erase(matchingEntityIterator);
-
-						if (system->OnComponentRemoved)
-						{
-							m_engineContext->SetCurrentEntity(entity);
-							system->OnComponentRemoved(*m_engineContext);
-						}
 					}
 				}
 			}
@@ -147,7 +139,16 @@ namespace dsr
 					return;
 
 				std::shared_ptr<TSystem> sys = std::make_shared<TSystem>();
-				m_systems.push_back(sys);
+
+				if constexpr (std::is_base_of<RendererSystem, TSystem>::value)
+				{
+					m_renderers.push_back(sys);
+				}
+				else
+				{
+					m_systems.push_back(sys);
+				}
+
 				UpdateSystemEntityAssignment(sys);
 			}
 
@@ -159,7 +160,15 @@ namespace dsr
 				if (std::find_if(m_systems.begin(), m_systems.end(), [&system](const std::shared_ptr<System>& sysPtr) { return sysPtr->GetType() == system->GetType(); }) != m_systems.end())
 					return;
 
-				m_systems.push_back(system);
+				if constexpr (std::is_base_of<RendererSystem, TSystem>::value)
+				{
+					m_renderers.push_back(system);
+				}
+				else
+				{
+					m_systems.push_back(system);
+				}
+
 				UpdateSystemEntityAssignment(system);
 			}
 
@@ -178,16 +187,23 @@ namespace dsr
 			}
 
 			void OnUpdate(const dsr::events::UpdateFrameEvent& updateFrameEvent);
+			void OnRendererUpdate(const dsr::events::UpdateFrameEvent& updateFrameEvent);
 
 			EcsManager(const EcsManager& other) = delete;
 			EcsManager& operator=(const EcsManager& other) = delete;
 		private:
 			bool HasComponentTypeIntersection(const std::shared_ptr<System>& system, const std::unordered_map<std::type_index, std::shared_ptr<Component>>& componentMap);
 			void UpdateSystemEntityAssignment(const std::shared_ptr<System>& system);
+			void UpdateSystemEntityAssignment(
+				const std::shared_ptr<System>& system,
+				const std::unordered_map<std::type_index, std::shared_ptr<Component>>& componentMap,
+				const Entity& entity);
 
 			std::shared_ptr<EcsEngineContext> m_engineContext;
 
+			std::shared_ptr<directX::Direct3dDevice> m_device;
 			std::vector<std::shared_ptr<System>> m_systems;
+			std::vector<std::shared_ptr<RendererSystem>> m_renderers;
 			std::unordered_map<std::type_index, std::vector<Entity>> m_systemEntities;
 		};
 	}

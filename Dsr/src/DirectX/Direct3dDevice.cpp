@@ -196,6 +196,20 @@ namespace dsr
 			m_deviceContext->GenerateMips(pShaderResourceView);
 		}
 
+		std::variant<ID3D11RasterizerState*, dsr_error> Direct3dDevice::CreateRasterizerState(const D3D11_RASTERIZER_DESC* pRasterizerDesc)
+		{
+			ID3D11RasterizerState* rasterizerState = nullptr;
+
+			HRESULT result = m_device->CreateRasterizerState(pRasterizerDesc, &rasterizerState);
+			if (FAILED(result))
+			{
+				SafeRelease(rasterizerState);
+				return dsr_error("Error device was unable to create the RasterizerState.", result);
+			}
+
+			return rasterizerState;
+		}
+
 		std::variant<ID3D11SamplerState*, dsr_error> Direct3dDevice::CreateSamplerState(const D3D11_SAMPLER_DESC* pSamplerDesc)
 		{
 			ID3D11SamplerState* samplerStatePtr = nullptr;
@@ -270,6 +284,16 @@ namespace dsr
 			m_deviceContext->IASetPrimitiveTopology(topology);
 		}
 
+		void Direct3dDevice::SetDefaultRasterizerState()
+		{
+			m_deviceContext->RSSetState(m_rasterizerState.Get());
+		}
+
+		void Direct3dDevice::SetRasterizerState(ID3D11RasterizerState* pRasterizerState)
+		{
+			m_deviceContext->RSSetState(pRasterizerState);
+		}
+
 		void Direct3dDevice::SetViewports(const uint32_t& numViewports, const D3D11_VIEWPORT* pViewports)
 		{
 			m_deviceContext->RSSetViewports(numViewports, pViewports);
@@ -285,6 +309,11 @@ namespace dsr
 		void Direct3dDevice::SwapBuffers()
 		{
 			m_swapChain->Present(0, 0);
+		}
+
+		void Direct3dDevice::Draw(const uint32_t& vertexCount, const uint32_t& startVertexLocation)
+		{
+			m_deviceContext->Draw(vertexCount, startVertexLocation);
 		}
 
 		void Direct3dDevice::DrawIndexed(const uint32_t& indexCount, const uint32_t& startIndexLocation, const uint32_t& baseVertexLocation)

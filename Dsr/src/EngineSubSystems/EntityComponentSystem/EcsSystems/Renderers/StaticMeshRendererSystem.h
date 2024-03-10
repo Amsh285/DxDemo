@@ -7,10 +7,13 @@
 
 #include "ErrorHandling/DsrResult.h"
 
+#include "EngineSubSystems/EntityComponentSystem/EnginePrepareRendererContext.h"
+#include "EngineSubSystems/EntityComponentSystem/EngineStartupContext.h"
 #include "EngineSubSystems/EntityComponentSystem/System.h"
 #include "EngineSubSystems/EntityComponentSystem/Components/ShaderProgramComponent.h"
 #include "EngineSubSystems/EntityComponentSystem/Components/StaticMeshComponent.h"
 #include "EngineSubSystems/EntityComponentSystem/Components/TransformComponent.h"
+#include "EngineSubSystems/EntityComponentSystem/EcsSystems/Renderers/RendererSystem.h"
 
 #include "Events/Application/WindowEvents.h"
 #include "Events/Application/FrameEvents.h"
@@ -19,21 +22,21 @@ namespace dsr
 {
 	namespace ecs
 	{
-		class RendererSystem : public System
+		class StaticMeshRendererSystem final : public RendererSystem
 		{
 		public:
 			virtual std::vector<std::type_index> GetRequiredComponents() const override;
 
-			RendererSystem(const std::shared_ptr<directX::Direct3dDevice>& device);
-			RendererSystem(const RendererSystem& other) = delete;
-			RendererSystem& operator=(const RendererSystem& other) = delete;
+			StaticMeshRendererSystem(const std::shared_ptr<directX::Direct3dDevice>& device);
+			StaticMeshRendererSystem(const StaticMeshRendererSystem& other) = delete;
+			StaticMeshRendererSystem& operator=(const StaticMeshRendererSystem& other) = delete;
 
 			DsrResult Initialize();
 			void SetDefaultSamplerState();
 
-			void PrepareUpdate(const events::PrepareUpdateFrameEvent& args);
+			void Startup(const EngineStartupContext& context);
+			void PrepareRendererUpdate(const EnginePrepareRendererContext& context);
 			void Update(const EngineContext& context);
-			void UpdateFinished(const events::UpdateFrameFinishedEvent& args);
 		private:
 			template<class TShader>
 			void ApplyConstantBuffers();

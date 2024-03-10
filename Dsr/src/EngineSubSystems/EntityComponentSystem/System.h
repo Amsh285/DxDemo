@@ -2,6 +2,7 @@
 
 #include "Events/EventListener.h"
 #include "EngineSubSystems/EntityComponentSystem/EngineContext.h"
+#include "EngineSubSystems/EntityComponentSystem/EngineStartupContext.h"
 
 namespace dsr
 {
@@ -10,10 +11,7 @@ namespace dsr
 		class System : public dsr::events::EventListener
 		{
 		public:
-			std::function<void(const EngineContext&)> OnComponentRegistered;
-			std::function<void(const EngineContext&)> OnComponentRemoved;
-
-			std::function<void(const EngineContext&)> OnStart;
+			std::function<void(const EngineStartupContext&)> OnStart;
 			std::function<void(const EngineContext&)> OnUpdate = [](const EngineContext&) {};
 			virtual std::vector<std::type_index> GetRequiredComponents() const = 0;
 			const std::type_index& GetType() const { return m_type; }

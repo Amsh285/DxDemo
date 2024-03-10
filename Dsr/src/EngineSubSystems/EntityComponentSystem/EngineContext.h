@@ -63,6 +63,8 @@ namespace dsr
 			}
 
 			std::optional<std::unordered_map<std::type_index, std::shared_ptr<Component>>> GetComponents(const Entity& entity) const;
+
+			~EngineContext() = default;
 		protected:
 			Entity m_currentEntity = 0;
 			std::unordered_map<std::string, std::vector<Entity>> m_taggedEntities;
@@ -71,6 +73,3 @@ namespace dsr
 		};
 	}
 }
-
-
-

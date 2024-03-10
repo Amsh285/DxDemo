@@ -46,5 +46,23 @@ namespace dsr
 			m_totalStride += description.ElementByteStride;
 			m_layout.push_back(description);
 		}
+
+		void Direct3dShaderInputLayout::AddVector4f(const std::string& semanticName, const uint32_t& semanticIndex,
+			const uint32_t& inputSlot, const uint32_t& alignedByteOffset,
+			const D3D11_INPUT_CLASSIFICATION& inputSlotClass, const uint32_t& instanceDataSteprate)
+		{
+			Direct3dLayoutShaderInputLayoutDescription description;
+			description.SemanticName = semanticName;
+			description.SemanticIndex = semanticIndex;
+			description.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+			description.InputSlot = inputSlot;
+			description.AlignedByteOffset = alignedByteOffset;
+			description.InputSlotClass = inputSlotClass;
+			description.InstanceDataStepRate = instanceDataSteprate;
+			description.ElementByteStride = sizeof(float) * 4;
+
+			m_totalStride += description.ElementByteStride;
+			m_layout.push_back(description);
+		}
 	}
 }

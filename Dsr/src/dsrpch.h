@@ -12,6 +12,7 @@
 #include <memory>
 #include <mutex>
 #include <optional>
+#include <set>
 #include <stdexcept>
 #include <string>
 #include <typeindex>
@@ -41,6 +42,13 @@ inline void SafeRelease(T& ptr)
     }
 }
 
+// These Macros overwrite stl functions for some reason.
+// Look if there is a better solution later.
+
 #ifdef min
 #undef min
+#endif
+
+#ifdef max
+#undef max
 #endif

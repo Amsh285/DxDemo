@@ -3,5 +3,8 @@
 
 namespace dsr
 {
+	namespace data
+	{
 
+	}
 }
