@@ -281,9 +281,9 @@ void NavMeshDemoApplication::RegisterPathEntity()
 	//	std::cout << std::endl;
 	//}
 
-	/*StaticMesh<Vertex3F> distincSubDivision = FilterDistinct(*m_mapUpperSurfaceSubDividedModel->Mesh);
+	StaticMesh<Vertex3F> distincSubDivision = FilterDistinct(*m_mapUpperSurfaceSubDividedModel->Mesh);
 	AStarStaticMeshPathfinder pathfinderSubDivision(distincSubDivision);
-	std::vector<uint32_t> pathSubDivided = pathfinderSubDivision.SearchIndexPath(StartIndexSubDivided, EndIndexSubDivided);*/
+	std::vector<uint32_t> pathSubDivided = pathfinderSubDivision.SearchIndexPathImp(StartIndexSubDivided, EndIndexSubDivided);
 
 	StaticMesh<Vertex3F> distinctMesh = FilterDistinct(*m_mapUpperSurfaceModel->Mesh);
 	/*for (auto pair : distinctMesh.GetAdjacencyList())
@@ -301,7 +301,10 @@ void NavMeshDemoApplication::RegisterPathEntity()
 	const std::vector<Vertex3F>& vertexBuffer = distinctMesh.GetVertexBuffer();
 
 	AStarStaticMeshPathfinder pathfinder(distinctMesh);
-	std::vector<uint32_t> path = pathfinder.SearchIndexPath(StartIndex, EndIndex);
+	/*std::vector<uint32_t> path = pathfinder.SearchIndexPath(StartIndex, EndIndex);
+	std::vector<uint32_t> path2 = pathfinder.SearchIndexPathImp(StartIndex, EndIndex);*/
+
+	std::vector<uint32_t> path = pathfinder.SearchIndexPathImp(StartIndex, EndIndex);
 
 	std::shared_ptr<TransformComponent> surfaceTransform = m_ecsManager->GetComponentFrom<TransformComponent>(m_mapUpperSurfaceEntity);
 	XMFLOAT3 surfacePosition = surfaceTransform->GetPositionVec3();
