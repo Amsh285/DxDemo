@@ -283,7 +283,11 @@ void NavMeshDemoApplication::RegisterPathEntity()
 
 	StaticMesh<Vertex3F> distincSubDivision = FilterDistinct(*m_mapUpperSurfaceSubDividedModel->Mesh);
 	AStarStaticMeshPathfinder pathfinderSubDivision(distincSubDivision);
+
+	/*std::chrono::time_point prev = std::chrono::high_resolution_clock::now();*/
 	std::vector<uint32_t> pathSubDivided = pathfinderSubDivision.SearchIndexPathImp(StartIndexSubDivided, EndIndexSubDivided);
+	/*std::chrono::time_point current = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<float, std::milli> duration = current - prev;*/
 
 	StaticMesh<Vertex3F> distinctMesh = FilterDistinct(*m_mapUpperSurfaceModel->Mesh);
 	/*for (auto pair : distinctMesh.GetAdjacencyList())
@@ -304,7 +308,12 @@ void NavMeshDemoApplication::RegisterPathEntity()
 	/*std::vector<uint32_t> path = pathfinder.SearchIndexPath(StartIndex, EndIndex);
 	std::vector<uint32_t> path2 = pathfinder.SearchIndexPathImp(StartIndex, EndIndex);*/
 
+	using namespace std::chrono;
+
+	
 	std::vector<uint32_t> path = pathfinder.SearchIndexPathImp(StartIndex, EndIndex);
+	
+
 
 	std::shared_ptr<TransformComponent> surfaceTransform = m_ecsManager->GetComponentFrom<TransformComponent>(m_mapUpperSurfaceEntity);
 	XMFLOAT3 surfacePosition = surfaceTransform->GetPositionVec3();

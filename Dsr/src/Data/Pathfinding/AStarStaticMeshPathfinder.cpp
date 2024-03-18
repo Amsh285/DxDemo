@@ -100,114 +100,41 @@ namespace dsr
 				return std::vector<uint32_t>();
 			}
 
-			//std::vector<uint32_t> AStarStaticMeshPathfinder::SearchIndexPathImp(const uint32_t& startIndex, const uint32_t& goalIndex)
-			//{
-			//	using namespace DirectX;
-
-			//	if (startIndex == goalIndex)
-			//		return std::vector<uint32_t>();
-
-			//	const XMVECTOR goalPosition = XMLoadFloat3(&m_vertexBuffer[goalIndex].Position);
-
-			//	//std::multiset<std::pair<float, std::<pair<uint32_t, uint32_t>>, std::less<float>> openListExpansion;
-			//	std::multiset<std::pair<float, uint32_t>, std::less<float>> openListExpansion;
-			//	openListExpansion.insert(std::pair(0.0f, startIndex));
-			//	
-			//	std::unordered_map<uint32_t, float> openList, closeList;
-			//	openList[startIndex] = 0.0f;
-
-			//	std::unordered_map<uint32_t, std::vector<uint32_t>> pathMap;
-
-			//	while (openListExpansion.size() > 0)
-			//	{
-			//		std::pair<float, uint32_t> q = openListExpansion.extract(openListExpansion.begin()).value();
-			//		const std::vector<uint32_t>& parentPath = pathMap[q.second];
-			//		openList.erase(q.second);
-
-			//		// expand q
-			//		const std::set<uint32_t> adjacentIndicies = m_adjacencyList[q.second];
-
-			//		for (const uint32_t adjacentIndex : adjacentIndicies)
-			//		{
-			//			// reconstruct path
-			//			if (adjacentIndex == goalIndex)
-			//			{
-			//				std::vector<uint32_t> path;
-
-			//				for (const uint32_t& n : parentPath)
-			//					path.push_back(n);
-
-			//				path.push_back(q.second);
-			//				path.push_back(adjacentIndex);
-
-			//				return path;
-			//			}
-
-			//			// calculate cost
-			//			const XMVECTOR qPosition = XMLoadFloat3(&m_vertexBuffer[q.second].Position);
-			//			const XMVECTOR adjacentPosition = XMLoadFloat3(&m_vertexBuffer[adjacentIndex].Position);
-			//			XMVECTOR deltaQ = XMVectorSubtract(qPosition, adjacentPosition);
-			//			XMVECTOR deltaGoal = XMVectorSubtract(goalPosition, adjacentPosition);
-
-			//			float g = q.first + XMVectorGetX(XMVector3Dot(deltaQ, deltaQ));
-			//			float h = XMVectorGetX(XMVector3Dot(deltaGoal, deltaGoal));
-			//			float f = g + h;
-
-			//			auto itOpenList = openList.find(adjacentIndex);
-			//			auto itCloseList = closeList.find(adjacentIndex);
-
-			//			if (itOpenList != openList.end() && itOpenList->first < f)
-			//				continue;
-
-			//			if (itCloseList != closeList.end() && itCloseList->first < f)
-			//				continue;
-			//			
-			//			std::vector<uint32_t> path(parentPath.begin(), parentPath.end());
-			//			path.push_back(q.second);
-			//			pathMap[adjacentIndex] = path;
-
-			//			openList[adjacentIndex] = f;
-			//			openListExpansion.insert(std::pair(f, adjacentIndex));
-			//		}
-
-			//		closeList[q.second] = q.first;
-			//	}
-
-			//	return std::vector<uint32_t>();
-			//}
-
-			struct node
+			namespace
 			{
-				std::shared_ptr<node> prev;
-				uint32_t vertexIndex;
-
-				float g, h, f;
-
-				bool operator<(const node& other) const
+				struct node
 				{
-					return f > other.f;
-				}
+					std::shared_ptr<node> prev;
+					uint32_t vertexIndex;
 
-				node(const uint32_t& vertexIndex, const float& g, const float& h)
-					: vertexIndex(vertexIndex), g(g), h(h)
-				{
-					f = g + h;
-				}
+					float g, h, f;
 
-				node(const uint32_t& vertexIndex, const float& g, const float& h, const float& f)
-					: vertexIndex(vertexIndex), g(g), h(h), f(f)
-				{
-				}
-			};
+					bool operator<(const node& other) const
+					{
+						return f > other.f;
+					}
 
-			struct CompareSharedPtr
-			{
-				bool operator()(const std::shared_ptr<node>& lhs, const std::shared_ptr<node>& rhs) const
+					node(const uint32_t& vertexIndex, const float& g, const float& h)
+						: vertexIndex(vertexIndex), g(g), h(h)
+					{
+						f = g + h;
+					}
+
+					node(const uint32_t& vertexIndex, const float& g, const float& h, const float& f)
+						: vertexIndex(vertexIndex), g(g), h(h), f(f)
+					{
+					}
+				};
+
+				struct CompareSharedPtr
 				{
-					// Compare based on f() values of nodes
-					return lhs->f > rhs->f; // '>' for min-heap, '<' for max-heap
-				}
-			};
+					bool operator()(const std::shared_ptr<node>& lhs, const std::shared_ptr<node>& rhs) const
+					{
+						// Compare based on f() values of nodes
+						return lhs->f > rhs->f; // '>' for min-heap, '<' for max-heap
+					}
+				};
+			}
 
 			std::vector<uint32_t> AStarStaticMeshPathfinder::SearchIndexPathImp(const uint32_t& startIndex, const uint32_t& goalIndex)
 			{
@@ -224,6 +151,8 @@ namespace dsr
 				std::unordered_map<uint32_t, float> openListSearch, closeList;
 				openListSearch[startIndex] = 0.0f;
 
+				unsigned int nummIterartions = 0;
+
 				while (!openList.empty())
 				{
 					std::shared_ptr<node> q = openList.top();
@@ -233,6 +162,8 @@ namespace dsr
 
 					for (const uint32_t& adjacentIndex : adjacentIndicies)
 					{
+						++nummIterartions;
+
 						if (adjacentIndex == goalIndex)
 						{
 							std::vector<uint32_t> path;
