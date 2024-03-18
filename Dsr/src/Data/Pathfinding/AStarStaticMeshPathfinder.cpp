@@ -224,7 +224,7 @@ namespace dsr
 					std::shared_ptr<node> q = openList.top();
 					openList.pop();
 
-					std::set<uint32_t> adjacentIndicies = m_adjacencyList[q->vertexIndex];
+					const std::set<uint32_t>& adjacentIndicies = m_adjacencyList[q->vertexIndex];
 
 					for (const uint32_t& adjacentIndex : adjacentIndicies)
 					{
