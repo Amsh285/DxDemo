@@ -181,16 +181,21 @@ namespace dsr
 				std::shared_ptr<node> prev;
 				uint32_t vertexIndex;
 
-				float g, h;
-				float f() const { return g + h; }
+				float g, h, f;
 
 				bool operator<(const node& other) const
 				{
-					return f() > other.f();
+					return f > other.f;
 				}
 
 				node(const uint32_t& vertexIndex, const float& g, const float& h)
 					: vertexIndex(vertexIndex), g(g), h(h)
+				{
+					f = g + h;
+				}
+
+				node(const uint32_t& vertexIndex, const float& g, const float& h, const float& f)
+					: vertexIndex(vertexIndex), g(g), h(h), f(f)
 				{
 				}
 			};
@@ -200,7 +205,7 @@ namespace dsr
 				bool operator()(const std::shared_ptr<node>& lhs, const std::shared_ptr<node>& rhs) const
 				{
 					// Compare based on f() values of nodes
-					return lhs->f() > rhs->f(); // '>' for min-heap, '<' for max-heap
+					return lhs->f > rhs->f; // '>' for min-heap, '<' for max-heap
 				}
 			};
 
@@ -261,12 +266,12 @@ namespace dsr
 							continue;
 
 						openListSearch[adjacentIndex] = f;
-						std::shared_ptr<node> adjacentNode = std::make_shared<node>(adjacentIndex, g, h);
+						std::shared_ptr<node> adjacentNode = std::make_shared<node>(adjacentIndex, g, h, f);
 						adjacentNode->prev = q;
 						openList.push(adjacentNode);
 					}
 
-					closeList[q->vertexIndex] = q->f();
+					closeList[q->vertexIndex] = q->f;
 				}
 
 				return std::vector<uint32_t>();
