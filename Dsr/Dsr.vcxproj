@@ -34,6 +34,7 @@
     <ClInclude Include="src\Infrastructure\EventDispatcher.h" />
     <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\Component.h" />
     <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\Entity.h" />
+    <ClInclude Include="src\Vendor\ska\flat_hash_map.hpp" />
     <ClInclude Include="src\Windows\MouseEventTracker.h" />
     <ClInclude Include="src\Windows\Input\WinInput.h" />
     <ClInclude Include="src\EngineSubSystems\Input\Input.h" />
@@ -421,6 +422,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -443,6 +445,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <SubSystem>

@@ -285,14 +285,17 @@ void NavMeshDemoApplication::RegisterPathEntity()
 	AStarStaticMeshPathfinder pathfinderSubDivision(distincSubDivision);
 
 	/*std::chrono::time_point prev = std::chrono::high_resolution_clock::now();*/
-	std::vector<uint32_t> pathSubDivided = pathfinderSubDivision.SearchIndexPathImp(StartIndexSubDivided, EndIndexSubDivided);
+ 	std::vector<uint32_t> pathSubDivided = pathfinderSubDivision.SearchSequential(StartIndexSubDivided, EndIndexSubDivided);
 	/*std::chrono::time_point current = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<float, std::milli> duration = current - prev;*/
+
+
+	/*std::vector<uint32_t> pathSubDividedGa = pathfinderSubDivision.SearchOmpGAStar(StartIndexSubDivided, EndIndexSubDivided);*/
 
 	StaticMesh<Vertex3F> distinctMesh = FilterDistinct(*m_mapUpperSurfaceModel->Mesh);
 	/*for (auto pair : distinctMesh.GetAdjacencyList())
 	{
-		std::cout << pair.first;
+		std::cout << pair.first; 
 
 		for (auto item : pair.second)
 		{
@@ -301,6 +304,7 @@ void NavMeshDemoApplication::RegisterPathEntity()
 
 		std::cout << std::endl;
 	}*/
+
 
 	const std::vector<Vertex3F>& vertexBuffer = distinctMesh.GetVertexBuffer();
 
@@ -311,7 +315,7 @@ void NavMeshDemoApplication::RegisterPathEntity()
 	using namespace std::chrono;
 
 	
-	std::vector<uint32_t> path = pathfinder.SearchIndexPathImp(StartIndex, EndIndex);
+	std::vector<uint32_t> path = pathfinder.SearchSequential(StartIndex, EndIndex);
 	
 
 

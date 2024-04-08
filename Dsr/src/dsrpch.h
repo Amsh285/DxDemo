@@ -11,6 +11,7 @@
 #include <map>
 #include <memory>
 #include <mutex>
+#include <omp.h>
 #include <optional>
 #include <queue>
 #include <set>
@@ -53,3 +54,5 @@ inline void SafeRelease(T& ptr)
 #ifdef max
 #undef max
 #endif
+
+#include <Vendor/ska/flat_hash_map.hpp>

@@ -255,6 +255,9 @@
     <ClInclude Include="src\Data\Pathfinding\AStarStaticMeshPathfinder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Vendor\ska\flat_hash_map.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Windows\Window.cpp">
