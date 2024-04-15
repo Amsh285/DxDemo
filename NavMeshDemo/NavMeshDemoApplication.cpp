@@ -1,5 +1,9 @@
 #include "NavMeshDemoApplication.h"
 
+#include "imgui.h"
+#include "imgui_impl_win32.h"
+#include "imgui_impl_dx11.h"
+
 static constexpr auto StartIndex = 49;
 static constexpr auto EndIndex = 30;
 
@@ -467,6 +471,19 @@ dsr::DsrResult NavMeshDemoApplication::Setup()
 	dsr::DsrResult baseResult = DsrApplication::Setup();
 	if (baseResult.GetResultStatusCode() != RESULT_SUCCESS)
 		return baseResult;
+
+	// Setup Dear ImGui context
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO();
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+	// io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // IF using Docking Branch
+
+	// Setup Platform/Renderer backends
+	/*ImGui_ImplWin32_Init(YOUR_HWND);
+	ImGui_ImplDX11_Init(YOUR_D3D_DEVICE, YOUR_D3D_DEVICE_CONTEXT);*/
+
 
 	std::variant<ModelConfiguration, dsr_error> loadMapResult = LoadMapModel();
 	if (std::holds_alternative<dsr_error>(loadMapResult))
