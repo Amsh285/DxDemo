@@ -47,6 +47,9 @@ namespace dsr
 				ImGui_ImplWin32_NewFrame();
 				ImGui::NewFrame();
 
+				//sweet
+				//ImGui::Text("Hello, world %d", 123);
+
 				dsr::events::PrepareUpdateFrameEvent prepareEvent(deltaTime);
 				m_prepareUpdateFrameEmitter.operator()(prepareEvent);
 
