@@ -2,6 +2,10 @@
 #include "dsrpch.h"
 #include "Window.h"
 
+#include "imgui.h"
+#include "imgui_impl_win32.h"
+#include "imgui_impl_dx11.h"
+
 namespace dsr
 {
 	namespace windows
@@ -9,6 +13,10 @@ namespace dsr
 		LRESULT Window::WndProc(HWND windowHandle, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 			Window* pWnd = reinterpret_cast<Window*>(GetWindowLongPtr(windowHandle, GWLP_USERDATA));
+
+			extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+			if (ImGui_ImplWin32_WndProcHandler(windowHandle, message, wParam, lParam))
+				return true;
 
 			switch (message)
 			{

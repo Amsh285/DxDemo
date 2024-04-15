@@ -2,6 +2,10 @@
 #include "dsrpch.h"
 #include "WindowApplication.h"
 
+#include "imgui.h"
+#include "imgui_impl_win32.h"
+#include "imgui_impl_dx11.h"
+
 namespace dsr
 {
 	namespace windows
@@ -39,6 +43,10 @@ namespace dsr
 
 				dsr::Duration deltaTime = frameDelta.Update();
 
+				ImGui_ImplDX11_NewFrame();
+				ImGui_ImplWin32_NewFrame();
+				ImGui::NewFrame();
+
 				dsr::events::PrepareUpdateFrameEvent prepareEvent(deltaTime);
 				m_prepareUpdateFrameEmitter.operator()(prepareEvent);
 
@@ -48,6 +56,10 @@ namespace dsr
 				dsr::events::UpdateFrameFinishedEvent updateFinishedEvent(deltaTime);
 				m_updateFrameFinishedEmitter.operator()(updateFinishedEvent);
 			}
+
+			ImGui_ImplDX11_Shutdown();
+			ImGui_ImplWin32_Shutdown();
+			ImGui::DestroyContext();
 		}
 
 		void WindowApplication::ShutDown()

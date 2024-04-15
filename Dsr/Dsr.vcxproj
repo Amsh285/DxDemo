@@ -34,6 +34,14 @@
     <ClInclude Include="src\Infrastructure\EventDispatcher.h" />
     <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\Component.h" />
     <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\Entity.h" />
+    <ClInclude Include="src\Vendor\imgui\backends\imgui_impl_dx11.h" />
+    <ClInclude Include="src\Vendor\imgui\backends\imgui_impl_win32.h" />
+    <ClInclude Include="src\Vendor\imgui\imconfig.h" />
+    <ClInclude Include="src\Vendor\imgui\imgui.h" />
+    <ClInclude Include="src\Vendor\imgui\imgui_internal.h" />
+    <ClInclude Include="src\Vendor\imgui\imstb_rectpack.h" />
+    <ClInclude Include="src\Vendor\imgui\imstb_textedit.h" />
+    <ClInclude Include="src\Vendor\imgui\imstb_truetype.h" />
     <ClInclude Include="src\Vendor\ska\flat_hash_map.hpp" />
     <ClInclude Include="src\Windows\MouseEventTracker.h" />
     <ClInclude Include="src\Windows\Input\WinInput.h" />
@@ -151,6 +159,34 @@
     </ClCompile>
     <ClCompile Include="src\Infrastructure\EventDispatcher.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="src\Vendor\imgui\backends\imgui_impl_dx11.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\Vendor\imgui\backends\imgui_impl_win32.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\Vendor\imgui\imgui.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\Vendor\imgui\imgui_demo.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\Vendor\imgui\imgui_draw.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\Vendor\imgui\imgui_tables.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\Vendor\imgui\imgui_widgets.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\Windows\MouseEventTracker.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
@@ -379,6 +415,9 @@
       <DeploymentContent>true</DeploymentContent>
     </FxCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="src\Vendor\imgui\LICENSE.txt" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -420,7 +459,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;src/Vendor/imgui;src/Vendor/imgui/backends;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
@@ -443,7 +482,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;src/Vendor/imgui;src/Vendor/imgui/backends;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>

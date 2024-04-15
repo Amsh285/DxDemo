@@ -1,6 +1,10 @@
 #include "dsrpch.h"
 #include "EcsManager.h"
 
+#include "imgui.h"
+#include "imgui_impl_win32.h"
+#include "imgui_impl_dx11.h"
+
 namespace dsr
 {
 	namespace ecs
@@ -86,6 +90,9 @@ namespace dsr
 					renderer->OnUpdate(*m_engineContext);
 				}
 			}
+
+			ImGui::Render();
+			ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
 			m_device->SwapBuffers();
 		}

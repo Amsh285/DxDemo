@@ -153,6 +153,9 @@ namespace dsr
 			void Draw(const uint32_t& vertexCount, const uint32_t& startVertexLocation);
 			void DrawIndexed(const uint32_t& indexCount, const uint32_t& startIndexLocation, const uint32_t& baseVertexLocation);
 
+			ID3D11Device* GetDevicePtr() const { return m_device.Get(); }
+			ID3D11DeviceContext* GetDeviceContextPtr() const { return m_deviceContext.Get(); }
+
 			Direct3dDevice(const Direct3dDevice& other) = delete;
 			Direct3dDevice& operator=(const Direct3dDevice& other) = delete;
 		private:

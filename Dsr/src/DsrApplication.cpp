@@ -1,6 +1,10 @@
 #include "dsrpch.h"
 #include "DsrApplication.h"
 
+#include "imgui.h"
+#include "imgui_impl_win32.h"
+#include "imgui_impl_dx11.h"
+
 namespace dsr
 {
 	void DsrApplication::WindowManager::OnWindowDestroy(const events::WindowDestroyEvent& destroyEvent)
@@ -37,6 +41,18 @@ namespace dsr
 
 	DsrResult DsrApplication::Setup()
 	{
+		// Setup Dear ImGui context
+		IMGUI_CHECKVERSION();
+		ImGui::CreateContext();
+		ImGuiIO& io = ImGui::GetIO();
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+		//io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // IF using Docking Branch
+
+		// Setup Platform/Renderer backends
+		bool test1 = ImGui_ImplWin32_Init(m_window->GetWindowHandle());
+		bool test2 = ImGui_ImplDX11_Init(m_device->GetDevicePtr(), m_device->GetDeviceContextPtr());
+
 		m_window->GetDestroyEventRegister().Hook(m_windowManager, &DsrApplication::WindowManager::OnWindowDestroy);
 
 		m_inputSystem->RegisterEvents(m_eventDispatcher);

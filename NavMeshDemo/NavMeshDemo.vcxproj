@@ -105,7 +105,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dsr\src;$(SolutionDir)NavMeshDemo</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dsr\src;$(SolutionDir)NavMeshDemo;$(SolutionDir)Dsr\src\Vendor\imgui;$(SolutionDir)Dsr\src\Vendor\imgui\backends</AdditionalIncludeDirectories>
       <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
@@ -122,7 +122,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dsr\src;$(SolutionDir)NavMeshDemo</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dsr\src;$(SolutionDir)NavMeshDemo;$(SolutionDir)Dsr\src\Vendor\imgui;$(SolutionDir)Dsr\src\Vendor\imgui\backends</AdditionalIncludeDirectories>
       <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
