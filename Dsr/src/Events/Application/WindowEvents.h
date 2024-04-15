@@ -6,6 +6,14 @@ namespace dsr
 {
 	namespace events
 	{
+		struct WndProcEvent : public IEvent
+		{
+			HWND Handle;
+			uint32_t Message;
+			WPARAM WParam;
+			LPARAM LParam;
+		};
+
 		class WindowCloseEvent : public IEvent
 		{
 		};

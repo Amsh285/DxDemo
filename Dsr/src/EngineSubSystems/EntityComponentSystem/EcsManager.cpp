@@ -52,6 +52,11 @@ namespace dsr
 			}
 		}
 
+		void EcsManager::OnPrepareUpdate(const dsr::events::PrepareUpdateFrameEvent& prepareUpdateEvents)
+		{
+			m_device->Clear(0.3f, 0.3f, 0.3f, 1.0f);
+		}
+
 		void EcsManager::OnUpdate(const dsr::events::UpdateFrameEvent& updateFrameEvent)
 		{
 			for (auto it = m_systems.begin(); it != m_systems.end(); ++it)
@@ -69,8 +74,6 @@ namespace dsr
 
 		void EcsManager::OnRendererUpdate(const dsr::events::UpdateFrameEvent& updateFrameEvent)
 		{
-			m_device->Clear(0.3f, 0.3f, 0.3f, 1.0f);
-
 			for (auto it = m_renderers.begin(); it != m_renderers.end(); ++it)
 			{
 				std::shared_ptr<RendererSystem> renderer = *it;
@@ -86,7 +89,10 @@ namespace dsr
 					renderer->OnUpdate(*m_engineContext);
 				}
 			}
+		}
 
+		void EcsManager::OnUpdateFinished(const dsr::events::UpdateFrameFinishedEvent& updateFinished)
+		{
 			m_device->SwapBuffers();
 		}
 

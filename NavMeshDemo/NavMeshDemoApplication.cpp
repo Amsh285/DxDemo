@@ -15,6 +15,8 @@ NavMeshDemoApplication::NavMeshDemoApplication()
 {
 	using namespace dsr::ecs;
 
+	m_guiRenderer = std::make_shared<ImGuiRenderer>();
+
 	m_mapEntity = EcsManager::CreateNewEntity();
 	m_mapFaceNormalsEntity = EcsManager::CreateNewEntity();
 	m_mapUpperSurfaceEntity = EcsManager::CreateNewEntity();
@@ -472,7 +474,7 @@ dsr::DsrResult NavMeshDemoApplication::Setup()
 	if (baseResult.GetResultStatusCode() != RESULT_SUCCESS)
 		return baseResult;
 
-	// Setup Dear ImGui context
+#pragma region Setup Imgui
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
@@ -480,10 +482,9 @@ dsr::DsrResult NavMeshDemoApplication::Setup()
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 	// io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // IF using Docking Branch
 
-	// Setup Platform/Renderer backends
-	/*ImGui_ImplWin32_Init(YOUR_HWND);
-	ImGui_ImplDX11_Init(YOUR_D3D_DEVICE, YOUR_D3D_DEVICE_CONTEXT);*/
-
+	ImGui_ImplWin32_Init(m_window->GetWindowHandle());
+	ImGui_ImplDX11_Init(m_device->GetDevicePtr(), m_device->GetDeviceContextPtr());
+#pragma endregion
 
 	std::variant<ModelConfiguration, dsr_error> loadMapResult = LoadMapModel();
 	if (std::holds_alternative<dsr_error>(loadMapResult))

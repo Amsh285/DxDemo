@@ -10,6 +10,8 @@ namespace dsr
 		{
 			Window* pWnd = reinterpret_cast<Window*>(GetWindowLongPtr(windowHandle, GWLP_USERDATA));
 
+			return true;
+
 			switch (message)
 			{
 			case WM_SIZE:

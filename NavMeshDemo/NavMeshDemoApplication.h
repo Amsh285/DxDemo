@@ -10,6 +10,10 @@
 
 #include "Systems/CameraControllerSystem.h"
 
+
+
+#include "ImGuiRenderer.h"
+
 class NavMeshDemoApplication : public dsr::DsrApplication
 {
 public:
@@ -39,6 +43,8 @@ private:
 	void RegisterCameraController();
 
 	void AddMarkerLine(const dsr::data::Vertex3FP2FTx3FN& vertex, const DirectX::XMMATRIX& transform, std::vector<float>& vertexBufferData);
+
+	std::shared_ptr<ImGuiRenderer> m_guiRenderer;
 
 	std::shared_ptr<dsr::WavefrontModel> m_mapModel;
 	std::shared_ptr<dsr::WavefrontModel> m_mapUpperSurfaceModel;

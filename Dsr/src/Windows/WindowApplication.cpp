@@ -39,6 +39,7 @@ namespace dsr
 
 				dsr::Duration deltaTime = frameDelta.Update();
 
+				//Todo: Radical change. Use Ecs system here directly for rendering.
 				dsr::events::PrepareUpdateFrameEvent prepareEvent(deltaTime);
 				m_prepareUpdateFrameEmitter.operator()(prepareEvent);
 

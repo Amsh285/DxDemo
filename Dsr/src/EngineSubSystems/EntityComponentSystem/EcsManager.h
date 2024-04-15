@@ -186,8 +186,10 @@ namespace dsr
 				m_systemEntities.erase(sysType);
 			}
 
+			void OnPrepareUpdate(const dsr::events::PrepareUpdateFrameEvent& prepareUpdateEvents);
 			void OnUpdate(const dsr::events::UpdateFrameEvent& updateFrameEvent);
 			void OnRendererUpdate(const dsr::events::UpdateFrameEvent& updateFrameEvent);
+			void OnUpdateFinished(const dsr::events::UpdateFrameFinishedEvent& updateFinished);
 
 			EcsManager(const EcsManager& other) = delete;
 			EcsManager& operator=(const EcsManager& other) = delete;

@@ -42,6 +42,9 @@ namespace dsr
 		m_inputSystem->RegisterEvents(m_eventDispatcher);
 		m_eventDispatcher->RegisterEventListener(m_ecsManager, &dsr::ecs::EcsManager::OnUpdate);
 		m_eventDispatcher->RegisterEventListener(m_ecsManager, &dsr::ecs::EcsManager::OnRendererUpdate);
+		m_eventDispatcher->RegisterEventListener(m_ecsManager, &dsr::ecs::EcsManager::OnPrepareUpdate);
+		m_eventDispatcher->RegisterEventListener(m_ecsManager, &dsr::ecs::EcsManager::OnUpdateFinished);
+
 		m_eventDispatcher->RegisterEventListener(m_time, &dsr::time::Time::OnPrepareUpdateFrame);
 
 		DsrResult setupSystemsResult = SetupSystems();
