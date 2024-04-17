@@ -6,6 +6,8 @@
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
 
+#include "Input/WinInput.h"
+
 namespace dsr
 {
 	namespace windows
@@ -23,9 +25,20 @@ namespace dsr
 			return m_instance;
 		}
 
+		void WindowApplication::RegisterEvents(std::shared_ptr<dsr::EventDispatcher> dispatcher)
+		{
+			m_inputSystem->RegisterEvents(dispatcher);
+		}
+
 		void WindowApplication::PeekMessages()
 		{
+			using namespace dsr::input;
+			using namespace dsr::inputdevices;
+			
 			using namespace std::chrono;
+
+			std::shared_ptr<Keyboard> keyboard = m_inputSystem->GetKeyboard();
+			std::shared_ptr<Mouse> mouse = m_inputSystem->GetMouse();
 
 			MSG message = { 0 };
 			dsr::time::FrameDelta frameDelta;
@@ -54,8 +67,8 @@ namespace dsr
 				dsr::events::UpdateFrameEvent event(deltaTime);
 				m_updateFrameEmitter.operator()(event);
 
-				dsr::events::UpdateFrameFinishedEvent updateFinishedEvent(deltaTime);
-				m_updateFrameFinishedEmitter.operator()(updateFinishedEvent);
+				keyboard->PrepareNextFrame();
+				mouse->PrepareNextFrame();
 			}
 
 			ImGui_ImplDX11_Shutdown();
@@ -71,6 +84,7 @@ namespace dsr
 		WindowApplication::WindowApplication()
 		{
 			m_time = std::make_shared<dsr::time::Time>();
+			m_inputSystem = std::make_shared<dsr::input::InputSystem>(dsr::windows::CreateKeyMap());
 		}
 	}
 }

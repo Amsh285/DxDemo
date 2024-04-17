@@ -31,7 +31,7 @@ namespace dsr
 			m_previousState = m_currentState = 0x0000;
 		}
 
-		void Keyboard::OnUpdateFrameFinished(const dsr::events::UpdateFrameFinishedEvent& updateFinished)
+		void Keyboard::PrepareNextFrame()
 		{
 			m_previousState = m_currentState;
 		}

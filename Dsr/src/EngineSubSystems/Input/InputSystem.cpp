@@ -25,9 +25,6 @@ namespace dsr
 			dispatcher->RegisterEventListener(m_mouse, &Mouse::OnMouseWheelRotated);
 			dispatcher->RegisterEventListener(m_mouse, &Mouse::OnMouseMove);
 			dispatcher->RegisterEventListener(m_mouse, &Mouse::OnLooseFocus);
-
-			dispatcher->RegisterEventListener(m_keyboard, &Keyboard::OnUpdateFrameFinished);
-			dispatcher->RegisterEventListener(m_mouse, &Mouse::OnUpdateFrameFinished);
 		}
 	}
 }

@@ -59,7 +59,7 @@ namespace dsr
 			m_currentKeyState = m_previousKeyState = 0x0000;
 		}
 
-		void Mouse::OnUpdateFrameFinished(const dsr::events::UpdateFrameFinishedEvent& updateFinished)
+		void Mouse::PrepareNextFrame()
 		{
 			m_previousKeyState = m_currentKeyState;
 			m_previousClientAreaPosition = m_currentClientAreaPosition;

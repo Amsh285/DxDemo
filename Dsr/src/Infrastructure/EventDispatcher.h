@@ -6,19 +6,14 @@
 #include "Events/Application/InputEvents/KeyboardEvents.h"
 #include "Events/Application/InputEvents/MouseEvents.h"
 
-// this should be refactored later. Use a window and application interface
 #include "Windows/Window.h"
-#include "Windows/WindowApplication.h"
 
 namespace dsr
 {
 	class EventDispatcher
 	{
 	public:
-		EventDispatcher(
-			const std::shared_ptr<dsr::windows::Window>& window,
-			const std::shared_ptr<dsr::windows::WindowApplication>& windowApplication
-		);
+		EventDispatcher(const std::shared_ptr<dsr::windows::Window>& window);
 		EventDispatcher(const EventDispatcher& other) = delete;
 		EventDispatcher& operator=(const EventDispatcher& other) = delete;
 
@@ -86,23 +81,7 @@ namespace dsr
 			m_window->GetResizedEventRegister().Hook(instance, func);
 		}
 
-		template<class TSubType>
-		void RegisterEventListener(
-			const std::shared_ptr<dsr::events::EventListener>& instance,
-			void(TSubType::* func)(const dsr::events::UpdateFrameEvent&))
-		{
-			m_windowApplication->GetUpdateFrameEventRegister().Hook(instance, func);
-		}
-
-		template<class TSubType>
-		void RegisterEventListener(
-			const std::shared_ptr<dsr::events::EventListener>& instance,
-			void(TSubType::* func)(const dsr::events::UpdateFrameFinishedEvent&))
-		{
-			m_windowApplication->GetUpdateFrameFinishedRegister().Hook(instance, func);
-		}
 	private:
 		std::shared_ptr<dsr::windows::Window> m_window;
-		std::shared_ptr<dsr::windows::WindowApplication> m_windowApplication;
 	};
 }

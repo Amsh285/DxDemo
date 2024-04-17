@@ -29,14 +29,5 @@ namespace dsr
 			{
 			}
 		};
-
-		class UpdateFrameFinishedEvent : public FrameEvent
-		{
-		public:
-			UpdateFrameFinishedEvent(const Duration& deltaTime)
-				: FrameEvent(deltaTime)
-			{
-			}
-		};
 	}
 }

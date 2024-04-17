@@ -3,10 +3,8 @@
 
 namespace dsr
 {
-	EventDispatcher::EventDispatcher(
-		const std::shared_ptr<dsr::windows::Window>& window,
-		const std::shared_ptr<dsr::windows::WindowApplication>& windowApplication)
-		: m_window(window), m_windowApplication(windowApplication)
+	EventDispatcher::EventDispatcher(const std::shared_ptr<dsr::windows::Window>& window)
+		: m_window(window)
 	{
 	}
 }

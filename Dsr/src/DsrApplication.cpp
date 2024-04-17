@@ -30,9 +30,8 @@ namespace dsr
 		m_device = directX::Direct3dDevice::Create(m_window);
 		m_windowManager = std::make_shared<WindowManager>(m_window, m_device);
 		m_blenderModelLoader = std::make_shared<BlenderModelLoader>();
-		m_eventDispatcher = std::make_shared<dsr::EventDispatcher>(m_window, m_windowApplication);
+		m_eventDispatcher = std::make_shared<dsr::EventDispatcher>(m_window);
 
-		m_inputSystem = std::make_shared<dsr::input::InputSystem>(dsr::windows::CreateKeyMap());
 		m_ecsManager = std::make_shared<dsr::ecs::EcsManager>(m_device);
 
 		InitializeSystems();
@@ -49,14 +48,15 @@ namespace dsr
 		//io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // IF using Docking Branch
 
 		// Setup Platform/Renderer backends
-		bool test1 = ImGui_ImplWin32_Init(m_window->GetWindowHandle());
-		bool test2 = ImGui_ImplDX11_Init(m_device->GetDevicePtr(), m_device->GetDeviceContextPtr());
+		ImGui_ImplWin32_Init(m_window->GetWindowHandle());
+		ImGui_ImplDX11_Init(m_device->GetDevicePtr(), m_device->GetDeviceContextPtr());
 
 		m_window->GetDestroyEventRegister().Hook(m_windowManager, &DsrApplication::WindowManager::OnWindowDestroy);
 
-		m_inputSystem->RegisterEvents(m_eventDispatcher);
-		m_eventDispatcher->RegisterEventListener(m_ecsManager, &dsr::ecs::EcsManager::OnUpdate);
-		m_eventDispatcher->RegisterEventListener(m_ecsManager, &dsr::ecs::EcsManager::OnRendererUpdate);
+		m_windowApplication->RegisterEvents(m_eventDispatcher);
+
+		m_windowApplication->GetUpdateFrameEventRegister().Hook(m_ecsManager, &dsr::ecs::EcsManager::OnUpdate);
+		m_windowApplication->GetUpdateFrameEventRegister().Hook(m_ecsManager, &dsr::ecs::EcsManager::OnRendererUpdate);
 
 		DsrResult setupSystemsResult = SetupSystems();
 		if (setupSystemsResult.GetResultStatusCode() != RESULT_SUCCESS)
@@ -91,7 +91,7 @@ namespace dsr
 
 	std::shared_ptr<dsr::input::Input> DsrApplication::GetInput() const
 	{
-		return m_inputSystem->GetInput();
+		return m_windowApplication->GetInputSystem()->GetInput();
 	}
 
 	std::shared_ptr<dsr::time::Time> DsrApplication::GetTime() const

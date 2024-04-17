@@ -31,7 +31,7 @@ constexpr auto MouseWheelRotationDelta = 120;
 			void OnMouseWheelRotated(const dsr::events::MouseWheelEvent& mouseWheel);
 			void OnMouseMove(const dsr::events::MouseMoveEvent& mouseMove);
 			void OnLooseFocus(const dsr::events::LooseFocusEvent& looseFocus);
-			void OnUpdateFrameFinished(const dsr::events::UpdateFrameFinishedEvent& updateFinished);
+			void PrepareNextFrame();
 		private:
 			float m_mousewheelDeltaZ;
 			uint16_t m_currentKeyState, m_previousKeyState;

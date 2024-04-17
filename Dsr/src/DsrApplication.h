@@ -5,7 +5,6 @@
 
 #include "Windows/Window.h"
 #include "Windows/WindowApplication.h"
-#include "Windows/Input/WinInput.h"
 
 #include "ModelLoaders/BlenderModelLoader.h"
 
@@ -53,7 +52,6 @@ namespace dsr
 		std::shared_ptr<dsr::EventDispatcher> m_eventDispatcher;
 		std::shared_ptr<BlenderModelLoader> m_blenderModelLoader;
 
-		std::shared_ptr<dsr::input::InputSystem> m_inputSystem;
 		std::shared_ptr<dsr::ecs::EcsManager> m_ecsManager;
 
 		dsr::ecs::Entity m_cameraEntity;
