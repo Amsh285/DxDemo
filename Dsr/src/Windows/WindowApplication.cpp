@@ -37,6 +37,8 @@ namespace dsr
 			
 			using namespace std::chrono;
 
+			assert(m_device);
+
 			std::shared_ptr<Keyboard> keyboard = m_inputSystem->GetKeyboard();
 			std::shared_ptr<Mouse> mouse = m_inputSystem->GetMouse();
 
@@ -61,11 +63,18 @@ namespace dsr
 				ImGui_ImplWin32_NewFrame();
 				ImGui::NewFrame();
 
-				//sweet
-				ImGui::Text("Hello, world %d", 123);
+				m_device->Clear(0.3f, 0.3f, 0.3f, 1.0f);
 
 				dsr::events::UpdateFrameEvent event(deltaTime);
 				m_updateFrameEmitter.operator()(event);
+
+				//sweet
+				ImGui::Text("Hello, world %d", 123);
+
+				ImGui::Render();
+				ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
+				m_device->SwapBuffers();
 
 				keyboard->PrepareNextFrame();
 				mouse->PrepareNextFrame();

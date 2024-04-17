@@ -54,7 +54,7 @@ namespace dsr
 		m_window->GetDestroyEventRegister().Hook(m_windowManager, &DsrApplication::WindowManager::OnWindowDestroy);
 
 		m_windowApplication->RegisterEvents(m_eventDispatcher);
-
+		m_windowApplication->SetDevice(m_device);
 		m_windowApplication->GetUpdateFrameEventRegister().Hook(m_ecsManager, &dsr::ecs::EcsManager::OnUpdate);
 		m_windowApplication->GetUpdateFrameEventRegister().Hook(m_ecsManager, &dsr::ecs::EcsManager::OnRendererUpdate);
 

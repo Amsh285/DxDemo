@@ -1,10 +1,6 @@
 #include "dsrpch.h"
 #include "EcsManager.h"
 
-#include "imgui.h"
-#include "imgui_impl_win32.h"
-#include "imgui_impl_dx11.h"
-
 namespace dsr
 {
 	namespace ecs
@@ -73,9 +69,6 @@ namespace dsr
 
 		void EcsManager::OnRendererUpdate(const dsr::events::UpdateFrameEvent& updateFrameEvent)
 		{
-			// This should be probably refactored rendering should probably not happen here...
-			m_device->Clear(0.3f, 0.3f, 0.3f, 1.0f);
-
 			for (auto it = m_renderers.begin(); it != m_renderers.end(); ++it)
 			{
 				std::shared_ptr<RendererSystem> renderer = *it;
@@ -91,11 +84,6 @@ namespace dsr
 					renderer->OnUpdate(*m_engineContext);
 				}
 			}
-
-			ImGui::Render();
-			ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-
-			m_device->SwapBuffers();
 		}
 
 		bool EcsManager::HasComponentTypeIntersection(const std::shared_ptr<System>& system, const std::unordered_map<std::type_index, std::shared_ptr<Component>>& componentMap)
