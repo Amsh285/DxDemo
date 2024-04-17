@@ -73,6 +73,7 @@ namespace dsr
 
 		void EcsManager::OnRendererUpdate(const dsr::events::UpdateFrameEvent& updateFrameEvent)
 		{
+			// This should be probably refactored rendering should probably not happen here...
 			m_device->Clear(0.3f, 0.3f, 0.3f, 1.0f);
 
 			for (auto it = m_renderers.begin(); it != m_renderers.end(); ++it)

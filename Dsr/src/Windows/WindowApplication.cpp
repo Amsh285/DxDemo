@@ -32,6 +32,9 @@ namespace dsr
 
 			while (true)
 			{
+				dsr::Duration deltaTime = frameDelta.Update();
+				m_time->SetDeltaTime(deltaTime);
+				
 				if (PeekMessage(&message, NULL, 0, 0, PM_REMOVE))
 				{
 					TranslateMessage(&message);
@@ -41,17 +44,12 @@ namespace dsr
 						break;
 				}
 
-				dsr::Duration deltaTime = frameDelta.Update();
-
 				ImGui_ImplDX11_NewFrame();
 				ImGui_ImplWin32_NewFrame();
 				ImGui::NewFrame();
 
 				//sweet
-				//ImGui::Text("Hello, world %d", 123);
-
-				dsr::events::PrepareUpdateFrameEvent prepareEvent(deltaTime);
-				m_prepareUpdateFrameEmitter.operator()(prepareEvent);
+				ImGui::Text("Hello, world %d", 123);
 
 				dsr::events::UpdateFrameEvent event(deltaTime);
 				m_updateFrameEmitter.operator()(event);
@@ -68,6 +66,11 @@ namespace dsr
 		void WindowApplication::ShutDown()
 		{
 			PostQuitMessage(0);
+		}
+
+		WindowApplication::WindowApplication()
+		{
+			m_time = std::make_shared<dsr::time::Time>();
 		}
 	}
 }

@@ -21,15 +21,6 @@ namespace dsr
 			Duration m_deltaTime;
 		};
 
-		class PrepareUpdateFrameEvent : public FrameEvent
-		{
-		public:
-			PrepareUpdateFrameEvent(const Duration& deltaTime)
-				: FrameEvent(deltaTime)
-			{
-			}
-		};
-
 		class UpdateFrameEvent : public FrameEvent
 		{
 		public:

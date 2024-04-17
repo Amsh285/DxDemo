@@ -34,7 +34,6 @@ namespace dsr
 
 		m_inputSystem = std::make_shared<dsr::input::InputSystem>(dsr::windows::CreateKeyMap());
 		m_ecsManager = std::make_shared<dsr::ecs::EcsManager>(m_device);
-		m_time = std::make_shared<dsr::time::Time>();
 
 		InitializeSystems();
 	}
@@ -58,7 +57,6 @@ namespace dsr
 		m_inputSystem->RegisterEvents(m_eventDispatcher);
 		m_eventDispatcher->RegisterEventListener(m_ecsManager, &dsr::ecs::EcsManager::OnUpdate);
 		m_eventDispatcher->RegisterEventListener(m_ecsManager, &dsr::ecs::EcsManager::OnRendererUpdate);
-		m_eventDispatcher->RegisterEventListener(m_time, &dsr::time::Time::OnPrepareUpdateFrame);
 
 		DsrResult setupSystemsResult = SetupSystems();
 		if (setupSystemsResult.GetResultStatusCode() != RESULT_SUCCESS)
@@ -94,6 +92,11 @@ namespace dsr
 	std::shared_ptr<dsr::input::Input> DsrApplication::GetInput() const
 	{
 		return m_inputSystem->GetInput();
+	}
+
+	std::shared_ptr<dsr::time::Time> DsrApplication::GetTime() const
+	{
+		return m_windowApplication->GetTime();
 	}
 
 	void DsrApplication::InitializeSystems()

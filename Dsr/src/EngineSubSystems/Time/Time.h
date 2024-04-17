@@ -13,8 +13,8 @@ namespace dsr
 		{
 		public:
 			dsr::Duration GetDeltaTime() const { return m_deltaTime; }
+			void SetDeltaTime(const dsr::Duration& deltaTime) { m_deltaTime = deltaTime; }
 
-			void OnPrepareUpdateFrame(const dsr::events::PrepareUpdateFrameEvent& prepareUpdate);
 		private:
 			dsr::Duration m_deltaTime;
 		};

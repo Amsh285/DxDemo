@@ -46,6 +46,8 @@ namespace dsr
 		virtual ~DsrApplication() = default;
 	protected:
 		std::shared_ptr<dsr::input::Input> GetInput() const;
+		std::shared_ptr<dsr::time::Time> GetTime() const;
+
 		std::shared_ptr<directX::Direct3dDevice> m_device;
 
 		std::shared_ptr<dsr::EventDispatcher> m_eventDispatcher;
@@ -53,7 +55,6 @@ namespace dsr
 
 		std::shared_ptr<dsr::input::InputSystem> m_inputSystem;
 		std::shared_ptr<dsr::ecs::EcsManager> m_ecsManager;
-		std::shared_ptr<dsr::time::Time> m_time;
 
 		dsr::ecs::Entity m_cameraEntity;
 

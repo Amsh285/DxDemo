@@ -422,7 +422,7 @@ void NavMeshDemoApplication::RegisterMapFaceNormalsEntity()
 
 void NavMeshDemoApplication::RegisterCameraController()
 {
-	m_cameraControllerSystem = std::make_shared<CameraControllerSystem>(GetInput(), m_time);
+	m_cameraControllerSystem = std::make_shared<CameraControllerSystem>(GetInput(), GetTime());
 	m_ecsManager->RegisterSystem(m_cameraControllerSystem);
 
 	m_ecsManager->RegisterComponent<CameraControllerComponent>(m_cameraEntity);
