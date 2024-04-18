@@ -9,7 +9,8 @@ namespace dsr
 		{
 			m_keyboard = std::make_shared<dsr::inputdevices::Keyboard>();
 			m_mouse = std::make_shared<dsr::inputdevices::Mouse>();
-			m_input = std::make_shared<Input>(m_keyboard, m_mouse, keyMap);
+			m_screen = std::make_shared<dsr::inputdevices::Screen>();
+			m_input = std::make_shared<Input>(m_keyboard, m_mouse, m_screen, keyMap);
 		}
 
 		void InputSystem::RegisterEvents(std::shared_ptr<dsr::EventDispatcher> dispatcher)
@@ -25,6 +26,8 @@ namespace dsr
 			dispatcher->RegisterEventListener(m_mouse, &Mouse::OnMouseWheelRotated);
 			dispatcher->RegisterEventListener(m_mouse, &Mouse::OnMouseMove);
 			dispatcher->RegisterEventListener(m_mouse, &Mouse::OnLooseFocus);
+
+			dispatcher->RegisterEventListener(m_screen, &Screen::OnWindowResized);
 		}
 	}
 }

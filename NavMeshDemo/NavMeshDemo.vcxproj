@@ -134,12 +134,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Components\CameraControllerComponent.cpp" />
+    <ClCompile Include="Components\EditorUIComponent.cpp" />
+    <ClCompile Include="Systems\EditorUISystem.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NavMeshDemoApplication.cpp" />
     <ClCompile Include="Systems\CameraControllerSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Components\CameraControllerComponent.h" />
+    <ClInclude Include="Components\EditorUIComponent.h" />
+    <ClInclude Include="Systems\EditorUISystem.h" />
     <ClInclude Include="NavMeshDemoApplication.h" />
     <ClInclude Include="Systems\CameraControllerSystem.h" />
   </ItemGroup>

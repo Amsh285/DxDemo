@@ -68,9 +68,6 @@ namespace dsr
 				dsr::events::UpdateFrameEvent event(deltaTime);
 				m_updateFrameEmitter.operator()(event);
 
-				//sweet
-				ImGui::Text("Hello, world %d", 123);
-
 				ImGui::Render();
 				ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 

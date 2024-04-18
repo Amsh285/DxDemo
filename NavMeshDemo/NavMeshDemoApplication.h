@@ -9,6 +9,7 @@
 #include "DirectX/Rendering/ModelLoaderExtensions/BlenderModelLoaderExtensions.h"
 
 #include "Systems/CameraControllerSystem.h"
+#include "Systems/EditorUISystem.h"
 
 class NavMeshDemoApplication : public dsr::DsrApplication
 {
@@ -25,7 +26,11 @@ private:
 	dsr::ecs::Entity m_pathMarkersEntity;
 	dsr::ecs::Entity m_pathEntity;
 
+	dsr::ecs::Entity m_editorUIEntity;
+
 	std::shared_ptr<CameraControllerSystem> m_cameraControllerSystem;
+	std::shared_ptr<EditorUISystem> m_editorUISystem;
+
 	std::variant<dsr::ModelConfiguration, dsr::dsr_error> LoadMapModel();
 	std::variant<dsr::ModelConfiguration, dsr::dsr_error> LoadMapUpperSurfaceModel();
 
@@ -37,6 +42,7 @@ private:
 	void RegisterPathEntity();
 	void RegisterMapFaceNormalsEntity();
 	void RegisterCameraController();
+	void RegisterEditorUI();
 
 	void AddMarkerLine(const dsr::data::Vertex3FP2FTx3FN& vertex, const DirectX::XMMATRIX& transform, std::vector<float>& vertexBufferData);
 

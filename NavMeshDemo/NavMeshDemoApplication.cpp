@@ -18,6 +18,8 @@ NavMeshDemoApplication::NavMeshDemoApplication()
 	m_lineEntity = EcsManager::CreateNewEntity();
 	m_pathMarkersEntity = EcsManager::CreateNewEntity();
 	m_pathEntity = EcsManager::CreateNewEntity();
+
+	m_editorUIEntity = EcsManager::CreateNewEntity();
 }
 
 std::variant<dsr::ModelConfiguration, dsr::dsr_error> NavMeshDemoApplication::LoadMapModel()
@@ -428,6 +430,14 @@ void NavMeshDemoApplication::RegisterCameraController()
 	m_ecsManager->RegisterComponent<CameraControllerComponent>(m_cameraEntity);
 }
 
+void NavMeshDemoApplication::RegisterEditorUI()
+{
+	m_editorUISystem = std::make_shared<EditorUISystem>(GetInput());
+	m_ecsManager->RegisterSystem(m_editorUISystem);
+
+	m_ecsManager->RegisterComponent<EditorUIComponent>(m_editorUIEntity);
+}
+
 void NavMeshDemoApplication::AddMarkerLine(const dsr::data::Vertex3FP2FTx3FN& vertex, const DirectX::XMMATRIX& transform, std::vector<float>& vertexBufferData)
 {
 	using namespace dsr::data;
@@ -498,6 +508,7 @@ dsr::DsrResult NavMeshDemoApplication::Setup()
 	RegisterPathEntity();
 	RegisterMapFaceNormalsEntity();
 	RegisterCameraController();
+	RegisterEditorUI();
 
 	std::vector<dsr::ecs::Entity> cameraEntities = m_ecsManager->FindEntitiesByTag("Camera");
 	std::shared_ptr<dsr::ecs::TransformComponent> cameraTransform = m_ecsManager->GetComponentFrom<dsr::ecs::TransformComponent>(cameraEntities[0]);

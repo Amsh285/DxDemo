@@ -2,6 +2,7 @@
 
 #include "InputDevices/Keyboard.h"
 #include "InputDevices/Mouse.h"
+#include "InputDevices/Screen.h"
 
 #include "EngineSubSystems/Input/KeyCode.h"
 
@@ -21,6 +22,7 @@ namespace dsr
 		public:
 			std::shared_ptr<dsr::inputdevices::Keyboard> GetKeyboard() const { return m_keyboard; }
 			std::shared_ptr<dsr::inputdevices::Mouse> GetMouse() const { return m_mouse; }
+			std::shared_ptr<dsr::inputdevices::Screen> GetScreen() const { return m_screen; }
 
 			float GetMouseWheelRotationDeltaZ() const { return m_mouse->GetMouseWheelRotationDeltaZ(); }
 
@@ -31,6 +33,7 @@ namespace dsr
 			Input(
 				const std::shared_ptr<dsr::inputdevices::Keyboard>& keyboard,
 				const std::shared_ptr<dsr::inputdevices::Mouse>& mouse,
+				const std::shared_ptr<dsr::inputdevices::Screen>& screen,
 				const std::unordered_map<KeyCode, uint16_t>& keyMap
 			);
 			Input(const Input& other) = delete;
@@ -40,6 +43,7 @@ namespace dsr
 
 			std::shared_ptr<dsr::inputdevices::Keyboard> m_keyboard;
 			std::shared_ptr<dsr::inputdevices::Mouse> m_mouse;
+			std::shared_ptr<dsr::inputdevices::Screen> m_screen;
 			std::unordered_map<KeyCode, uint16_t> m_keyMap;
 		};
 	}

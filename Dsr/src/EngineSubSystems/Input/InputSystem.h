@@ -25,6 +25,7 @@ namespace dsr
 		private:
 			std::shared_ptr<dsr::inputdevices::Keyboard> m_keyboard;
 			std::shared_ptr<dsr::inputdevices::Mouse> m_mouse;
+			std::shared_ptr<dsr::inputdevices::Screen> m_screen;
 			std::shared_ptr<Input> m_input;
 		};
 	}
