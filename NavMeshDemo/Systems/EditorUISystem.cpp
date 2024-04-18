@@ -78,7 +78,7 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 
 		// the general direction can be calculated like this but for intersection calculation it is better
 		// to use mWorldSpace and apply the inverse model matrix to it like described above.
-		// Important: keep the raydirection in the Worldspace relative to the camera!
+		// Important: keep the raydirection in the Worldspace relative to the camera, do not use raydirection!
 		XMVECTOR raydirection = XMVector4Normalize(XMVectorSubtract(mWorldSpace, cameraTransform->GetPosition()));
 		XMFLOAT4 test2;
 		XMStoreFloat4(&test2, raydirection);
