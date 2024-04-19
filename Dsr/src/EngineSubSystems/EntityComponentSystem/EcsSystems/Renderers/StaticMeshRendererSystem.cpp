@@ -85,9 +85,9 @@ namespace dsr
 			uint32_t offset = 0;
 
 			std::shared_ptr<ID3D11Buffer> vertexBufferPtr = vertexBuffer.GetVertexBuffer().GetBufferPtr();
-			ID3D11Buffer* vertexShaderRawPtr = vertexBufferPtr.get();
+			ID3D11Buffer* vertexBufferRawPtr = vertexBufferPtr.get();
 
-			m_device->SetVertexBuffers(0, 1, &vertexShaderRawPtr, &vertexStride, &offset);
+			m_device->SetVertexBuffers(0, 1, &vertexBufferRawPtr, &vertexStride, &offset);
 
 			std::shared_ptr<ID3D11Buffer> indexBufferPtr = vertexBuffer.GetIndexBuffer().GetBufferPtr();
 			m_device->SetIndexBuffer(indexBufferPtr.get());

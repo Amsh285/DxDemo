@@ -67,6 +67,7 @@ namespace dsr
 				
 				DsrResult registerResult = RegisterComponent<TComponent>(componentPtr, entity);
 
+				// maybe throw instead
 				if (registerResult.GetResultStatusCode() != RESULT_SUCCESS)
 					return nullptr;
 

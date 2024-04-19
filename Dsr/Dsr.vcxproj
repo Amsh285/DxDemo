@@ -11,6 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\EngineSubSystems\SceneSystem\SceneManager.h" />
+    <ClInclude Include="src\EngineSubSystems\SceneSystem\SceneProxy.h" />
+    <ClInclude Include="src\ErrorHandling\InvalidOperationError.h" />
     <ClInclude Include="src\EngineSubSystems\SceneSystem\Scene.h" />
     <ClInclude Include="src\InputDevices\Screen.h" />
     <ClInclude Include="src\Data\Pathfinding\AStarStaticMeshPathfinder.h" />
@@ -104,6 +107,18 @@
     <ClInclude Include="src\Data\Manipulation\StaticMeshExtData.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\EngineSubSystems\SceneSystem\SceneManager.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="src\EngineSubSystems\SceneSystem\SceneProxy.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="src\ErrorHandling\InvalidOperationError.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="src\EngineSubSystems\SceneSystem\Scene.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
