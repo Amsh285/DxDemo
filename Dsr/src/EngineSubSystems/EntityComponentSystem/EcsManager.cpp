@@ -15,8 +15,8 @@ namespace dsr
 			return ++lastId;
 		}
 
-		EcsManager::EcsManager(const std::shared_ptr<directX::Direct3dDevice>& device)
-			: m_device(device), m_engineContext(std::make_shared<EcsEngineContext>())
+		EcsManager::EcsManager()
+			: m_engineContext(std::make_shared<EcsEngineContext>())
 		{
 		}
 

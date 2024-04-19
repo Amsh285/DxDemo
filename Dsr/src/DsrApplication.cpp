@@ -32,7 +32,7 @@ namespace dsr
 		m_blenderModelLoader = std::make_shared<BlenderModelLoader>();
 		m_eventDispatcher = std::make_shared<dsr::EventDispatcher>(m_window);
 
-		m_ecsManager = std::make_shared<dsr::ecs::EcsManager>(m_device);
+		m_ecsManager = std::make_shared<dsr::ecs::EcsManager>();
 
 		InitializeSystems();
 	}
