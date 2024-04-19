@@ -9,5 +9,24 @@ namespace dsr
 			: m_scene(scene), m_ecsManager(ecsManager)
 		{
 		}
+
+		void SceneProxy::LoadEntities()
+		{
+			const Scene::EntityComponentMap& entityMap = m_scene->GetEntityComponents();
+
+			for (auto itEntity = entityMap.begin(); itEntity != entityMap.end(); itEntity++)
+			{
+				const Scene::ComponentTypeMap& componentMap = itEntity->second;
+
+				for (auto itComponent = componentMap.begin(); itComponent != componentMap.end(); itComponent++)
+				{
+					
+				}
+			}
+		}
+
+		void SceneProxy::UnloadEntities()
+		{
+		}
 	}
 }

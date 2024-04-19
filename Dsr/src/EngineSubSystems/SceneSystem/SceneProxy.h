@@ -34,6 +34,9 @@ namespace dsr
 				m_scene->RemoveComponent<TComponent>(entity);
 				m_ecsManager->RemoveComponent<TComponent>(entity);
 			}
+
+			void LoadEntities();
+			void UnloadEntities();
 		private:
 			std::shared_ptr<Scene> m_scene;
 			std::shared_ptr<dsr::ecs::EcsManager> m_ecsManager;

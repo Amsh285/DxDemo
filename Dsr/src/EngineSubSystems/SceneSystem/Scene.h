@@ -17,12 +17,15 @@ namespace dsr
 
 			uint32_t GetSceneId() const { return m_id; }
 
+			const EntityComponentMap& GetEntityComponents() const { return m_entityComponents; }
+
 			std::string GetName() const { return m_name; }
 			void SetName(const std::string& name) { m_name = name; }
 
 			std::set<dsr::ecs::Entity> GetEntities() const;
 
 			Scene();
+			Scene(const std::string& name);
 			Scene(const Scene& other) = delete;
 			Scene& operator=(const Scene& other) = delete;
 

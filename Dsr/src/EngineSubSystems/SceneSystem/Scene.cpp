@@ -23,5 +23,11 @@ namespace dsr
 
 			m_id = uid.fetch_add(1);
 		}
+
+		Scene::Scene(const std::string& name)
+			: Scene()
+		{
+			m_name = name;
+		}
 	}
 }
