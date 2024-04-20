@@ -69,12 +69,31 @@ namespace dsr
 			}
 		}
 
+		void EcsManager::RemoveComponent(const Entity& entity, const std::type_index& componentType)
+		{
+			m_engineContext->RemoveComponent(entity, componentType);
+
+			for (const std::shared_ptr<System>& system : m_systems)
+			{
+				std::pair<std::vector<Entity>, ska::flat_hash_map<Entity, size_t>>& systemEntities = m_systemEntities[system->GetType()];
+
+				std::vector<Entity>& entityVec = systemEntities.first;
+				ska::flat_hash_map<Entity, size_t>& entityIndexMap = systemEntities.second;
+
+				if (entityIndexMap.count(entity) > 0)
+				{
+					entityVec.erase(entityVec.begin() + entityIndexMap[entity]);
+					entityIndexMap.erase(entity);
+				}
+			}
+		}
+
 		void EcsManager::OnUpdate(const dsr::events::UpdateFrameEvent& updateFrameEvent)
 		{
 			for (auto it = m_systems.begin(); it != m_systems.end(); ++it)
 			{
 				std::shared_ptr<System> system = *it;
-				std::set<Entity> entities = m_systemEntities[system->GetType()];
+				const std::vector<Entity>& entities = m_systemEntities[system->GetType()].first;
 
 				for (const Entity& entity : entities)
 				{
@@ -93,7 +112,7 @@ namespace dsr
 				m_engineContext->SetCurrentEntity(0);
 				renderer->OnPrepareRendererUpdate(EnginePrepareRendererContext(m_engineContext));
 
-				std::set<Entity> entities = m_systemEntities[renderer->GetType()];
+				const std::vector<Entity>& entities = m_systemEntities[renderer->GetType()].first;
 
 				for (const Entity& entity : entities)
 				{
@@ -120,8 +139,7 @@ namespace dsr
 		{
 			for (auto& entity : m_engineContext->GetEntityComponents())
 			{
-				if (HasComponentTypeIntersection(system, entity.second))
-					m_systemEntities[system->GetType()].insert(entity.first);
+				UpdateSystemEntityAssignment(system, entity.second, entity.first);
 			}
 		}
 
@@ -130,9 +148,15 @@ namespace dsr
 			const std::unordered_map<std::type_index, std::shared_ptr<Component>>& componentMap,
 			const Entity& entity)
 		{
-			if (HasComponentTypeIntersection(system, componentMap))
+			std::pair<std::vector<Entity>, ska::flat_hash_map<Entity, size_t>>& systemEntities = m_systemEntities[system->GetType()];
+
+			std::vector<Entity>& entityVec = systemEntities.first;
+			ska::flat_hash_map<Entity, size_t>& entityIndexMap = systemEntities.second;
+
+			if (entityIndexMap.count(entity) == 0 && HasComponentTypeIntersection(system, componentMap))
 			{
-				m_systemEntities[system->GetType()].insert(entity);
+				entityVec.push_back(entity);
+				entityIndexMap[entity] = entityVec.size() - 1;
 			}
 		}
 	}

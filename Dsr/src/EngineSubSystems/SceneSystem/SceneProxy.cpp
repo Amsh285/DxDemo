@@ -20,13 +20,24 @@ namespace dsr
 
 				for (auto itComponent = componentMap.begin(); itComponent != componentMap.end(); itComponent++)
 				{
-					
+					m_ecsManager->RegisterComponent(itEntity->first, itComponent->first, itComponent->second);
 				}
 			}
 		}
 
 		void SceneProxy::UnloadEntities()
 		{
+			const Scene::EntityComponentMap& entityMap = m_scene->GetEntityComponents();
+
+			for (auto itEntity = entityMap.begin(); itEntity != entityMap.end(); itEntity++)
+			{
+				const Scene::ComponentTypeMap& componentMap = itEntity->second;
+
+				for (auto itComponent = componentMap.begin(); itComponent != componentMap.end(); itComponent++)
+				{
+					m_ecsManager->RemoveComponent(itEntity->first, itComponent->first);
+				}
+			}
 		}
 	}
 }

@@ -66,26 +66,10 @@ namespace dsr
 			{
 				static_assert(std::is_base_of<Component, TComponent>::value, "TComponent must be derived from Component.");
 
-				if (!m_engineContext->Exists(entity))
-					return;
-
-				m_engineContext->RemoveComponent<TComponent>(entity);
-
-				for (const std::shared_ptr<System>& system : m_systems)
-				{
-					std::vector<Entity>& assignedEntities = m_systemEntities[system->GetType()];
-					std::vector<std::type_index> requiredComponentTypes = system->GetRequiredComponents();
-
-					auto matchingEntityIterator = std::find(assignedEntities.begin(), assignedEntities.end(), entity);
-					bool hasMatchingEntityId = matchingEntityIterator != assignedEntities.end();
-					bool hasMatchingTypeIndex = std::find(requiredComponentTypes.begin(), requiredComponentTypes.end(), std::type_index(typeid(TComponent))) != requiredComponentTypes.end();
-
-					if (hasMatchingEntityId && hasMatchingTypeIndex)
-					{
-						assignedEntities.erase(matchingEntityIterator);
-					}
-				}
+				RemoveComponent(entity, std::type_index(typeid(TComponent)));
 			}
+
+			void RemoveComponent(const Entity& entity, const std::type_index& componentType);
 
 			template<class TSystem>
 			void RegisterSystem()
@@ -162,7 +146,7 @@ namespace dsr
 
 			std::vector<std::shared_ptr<System>> m_systems;
 			std::vector<std::shared_ptr<RendererSystem>> m_renderers;
-			std::unordered_map<std::type_index, std::set<Entity>> m_systemEntities;
+			std::unordered_map<std::type_index, std::pair<std::vector<Entity>, ska::flat_hash_map<Entity, size_t>>> m_systemEntities;
 		};
 	}
 }
