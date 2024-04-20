@@ -30,11 +30,10 @@ namespace dsr
 			{
 				static_assert(std::is_base_of<Component, TComponent>::value, "TComponent must derive Component.");
 
-				if (!Exists(entity))
-					return false;
-
-				return m_entityComponents.at(entity).find(std::type_index(typeid(TComponent))) != m_entityComponents.at(entity).end();
+				return HasComponent(entity, std::type_index(typeid(TComponent)));
 			}
+
+			bool HasComponent(const Entity& entity, const std::type_index& componentType) const;
 
 			std::vector<Entity> FindEntitiesByTag(const std::string& tag) const;
 
@@ -47,13 +46,7 @@ namespace dsr
 			template<class TComponent>
 			std::shared_ptr<TComponent> GetComponentFrom(const Entity& entity) const
 			{
-				std::optional<std::unordered_map<std::type_index, std::shared_ptr<Component>>> componentSearchResult = GetComponents(entity);
-
-				if (!componentSearchResult.has_value())
-					return nullptr;
-
-				std::unordered_map<std::type_index, std::shared_ptr<Component>> componentMap = componentSearchResult.value();
-
+				const std::unordered_map<std::type_index, std::shared_ptr<Component>>& componentMap = m_entityComponents.at(entity);
 				auto it = componentMap.find(std::type_index(typeid(TComponent)));
 
 				if (it == componentMap.end())
@@ -62,7 +55,7 @@ namespace dsr
 				return std::dynamic_pointer_cast<TComponent>(it->second);
 			}
 
-			std::optional<std::unordered_map<std::type_index, std::shared_ptr<Component>>> GetComponents(const Entity& entity) const;
+			std::unordered_map<std::type_index, std::shared_ptr<Component>>& GetComponents(const Entity& entity);
 
 			~EngineContext() = default;
 		protected:

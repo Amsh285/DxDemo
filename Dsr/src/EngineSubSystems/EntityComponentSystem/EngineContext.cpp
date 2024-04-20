@@ -11,6 +11,14 @@ namespace dsr
 			return m_entityComponents.find(entity) != m_entityComponents.end();
 		}
 
+		bool EngineContext::HasComponent(const Entity& entity, const std::type_index& componentType) const
+		{
+			if (!Exists(entity))
+				return false;
+
+			return m_entityComponents.at(entity).find(componentType) != m_entityComponents.at(entity).end();
+		}
+
 		std::vector<Entity> EngineContext::FindEntitiesByTag(const std::string& tag) const
 		{
 			auto it = m_taggedEntities.find(tag);
@@ -21,12 +29,9 @@ namespace dsr
 			return it->second;
 		}
 
-		std::optional<std::unordered_map<std::type_index, std::shared_ptr<Component>>> EngineContext::GetComponents(const Entity& entity) const
+		std::unordered_map<std::type_index, std::shared_ptr<Component>>& EngineContext::GetComponents(const Entity& entity)
 		{
-			if (m_entityComponents.find(entity) == m_entityComponents.end())
-				return std::nullopt;
-
-			return m_entityComponents.at(entity);
+			return m_entityComponents[entity];
 		}
 	}
 }

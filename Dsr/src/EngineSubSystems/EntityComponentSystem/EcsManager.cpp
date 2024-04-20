@@ -52,14 +52,31 @@ namespace dsr
 			}
 		}
 
+		void EcsManager::RegisterComponent(const Entity& entity, const std::type_index& componentType, const std::shared_ptr<Component>& component)
+		{
+			m_engineContext->AddComponent(entity, componentType, component);
+
+			std::unordered_map<std::type_index, std::shared_ptr<Component>>& componentMap = m_engineContext->GetComponents(entity);
+
+			for (std::shared_ptr<System>& system : m_systems)
+			{
+				UpdateSystemEntityAssignment(system, componentMap, entity);
+			}
+
+			for (std::shared_ptr<RendererSystem>& renderer : m_renderers)
+			{
+				UpdateSystemEntityAssignment(renderer, componentMap, entity);
+			}
+		}
+
 		void EcsManager::OnUpdate(const dsr::events::UpdateFrameEvent& updateFrameEvent)
 		{
 			for (auto it = m_systems.begin(); it != m_systems.end(); ++it)
 			{
 				std::shared_ptr<System> system = *it;
-				std::vector<Entity> entities = m_systemEntities[system->GetType()];
+				std::set<Entity> entities = m_systemEntities[system->GetType()];
 
-				for (Entity& entity : entities)
+				for (const Entity& entity : entities)
 				{
 					m_engineContext->SetCurrentEntity(entity);
 					system->OnUpdate(*m_engineContext);
@@ -76,9 +93,9 @@ namespace dsr
 				m_engineContext->SetCurrentEntity(0);
 				renderer->OnPrepareRendererUpdate(EnginePrepareRendererContext(m_engineContext));
 
-				std::vector<Entity> entities = m_systemEntities[renderer->GetType()];
+				std::set<Entity> entities = m_systemEntities[renderer->GetType()];
 
-				for (Entity& entity : entities)
+				for (const Entity& entity : entities)
 				{
 					m_engineContext->SetCurrentEntity(entity);
 					renderer->OnUpdate(*m_engineContext);
@@ -104,7 +121,7 @@ namespace dsr
 			for (auto& entity : m_engineContext->GetEntityComponents())
 			{
 				if (HasComponentTypeIntersection(system, entity.second))
-					m_systemEntities[system->GetType()].push_back(entity.first);
+					m_systemEntities[system->GetType()].insert(entity.first);
 			}
 		}
 
@@ -113,12 +130,9 @@ namespace dsr
 			const std::unordered_map<std::type_index, std::shared_ptr<Component>>& componentMap,
 			const Entity& entity)
 		{
-			std::vector<Entity>& systemEntityVector = m_systemEntities[system->GetType()];
-
-			//check if the entity is already registered for the current system and if the componentmap of the entity has the components needed by the current system.
-			if (std::find(systemEntityVector.begin(), systemEntityVector.end(), entity) == systemEntityVector.end() && HasComponentTypeIntersection(system, componentMap))
+			if (HasComponentTypeIntersection(system, componentMap))
 			{
-				systemEntityVector.push_back(entity);
+				m_systemEntities[system->GetType()].insert(entity);
 			}
 		}
 	}

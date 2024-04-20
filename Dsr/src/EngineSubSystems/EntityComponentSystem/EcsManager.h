@@ -36,72 +36,30 @@ namespace dsr
 			void OrderSystems();
 			void RaiseSystemStartEvents();
 
-			template<class TComponent>
-			std::shared_ptr<TComponent> RegisterComponent(const Entity& entity)
-			{
-				static_assert(std::is_base_of<Component, TComponent>::value, "TComponent must be derived from Component.");
-
-				std::shared_ptr<TComponent> component = std::make_shared<TComponent>();
-
-				if (m_engineContext->HasComponent<TComponent>(entity))
-					return nullptr;
-
-				DsrResult registerResult = RegisterComponent<TComponent>(component, entity);
-
-				if (registerResult.GetResultStatusCode() != RESULT_SUCCESS)
-					return nullptr;
-
-				return component;
-			}
-
 			template<class TComponent, class ...TArgs>
 			std::shared_ptr<TComponent> RegisterComponent(const Entity& entity, TArgs... args)
 			{
 				static_assert(std::is_base_of<Component, TComponent>::value, "TComponent must be derived from Component.");
 
-				//only one of the same component for an entity
-				if (m_engineContext->HasComponent<TComponent>(entity))
-					return nullptr;
-
 				auto componentPtr = std::make_shared<TComponent>(args...);
-				
-				DsrResult registerResult = RegisterComponent<TComponent>(componentPtr, entity);
-
-				// maybe throw instead
-				if (registerResult.GetResultStatusCode() != RESULT_SUCCESS)
-					return nullptr;
+				RegisterComponent<TComponent>(componentPtr, entity);
 
 				return componentPtr;
 			}
 
 			template<class TComponent>
-			DsrResult RegisterComponent(const std::shared_ptr<TComponent>& component, const Entity& entity)
+			void RegisterComponent(const std::shared_ptr<TComponent>& component, const Entity& entity)
 			{
 				static_assert(std::is_base_of<Component, TComponent>::value, "TComponent must be derived from Component.");
 
-				//only one of the same component for an entity
-				if (m_engineContext->HasComponent<TComponent>(entity))
-					return DsrResult("Component already registered.", REGISTERCOMPONENT_ALREADYREGISTERED);
-
-				m_engineContext->AddComponent(entity, component);
-
-				std::optional<std::unordered_map<std::type_index, std::shared_ptr<Component>>> getComponentResult = m_engineContext->GetComponents(entity);
-				assert(getComponentResult.has_value());
-
-				const std::unordered_map<std::type_index, std::shared_ptr<Component>> componentMap = getComponentResult.value();
-
-				for (std::shared_ptr<System>& system : m_systems)
-				{
-					UpdateSystemEntityAssignment(system, componentMap, entity);
-				}
-
-				for (std::shared_ptr<RendererSystem>& renderer : m_renderers)
-				{
-					UpdateSystemEntityAssignment(renderer, componentMap, entity);
-				}
-
-				return DsrResult::Success("Component registered.");
+				RegisterComponent(entity, std::type_index(typeid(TComponent)), component);
 			}
+
+			void RegisterComponent(
+				const Entity& entity,
+				const std::type_index& componentType,
+				const std::shared_ptr<Component>& component
+			);
 
 			template<class TComponent>
 			void RemoveComponent(const Entity& entity)
@@ -204,7 +162,7 @@ namespace dsr
 
 			std::vector<std::shared_ptr<System>> m_systems;
 			std::vector<std::shared_ptr<RendererSystem>> m_renderers;
-			std::unordered_map<std::type_index, std::vector<Entity>> m_systemEntities;
+			std::unordered_map<std::type_index, std::set<Entity>> m_systemEntities;
 		};
 	}
 }
