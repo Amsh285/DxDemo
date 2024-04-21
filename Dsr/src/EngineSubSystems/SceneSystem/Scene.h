@@ -40,40 +40,34 @@ namespace dsr
 				auto it = entityComponents.find(typeKey);
 
 				if (it != entityComponents.end())
-					throw dsr::InvalidOperationError("cannot add duplicate Component of type: " + typeKey);
+					return;
 
 				std::shared_ptr<TComponent> component = std::make_shared<TComponent>(args...);
 				entityComponents[typeKey] = component;
 			}
 
 			template<class TComponent>
-			void AddComponent(const std::shared_ptr<TComponent>& component, const dsr::ecs::Entity& entity)
+			void AddComponent(const dsr::ecs::Entity& entity, const std::shared_ptr<TComponent>& component)
 			{
 				static_assert(std::is_base_of<dsr::ecs::Component, TComponent>::value, "TComponent must be derived from Component.");
 
-				ComponentTypeMap& entityComponents = m_entityComponents[entity];
-				std::type_index typeKey = std::type_index(typeid(TComponent));
-
-				auto it = entityComponents.find(typeKey);
-
-				if (it != entityComponents.end())
-					throw dsr::InvalidOperationError("cannot add duplicate Component of type: " + typeKey);
-
-				entityComponents[typeKey] = component;
+				AddComponent(entity, std::type_index(typeid(TComponent)), component);
 			}
+
+			void AddComponent(
+				const dsr::ecs::Entity& entity,
+				const std::type_index& componentType,
+				const std::shared_ptr<dsr::ecs::Component>& component);
 
 			template<class TComponent>
 			void RemoveComponent(const dsr::ecs::Entity& entity)
 			{
 				static_assert(std::is_base_of<dsr::ecs::Component, TComponent>::value, "TComponent must be derived from Component.");
 
-				auto it = m_entityComponents.find(entity);
-
-				if (it == m_entityComponents.end())
-					return;
-
-				it->second.erase(std::type_index(typeid(TComponent)));
+				RemoveComponent(entity, std::type_index(typeid(TComponent)));
 			}
+
+			void RemoveComponent(const dsr::ecs::Entity& entity, const std::type_index& componentType);
 		private:
 			uint32_t m_id;
 			std::string m_name;

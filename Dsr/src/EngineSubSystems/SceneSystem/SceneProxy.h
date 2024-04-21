@@ -22,11 +22,17 @@ namespace dsr
 			}
 
 			template<class TComponent>
-			void AddComponent(const std::shared_ptr<TComponent>& component, const dsr::ecs::Entity& entity)
+			void AddComponent(const dsr::ecs::Entity& entity, const std::shared_ptr<TComponent>& component)
 			{
 				m_scene->AddComponent<TComponent>(component, entity);
 				m_ecsManager->RegisterComponent<TComponent>(component, entity);
 			}
+
+			void AddComponent(
+				const dsr::ecs::Entity& entity,
+				const std::type_index& componentType,
+				const std::shared_ptr<dsr::ecs::Component>& component
+			);
 
 			template<class TComponent>
 			void RemoveComponent(const dsr::ecs::Entity& entity)
@@ -37,6 +43,9 @@ namespace dsr
 
 			void LoadEntities();
 			void UnloadEntities();
+
+			bool Equals(const uint32_t& sceneId);
+			bool Equals(const std::shared_ptr<Scene>& scene);
 		private:
 			std::shared_ptr<Scene> m_scene;
 			std::shared_ptr<dsr::ecs::EcsManager> m_ecsManager;

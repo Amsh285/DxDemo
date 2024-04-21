@@ -8,6 +8,14 @@ namespace dsr
 		SceneProxy::SceneProxy(const std::shared_ptr<Scene>& scene, const std::shared_ptr<dsr::ecs::EcsManager>& ecsManager)
 			: m_scene(scene), m_ecsManager(ecsManager)
 		{
+			assert(m_scene);
+			assert(m_ecsManager);
+		}
+
+		void SceneProxy::AddComponent(const dsr::ecs::Entity& entity, const std::type_index& componentType, const std::shared_ptr<dsr::ecs::Component>& component)
+		{
+			m_scene->AddComponent(entity, componentType, component);
+			m_ecsManager->RegisterComponent(entity, componentType, component);
 		}
 
 		void SceneProxy::LoadEntities()
@@ -38,6 +46,16 @@ namespace dsr
 					m_ecsManager->RemoveComponent(itEntity->first, itComponent->first);
 				}
 			}
+		}
+
+		bool SceneProxy::Equals(const uint32_t& sceneId)
+		{
+			return m_scene->GetSceneId() == sceneId;
+		}
+
+		bool SceneProxy::Equals(const std::shared_ptr<Scene>& scene)
+		{
+			return scene && m_scene->GetSceneId() == scene->GetSceneId();
 		}
 	}
 }

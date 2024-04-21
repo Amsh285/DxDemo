@@ -15,30 +15,67 @@ namespace dsr
 			return dsr::ecs::EcsManager::CreateNewEntity();
 		}
 
-		std::shared_ptr<Scene> SceneManager::CreateNewScene(const std::string& name)
+		std::pair<uint32_t, std::string> SceneManager::CreateNewScene(const std::string& name)
 		{
 			std::shared_ptr<Scene> scene = std::make_shared<Scene>(name);
-			m_scenes.push_back(scene);
+			m_scenes.insert({ scene->GetSceneId(), scene });
 
-			return scene;
+			return std::pair<uint32_t, std::string>(scene->GetSceneId(), name);
 		}
 
-		std::optional<std::shared_ptr<SceneProxy>> SceneManager::SetActiveScene(const std::shared_ptr<Scene>& scene)
+		void SceneManager::AddScene(const std::shared_ptr<Scene>& scene)
 		{
-			if (!scene)
-				return std::nullopt;
+			m_scenes.insert({ scene->GetSceneId(), scene });
+		}
 
-			auto it = std::find_if(
-				m_scenes.begin(),
-				m_scenes.end(),
-				[&scene](const std::shared_ptr<Scene>& current) {
-					return current->GetSceneId() == scene->GetSceneId();
-				});
+		void SceneManager::RemoveScene(const uint32_t& sceneId)
+		{
+			RemoveScene(m_scenes.at(sceneId));
+		}
 
-			if (it == m_scenes.end())
-				return std::nullopt;
+		void SceneManager::RemoveScene(const std::shared_ptr<Scene>& scene)
+		{
+			if (m_activeScene && m_activeScene->Equals(scene))
+			{
+				m_activeScene->UnloadEntities();
+				m_activeScene.reset();
+			}
 
-			return std::make_shared<SceneProxy>(*it, m_ecsManager);
+			m_scenes.erase(scene->GetSceneId());
+		}
+
+		void SceneManager::AddComponent(const uint32_t& sceneId, const dsr::ecs::Entity& entity, const std::type_index& componentType, const std::shared_ptr<dsr::ecs::Component>& component)
+		{
+			if (m_activeScene && m_activeScene->Equals(sceneId))
+			{
+				m_activeScene->AddComponent(entity, componentType, component);
+			}
+			else
+			{
+				auto it = m_scenes.find(sceneId);
+
+				if (it == m_scenes.end())
+					return;
+
+				it->second->AddComponent(entity, componentType, component);
+			}
+		}
+
+		void SceneManager::SetActiveScene(const uint32_t& sceneId)
+		{
+			if (m_scenes.count(sceneId) == 0)
+				return;
+
+			if (m_activeScene)
+			{
+				if (m_activeScene->Equals(sceneId))
+					return;
+
+				m_activeScene->UnloadEntities();
+			}
+
+			m_activeScene = std::make_unique<SceneProxy>(m_scenes[sceneId], m_ecsManager);
+			m_activeScene->LoadEntities();
 		}
 	}
 }

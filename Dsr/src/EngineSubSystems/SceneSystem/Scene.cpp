@@ -29,5 +29,27 @@ namespace dsr
 		{
 			m_name = name;
 		}
+
+		void Scene::AddComponent(const dsr::ecs::Entity& entity, const std::type_index& componentType, const std::shared_ptr<dsr::ecs::Component>& component)
+		{
+			ComponentTypeMap& entityComponents = m_entityComponents[entity];
+
+			auto it = entityComponents.find(componentType);
+
+			if (it != entityComponents.end())
+				return;
+
+			entityComponents[componentType] = component;
+		}
+
+		void Scene::RemoveComponent(const dsr::ecs::Entity& entity, const std::type_index& componentType)
+		{
+			auto it = m_entityComponents.find(entity);
+
+			if (it == m_entityComponents.end())
+				return;
+
+			it->second.erase(componentType);
+		}
 	}
 }
