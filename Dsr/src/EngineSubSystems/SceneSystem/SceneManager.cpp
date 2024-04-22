@@ -15,12 +15,12 @@ namespace dsr
 			return dsr::ecs::EcsManager::CreateNewEntity();
 		}
 
-		std::pair<uint32_t, std::string> SceneManager::CreateNewScene(const std::string& name)
+		uint32_t SceneManager::CreateNewScene(const std::string& name)
 		{
 			std::shared_ptr<Scene> scene = std::make_shared<Scene>(name);
 			m_scenes.insert({ scene->GetSceneId(), scene });
 
-			return std::pair<uint32_t, std::string>(scene->GetSceneId(), name);
+			return scene->GetSceneId();
 		}
 
 		void SceneManager::AddScene(const std::shared_ptr<Scene>& scene)

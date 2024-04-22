@@ -26,6 +26,8 @@
 #include "EngineSubSystems/EntityComponentSystem/EcsSystems/Renderers/StaticMeshRendererSystem.h"
 #include "EngineSubSystems/EntityComponentSystem/EcsSystems/Renderers/WireframeRendererSystem.h"
 
+#include "EngineSubSystems/SceneSystem/SceneManager.h"
+
 #include "EngineSubSystems/Input/InputSystem.h"
 #include "EngineSubSystems/Time/Time.h"
 
@@ -53,6 +55,7 @@ namespace dsr
 		std::shared_ptr<BlenderModelLoader> m_blenderModelLoader;
 
 		std::shared_ptr<dsr::ecs::EcsManager> m_ecsManager;
+		std::shared_ptr<dsr::scenesystem::SceneManager> m_sceneManager;
 
 		dsr::ecs::Entity m_cameraEntity;
 

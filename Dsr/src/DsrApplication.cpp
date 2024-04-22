@@ -33,6 +33,7 @@ namespace dsr
 		m_eventDispatcher = std::make_shared<dsr::EventDispatcher>(m_window);
 
 		m_ecsManager = std::make_shared<dsr::ecs::EcsManager>();
+		m_sceneManager = std::make_shared<dsr::scenesystem::SceneManager>(m_ecsManager);
 
 		InitializeSystems();
 	}

@@ -11,6 +11,8 @@
 #include "Systems/CameraControllerSystem.h"
 #include "Systems/EditorUISystem.h"
 
+#include "Scenes/RampScene.h"
+
 class NavMeshDemoApplication : public dsr::DsrApplication
 {
 public:
@@ -49,4 +51,6 @@ private:
 	std::shared_ptr<dsr::WavefrontModel> m_mapModel;
 	std::shared_ptr<dsr::WavefrontModel> m_mapUpperSurfaceModel;
 	std::shared_ptr<dsr::WavefrontModel> m_mapUpperSurfaceSubDividedModel;
+
+	std::shared_ptr<RampScene> m_rampScene;
 };

@@ -19,14 +19,14 @@ namespace dsr
 
 			dsr::ecs::Entity CreateNewEntity() const;
 			
-			std::pair<uint32_t, std::string> CreateNewScene(const std::string& name);
+			uint32_t CreateNewScene(const std::string& name);
 			void AddScene(const std::shared_ptr<Scene>& scene);
 
 			void RemoveScene(const uint32_t& sceneId);
 			void RemoveScene(const std::shared_ptr<Scene>& scene);
 			
 			template<class TComponent, class ...TArgs>
-			void AddComponent(const dsr::ecs::Entity& entity, TArgs... args)
+			void AddComponent(const uint32_t& sceneId, const dsr::ecs::Entity& entity, TArgs... args)
 			{
 				static_assert(std::is_base_of<dsr::ecs::Component, TComponent>::value, "TComponent must be derived from Component.");
 
@@ -41,16 +41,16 @@ namespace dsr
 					if (it == m_scenes.end())
 						return;
 
-					it->second->AddComponent<TComponent>(entity, args..);
+					it->second->AddComponent<TComponent>(entity, args...);
 				}
 			}
 
 			template<class TComponent>
-			void AddComponent(const dsr::ecs::Entity& entity, const std::shared_ptr<TComponent>& component)
+			void AddComponent(const uint32_t& sceneId, const dsr::ecs::Entity& entity, const std::shared_ptr<TComponent>& component)
 			{
 				static_assert(std::is_base_of<dsr::ecs::Component, TComponent>::value, "TComponent must be derived from Component.");
 
-				AddComponent(entity, std::type_index(typeid(TComponent)), component);
+				AddComponent(sceneId, entity, std::type_index(typeid(TComponent)), component);
 			}
 
 			void AddComponent(

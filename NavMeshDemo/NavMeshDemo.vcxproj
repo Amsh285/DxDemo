@@ -135,6 +135,7 @@
   <ItemGroup>
     <ClCompile Include="Components\CameraControllerComponent.cpp" />
     <ClCompile Include="Components\EditorUIComponent.cpp" />
+    <ClCompile Include="Scenes\RampScene.cpp" />
     <ClCompile Include="Systems\EditorUISystem.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NavMeshDemoApplication.cpp" />
@@ -143,6 +144,7 @@
   <ItemGroup>
     <ClInclude Include="Components\CameraControllerComponent.h" />
     <ClInclude Include="Components\EditorUIComponent.h" />
+    <ClInclude Include="Scenes\RampScene.h" />
     <ClInclude Include="Systems\EditorUISystem.h" />
     <ClInclude Include="NavMeshDemoApplication.h" />
     <ClInclude Include="Systems\CameraControllerSystem.h" />
