@@ -15,10 +15,11 @@ namespace dsr
 			SceneProxy& operator=(const SceneProxy& other) = delete;
 
 			template<class TComponent, class ...TArgs>
-			void AddComponent(const dsr::ecs::Entity& entity, TArgs... args)
+			std::shared_ptr<TComponent> AddComponent(const dsr::ecs::Entity& entity, TArgs... args)
 			{
-				m_scene->AddComponent<TComponent, TArgs...>(entity, args...);
-				m_ecsManager->RegisterComponent<TComponent, TArgs...>(entity, args...);
+				std::shared_ptr<TComponent> componentPtr = m_scene->AddComponent<TComponent, TArgs...>(entity, args...);
+				m_ecsManager->RegisterComponent(componentPtr, entity);
+				return componentPtr;
 			}
 
 			template<class TComponent>

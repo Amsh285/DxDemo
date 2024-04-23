@@ -13,6 +13,12 @@ namespace dsr
 		class SceneManager
 		{
 		public:
+			template<class TComponent>
+			std::shared_ptr<TComponent> GetComponentFrom(const uint32_t& sceneId,  const dsr::ecs::Entity& entity) const
+			{
+				return m_scenes.at(sceneId)->GetComponentFrom<TComponent>(entity);
+			}
+
 			SceneManager(const std::shared_ptr<dsr::ecs::EcsManager>& ecaManager);
 			SceneManager(const SceneManager& other) = delete;
 			SceneManager& operator=(const SceneManager& other) = delete;
@@ -26,22 +32,22 @@ namespace dsr
 			void RemoveScene(const std::shared_ptr<Scene>& scene);
 			
 			template<class TComponent, class ...TArgs>
-			void AddComponent(const uint32_t& sceneId, const dsr::ecs::Entity& entity, TArgs... args)
+			std::shared_ptr<TComponent> AddComponent(const uint32_t& sceneId, const dsr::ecs::Entity& entity, TArgs... args)
 			{
 				static_assert(std::is_base_of<dsr::ecs::Component, TComponent>::value, "TComponent must be derived from Component.");
 
 				if (m_activeScene && m_activeScene->Equals(sceneId))
 				{
-					m_activeScene->AddComponent<TComponent>(entity, args...);
+					return m_activeScene->AddComponent<TComponent>(entity, args...);
 				}
 				else
 				{
 					auto it = m_scenes.find(sceneId);
 
 					if (it == m_scenes.end())
-						return;
+						throw NotFoundError("SceneId: " + std::to_string(sceneId) +  " not found.");
 
-					it->second->AddComponent<TComponent>(entity, args...);
+					return it->second->AddComponent<TComponent>(entity, args...);
 				}
 			}
 

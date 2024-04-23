@@ -24,13 +24,19 @@ namespace dsr
 
 			std::set<dsr::ecs::Entity> GetEntities() const;
 
+			template<class TComponent>
+			std::shared_ptr<TComponent> GetComponentFrom(const dsr::ecs::Entity& entity) const
+			{ 
+				return std::dynamic_pointer_cast<TComponent>(m_entityComponents.at(entity).at(std::type_index(typeid(TComponent))));
+			}
+
 			Scene();
 			Scene(const std::string& name);
 			Scene(const Scene& other) = delete;
 			Scene& operator=(const Scene& other) = delete;
 
 			template<class TComponent, class ...TArgs>
-			void AddComponent(const dsr::ecs::Entity& entity, TArgs... args)
+			std::shared_ptr<TComponent> AddComponent(const dsr::ecs::Entity& entity, TArgs... args)
 			{
 				static_assert(std::is_base_of<dsr::ecs::Component, TComponent>::value, "TComponent must be derived from Component.");
 
@@ -40,10 +46,17 @@ namespace dsr
 				auto it = entityComponents.find(typeKey);
 
 				if (it != entityComponents.end())
-					return;
+				{
+					std::string errorMesssage = "Entity: ";
+					errorMesssage += std::to_string(entity) + " ComponentType: " ;
+					errorMesssage += typeKey.name();
+					errorMesssage += " cannot be registered twice.";
+					throw InvalidOperationError(errorMesssage);
+				}
 
 				std::shared_ptr<TComponent> component = std::make_shared<TComponent>(args...);
 				entityComponents[typeKey] = component;
+				return component;
 			}
 
 			template<class TComponent>
