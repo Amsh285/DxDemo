@@ -297,6 +297,9 @@
     <ClInclude Include="src\EngineSubSystems\SceneSystem\SceneManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\EntityComponentStore.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Windows\Window.cpp">
@@ -549,6 +552,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\EngineSubSystems\SceneSystem\SceneManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\EntityComponentStore.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
