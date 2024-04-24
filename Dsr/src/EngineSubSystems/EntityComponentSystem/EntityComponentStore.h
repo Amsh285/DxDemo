@@ -24,6 +24,9 @@ namespace dsr
 
 			bool HasComponent(const Entity& entity, const std::type_index& componentType) const;
 
+			EntityComponentMap& GetEntityComponentMap() { return m_entityComponents; }
+
+			EntityComponentStore() = default;
 			EntityComponentStore(const EntityComponentStore& other) = delete;
 			EntityComponentStore& operator=(const EntityComponentStore& other) = delete;
 
@@ -61,7 +64,7 @@ namespace dsr
 			void RemoveComponent(const dsr::ecs::Entity& entity, const std::type_index& componentType);
 
 			void Clear();
-			void Clear(const dsr::ecs::Entity& entity)
+			void Clear(const dsr::ecs::Entity& entity);
 		protected:
 			std::unordered_map<std::string, std::vector<Entity>> m_taggedEntities;
 			EntityComponentMap m_entityComponents;
