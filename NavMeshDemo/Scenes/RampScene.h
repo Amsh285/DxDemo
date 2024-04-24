@@ -23,6 +23,7 @@ public:
 	);
 
 	dsr::DsrResult BuildScene();
+	void SetActive();
 private:
 	uint32_t m_sceneId;
 	std::string m_sceneName;

@@ -53,6 +53,15 @@ dsr::DsrResult RampScene::BuildScene()
 	RegisterMapUpperSurfaceModel(models[1]);
 	RegisterMapUpperSurfaceSubDividedModel();
 	RegisterStartEndMarkerEntities();
+	RegisterPathEntity();
+	RegisterMapFaceNormalsEntity();
+
+	return DsrResult::Success("Build RampScene Success.");
+}
+
+void RampScene::SetActive()
+{
+	m_sceneManager->SetActiveScene(m_sceneId);
 }
 
 std::variant<std::vector<dsr::ModelConfiguration>, dsr::dsr_error> RampScene::LoadSceneData()

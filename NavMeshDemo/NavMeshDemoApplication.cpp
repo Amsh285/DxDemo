@@ -99,5 +99,6 @@ dsr::DsrResult NavMeshDemoApplication::Setup()
 	DirectX::XMFLOAT3 cameraPosition = DirectX::XMFLOAT3(0.0f, 10.0f, -50.0f);
 	cameraTransform->SetPositionVec3(cameraPosition);
 
+	m_rampScene->SetActive();
 	return dsr::DsrResult::Success("Setup Successful.");
 }
