@@ -78,6 +78,24 @@ namespace EntityComponentStoreTests
 		EXPECT_NE(entityComponentMap[first][std::type_index(typeid(NameComponent))], nameComponent2);
 	}
 
+	TEST(AddComponent, TagComponentAddsAlsoToTagMap)
+	{
+		const Entity first = 1;
+
+		EntityComponentStore store;
+		EntityComponentStore::EntityComponentMap& entityComponentMap = store.GetEntityComponentMap();
+		EntityComponentStore::EntityTagMap& tagMap = store.GetTagMap();
+
+
+		std::shared_ptr<NameComponent> nameComponent = store.AddComponent<NameComponent>(first, "123");
+		std::shared_ptr<TagComponent> tagComponent = store.AddComponent<TagComponent>(first, "myTag");
+
+		EXPECT_EQ(entityComponentMap[first].size(), 2);
+		EXPECT_EQ(tagMap.size(), 1);
+		EXPECT_EQ(entityComponentMap[first].count(std::type_index(typeid(TagComponent))), 1);
+		EXPECT_EQ(tagMap.count(tagComponent->GetTag()), 1);
+	}
+
 	TEST(RemoveComponent, RemovesValidComponent)
 	{
 		const Entity first = 1;
@@ -97,6 +115,27 @@ namespace EntityComponentStoreTests
 		ASSERT_EQ(entityComponentMap[first].size(), 1);
 		ASSERT_EQ(entityComponentMap[first].count(std::type_index(typeid(NameComponent))), 1);
 		ASSERT_EQ(entityComponentMap[first].count(std::type_index(typeid(TagComponent))), 0);
+	}
+
+	TEST(RemoveComponent, TagComponentAlsoRemovesFromTagMap)
+	{
+		const Entity first = 1;
+
+		EntityComponentStore store;
+		EntityComponentStore::EntityComponentMap& entityComponentMap = store.GetEntityComponentMap();
+		EntityComponentStore::EntityTagMap& tagMap = store.GetTagMap();
+
+		std::shared_ptr<NameComponent> nameComponent = store.AddComponent<NameComponent>(first, "123");
+		std::shared_ptr<TagComponent> tagComponent = store.AddComponent<TagComponent>(first, "myTag");
+
+		EXPECT_EQ(entityComponentMap[first].size(), 2);
+		EXPECT_EQ(tagMap.count(tagComponent->GetTag()), 1);
+		EXPECT_EQ(tagMap.at(tagComponent->GetTag()).size(), 1);
+
+		store.RemoveComponent<TagComponent>(first);
+
+		EXPECT_EQ(entityComponentMap[first].size(), 1);
+		EXPECT_EQ(tagMap.at(tagComponent->GetTag()).size(), 0);
 	}
 
 	TEST(ClearEntity, RemovesValidEntity)
@@ -172,7 +211,7 @@ namespace EntityComponentStoreTests
 		EXPECT_EQ(actual2.value(), nameComponent2);
 	}
 
-	TEST(GetComponentFrom, EntityNotFoundReturnsNullopt)
+	TEST(GetComponentFrom, EntityNotFoundReturnsnullptr)
 	{
 		const Entity first = 1;
 
@@ -182,12 +221,12 @@ namespace EntityComponentStoreTests
 		std::shared_ptr<NameComponent> nameComponent = store.AddComponent<NameComponent>(first, "123");
 		std::shared_ptr<TagComponent> tagComponent = store.AddComponent<TagComponent>(first, "myTag");
 
-		std::optional<std::shared_ptr<NameComponent>> actual = store.GetComponentFrom<NameComponent>(123);
+		std::shared_ptr<NameComponent> actual = store.GetComponentFrom<NameComponent>(123);
 
-		EXPECT_FALSE(actual.has_value());
+		EXPECT_EQ(actual, nullptr);
 	}
 
-	TEST(GetComponentFrom, ComponentNotFoundReturnsNullopt)
+	TEST(GetComponentFrom, ComponentNotFoundReturnsnullptr)
 	{
 		const Entity first = 1;
 
@@ -196,8 +235,8 @@ namespace EntityComponentStoreTests
 
 		std::shared_ptr<NameComponent> nameComponent = store.AddComponent<NameComponent>(first, "123");
 
-		std::optional<std::shared_ptr<TagComponent>> actual = store.GetComponentFrom<TagComponent>(123);
+		std::shared_ptr<TagComponent> actual = store.GetComponentFrom<TagComponent>(first);
 
-		EXPECT_FALSE(actual.has_value());
+		EXPECT_EQ(actual, nullptr);
 	}
 }

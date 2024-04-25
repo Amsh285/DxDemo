@@ -3,6 +3,8 @@
 #include "Component.h"
 #include "Entity.h"
 
+#include "Components/TagComponent.h"
+
 namespace dsr
 {
 	namespace ecs
@@ -11,6 +13,7 @@ namespace dsr
 		{
 		public:
 			// using ska::flat_hashmap cannot show ComponentTypeMap while debugging
+			using EntityTagMap = std::unordered_map<std::string, std::set<Entity>>;
 			using ComponentTypeMap = std::unordered_map<std::type_index, std::shared_ptr<dsr::ecs::Component>>;
 			using EntityComponentMap = std::unordered_map<dsr::ecs::Entity, ComponentTypeMap>;
 
@@ -25,22 +28,25 @@ namespace dsr
 			bool HasComponent(const Entity& entity, const std::type_index& componentType) const;
 
 			EntityComponentMap& GetEntityComponentMap() { return m_entityComponents; }
+			EntityTagMap& GetTagMap() { return m_taggedEntities; }
 
 			template<class TComponent>
-			std::optional<std::shared_ptr<TComponent>> GetComponentFrom(const Entity& entity) const
+			std::shared_ptr<TComponent> GetComponentFrom(const Entity& entity) const
 			{
 				auto itEntity = m_entityComponents.find(entity);
 				
 				if (itEntity == m_entityComponents.end())
-					return std::nullopt;
+					return nullptr;
 
 				auto itComponentMap = itEntity->second.find(std::type_index(typeid(TComponent)));
 
 				if (itComponentMap == itEntity->second.end())
-					return std::nullopt;
+					return nullptr;
 
 				return std::dynamic_pointer_cast<TComponent>(itComponentMap->second);
 			}
+
+			std::set<Entity> FindEntitiesByTag(const std::string& tag);
 
 			EntityComponentStore() = default;
 			EntityComponentStore(const EntityComponentStore& other) = delete;
@@ -83,7 +89,7 @@ namespace dsr
 			void Clear();
 			void Clear(const dsr::ecs::Entity& entity);
 		protected:
-			std::unordered_map<std::string, std::vector<Entity>> m_taggedEntities;
+			EntityTagMap m_taggedEntities;
 			EntityComponentMap m_entityComponents;
 		private:
 		};
