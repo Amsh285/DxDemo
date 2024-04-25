@@ -26,9 +26,26 @@ namespace dsr
 
 			EntityComponentMap& GetEntityComponentMap() { return m_entityComponents; }
 
+			template<class TComponent>
+			std::optional<std::shared_ptr<TComponent>> GetComponentFrom(const Entity& entity) const
+			{
+				auto itEntity = m_entityComponents.find(entity);
+				
+				if (itEntity == m_entityComponents.end())
+					return std::nullopt;
+
+				auto itComponentMap = itEntity->second.find(std::type_index(typeid(TComponent)));
+
+				if (itComponentMap == itEntity->second.end())
+					return std::nullopt;
+
+				return std::dynamic_pointer_cast<TComponent>(itComponentMap->second);
+			}
+
 			EntityComponentStore() = default;
 			EntityComponentStore(const EntityComponentStore& other) = delete;
 			EntityComponentStore& operator=(const EntityComponentStore& other) = delete;
+			virtual ~EntityComponentStore() = default;
 
 			template<class TComponent, class ...TArgs>
 			std::shared_ptr<TComponent> AddComponent(const dsr::ecs::Entity& entity, TArgs... args)
