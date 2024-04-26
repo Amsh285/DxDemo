@@ -10,7 +10,7 @@ namespace dsr
 		{
 		public:
 			void SetCurrentEntity(const Entity& current) { m_currentEntity = current; }
-			const std::unordered_map<Entity, std::unordered_map<std::type_index, std::shared_ptr<Component>>>& GetEntityComponents() const { return m_entityComponents; }
+			EntityComponentStore::EntityComponentMap& GetEntityComponents() { return m_entityComponents.GetEntityComponentMap(); }
 
 			template<class TComponent>
 			void AddComponent(const Entity& entity, const std::shared_ptr<TComponent>& component)

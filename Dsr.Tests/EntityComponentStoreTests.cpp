@@ -31,7 +31,7 @@ namespace EntityComponentStoreTests
 		const Entity first = 1;
 
 		EntityComponentStore store;
-		
+
 		bool result = store.HasComponent<NameComponent>(first);
 		EXPECT_FALSE(result);
 	}
@@ -55,7 +55,7 @@ namespace EntityComponentStoreTests
 		EntityComponentStore::EntityComponentMap& entityComponentMap = store.GetEntityComponentMap();
 
 		std::shared_ptr<NameComponent> nameComponent = store.AddComponent<NameComponent>(first, "123");
-		
+
 		ASSERT_NE(nameComponent, nullptr);
 		EXPECT_STREQ(nameComponent->GetName().c_str(), "123");
 		EXPECT_EQ(entityComponentMap.size(), 1);
@@ -294,5 +294,48 @@ namespace EntityComponentStoreTests
 		std::shared_ptr<TagComponent> actual = store.GetComponentFrom<TagComponent>(first);
 
 		EXPECT_EQ(actual, nullptr);
+	}
+
+	TEST(FindEntitiesByTag, TagNotFound_ReturnsEmptyVector)
+	{
+		const Entity first = 1;
+		const Entity second = 1;
+		const Entity third = 1;
+
+		EntityComponentStore store;
+		EntityComponentStore::EntityComponentMap& entityComponentMap = store.GetEntityComponentMap();
+
+		store.AddComponent<TagComponent>(first, "test");
+		store.AddComponent<TagComponent>(second, "test");
+		store.AddComponent<TagComponent>(first, "foo");
+
+		std::vector<Entity> match = store.FindEntitiesByTag("asd");
+
+		EXPECT_EQ(match.size(), 0);
+	}
+
+	TEST(FindEntitiesByTag, TagFound_ReturnsVectorContainingCorrectEntities)
+	{
+		const Entity first = 1;
+		const Entity second = 2;
+		const Entity third = 3;
+
+		EntityComponentStore store;
+		EntityComponentStore::EntityComponentMap& entityComponentMap = store.GetEntityComponentMap();
+
+		store.AddComponent<TagComponent>(first, "test");
+		store.AddComponent<TagComponent>(second, "test");
+		store.AddComponent<TagComponent>(third, "foo");
+
+		std::vector<Entity> match_test = store.FindEntitiesByTag("test");
+		std::vector<Entity> match_foo = store.FindEntitiesByTag("foo");
+
+		ASSERT_EQ(match_test.size(), 2);
+		ASSERT_EQ(match_foo.size(), 1);
+
+		EXPECT_EQ(std::count(match_test.begin(), match_test.end(), first), 1);
+		EXPECT_EQ(std::count(match_test.begin(), match_test.end(), second), 1);
+		
+		EXPECT_EQ(std::count(match_foo.begin(), match_foo.end(), third), 1);
 	}
 }

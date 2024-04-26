@@ -28,6 +28,7 @@ namespace dsr
 			bool HasComponent(const Entity& entity, const std::type_index& componentType) const;
 
 			EntityComponentMap& GetEntityComponentMap() { return m_entityComponents; }
+			ComponentTypeMap& GetComponentTypeMap(const Entity& entity) { return m_entityComponents[entity]; }
 			EntityTagMap& GetTagMap() { return m_taggedEntities; }
 
 			template<class TComponent>
@@ -46,7 +47,7 @@ namespace dsr
 				return std::dynamic_pointer_cast<TComponent>(itComponentMap->second);
 			}
 
-			std::set<Entity> FindEntitiesByTag(const std::string& tag);
+			std::vector<Entity> FindEntitiesByTag(const std::string& tag) const;
 
 			EntityComponentStore() = default;
 			EntityComponentStore(const EntityComponentStore& other) = delete;

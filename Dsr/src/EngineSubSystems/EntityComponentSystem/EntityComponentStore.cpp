@@ -15,11 +15,14 @@ namespace dsr
 			return it->second.find(componentType) != it->second.end();
 		}
 
-		std::set<Entity> EntityComponentStore::FindEntitiesByTag(const std::string& tag)
+		std::vector<Entity> EntityComponentStore::FindEntitiesByTag(const std::string& tag) const
 		{
-			// this will grow the tagmap when a tag is not found, but this will rarely happen.
-			// If someone searches for a non existant tag, it is very likely that this is due to a bug.
-			return m_taggedEntities[tag];
+			auto it = m_taggedEntities.find(tag);
+
+			if (it == m_taggedEntities.end())
+				return std::vector<Entity>();
+
+			return std::vector<Entity>(it->second.begin(), it->second.end());
 		}
 
 		void EntityComponentStore::AddComponent(const dsr::ecs::Entity& entity, const std::type_index& componentType, const std::shared_ptr<dsr::ecs::Component>& component)
@@ -39,7 +42,7 @@ namespace dsr
 			if (componentType == std::type_index(typeid(TagComponent)))
 			{
 				std::shared_ptr<Component> componentPtr = m_entityComponents[entity][componentType];
-				
+
 				if (componentPtr)
 				{
 					auto tagComponentPtr = std::static_pointer_cast<TagComponent>(componentPtr);
