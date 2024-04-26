@@ -10,6 +10,43 @@ using namespace dsr::ecs;
 
 namespace EntityComponentStoreTests
 {
+	TEST(HasComponent, ComponentFound_ReturnsTrue)
+	{
+		const Entity first = 1;
+		const Entity second = 2;
+		const Entity third = 3;
+
+		EntityComponentStore store;
+		store.AddComponent<NameComponent>(first, "123");
+		store.AddComponent<NameComponent>(second, "123");
+		store.AddComponent<TagComponent>(third, "123");
+
+		EXPECT_TRUE(store.HasComponent<NameComponent>(first));
+		EXPECT_TRUE(store.HasComponent<NameComponent>(second));
+		EXPECT_TRUE(store.HasComponent<TagComponent>(third));
+	}
+
+	TEST(HasComponent, EntityNotFound_ReturnsFalse)
+	{
+		const Entity first = 1;
+
+		EntityComponentStore store;
+		
+		bool result = store.HasComponent<NameComponent>(first);
+		EXPECT_FALSE(result);
+	}
+
+	TEST(HasComponent, ComponentNotFound_ReturnsFalse)
+	{
+		const Entity first = 1;
+
+		EntityComponentStore store;
+		store.AddComponent<NameComponent>(first, "123");
+
+		bool result = store.HasComponent<TagComponent>(first);
+		EXPECT_FALSE(result);
+	}
+
 	TEST(AddComponent, AddsValidComponent)
 	{
 		const Entity first = 1;

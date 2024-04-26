@@ -36,11 +36,6 @@ namespace dsr
 
 		void EntityComponentStore::RemoveComponent(const dsr::ecs::Entity& entity, const std::type_index& componentType)
 		{
-			/*auto it = m_entityComponents.find(entity);
-
-			if (it == m_entityComponents.end())
-				return;*/
-
 			if (componentType == std::type_index(typeid(TagComponent)))
 			{
 				std::shared_ptr<Component> componentPtr = m_entityComponents[entity][componentType];
@@ -52,8 +47,6 @@ namespace dsr
 					entities.erase(entity);
 				}
 			}
-
-			//it->second.erase(componentType);
 
 			// dont search for entity. if it doenst exists just create it and let erase fail.
 			// again this is unlikely to happen and most likely due to a bug
