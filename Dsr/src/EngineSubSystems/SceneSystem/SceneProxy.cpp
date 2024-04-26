@@ -20,7 +20,7 @@ namespace dsr
 
 		void SceneProxy::LoadEntities()
 		{
-			const Scene::EntityComponentMap& entityMap = m_scene->GetEntityComponents();
+			const dsr::ecs::EntityComponentStore::EntityComponentMap& entityMap = m_scene->GetEntityComponentMap();
 
 			for (auto itEntity = entityMap.begin(); itEntity != entityMap.end(); itEntity++)
 			{
@@ -35,7 +35,7 @@ namespace dsr
 
 		void SceneProxy::UnloadEntities()
 		{
-			const Scene::EntityComponentMap& entityMap = m_scene->GetEntityComponents();
+			const dsr::ecs::EntityComponentStore::EntityComponentMap& entityMap = m_scene->GetEntityComponentMap();
 
 			for (auto itEntity = entityMap.begin(); itEntity != entityMap.end(); itEntity++)
 			{
