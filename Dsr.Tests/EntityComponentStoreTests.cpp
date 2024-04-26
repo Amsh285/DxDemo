@@ -138,6 +138,25 @@ namespace EntityComponentStoreTests
 		EXPECT_EQ(tagMap.at(tagComponent->GetTag()).size(), 0);
 	}
 
+	TEST(RemoveComponent, TagComponent_NotFound_InternalDataStaysEmpty)
+	{
+		const Entity first = 1;
+
+		EntityComponentStore store;
+		EntityComponentStore::EntityComponentMap& entityComponentMap = store.GetEntityComponentMap();
+		EntityComponentStore::EntityTagMap& tagMap = store.GetTagMap();
+
+		std::shared_ptr<NameComponent> nameComponent = store.AddComponent<NameComponent>(first, "123");
+
+		ASSERT_EQ(tagMap.size(), 0);
+
+		store.RemoveComponent<TagComponent>(first);
+
+		EXPECT_EQ(entityComponentMap.at(first).size(), 1);
+		EXPECT_EQ(entityComponentMap.at(first).count(std::type_index(typeid(NameComponent))), 1);
+		EXPECT_EQ(tagMap.size(), 0);
+	}
+
 	TEST(ClearEntity, RemovesValidEntity)
 	{
 		const Entity first = 1;

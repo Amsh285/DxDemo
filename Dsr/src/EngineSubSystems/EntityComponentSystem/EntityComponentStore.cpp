@@ -17,6 +17,8 @@ namespace dsr
 
 		std::set<Entity> EntityComponentStore::FindEntitiesByTag(const std::string& tag)
 		{
+			// this will grow the tagmap when a tag is not found, but this will rarely happen.
+			// If someone searches for a non existant tag, it is very likely that this is due to a bug.
 			return m_taggedEntities[tag];
 		}
 
@@ -34,21 +36,28 @@ namespace dsr
 
 		void EntityComponentStore::RemoveComponent(const dsr::ecs::Entity& entity, const std::type_index& componentType)
 		{
-			auto it = m_entityComponents.find(entity);
+			/*auto it = m_entityComponents.find(entity);
 
 			if (it == m_entityComponents.end())
-				return;
+				return;*/
 
 			if (componentType == std::type_index(typeid(TagComponent)))
 			{
 				std::shared_ptr<Component> componentPtr = m_entityComponents[entity][componentType];
-				auto tagComponentPtr = std::static_pointer_cast<TagComponent>(componentPtr);
-				std::set<Entity>& entities = m_taggedEntities[tagComponentPtr->GetTag()];
-
-				entities.erase(entity);
+				
+				if (componentPtr)
+				{
+					auto tagComponentPtr = std::static_pointer_cast<TagComponent>(componentPtr);
+					std::set<Entity>& entities = m_taggedEntities[tagComponentPtr->GetTag()];
+					entities.erase(entity);
+				}
 			}
 
-			it->second.erase(componentType);
+			//it->second.erase(componentType);
+
+			// dont search for entity. if it doenst exists just create it and let erase fail.
+			// again this is unlikely to happen and most likely due to a bug
+			m_entityComponents[entity].erase(componentType);
 		}
 
 		void EntityComponentStore::Clear()
