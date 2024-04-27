@@ -10,7 +10,7 @@ namespace dsr
 {
 	namespace scenesystem
 	{
-		class Scene : public dsr::ecs::EntityComponentStore
+		class Scene final : public dsr::ecs::EntityComponentStore
 		{
 		public:
 			uint32_t GetSceneId() const { return m_id; }

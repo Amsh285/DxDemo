@@ -80,7 +80,7 @@ namespace dsr
 				std::vector<Entity>& entityVec = systemEntities.first;
 				ska::flat_hash_map<Entity, size_t>& entityIndexMap = systemEntities.second;
 
-				if (entityIndexMap.count(entity) > 0)
+				if (entityIndexMap.count(entity) > 0 && !HasComponentTypeIntersection(system, m_engineContext->GetComponents(entity)))
 				{
 					entityVec.erase(entityVec.begin() + entityIndexMap[entity]);
 					entityIndexMap.erase(entity);

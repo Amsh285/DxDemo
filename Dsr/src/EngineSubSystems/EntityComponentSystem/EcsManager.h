@@ -21,10 +21,14 @@ namespace dsr
 	{
 		constexpr auto REGISTERCOMPONENT_ALREADYREGISTERED = 200000;
 
-		class EcsManager : public events::EventListener
+		class EcsManager final : public events::EventListener
 		{
 		public:
+			using EntityVectorIndexMapPair = std::pair<std::vector<Entity>, ska::flat_hash_map<Entity, size_t>>;
+
 			static Entity CreateNewEntity();
+
+			std::unordered_map<std::type_index, EntityVectorIndexMapPair> GetSystemEntityAssignments() const { return m_systemEntities;  }
 
 			std::vector<Entity> FindEntitiesByTag(const std::string& tag) const { return m_engineContext->FindEntitiesByTag(tag); }
 
@@ -146,7 +150,7 @@ namespace dsr
 
 			std::vector<std::shared_ptr<System>> m_systems;
 			std::vector<std::shared_ptr<RendererSystem>> m_renderers;
-			std::unordered_map<std::type_index, std::pair<std::vector<Entity>, ska::flat_hash_map<Entity, size_t>>> m_systemEntities;
+			std::unordered_map<std::type_index, EntityVectorIndexMapPair> m_systemEntities;
 		};
 	}
 }
