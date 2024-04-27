@@ -28,6 +28,8 @@ namespace dsr
 
 			static Entity CreateNewEntity();
 
+			std::shared_ptr<EcsEngineContext> GetContext() const { return m_engineContext; }
+
 			std::unordered_map<std::type_index, EntityVectorIndexMapPair> GetSystemEntityAssignments() const { return m_systemEntities;  }
 
 			std::vector<Entity> FindEntitiesByTag(const std::string& tag) const { return m_engineContext->FindEntitiesByTag(tag); }

@@ -18,6 +18,12 @@ namespace dsr
 			m_ecsManager->RegisterComponent(entity, componentType, component);
 		}
 
+		void SceneProxy::RemoveComponent(const dsr::ecs::Entity& entity, const std::type_index& componentType)
+		{
+			m_scene->RemoveComponent(entity, componentType);
+			m_ecsManager->RemoveComponent(entity, componentType);
+		}
+
 		void SceneProxy::LoadEntities()
 		{
 			const dsr::ecs::EntityComponentStore::EntityComponentMap& entityMap = m_scene->GetEntityComponentMap();

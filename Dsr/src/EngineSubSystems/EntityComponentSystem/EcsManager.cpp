@@ -7,12 +7,9 @@ namespace dsr
 	{
 		Entity EcsManager::CreateNewEntity()
 		{
-			static unsigned int lastId = 0;
-			static std::mutex entityLock;
+			static std::atomic<Entity> lastId = 1;
 
-			std::lock_guard<std::mutex> guard(entityLock);
-
-			return ++lastId;
+			return lastId.fetch_add(1);
 		}
 
 		EcsManager::EcsManager()

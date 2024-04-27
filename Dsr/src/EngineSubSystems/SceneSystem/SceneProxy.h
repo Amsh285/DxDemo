@@ -7,7 +7,7 @@ namespace dsr
 {
 	namespace scenesystem
 	{
-		class SceneProxy
+		class SceneProxy final
 		{
 		public:
 			SceneProxy(const std::shared_ptr<Scene>& scene, const std::shared_ptr<dsr::ecs::EcsManager>& ecsManager);
@@ -38,9 +38,10 @@ namespace dsr
 			template<class TComponent>
 			void RemoveComponent(const dsr::ecs::Entity& entity)
 			{
-				m_scene->RemoveComponent<TComponent>(entity);
-				m_ecsManager->RemoveComponent<TComponent>(entity);
+				RemoveComponent(entity, typeid(TComponent));
 			}
+
+			void RemoveComponent(const dsr::ecs::Entity& entity, const std::type_index& componentType);
 
 			void LoadEntities();
 			void UnloadEntities();

@@ -48,6 +48,7 @@ namespace dsr
 
 			EntityComponentStore::ComponentTypeMap& GetComponents(const Entity& entity);
 
+			//Todo: have to check if i want to delete copy operations
 			~EngineContext() = default;
 		protected:
 			Entity m_currentEntity = 0;

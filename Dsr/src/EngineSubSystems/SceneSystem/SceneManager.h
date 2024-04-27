@@ -10,7 +10,7 @@ namespace dsr
 {
 	namespace scenesystem
 	{
-		class SceneManager
+		class SceneManager final
 		{
 		public:
 			template<class TComponent>
