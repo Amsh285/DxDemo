@@ -68,7 +68,7 @@ namespace EcsManagerTests
 
 		std::vector<Entity> nameTagSystemEntities = FindSystemAssignedEntities(std::type_index(typeid(TestNameTagSystem)));
 		ASSERT_EQ(nameTagSystemEntities.size(), 1);
-		EXPECT_EQ(std::count(nameSystemEntities.begin(), nameSystemEntities.end(), m_nameTagEntity), 1); 
+		EXPECT_EQ(std::count(nameSystemEntities.begin(), nameSystemEntities.end(), m_nameTagEntity), 1);
 
 		std::vector<Entity> tagSystemEntities = FindSystemAssignedEntities(typeid(TestTagSystem));
 		ASSERT_EQ(tagSystemEntities.size(), 1);
@@ -80,6 +80,9 @@ namespace EcsManagerTests
 
 	TEST_F(EcsManagerSystemEntityTests, RemoveComponent_SystemsEntitiesValid)
 	{
+		std::vector<Entity> nameTagSystemEntitiesBeforeDelete = FindSystemAssignedEntities(std::type_index(typeid(TestNameTagSystem)));
+		ASSERT_EQ(nameTagSystemEntitiesBeforeDelete.size(), 1);
+
 		m_ecsManager.RemoveComponent(m_nameTagEntity, typeid(TestNameComponent));
 
 		std::vector<Entity> nameSystemEntities = FindSystemAssignedEntities(std::type_index(typeid(TestNameSystem)));
@@ -95,5 +98,28 @@ namespace EcsManagerTests
 
 		std::unordered_map<std::type_index, EcsManager::EntityVectorIndexMapPair> systemEntities = m_ecsManager.GetSystemEntityAssignments();
 		EXPECT_EQ(systemEntities.size(), 3);
+	}
+
+	TEST_F(EcsManagerSystemEntityTests, RemoveSystem_ClearsCorrespondingSystemEntityAssignment)
+	{
+		std::vector<Entity> testTagSystemEntities = FindSystemAssignedEntities(std::type_index(typeid(TestTagSystem)));
+		ASSERT_EQ(testTagSystemEntities.size(), 1);
+
+		m_ecsManager.RemoveSystem<TestTagSystem>();
+
+		std::unordered_map<std::type_index, EcsManager::EntityVectorIndexMapPair> systemEntityAssignments = m_ecsManager.GetSystemEntityAssignments();
+
+		EXPECT_EQ(systemEntityAssignments.count(typeid(TestTagSystem)), 0);
+	}
+
+	TEST_F(EcsManagerSystemEntityTests, RemoveSystem_DoesNotAffectOtherSystemEntityAssignments)
+	{
+		m_ecsManager.RemoveSystem<TestTagSystem>();
+
+		std::vector<Entity> nameSystemEntityAssignments = FindSystemAssignedEntities(typeid(TestNameSystem));
+		std::vector<Entity> nameTagSystemEntityAssignments = FindSystemAssignedEntities(typeid(TestNameTagSystem));
+
+		EXPECT_EQ(nameSystemEntityAssignments.size(), 2);
+		EXPECT_EQ(nameTagSystemEntityAssignments.size(), 1);
 	}
 }

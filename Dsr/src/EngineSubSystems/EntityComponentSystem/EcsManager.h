@@ -124,14 +124,10 @@ namespace dsr
 			{
 				static_assert(std::is_base_of<System, TSystem>::value, "TSystem must be derived from System");
 
-				const std::type_index& sysType = std::type_index(typeid(TSystem));
-				auto sysIterator = std::find_if(m_systems.begin(), m_systems.end(), [&sysType](const std::shared_ptr<System>& sys) {return sys->GetType() == sysType; });
-
-				if (sysIterator != m_systems.end())
-					m_systems.erase(sysIterator);
-
-				m_systemEntities.erase(sysType);
+				RemoveSystem(typeid(TSystem));
 			}
+
+			void RemoveSystem(const std::type_index& sysType);
 
 			void OnUpdate(const dsr::events::UpdateFrameEvent& updateFrameEvent);
 			void OnRendererUpdate(const dsr::events::UpdateFrameEvent& updateFrameEvent);

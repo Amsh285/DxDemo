@@ -88,6 +88,16 @@ namespace dsr
 			}
 		}
 
+		void EcsManager::RemoveSystem(const std::type_index& sysType)
+		{
+			auto sysIterator = std::find_if(m_systems.begin(), m_systems.end(), [&sysType](const std::shared_ptr<System>& sys) {return sys->GetType() == sysType; });
+
+			if (sysIterator != m_systems.end())
+				m_systems.erase(sysIterator);
+
+			m_systemEntities.erase(sysType);
+		}
+
 		void EcsManager::OnUpdate(const dsr::events::UpdateFrameEvent& updateFrameEvent)
 		{
 			for (auto it = m_systems.begin(); it != m_systems.end(); ++it)
