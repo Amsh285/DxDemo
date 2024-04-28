@@ -13,6 +13,11 @@ namespace dsr
 		class SceneManager final
 		{
 		public:
+
+			std::shared_ptr<Scene> GetScene(const uint32_t& sceneId);
+			ecs::EntityComponentStore::EntityComponentMap& GetEntityComponentMap(const uint32_t& sceneId);
+			ecs::EntityComponentStore::ComponentTypeMap& GetComponentTypeMap(const uint32_t& sceneId, const ecs::Entity& entity);
+
 			template<class TComponent>
 			std::shared_ptr<TComponent> GetComponentFrom(const uint32_t& sceneId,  const dsr::ecs::Entity& entity) const
 			{

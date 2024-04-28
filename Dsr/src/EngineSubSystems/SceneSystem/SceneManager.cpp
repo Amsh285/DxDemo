@@ -5,6 +5,21 @@ namespace dsr
 {
 	namespace scenesystem
 	{
+		std::shared_ptr<Scene> SceneManager::GetScene(const uint32_t& sceneId)
+		{
+			return m_scenes.at(sceneId);
+		}
+
+		ecs::EntityComponentStore::EntityComponentMap& SceneManager::GetEntityComponentMap(const uint32_t& sceneId)
+		{
+			return m_scenes.at(sceneId)->GetEntityComponentMap();
+		}
+
+		ecs::EntityComponentStore::ComponentTypeMap& SceneManager::GetComponentTypeMap(const uint32_t& sceneId, const ecs::Entity& entity)
+		{
+			return m_scenes.at(sceneId)->GetComponentTypeMap(entity);
+		}
+
 		SceneManager::SceneManager(const std::shared_ptr<dsr::ecs::EcsManager>& ecaManager)
 			: m_ecsManager(ecaManager)
 		{
