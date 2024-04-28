@@ -13,7 +13,7 @@ namespace dsr
 		}
 
 		EcsManager::EcsManager()
-			: m_engineContext(std::make_shared<EcsEngineContext>())
+			: m_engineContext(std::make_shared<EngineContext>())
 		{
 		}
 
@@ -53,7 +53,7 @@ namespace dsr
 		{
 			m_engineContext->AddComponent(entity, componentType, component);
 
-			std::unordered_map<std::type_index, std::shared_ptr<Component>>& componentMap = m_engineContext->GetComponents(entity);
+			std::unordered_map<std::type_index, std::shared_ptr<Component>>& componentMap = m_engineContext->GetComponentTypeMap(entity);
 
 			for (std::shared_ptr<System>& system : m_systems)
 			{
@@ -77,12 +77,17 @@ namespace dsr
 				std::vector<Entity>& entityVec = systemEntities.first;
 				ska::flat_hash_map<Entity, size_t>& entityIndexMap = systemEntities.second;
 
-				if (entityIndexMap.count(entity) > 0 && !HasComponentTypeIntersection(system, m_engineContext->GetComponents(entity)))
+				if (entityIndexMap.count(entity) > 0 && !HasComponentTypeIntersection(system, m_engineContext->GetComponentTypeMap(entity)))
 				{
 					entityVec.erase(entityVec.begin() + entityIndexMap[entity]);
 					entityIndexMap.erase(entity);
 				}
 			}
+		}
+
+		void EcsManager::Clear(const Entity& entity)
+		{
+			m_engineContext->Clear(entity);
 		}
 
 		void EcsManager::RemoveSystem(const std::type_index& sysType)
@@ -144,7 +149,7 @@ namespace dsr
 
 		void EcsManager::UpdateSystemEntityAssignment(const std::shared_ptr<System>& system)
 		{
-			for (auto& entity : m_engineContext->GetEntityComponents())
+			for (auto& entity : m_engineContext->GetEntityComponentMap())
 			{
 				UpdateSystemEntityAssignment(system, entity.second, entity.first);
 			}

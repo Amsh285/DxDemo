@@ -55,7 +55,7 @@ namespace SceneProxyTests
 
 	TEST_F(SceneProxySceneSynchronizationTests, SceneInSyncWithEcsManager)
 	{
-		EntityComponentStore::EntityComponentMap& ecsMap = m_ecsManager->GetContext()->GetEntityComponents();
+		EntityComponentStore::EntityComponentMap& ecsMap = m_ecsManager->GetContext()->GetEntityComponentMap();
 		EntityComponentStore::EntityComponentMap& sceneMap = m_scene->GetEntityComponentMap();
 
 		ASSERT_EQ(ecsMap.size(), sceneMap.size());
@@ -73,7 +73,7 @@ namespace SceneProxyTests
 
 	TEST_F(SceneProxySceneSynchronizationTests, RemoveComponent_HoldsSynch)
 	{
-		EntityComponentStore::EntityComponentMap& ecsMap = m_ecsManager->GetContext()->GetEntityComponents();
+		EntityComponentStore::EntityComponentMap& ecsMap = m_ecsManager->GetContext()->GetEntityComponentMap();
 		EntityComponentStore::EntityComponentMap& sceneMap = m_scene->GetEntityComponentMap();
 
 		m_sceneProxy->RemoveComponent<TestDummyComponent>(m_first);
@@ -88,5 +88,16 @@ namespace SceneProxyTests
 		EXPECT_TRUE(IsInSync<TestTagComponent>(m_first));
 
 		EXPECT_TRUE(IsInSync<TestNameComponent>(m_second));
+	}
+
+	TEST_F(SceneProxySceneSynchronizationTests, UnloadEntities_RemovesFromEcsManager)
+	{
+		EntityComponentStore::EntityComponentMap& ecsMap = m_ecsManager->GetContext()->GetEntityComponentMap();
+		EntityComponentStore::EntityComponentMap& sceneMap = m_scene->GetEntityComponentMap();
+
+		ASSERT_EQ(ecsMap.size(), 2);
+		m_sceneProxy->UnloadEntities();
+		EXPECT_EQ(sceneMap.size(), 2);
+		EXPECT_EQ(ecsMap.size(), 0);
 	}
 }

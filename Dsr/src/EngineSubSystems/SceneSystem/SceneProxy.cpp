@@ -47,10 +47,7 @@ namespace dsr
 			{
 				const Scene::ComponentTypeMap& componentMap = itEntity->second;
 
-				for (auto itComponent = componentMap.begin(); itComponent != componentMap.end(); itComponent++)
-				{
-					m_ecsManager->RemoveComponent(itEntity->first, itComponent->first);
-				}
+				m_ecsManager->Clear(itEntity->first);
 			}
 		}
 

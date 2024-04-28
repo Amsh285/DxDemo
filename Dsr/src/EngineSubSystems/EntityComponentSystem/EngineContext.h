@@ -13,47 +13,19 @@ namespace dsr
 {
 	namespace ecs
 	{
-		class EngineContext
+		class EngineContext final : public EntityComponentStore
 		{
 		public:
 			Entity GetCurrentEntity() const { return m_currentEntity; }
-
-			template<class TComponent>
-			bool HasComponent() const
-			{
-				return m_entityComponents.HasComponent<TComponent>(m_currentEntity);
-			}
-
-			template<class TComponent>
-			bool HasComponent(const Entity& entity) const
-			{
-				return m_entityComponents.HasComponent<TComponent>(entity);
-			}
-
-			bool HasComponent(const Entity& entity, const std::type_index& componentType) const;
-
-			std::vector<Entity> FindEntitiesByTag(const std::string& tag) const;
+			void SetCurrentEntity(const Entity& current) { m_currentEntity = current; }
 
 			template<class TComponent>
 			std::shared_ptr<TComponent> GetComponent() const
 			{
-				return m_entityComponents.GetComponentFrom<TComponent>(m_currentEntity);
+				return GetComponentFrom<TComponent>(m_currentEntity);
 			}
-
-			template<class TComponent>
-			std::shared_ptr<TComponent> GetComponentFrom(const Entity& entity) const
-			{
-				return m_entityComponents.GetComponentFrom<TComponent>(entity);
-			}
-
-			EntityComponentStore::ComponentTypeMap& GetComponents(const Entity& entity);
-
-			//Todo: have to check if i want to delete copy operations
-			~EngineContext() = default;
-		protected:
-			Entity m_currentEntity = 0;
-			EntityComponentStore m_entityComponents;
 		private:
+			Entity m_currentEntity = 0;
 		};
 	}
 }

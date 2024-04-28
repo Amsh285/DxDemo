@@ -8,7 +8,6 @@
 
 #include "ErrorHandling/DsrResult.h"
 
-#include "EngineSubSystems/EntityComponentSystem/EcsEngineContext.h"
 #include "EngineSubSystems/EntityComponentSystem/EnginePrepareRendererContext.h"
 #include "EngineSubSystems/EntityComponentSystem/EngineStartupContext.h"
 #include "EngineSubSystems/EntityComponentSystem/Entity.h"
@@ -28,7 +27,7 @@ namespace dsr
 
 			static Entity CreateNewEntity();
 
-			std::shared_ptr<EcsEngineContext> GetContext() const { return m_engineContext; }
+			std::shared_ptr<EngineContext> GetContext() const { return m_engineContext; }
 
 			std::unordered_map<std::type_index, EntityVectorIndexMapPair> GetSystemEntityAssignments() const { return m_systemEntities;  }
 
@@ -76,6 +75,8 @@ namespace dsr
 			}
 
 			void RemoveComponent(const Entity& entity, const std::type_index& componentType);
+
+			void Clear(const Entity& entity);
 
 			template<class TSystem>
 			void RegisterSystem()
@@ -144,7 +145,7 @@ namespace dsr
 				const std::unordered_map<std::type_index, std::shared_ptr<Component>>& componentMap,
 				const Entity& entity);
 
-			std::shared_ptr<EcsEngineContext> m_engineContext;
+			std::shared_ptr<EngineContext> m_engineContext;
 
 			std::vector<std::shared_ptr<System>> m_systems;
 			std::vector<std::shared_ptr<RendererSystem>> m_renderers;
