@@ -133,6 +133,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Scenes\BridgeScene.cpp" />
     <ClCompile Include="Components\CameraControllerComponent.cpp" />
     <ClCompile Include="Components\EditorUIComponent.cpp" />
     <ClCompile Include="Scenes\RampScene.cpp" />
@@ -142,6 +143,7 @@
     <ClCompile Include="Systems\CameraControllerSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Scenes\BridgeScene.h" />
     <ClInclude Include="Components\CameraControllerComponent.h" />
     <ClInclude Include="Components\EditorUIComponent.h" />
     <ClInclude Include="Scenes\RampScene.h" />

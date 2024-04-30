@@ -18,6 +18,10 @@ namespace dsr
 			XMMATRIX matRotate = XMMatrixRotationQuaternion(quaternion);
 			XMMATRIX matScale = XMMatrixScaling(XMVectorGetX(Scale), XMVectorGetY(Scale), XMVectorGetZ(Scale));
 
+			//Counterclockwise
+			//XMMatrixTransformation(,)
+			//XMMatrixDecompose
+
 			return matTranslate * matScale * matRotate;
 		}
 

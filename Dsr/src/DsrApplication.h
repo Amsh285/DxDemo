@@ -48,6 +48,7 @@ namespace dsr
 	protected:
 		std::shared_ptr<dsr::input::Input> GetInput() const;
 		std::shared_ptr<dsr::time::Time> GetTime() const;
+		std::shared_ptr<dsr::scenesystem::SceneManager> GetSceneManager() const;
 
 		std::shared_ptr<directX::Direct3dDevice> m_device;
 

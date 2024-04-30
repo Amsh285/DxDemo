@@ -77,6 +77,7 @@ namespace dsr
 					std::shared_ptr<node> q = openList.top();
 					openList.pop();
 
+					// besser arrays
 					const std::set<uint32_t>& adjacentIndicies = m_adjacencyList[q->vertexIndex];
 
 					for (const uint32_t& adjacentIndex : adjacentIndicies)
@@ -98,6 +99,8 @@ namespace dsr
 
 							std::reverse(path.begin(), path.end());
 							return path;
+
+							// consider break;
 						}
 
 						const XMVECTOR qPosition = XMLoadFloat3(&m_vertexBuffer[q->vertexIndex].Position);

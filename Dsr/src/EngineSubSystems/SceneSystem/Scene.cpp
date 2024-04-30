@@ -7,7 +7,7 @@ namespace dsr
 	{
 		Scene::Scene()
 		{
-			static std::atomic<uint32_t> uid = 0;
+			static std::atomic<uint32_t> uid = 1;
 
 			m_id = uid.fetch_add(1);
 		}

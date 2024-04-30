@@ -11,29 +11,23 @@
 
 #include "ModelLoaders/BlenderModelLoader.h"
 
-constexpr auto ERROR_LOADRAMPSCENE_MODELS = 100;
+constexpr auto ERROR_LOADBRIDGESCENE_MODELS = 101;
 
-class RampScene
+class BridgeScene
 {
 public:
-	RampScene(
+	BridgeScene(
 		const std::shared_ptr<dsr::scenesystem::SceneManager>& sceneManager,
 		const std::shared_ptr<dsr::directX::Direct3dDevice>& device,
 		const std::shared_ptr<dsr::BlenderModelLoader>& blenderModelLoader
 	);
 
 	dsr::DsrResult BuildScene();
-	void SetActive();
 private:
 	std::string m_sceneName;
 	uint32_t m_sceneId;
-	
+
 	dsr::ecs::Entity m_mapEntity;
-	dsr::ecs::Entity m_mapFaceNormalsEntity;
-	dsr::ecs::Entity m_mapUpperSurfaceEntity;
-	dsr::ecs::Entity m_mapUpperSurfaceSubDividedEntity;
-	dsr::ecs::Entity m_pathMarkersEntity;
-	dsr::ecs::Entity m_pathEntity;
 
 	std::shared_ptr<dsr::WavefrontModel> m_mapModel;
 	std::shared_ptr<dsr::WavefrontModel> m_mapUpperSurfaceModel;
@@ -48,12 +42,5 @@ private:
 	std::variant<dsr::ModelConfiguration, dsr::dsr_error> LoadMapUpperSurfaceModel();
 
 	void RegisterMapModel(const dsr::ModelConfiguration& map);
-	void RegisterMapUpperSurfaceModel(const dsr::ModelConfiguration& mapUpperSurface);
-	void RegisterMapUpperSurfaceSubDividedModel();
-	void RegisterStartEndMarkerEntities();
-	void RegisterPathEntity();
-	void RegisterMapFaceNormalsEntity();
-
-	void AddMarkerLine(const dsr::data::Vertex3FP2FTx3FN& vertex, const DirectX::XMMATRIX& transform, std::vector<float>& vertexBufferData);
 };
 

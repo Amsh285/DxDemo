@@ -5,7 +5,17 @@ namespace dsr
 {
 	namespace scenesystem
 	{
-		std::shared_ptr<Scene> SceneManager::GetScene(const uint32_t& sceneId)
+		std::vector<std::shared_ptr<Scene>> SceneManager::GetScenes() const
+		{
+			std::vector<std::shared_ptr<Scene>> scenes;
+
+			for (auto it = m_scenes.begin(); it != m_scenes.end(); ++it)
+				scenes.push_back(it->second);
+
+			return scenes;
+		}
+
+		std::shared_ptr<Scene> SceneManager::GetScene(const uint32_t& sceneId) const
 		{
 			return m_scenes.at(sceneId);
 		}

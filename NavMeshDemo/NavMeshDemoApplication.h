@@ -8,10 +8,11 @@
 
 #include "DirectX/Rendering/ModelLoaderExtensions/BlenderModelLoaderExtensions.h"
 
+#include "Scenes/RampScene.h"
+#include "Scenes/BridgeScene.h"
+
 #include "Systems/CameraControllerSystem.h"
 #include "Systems/EditorUISystem.h"
-
-#include "Scenes/RampScene.h"
 
 class NavMeshDemoApplication : public dsr::DsrApplication
 {
@@ -32,4 +33,5 @@ private:
 	void RegisterEditorUI();
 
 	std::shared_ptr<RampScene> m_rampScene;
+	std::shared_ptr<BridgeScene> m_bridgeScene;
 };

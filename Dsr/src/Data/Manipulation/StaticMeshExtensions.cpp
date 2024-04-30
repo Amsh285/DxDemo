@@ -124,6 +124,8 @@ namespace dsr
 					v = XMVectorSubtract(v2, v1);
 					float angle = std::atan2(XMVectorGetX(XMVector3Length(XMVector3Cross(u, v))), XMVectorGetX(XMVector3Dot(u, v)));
 
+					//arcos - crossproduct
+
 					if (angle > largestAngle)
 					{
 						subDivisionData.A = { vertex1, v1, sourceIndexBuffer[i + 1] };

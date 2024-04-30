@@ -100,6 +100,11 @@ namespace dsr
 		return m_windowApplication->GetTime();
 	}
 
+	std::shared_ptr<dsr::scenesystem::SceneManager> DsrApplication::GetSceneManager() const
+	{
+		return m_sceneManager;
+	}
+
 	void DsrApplication::InitializeSystems()
 	{
 		m_viewProjectionSystem = std::make_shared<dsr::ecs::ViewProjectionSystem>();
