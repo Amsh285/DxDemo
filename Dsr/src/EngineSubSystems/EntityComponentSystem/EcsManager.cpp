@@ -88,6 +88,29 @@ namespace dsr
 		void EcsManager::Clear(const Entity& entity)
 		{
 			m_engineContext->Clear(entity);
+
+			//Todo: also erase entity in m_systemEntities
+
+			for (auto it = m_systemEntities.begin(); it != m_systemEntities.end(); it++)
+			{
+				EntityVectorIndexMapPair& systemAssignedEntities = it->second;
+
+				auto itAssignedEntities = systemAssignedEntities.second.find(entity);
+
+				if (itAssignedEntities != systemAssignedEntities.second.end())
+				{
+					size_t entityIdx = itAssignedEntities->second;
+
+					//cant do that indices will be invalidated
+					//Todo: refactor indexmap. maybe just remove it make it simplier
+					//For now just use linear search not optimal but get it working for now
+					//systemAssignedEntities.first.erase(systemAssignedEntities.first.begin() + entityIdx);
+
+					auto itErase = std::find(systemAssignedEntities.first.begin(), systemAssignedEntities.first.end(), entity);
+					systemAssignedEntities.first.erase(itErase);
+					systemAssignedEntities.second.erase(entity);
+				}
+			}
 		}
 
 		void EcsManager::RemoveSystem(const std::type_index& sysType)

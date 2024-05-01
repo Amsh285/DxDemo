@@ -19,6 +19,27 @@ namespace EcsManagerTests
 	class EcsManagerSystemEntityTests : public testing::Test
 	{
 	public:
+		bool HasEntityAssigned(const std::type_index& systemType, const Entity& entity)
+		{
+			const std::unordered_map<std::type_index, EcsManager::EntityVectorIndexMapPair>& systemEntityAssignment = m_ecsManager.GetSystemEntityAssignments();
+
+			auto itSystemType = systemEntityAssignment.find(systemType);
+
+			if (itSystemType == systemEntityAssignment.end())
+				return false;
+
+			std::vector<Entity> assignedEntities = itSystemType->second.first;
+			ska::flat_hash_map<Entity, size_t> assignedEntityIndexPairs = itSystemType->second.second;
+
+			if (std::find(assignedEntities.begin(), assignedEntities.end(), entity) == assignedEntities.end())
+				return false;
+
+			if (assignedEntityIndexPairs.count(entity) == false)
+				return false;
+
+			return true;
+		}
+
 		std::vector<Entity> FindSystemAssignedEntities(const std::type_index& systemType) const
 		{
 			using namespace dsr::ecs;
@@ -48,7 +69,6 @@ namespace EcsManagerTests
 			m_ecsManager.RegisterSystem<TestNameTagSystem>();
 			m_ecsManager.RegisterSystem<TestTagSystem>();
 		}
-
 
 		Entity m_nameEntity;
 		Entity m_nameTagEntity;
@@ -121,5 +141,22 @@ namespace EcsManagerTests
 
 		EXPECT_EQ(nameSystemEntityAssignments.size(), 2);
 		EXPECT_EQ(nameTagSystemEntityAssignments.size(), 1);
+	}
+
+	TEST_F(EcsManagerSystemEntityTests, ClearEntity_RemovesAlsoFromSystemEntityAssignments)
+	{
+		ASSERT_TRUE(HasEntityAssigned(typeid(TestNameSystem), m_nameEntity));
+		ASSERT_TRUE(HasEntityAssigned(typeid(TestNameSystem), m_nameTagEntity));
+
+		ASSERT_TRUE(HasEntityAssigned(typeid(TestNameTagSystem), m_nameTagEntity));
+		ASSERT_TRUE(HasEntityAssigned(typeid(TestTagSystem), m_nameTagEntity));
+
+		m_ecsManager.Clear(m_nameTagEntity);
+
+		EXPECT_TRUE(HasEntityAssigned(typeid(TestNameSystem), m_nameEntity));
+		EXPECT_FALSE(HasEntityAssigned(typeid(TestNameSystem), m_nameTagEntity));
+
+		EXPECT_FALSE(HasEntityAssigned(typeid(TestNameTagSystem), m_nameTagEntity));
+		EXPECT_FALSE(HasEntityAssigned(typeid(TestTagSystem), m_nameTagEntity));
 	}
 }

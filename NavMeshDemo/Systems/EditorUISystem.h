@@ -45,5 +45,6 @@ private:
 	std::shared_ptr<dsr::input::Input> m_input;
 
 	std::vector<SceneViewData> m_sceneViewData;
+	size_t m_sceneSelectedIdx;
 };
 

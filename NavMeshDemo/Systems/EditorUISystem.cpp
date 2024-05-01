@@ -14,7 +14,7 @@ EditorUISystem::EditorUISystem(
 	const std::shared_ptr<dsr::scenesystem::SceneManager>& sceneManager,
 	const std::shared_ptr<dsr::input::Input>& input)
 	: dsr::ecs::System(std::type_index(typeid(EditorUISystem))),
-	m_sceneManager(sceneManager), m_input(input)
+	m_sceneManager(sceneManager), m_input(input), m_sceneSelectedIdx(0)
 {
 	OnUpdate = std::bind(&EditorUISystem::Update, this, std::placeholders::_1);
 	OnStart = std::bind(&EditorUISystem::Start, this, std::placeholders::_1);
@@ -26,17 +26,17 @@ void EditorUISystem::Start(const dsr::ecs::EngineStartupContext& context)
 
 	std::vector<std::shared_ptr<Scene>> scenes = m_sceneManager->GetScenes();
 
-	for (auto it = scenes.begin(); it != scenes.end(); ++it)
+	for (size_t i = 0; i < scenes.size(); ++i)
 	{
-		std::shared_ptr<Scene> scene = *it;
+		std::shared_ptr<Scene> scene = scenes[i];
 		SceneViewData viewData;
 		viewData.SceneName = scene->GetName();
 		viewData.SceneId = scene->GetSceneId();
 		m_sceneViewData.push_back(viewData);
-	}
 
-	if (m_sceneViewData.size() > 0)
-		m_sceneViewData[0].IsSelected = true;
+		if (scene->GetName() == "Ramp")
+			m_sceneSelectedIdx = i;
+	}
 }
 
 void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
@@ -63,9 +63,18 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 	{
 		for (size_t i = 0; i < m_sceneViewData.size(); i++)
 		{
-			ImGui::Selectable(m_sceneViewData[i].SceneName.c_str(), &m_sceneViewData[i].IsSelected);
+			//m_sceneViewData[i].IsSelected = itemCurrentIndex == i;
+			const bool isSelected = m_sceneSelectedIdx == i;
 
-			if (m_sceneViewData[i].IsSelected)
+			if (ImGui::Selectable(m_sceneViewData[i].SceneName.c_str(), isSelected))
+			{
+				if (m_sceneSelectedIdx != i)
+					m_sceneManager->SetActiveScene(m_sceneViewData[i].SceneId);
+
+				m_sceneSelectedIdx = i;
+			}
+
+			if (isSelected)
 				ImGui::SetItemDefaultFocus();
 		}
 

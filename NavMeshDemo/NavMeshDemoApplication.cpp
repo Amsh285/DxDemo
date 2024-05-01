@@ -15,6 +15,7 @@ void NavMeshDemoApplication::RegisterLineEntity()
 	using namespace dsr::data;
 	using namespace dsr::directX;
 
+	m_ecsManager->RegisterComponent<dsr::ecs::NameComponent>(m_lineEntity, "Center Helplines");
 	std::shared_ptr<dsr::ecs::LineListComponent> lines = m_ecsManager->RegisterComponent<dsr::ecs::LineListComponent>(m_lineEntity);
 
 	std::vector<Vertex3FP4FC> lineList;
