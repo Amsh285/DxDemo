@@ -33,6 +33,7 @@ RampScene::RampScene(
 	m_mapUpperSurfaceSubDividedEntity = m_sceneManager->CreateNewEntity();
 	m_pathMarkersEntity = m_sceneManager->CreateNewEntity();
 	m_pathEntity = m_sceneManager->CreateNewEntity();
+	m_pathSubDividedEntity = m_sceneManager->CreateNewEntity();
 }
 
 dsr::DsrResult RampScene::BuildScene()
@@ -54,6 +55,7 @@ dsr::DsrResult RampScene::BuildScene()
 	RegisterMapUpperSurfaceSubDividedModel();
 	RegisterStartEndMarkerEntities();
 	RegisterPathEntity();
+	RegisterSubDividedPathEntity();
 	RegisterMapFaceNormalsEntity();
 
 	return DsrResult::Success("Build RampScene Success.");
@@ -293,65 +295,10 @@ void RampScene::RegisterPathEntity()
 
 	using namespace DirectX;
 
-	StaticMesh<Vertex3F> distincSubDivision = FilterDistinct(*m_mapUpperSurfaceSubDividedModel->Mesh);
-	AStarStaticMeshPathfinder pathfinderSubDivision(distincSubDivision);
-
-	/*std::chrono::time_point prev = std::chrono::high_resolution_clock::now();*/
-	std::vector<uint32_t> pathSubDivided = pathfinderSubDivision.SearchSequential(StartIndexSubDivided, EndIndexSubDivided);
-	/*std::chrono::time_point current = std::chrono::high_resolution_clock::now();
-	std::chrono::duration<float, std::milli> duration = current - prev;*/
-
-
-	/*std::vector<uint32_t> pathSubDividedGa = pathfinderSubDivision.SearchOmpGAStar(StartIndexSubDivided, EndIndexSubDivided);*/
-
 	StaticMesh<Vertex3F> distinctMesh = FilterDistinct(*m_mapUpperSurfaceModel->Mesh);
-
-
-	const std::vector<Vertex3F>& vertexBuffer = distinctMesh.GetVertexBuffer();
-
 	AStarStaticMeshPathfinder pathfinder(distinctMesh);
-	/*std::vector<uint32_t> path = pathfinder.SearchIndexPath(StartIndex, EndIndex);
-	std::vector<uint32_t> path2 = pathfinder.SearchIndexPathImp(StartIndex, EndIndex);*/
-
-	using namespace std::chrono;
-
-
 	std::vector<uint32_t> path = pathfinder.SearchSequential(StartIndex, EndIndex);
-
-
-
-	std::shared_ptr<TransformComponent> surfaceTransform = m_sceneManager->GetComponentFrom<TransformComponent>(m_sceneId, m_mapUpperSurfaceEntity);
-	XMFLOAT3 surfacePosition = surfaceTransform->GetPositionVec3();
-	XMMATRIX surfaceTransformationMatrix = XMMatrixTranslation(surfacePosition.x, surfacePosition.y + 1.0f, surfacePosition.z);
-
-	std::vector<float> vertexData;
-
-	for (size_t i = 0; i < path.size() - 1; i++)
-	{
-		uint32_t currentIndex = path[i];
-		uint32_t nextIndex = path[i + 1];
-
-		XMVECTOR v0 = XMVector3Transform(XMLoadFloat3(&vertexBuffer[currentIndex].Position), surfaceTransformationMatrix);
-		XMVECTOR v1 = XMVector3Transform(XMLoadFloat3(&vertexBuffer[nextIndex].Position), surfaceTransformationMatrix);
-
-		vertexData.push_back(XMVectorGetX(v0));
-		vertexData.push_back(XMVectorGetY(v0));
-		vertexData.push_back(XMVectorGetZ(v0));
-
-		vertexData.push_back(1.0f);
-		vertexData.push_back(0.0f);
-		vertexData.push_back(1.0f);
-		vertexData.push_back(1.0f);
-
-		vertexData.push_back(XMVectorGetX(v1));
-		vertexData.push_back(XMVectorGetY(v1));
-		vertexData.push_back(XMVectorGetZ(v1));
-
-		vertexData.push_back(1.0f);
-		vertexData.push_back(0.0f);
-		vertexData.push_back(1.0f);
-		vertexData.push_back(1.0f);
-	}
+	std::vector<float> vertexData = GetLinePath(distinctMesh, path, {1.0f, 0.0f, 1.0f, 1.0f});
 
 	std::variant<Direct3dBuffer, dsr_error> createVertexBuffer = Direct3dBuffer::CreateVertexBufferf(m_device, vertexData);
 	if (std::holds_alternative<dsr_error>(createVertexBuffer))
@@ -366,6 +313,55 @@ void RampScene::RegisterPathEntity()
 	inputLayout.AddVector4f("COLOR");
 
 	std::shared_ptr<dsr::ecs::LineListComponent> lines = m_sceneManager->AddComponent<dsr::ecs::LineListComponent>(m_sceneId, m_pathEntity);
+	std::shared_ptr<TransformComponent> transform = m_sceneManager->AddComponent<TransformComponent>(m_sceneId, m_pathEntity);
+	std::shared_ptr<TransformComponent> surfaceTransform = m_sceneManager->GetComponentFrom<TransformComponent>(m_sceneId, m_mapUpperSurfaceEntity);
+	XMFLOAT3 surfacePosition = surfaceTransform->GetPositionVec3();
+	++surfacePosition.y;
+	transform->SetPositionVec3(surfacePosition);
+
+	lines->SetVertexCount(vertexData.size() / 7);
+	lines->SetVertexBuffer(std::get<Direct3dBuffer>(createVertexBuffer));
+	lines->SetVertexShaderInputLayout(inputLayout);
+}
+
+void RampScene::RegisterSubDividedPathEntity()
+{
+	using namespace dsr;
+	using namespace dsr::data;
+	using namespace dsr::data::manipulation;
+	using namespace dsr::data::pathfinding;
+	using namespace dsr::directX;
+	using namespace dsr::ecs;
+
+	using namespace DirectX;
+
+	StaticMesh<Vertex3F> distincSubDivision = FilterDistinct(*m_mapUpperSurfaceSubDividedModel->Mesh);
+	AStarStaticMeshPathfinder pathfinderSubDivision(distincSubDivision);
+
+	/*std::chrono::time_point prev = std::chrono::high_resolution_clock::now();*/
+	std::vector<uint32_t> pathSubDivided = pathfinderSubDivision.SearchSequential(StartIndexSubDivided, EndIndexSubDivided);
+	/*std::chrono::time_point current = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<float, std::milli> duration = current - prev;*/
+
+	std::vector<float> vertexData = GetLinePath(distincSubDivision, pathSubDivided, { 1.0f, 0.0f, 1.0f, 1.0f });
+	std::variant<Direct3dBuffer, dsr_error> createVertexBuffer = Direct3dBuffer::CreateVertexBufferf(m_device, vertexData);
+	if (std::holds_alternative<dsr_error>(createVertexBuffer))
+	{
+		const dsr_error& err = std::get<dsr_error>(createVertexBuffer);
+		std::cout << "error creatingVertexBuffer for Subdivided path LineData: " << err.what() << std::endl;
+		return;
+	}
+
+	Direct3dShaderInputLayout inputLayout;
+	inputLayout.AddVector3f("POSITION");
+	inputLayout.AddVector4f("COLOR");
+
+	std::shared_ptr<dsr::ecs::LineListComponent> lines = m_sceneManager->AddComponent<dsr::ecs::LineListComponent>(m_sceneId, m_pathSubDividedEntity);
+	std::shared_ptr<TransformComponent> transform = m_sceneManager->AddComponent<TransformComponent>(m_sceneId, m_pathSubDividedEntity);
+	std::shared_ptr<TransformComponent> surfaceTransform = m_sceneManager->GetComponentFrom<TransformComponent>(m_sceneId, m_mapUpperSurfaceSubDividedEntity);
+	XMFLOAT3 surfacePosition = surfaceTransform->GetPositionVec3();
+	++surfacePosition.y;
+	transform->SetPositionVec3(surfacePosition);
 
 	lines->SetVertexCount(vertexData.size() / 7);
 	lines->SetVertexBuffer(std::get<Direct3dBuffer>(createVertexBuffer));

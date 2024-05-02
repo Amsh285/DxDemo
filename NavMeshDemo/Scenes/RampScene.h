@@ -34,6 +34,7 @@ private:
 	dsr::ecs::Entity m_mapUpperSurfaceSubDividedEntity;
 	dsr::ecs::Entity m_pathMarkersEntity;
 	dsr::ecs::Entity m_pathEntity;
+	dsr::ecs::Entity m_pathSubDividedEntity;
 
 	std::shared_ptr<dsr::WavefrontModel> m_mapModel;
 	std::shared_ptr<dsr::WavefrontModel> m_mapUpperSurfaceModel;
@@ -52,6 +53,7 @@ private:
 	void RegisterMapUpperSurfaceSubDividedModel();
 	void RegisterStartEndMarkerEntities();
 	void RegisterPathEntity();
+	void RegisterSubDividedPathEntity();
 	void RegisterMapFaceNormalsEntity();
 
 	void AddMarkerLine(const dsr::data::Vertex3FP2FTx3FN& vertex, const DirectX::XMMATRIX& transform, std::vector<float>& vertexBufferData);

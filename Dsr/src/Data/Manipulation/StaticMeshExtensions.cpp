@@ -184,6 +184,46 @@ namespace dsr
 				return subdividedMesh;
 			}
 
+			std::vector<float> GetLinePath(
+				const StaticMesh<Vertex3F>& sourcemesh,
+				const std::vector<uint32_t>& indexPath,
+				const std::array<float, 4>& color)
+			{
+				using namespace DirectX;
+
+				std::vector<Vertex3F> vertexBuffer = sourcemesh.GetVertexBuffer();
+				std::vector<float> vertexData;
+
+				for (size_t i = 0; i < indexPath.size() - 1; i++)
+				{
+					uint32_t currentIndex = indexPath[i];
+					uint32_t nextIndex = indexPath[i + 1];
+
+					XMVECTOR v0 = XMLoadFloat3(&vertexBuffer[currentIndex].Position);
+					XMVECTOR v1 = XMLoadFloat3(&vertexBuffer[nextIndex].Position);
+
+					vertexData.push_back(XMVectorGetX(v0));
+					vertexData.push_back(XMVectorGetY(v0));
+					vertexData.push_back(XMVectorGetZ(v0));
+
+					vertexData.push_back(color[0]);
+					vertexData.push_back(color[1]);
+					vertexData.push_back(color[2]);
+					vertexData.push_back(color[3]);
+
+					vertexData.push_back(XMVectorGetX(v1));
+					vertexData.push_back(XMVectorGetY(v1));
+					vertexData.push_back(XMVectorGetZ(v1));
+
+					vertexData.push_back(color[0]);
+					vertexData.push_back(color[1]);
+					vertexData.push_back(color[2]);
+					vertexData.push_back(color[3]);
+				}
+
+				return vertexData;
+			}
+
 			void SetSubdivisionData(
 				const SubDivisionVertex& subDivisionData,
 				uint32_t& index,
