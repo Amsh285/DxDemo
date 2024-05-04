@@ -184,6 +184,54 @@ namespace dsr
 				return subdividedMesh;
 			}
 
+			std::shared_ptr<StaticMesh<Vertex3FP2FTx3FN>> SubDivideBarycentric(const std::shared_ptr<StaticMesh<Vertex3FP2FTx3FN>> sourceMesh)
+			{
+				using namespace DirectX;
+
+				constexpr float c = 1.0f / 3.0f;
+
+				const std::vector<Vertex3FP2FTx3FN>& sourceVertexBuffer = sourceMesh->GetVertexBuffer();
+				const std::vector<uint32_t>& sourceIndexBuffer = sourceMesh->GetIndexBuffer();
+
+				if (sourceIndexBuffer.size() % 3 != 0)
+				{
+					return std::make_shared<StaticMesh<Vertex3FP2FTx3FN>>();
+				}
+
+				std::shared_ptr<StaticMesh<Vertex3FP2FTx3FN>> subdividedMesh = std::make_shared<StaticMesh<Vertex3FP2FTx3FN>>();
+				std::vector<Vertex3FP2FTx3FN> subdividedVertexBuffer;
+				std::vector<uint32_t> subdividedIndexBuffer;
+
+				SubDivisionTriangle subDivisionData;
+
+				uint32_t index = 0;
+				std::unordered_map<uint32_t, uint32_t> indexMap;
+				std::unordered_map<XMVECTOR, uint32_t, XMVectorHasher, XMVectorEqualComparer<1e-6f>> splitMap;
+
+				for (size_t i = 0; i < sourceIndexBuffer.size(); i += 3)
+				{
+					const Vertex3FP2FTx3FN& vertex0 = sourceVertexBuffer[sourceIndexBuffer[i]];
+					const Vertex3FP2FTx3FN& vertex1 = sourceVertexBuffer[sourceIndexBuffer[i + 1]];
+					const Vertex3FP2FTx3FN& vertex2 = sourceVertexBuffer[sourceIndexBuffer[i + 2]];
+
+					XMVECTOR v0 = XMLoadFloat3(&vertex0.Position);
+					XMVECTOR v1 = XMLoadFloat3(&vertex1.Position);
+					XMVECTOR v2 = XMLoadFloat3(&vertex2.Position);
+
+					XMVECTOR centroid = XMVectorAdd(
+						XMVectorAdd(XMVectorScale(v0, c), XMVectorScale(v1, c)),
+						XMVectorScale(v2, c)
+					);
+
+
+				}
+
+				subdividedMesh->SetVertexBuffer(subdividedVertexBuffer);
+				subdividedMesh->SetIndexBuffer(subdividedIndexBuffer);
+				subdividedMesh->SetWindingOrder(sourceMesh->GetWindingOrder());
+				return subdividedMesh;
+			}
+
 			std::vector<float> GetLinePath(
 				const StaticMesh<Vertex3F>& sourcemesh,
 				const std::vector<uint32_t>& indexPath,

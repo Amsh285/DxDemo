@@ -145,7 +145,7 @@ std::variant<dsr::ModelConfiguration, dsr::dsr_error> RampScene::LoadMapUpperSur
 	group.StartIndexLocation = 0;
 	group.MaterialName = "mat";
 	group.MaterialData.SpecularColor = XMFLOAT3(0.8f, 0.8f, 0.8f);
-	group.MaterialData.DiffuseColor = XMFLOAT4(0.8f, 0.0f, 0.0f, 1.0f);
+	group.MaterialData.DiffuseColor = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
 	m_mapUpperSurfaceModel->MaterialGroups.push_back(group);
 
 	return LoadWavefrontModelConfiguration(
@@ -208,7 +208,7 @@ void RampScene::RegisterMapUpperSurfaceSubDividedModel()
 	group.StartIndexLocation = 0;
 	group.MaterialName = "mat";
 	group.MaterialData.SpecularColor = XMFLOAT3(0.8f, 0.8f, 0.8f);
-	group.MaterialData.DiffuseColor = XMFLOAT4(0.8f, 0.0f, 0.0f, 1.0f);
+	group.MaterialData.DiffuseColor = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
 	m_mapUpperSurfaceSubDividedModel->MaterialGroups.push_back(group);
 
 
