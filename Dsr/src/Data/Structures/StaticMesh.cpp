@@ -5,6 +5,5 @@ namespace dsr
 {
 	namespace data
 	{
-
 	}
 }

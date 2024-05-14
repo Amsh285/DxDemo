@@ -3,6 +3,7 @@
 #include "Data/WindingOrder.h"
 
 #include "Infrastructure/Comparers.h"
+#include "Infrastructure/XMathHelper.h"
 
 namespace dsr
 {
@@ -18,6 +19,8 @@ namespace dsr
 			const std::vector<uint32_t>& GetIndexBuffer() const { return m_indexBuffer; }
 			void SetIndexBuffer(const std::vector<uint32_t>& indexBuffer) { m_indexBuffer = indexBuffer; }
 
+			const std::vector<float>& GetHitTestCache() const { return m_hitTestCache; }
+
 			std::unordered_map<uint32_t, std::set<uint32_t>> GetAdjacencyList() const;
 
 			WindingOrder GetWindingOrder() const { return m_order; }
@@ -32,6 +35,8 @@ namespace dsr
 				: m_order(order)
 			{
 			}
+
+			void RefreshHitTestCache();
 		private:
 			void InsertAdjacentIndices(
 				const size_t& currentTrianlgeIndex,
@@ -40,6 +45,8 @@ namespace dsr
 
 			std::vector<TVertex> m_vertexBuffer;
 			std::vector<uint32_t> m_indexBuffer;
+
+			std::vector<float> m_hitTestCache;
 
 			WindingOrder m_order;
 		};
@@ -63,6 +70,24 @@ namespace dsr
 		}
 
 		template<class TVertex>
+		inline void StaticMesh<TVertex>::RefreshHitTestCache()
+		{
+			using namespace DirectX;
+
+			m_hitTestCache.clear();
+
+			for (size_t i = 0; i < m_indexBuffer.size(); i += 3)
+			{
+				XMVECTOR a = XMLoadFloat3(&m_vertexBuffer[m_indexBuffer[i]].Position);
+				XMVECTOR b = XMLoadFloat3(&m_vertexBuffer[m_indexBuffer[i + 1]].Position);
+				XMVECTOR c = XMLoadFloat3(&m_vertexBuffer[m_indexBuffer[i + 2]].Position);
+
+				float denom = 1.0f / Vector3Determinant(a, b, c);
+				m_hitTestCache.push_back(denom);
+			}
+		}
+
+		template<class TVertex>
 		inline void StaticMesh<TVertex>::InsertAdjacentIndices(
 			const size_t& currentTrianlgeIndex,
 			const size_t& nextTriangleIndex,
@@ -72,23 +97,6 @@ namespace dsr
 			using namespace DirectX;
 
 			static dsr::XMVectorEqualComparer<1e-6f> comparer;
-
-			/*Note:
-			* 
-			* this implementation relies only on indices which is wrong because vertices can be neighbours even if they are
-			* different
-			* e.g.:
-			* 
-			* v1:
-			* position: x=-2.74569201 y=8.71415329 z=1.83298802
-			* normal: x=-0.00000000 y=1.00000000 z=0.00000000
-			* v2:
-			* position: x=-2.74569201 y=8.71415329 z=1.83298802
-			* normal: x=-0.00000000 y=0.894999981 z=-0.446099997
-			* 
-			* Both vertices are different yet they share the same position. Computing a adjacencylist
-			* these vertices have to be considered equal, even if they are technically not.
-			*/
 
 			XMVECTOR currentVertex = XMLoadFloat3(&m_vertexBuffer[m_indexBuffer[currentTrianlgeIndex]].Position);
 			XMVECTOR v0 = XMLoadFloat3(&m_vertexBuffer[m_indexBuffer[nextTriangleIndex]].Position);
@@ -110,22 +118,6 @@ namespace dsr
 				adjacencyList[m_indexBuffer[currentTrianlgeIndex]].insert(m_indexBuffer[nextTriangleIndex]);
 				adjacencyList[m_indexBuffer[currentTrianlgeIndex]].insert(m_indexBuffer[nextTriangleIndex + 1]);
 			}
-
-			/*if (currentIndexIB == m_indexBuffer[nextTriangleIndex])
-			{
-				adjacencyList[m_indexBuffer[currentTrianlgeIndex]].insert(m_indexBuffer[nextTriangleIndex + 1]);
-				adjacencyList[m_indexBuffer[currentTrianlgeIndex]].insert(m_indexBuffer[nextTriangleIndex + 2]);
-			}
-			else if (currentIndexIB == m_indexBuffer[nextTriangleIndex + 1])
-			{
-				adjacencyList[m_indexBuffer[currentTrianlgeIndex]].insert(m_indexBuffer[nextTriangleIndex]);
-				adjacencyList[m_indexBuffer[currentTrianlgeIndex]].insert(m_indexBuffer[nextTriangleIndex + 2]);
-			}
-			else if (currentIndexIB == m_indexBuffer[nextTriangleIndex + 2])
-			{
-				adjacencyList[m_indexBuffer[currentTrianlgeIndex]].insert(m_indexBuffer[nextTriangleIndex]);
-				adjacencyList[m_indexBuffer[currentTrianlgeIndex]].insert(m_indexBuffer[nextTriangleIndex + 1]);
-			}*/
 		}
 	}
 }

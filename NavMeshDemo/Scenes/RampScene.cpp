@@ -29,6 +29,7 @@ RampScene::RampScene(
 
 	m_mapEntity = m_sceneManager->CreateNewEntity();
 	m_mapFaceNormalsEntity = m_sceneManager->CreateNewEntity();
+	m_mapBarycentricSubdividedEntity = m_sceneManager->CreateNewEntity();
 	m_mapUpperSurfaceEntity = m_sceneManager->CreateNewEntity();
 	m_mapUpperSurfaceSubDividedEntity = m_sceneManager->CreateNewEntity();
 	m_pathMarkersEntity = m_sceneManager->CreateNewEntity();
@@ -51,6 +52,7 @@ dsr::DsrResult RampScene::BuildScene()
 	const std::vector<ModelConfiguration>& models = std::get<std::vector<ModelConfiguration>>(loadSceneDataResult);
 
 	RegisterMapModel(models[0]);
+	RegisterMapBarycentricSubDivisionEntity();
 	RegisterMapUpperSurfaceModel(models[1]);
 	RegisterMapUpperSurfaceSubDividedModel();
 	RegisterStartEndMarkerEntities();
@@ -167,6 +169,60 @@ void RampScene::RegisterMapModel(const dsr::ModelConfiguration& map)
 	mesh->SetVertexGroups(map.GetVertexGroups());
 }
 
+void RampScene::RegisterMapBarycentricSubDivisionEntity()
+{
+	using namespace dsr;
+
+	using namespace dsr::data;
+	using namespace dsr::data::manipulation;
+
+	using namespace dsr::directX::rendering;
+
+	using namespace dsr::ecs;
+
+	using namespace DirectX;
+
+	m_barycentricSubdividedModel = std::make_shared<dsr::WavefrontModel>();
+	m_barycentricSubdividedModel->Mesh = SubDivideBarycentric(m_mapModel->Mesh);
+
+	WavefrontModelMaterialGroup group;
+	group.IndexCount = m_barycentricSubdividedModel->Mesh->GetIndexBuffer().size();
+	group.StartIndexLocation = 0;
+	group.MaterialName = "mat";
+	/*group.MaterialData.AmbientColor = XMFLOAT3(1.0f, 1.0f, 1.0f);
+	group.MaterialData.SpecularColor = XMFLOAT3(0.5f, 0.5f, 0.5f);
+	group.MaterialData.DiffuseColor = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);*/
+
+	group.MaterialData.SpecularColor = XMFLOAT3(0.8f, 0.8f, 0.8f);
+	group.MaterialData.DiffuseColor = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
+	m_barycentricSubdividedModel->MaterialGroups.push_back(group);
+
+	std::variant<ModelConfiguration, dsr_error> loadModelResult = LoadWavefrontModelConfiguration(
+		m_device,
+		m_barycentricSubdividedModel
+	);
+
+	if (std::holds_alternative<dsr_error>(loadModelResult))
+	{
+		const dsr_error& error = std::get<dsr_error>(loadModelResult);
+		std::cout << "Failed to load Subdivided Upper Surface: " << error.what() << std::endl;
+		return;
+	}
+
+	ModelConfiguration model = std::get<ModelConfiguration>(loadModelResult);
+
+	m_sceneManager->AddComponent<NameComponent>(m_sceneId, m_mapBarycentricSubdividedEntity, "Barycentric Subdivision Test");
+	std::shared_ptr<TransformComponent> transform = m_sceneManager->AddComponent<TransformComponent>(m_sceneId, m_mapBarycentricSubdividedEntity);
+	transform->SetPosition(DirectX::XMVectorSet(80.0f, 0.0f, 0.0f, 1.0f));
+
+	std::shared_ptr<StaticMeshComponent> mesh = std::make_shared<StaticMeshComponent>();
+	mesh->SetVertexBuffer(model.GetVertexBuffer());
+	mesh->SetVertexGroups(model.GetVertexGroups());
+
+	std::shared_ptr<WireframeMeshComponent> wireframe = m_sceneManager->AddComponent<WireframeMeshComponent>(m_sceneId, m_mapBarycentricSubdividedEntity);
+	wireframe->SetMesh(mesh);
+}
+
 void RampScene::RegisterMapUpperSurfaceModel(const dsr::ModelConfiguration& mapUpperSurface)
 {
 	using namespace dsr::ecs;
@@ -210,7 +266,6 @@ void RampScene::RegisterMapUpperSurfaceSubDividedModel()
 	group.MaterialData.SpecularColor = XMFLOAT3(0.8f, 0.8f, 0.8f);
 	group.MaterialData.DiffuseColor = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
 	m_mapUpperSurfaceSubDividedModel->MaterialGroups.push_back(group);
-
 
 	std::variant<ModelConfiguration, dsr_error> loadSurfaceResult = LoadWavefrontModelConfiguration(
 		m_device,

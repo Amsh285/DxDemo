@@ -105,6 +105,7 @@
     <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\Components\WireframeMeshComponent.h" />
     <ClInclude Include="src\Data\Structures\StaticMesh.h" />
     <ClInclude Include="src\Data\Manipulation\StaticMeshExtData.h" />
+    <ClInclude Include="src\Infrastructure\XMathHelper.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\EngineSubSystems\EntityComponentSystem\EntityComponentStore.cpp">
@@ -413,6 +414,10 @@
     </ClCompile>
     <ClCompile Include="src\Data\Manipulation\StaticMeshExtData.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="src\Infrastructure\XMathHelper.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

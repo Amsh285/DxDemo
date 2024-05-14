@@ -28,7 +28,6 @@ namespace dsr
 				std::vector<uint32_t>& subdividedIndexBuffer
 			);
 
-
 			struct IndexBufferChangeEntry
 			{
 				uint32_t OldValue;
@@ -218,12 +217,49 @@ namespace dsr
 					XMVECTOR v1 = XMLoadFloat3(&vertex1.Position);
 					XMVECTOR v2 = XMLoadFloat3(&vertex2.Position);
 
-					XMVECTOR centroid = XMVectorAdd(
-						XMVectorAdd(XMVectorScale(v0, c), XMVectorScale(v1, c)),
-						XMVectorScale(v2, c)
+					Vertex3FP2FTx3FN centroidVertex;
+
+					centroidVertex.Position = XMFLOAT3(
+						(vertex0.Position.x + vertex1.Position.x + vertex2.Position.x) * c,
+						(vertex0.Position.y + vertex1.Position.y + vertex2.Position.y) * c,
+						(vertex0.Position.z + vertex1.Position.z + vertex2.Position.z) * c
+					);
+					
+					centroidVertex.Normal = XMFLOAT3(
+						(vertex0.Normal.x + vertex1.Normal.x + vertex2.Normal.x) * c,
+						(vertex0.Normal.y + vertex1.Normal.y + vertex2.Normal.y) * c,
+						(vertex0.Normal.z + vertex1.Normal.z + vertex2.Normal.z) * c
 					);
 
+					centroidVertex.texCoords = XMFLOAT2(
+						(vertex0.texCoords.x + vertex1.texCoords.x + vertex2.texCoords.x) * c,
+						(vertex0.texCoords.y + vertex1.texCoords.y + vertex2.texCoords.y) * c
+					);
 
+					uint32_t centroidIndex, v0Idx, v1Idx, v2Idx;
+
+					//Todo: test if the windingorder is correct
+					v0Idx = index++;
+					subdividedVertexBuffer.push_back(vertex0);
+					subdividedIndexBuffer.push_back(v0Idx);
+
+					v1Idx = index++;
+					subdividedVertexBuffer.push_back(vertex1);
+					subdividedIndexBuffer.push_back(v1Idx);
+
+					centroidIndex = index++;
+					subdividedVertexBuffer.push_back(centroidVertex);
+					subdividedIndexBuffer.push_back(centroidIndex);
+
+					v2Idx = index++;
+					subdividedVertexBuffer.push_back(vertex2);
+					subdividedIndexBuffer.push_back(v2Idx);
+					subdividedIndexBuffer.push_back(centroidIndex);
+					subdividedIndexBuffer.push_back(v1Idx);
+
+					subdividedIndexBuffer.push_back(v2Idx);
+					subdividedIndexBuffer.push_back(v0Idx);
+					subdividedIndexBuffer.push_back(centroidIndex);
 				}
 
 				subdividedMesh->SetVertexBuffer(subdividedVertexBuffer);
