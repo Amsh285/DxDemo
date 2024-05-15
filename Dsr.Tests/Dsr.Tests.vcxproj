@@ -126,6 +126,7 @@
     <ClCompile Include="TestModels\EntityComponentSystem\Components\TestTagComponent.cpp" />
     <ClCompile Include="TestModels\EntityComponentSystem\Systems\TestNameTagSystem.cpp" />
     <ClCompile Include="TestModels\EntityComponentSystem\Systems\TestTagSystem.cpp" />
+    <ClCompile Include="XMMathHelperTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Dsr\Dsr.vcxproj">
