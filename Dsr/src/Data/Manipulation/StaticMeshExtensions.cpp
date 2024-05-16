@@ -1,8 +1,6 @@
 #include "dsrpch.h"
 #include "StaticMeshExtensions.h"
 
-#include "Data/Manipulation/StaticMeshExtData.h"
-
 #include "Infrastructure/Comparers.h"
 
 namespace dsr

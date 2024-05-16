@@ -1,9 +1,11 @@
 #pragma once
 
+#include "Data/Manipulation/StaticMeshExtData.h"
 #include "Data/Vertex.h"
 #include "Data/Structures/StaticMesh.h"
 
 #include "Infrastructure/DsrTypes.h"
+#include "Infrastructure/XMathHelper.h"
 
 namespace dsr
 {
@@ -75,6 +77,66 @@ namespace dsr
 			std::shared_ptr<StaticMesh<Vertex3FP2FTx3FN>> SubDivide(const std::shared_ptr<StaticMesh<Vertex3FP2FTx3FN>> sourceMesh);
 			std::shared_ptr<StaticMesh<Vertex3FP2FTx3FN>> SubDivideBarycentric(const std::shared_ptr<StaticMesh<Vertex3FP2FTx3FN>> sourceMesh);
 
+			template<class TVertex>
+			std::vector<RaycastMeshHit> GetMeshIntersections(
+				const std::shared_ptr<StaticMesh<TVertex>>& mesh,
+				const DirectX::XMVECTOR& rayOrigin,
+				const DirectX::XMVECTOR& rayDirection)
+			{
+				using namespace DirectX;
+
+				XMVECTOR rayDirectionNormalized = XMVector3Normalize(rayDirection);
+
+				const std::vector<float>& hitTestCache = mesh->GetHitTestCache();
+				const std::vector<TVertex>& sourceVertexBuffer = mesh->GetVertexBuffer();
+				const std::vector<uint32_t>& sourceIndexBuffer = mesh->GetIndexBuffer();
+				size_t hitTestCacheIndex = 0;
+
+				std::vector<RaycastMeshHit> hits;
+
+				for (size_t i = 0; i < sourceIndexBuffer.size(); i += 3)
+				{
+					XMVECTOR v0 = XMLoadFloat3(&sourceVertexBuffer[sourceIndexBuffer[i]].Position);
+					XMVECTOR v1 = XMLoadFloat3(&sourceVertexBuffer[sourceIndexBuffer[i + 1]].Position);
+					XMVECTOR v2 = XMLoadFloat3(&sourceVertexBuffer[sourceIndexBuffer[i + 2]].Position);
+
+					XMVECTOR planeNormal = XMVector3Normalize(XMVector3Cross(XMVectorSubtract(v1, v0), XMVectorSubtract(v2, v0)));
+					RaycastPlaneHit planeHit = Vector3PlaneIntersection(rayOrigin, rayDirectionNormalized, planeNormal, v0);
+
+					if (!planeHit.IsOrthogonal && planeHit.Distance >= 0.0f)
+					{
+						XMVECTOR interSection = XMVectorAdd(rayOrigin, XMVectorScale(rayDirectionNormalized, planeHit.Distance));
+
+						float denom = hitTestCache[hitTestCacheIndex];
+						float v = dsr::Vector3Determinant(v0, interSection, v2) * denom;
+						float w = dsr::Vector3Determinant(v0, v1, interSection) * denom;
+						float u = 1.0f - v - w;
+
+						if (u >= 0 && v >= 0 && w >= 0 /*&& (u + v + w) == 1.0f*/)
+						{
+							RaycastMeshHit meshHitData;
+							meshHitData.IndexBuffer0 = sourceIndexBuffer[i];
+							meshHitData.IndexBuffer1 = sourceIndexBuffer[i + 1];
+							meshHitData.IndexBuffer2 = sourceIndexBuffer[i + 2];
+							meshHitData.Distance = planeHit.Distance;
+							XMStoreFloat3(&meshHitData.Intersection, interSection);
+							hits.push_back(meshHitData);
+						}
+					}
+
+					++hitTestCacheIndex;
+				}
+
+				std::sort(
+					hits.begin(),
+					hits.end(),
+					[](const RaycastMeshHit& meshHit1, const RaycastMeshHit& meshHit2) {
+						return meshHit1.Distance < meshHit2.Distance;
+					}
+				);
+
+				return hits;
+			}
 
 			std::vector<float> GetLinePath(
 				const StaticMesh<Vertex3F>& sourcemesh,

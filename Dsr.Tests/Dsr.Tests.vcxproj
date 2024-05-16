@@ -119,6 +119,7 @@
     </ClCompile>
     <ClCompile Include="SceneManagerTests.cpp" />
     <ClCompile Include="SceneProxyTests.cpp" />
+    <ClCompile Include="StaticMeshExtensionsTests.cpp" />
     <ClCompile Include="StaticMeshTests.cpp" />
     <ClCompile Include="TestModels\EntityComponentSystem\Components\TestDummyComponent.cpp" />
     <ClCompile Include="TestModels\EntityComponentSystem\Systems\TestNameSystem.cpp" />

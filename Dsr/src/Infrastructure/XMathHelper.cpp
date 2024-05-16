@@ -11,6 +11,7 @@ namespace dsr
 		m.r[0] = v0;
 		m.r[1] = v1;
 		m.r[2] = v2;
+		m.r[3] = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
 
 		return XMVectorGetX(XMMatrixDeterminant(m));
 	}
