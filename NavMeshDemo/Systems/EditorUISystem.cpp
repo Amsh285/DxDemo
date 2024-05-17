@@ -4,6 +4,7 @@
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
 
+#include "Infrastructure/XMathHelper.h"
 
 std::vector<std::type_index> EditorUISystem::GetRequiredComponents() const
 {
@@ -94,40 +95,22 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 		std::shared_ptr<ViewProjectionComponent> viewProjection = context.GetComponentFrom<ViewProjectionComponent>(cameras[0]);
 
 		XMMATRIX projectionMatrix = viewProjection->GetProjectionMatrix();
-		XMVECTOR projectionDeterminant = XMMatrixDeterminant(projectionMatrix);
-		XMMATRIX inverseProjectionMatrix = XMMatrixInverse(&projectionDeterminant, projectionMatrix);
-
 		XMMATRIX viewMatrix = viewProjection->GetViewMatrix();
-		XMVECTOR viewDeterminant = XMMatrixDeterminant(viewMatrix);
-		XMMATRIX inverseViewMatrix = XMMatrixInverse(&viewDeterminant, viewMatrix);
-
-		//XMMATRIX toWorldSpace = XMMatrixMultiply(inverseProjectionMatrix, inverseViewMatrix);
 
 		MousePosition position = m_input->GetMouse()->GetCurrentClientAreaPosition();
-
 		std::shared_ptr<dsr::inputdevices::Screen> screen = m_input->GetScreen();
-		float resx = 1.0f / screen->GetClientWidth();
-		float resy = 1.0f / screen->GetClientHeight();
 
-		float x = resx * position.X;
-		float y = resy * position.Y;
-
-		XMVECTOR mClipSpace = XMVectorSet(2.0f * x - 1.0f, 1.0f - 2.0f * y, 1.0f, 1.0f);
-		XMVECTOR mWorldSpace = XMVector4Transform(mClipSpace, inverseProjectionMatrix);
-
-		// memo use this vector and apply inverse of model matrix for each geometry to test
-		// this will translate mWorldspace to the local space of the geometry
-		// you can calculate intersection there and dont net to transform geomtry to worldspace
-		mWorldSpace = XMVector4Transform(mClipSpace, inverseViewMatrix);
-
-		XMFLOAT4 test;
-		XMStoreFloat4(&test, mWorldSpace);
-
+		
+		XMVECTOR rayDirectionWorldSpace = dsr::ScreenToWorld(
+			 position.X, position.Y,
+			 screen->GetClientWidth(), screen->GetClientHeight(),
+			 projectionMatrix, viewMatrix
+		);
 
 		// the general direction can be calculated like this but for intersection calculation it is better
 		// to use mWorldSpace and apply the inverse model matrix to it like described above.
 		// Important: keep the raydirection in the Worldspace relative to the camera, do not use raydirection!
-		XMVECTOR raydirection = XMVector4Normalize(XMVectorSubtract(mWorldSpace, cameraTransform->GetPosition()));
+		XMVECTOR raydirection = XMVector4Normalize(XMVectorSubtract(rayDirectionWorldSpace, cameraTransform->GetPosition()));
 		XMFLOAT4 test2;
 		XMStoreFloat4(&test2, raydirection);
 

@@ -43,4 +43,33 @@ namespace dsr
 
 		return RaycastPlaneHit(false, num / denom);
 	}
+
+	DirectX::XMVECTOR ScreenToWorld(
+		const int32_t& mouseX, const int32_t& mouseY, const int32_t& clientWidth, const int32_t& clientHeight,
+		const DirectX::XMMATRIX& projectionMatrix,
+		const DirectX::XMMATRIX& viewMatrix)
+	{
+		using namespace DirectX;
+
+		XMVECTOR projectionDeterminant = XMMatrixDeterminant(projectionMatrix);
+		XMMATRIX inverseProjectionMatrix = XMMatrixInverse(&projectionDeterminant, projectionMatrix);
+
+		XMVECTOR viewDeterminant = XMMatrixDeterminant(viewMatrix);
+		XMMATRIX inverseViewMatrix = XMMatrixInverse(&viewDeterminant, viewMatrix);
+
+		float resx = 1.0f / clientWidth;
+		float resy = 1.0f / clientHeight;
+
+		float x = resx * mouseX;
+		float y = resy * mouseY;
+
+		XMVECTOR mClipSpace = XMVectorSet(2.0f * x - 1.0f, 1.0f - 2.0f * y, 1.0f, 1.0f);
+		XMVECTOR mWorldSpace = XMVector4Transform(mClipSpace, inverseProjectionMatrix);
+
+		// memo use this vector and apply inverse of model matrix for each geometry to test
+		// this will translate mWorldspace to the local space of the geometry
+		// you can calculate intersection there and dont net to transform geomtry to worldspace
+		mWorldSpace = XMVector4Transform(mClipSpace, inverseViewMatrix);
+		return mWorldSpace;
+	}
 }

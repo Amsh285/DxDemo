@@ -36,4 +36,11 @@ namespace dsr
 		const DirectX::XMVECTOR& planeNormal,
 		const DirectX::XMVECTOR& planeOrigin
 	);
+
+	DirectX::XMVECTOR ScreenToWorld(
+		const int32_t& mouseX, const int32_t& mouseY,
+		const int32_t& clientWidth, const int32_t& clientHeight,
+		const DirectX::XMMATRIX& projectionMatrix,
+		const DirectX::XMMATRIX& viewMatrix
+	);
 }

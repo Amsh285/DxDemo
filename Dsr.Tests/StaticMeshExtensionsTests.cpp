@@ -12,6 +12,8 @@ using namespace dsr::data::manipulation;
 
 namespace StaticMeshExtensionsTests
 {
+	static constexpr float epsilon = 1e-6f;
+
 	class StaticMeshIntersectionTests : public testing::Test
 	{
 	public:
@@ -41,11 +43,33 @@ namespace StaticMeshExtensionsTests
 
 	TEST_F(StaticMeshIntersectionTests, RaycastHit)
 	{
+		constexpr float scale = 1.0f / 3.0f;
+
+		XMVECTOR barycenter = XMVectorAdd(
+			XMVectorScale(XMLoadFloat3(&a), scale),
+			XMVectorAdd(
+				XMVectorScale(XMLoadFloat3(&b), scale),
+				XMVectorScale(XMLoadFloat3(&c), scale)
+			)
+		);
+
 		XMVECTOR rayOrigin = XMVectorSet(3.0f, 3.0f, 3.0f, 1.0f);
 		XMVECTOR rayDirection = XMVector3Normalize(XMVectorSubtract(XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f), rayOrigin));
 
 		std::vector<RaycastMeshHit> meshHits = GetMeshIntersections(m_mesh, rayOrigin, rayDirection);
 
 		EXPECT_GT(meshHits.size(), 0);
+		EXPECT_TRUE(XMVector3NearEqual(barycenter, XMLoadFloat3(&meshHits[0].Intersection), XMVectorReplicate(epsilon)));
+	}
+
+	TEST_F(StaticMeshIntersectionTests, RaycastMiss)
+	{
+		XMVECTOR rayOrigin = XMVectorSet(3.0f, 3.0f, 3.0f, 1.0f);
+		XMVECTOR rayDirection = XMVector3Normalize(XMVectorSubtract(XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f), rayOrigin));
+		rayDirection = XMVectorNegate(rayDirection);
+
+		std::vector<RaycastMeshHit> meshHits = GetMeshIntersections(m_mesh, rayOrigin, rayDirection);
+
+		EXPECT_EQ(meshHits.size(), 0);
 	}
 }
