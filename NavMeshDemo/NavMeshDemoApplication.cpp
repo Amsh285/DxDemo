@@ -69,7 +69,7 @@ void NavMeshDemoApplication::RegisterCameraController()
 
 void NavMeshDemoApplication::RegisterEditorUI()
 {
-	m_editorUISystem = std::make_shared<EditorUISystem>(GetSceneManager(), GetInput());
+	m_editorUISystem = std::make_shared<EditorUISystem>(GetSceneManager(), GetInput(), m_rampScene);
 	m_ecsManager->RegisterSystem(m_editorUISystem);
 
 	m_ecsManager->RegisterComponent<EditorUIComponent>(m_editorUIEntity);

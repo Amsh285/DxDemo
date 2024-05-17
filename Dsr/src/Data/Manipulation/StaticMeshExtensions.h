@@ -82,10 +82,10 @@ namespace dsr
 				const std::shared_ptr<StaticMesh<TVertex>>& mesh,
 				const DirectX::XMVECTOR& rayOrigin,
 				const DirectX::XMVECTOR& rayDirection)
-			{
+			{ 
 				using namespace DirectX;
 
-				XMVECTOR rayDirectionNormalized = XMVector3Normalize(rayDirection);
+				XMVECTOR rayDirectionNormalized = XMVector4Normalize(rayDirection);
 
 				const std::vector<float>& hitTestCache = mesh->GetHitTestCache();
 				const std::vector<TVertex>& sourceVertexBuffer = mesh->GetVertexBuffer();

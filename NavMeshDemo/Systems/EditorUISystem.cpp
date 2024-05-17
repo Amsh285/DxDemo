@@ -13,9 +13,10 @@ std::vector<std::type_index> EditorUISystem::GetRequiredComponents() const
 
 EditorUISystem::EditorUISystem(
 	const std::shared_ptr<dsr::scenesystem::SceneManager>& sceneManager,
-	const std::shared_ptr<dsr::input::Input>& input)
+	const std::shared_ptr<dsr::input::Input>& input,
+	const std::shared_ptr<RampScene>& rampScene)
 	: dsr::ecs::System(std::type_index(typeid(EditorUISystem))),
-	m_sceneManager(sceneManager), m_input(input), m_sceneSelectedIdx(0)
+	m_sceneManager(sceneManager), m_input(input), m_rampScene(rampScene), m_sceneSelectedIdx(0)
 {
 	OnUpdate = std::bind(&EditorUISystem::Update, this, std::placeholders::_1);
 	OnStart = std::bind(&EditorUISystem::Start, this, std::placeholders::_1);
@@ -107,12 +108,13 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 			 projectionMatrix, viewMatrix
 		);
 
-		// the general direction can be calculated like this but for intersection calculation it is better
-		// to use mWorldSpace and apply the inverse model matrix to it like described above.
-		// Important: keep the raydirection in the Worldspace relative to the camera, do not use raydirection!
 		XMVECTOR raydirection = XMVector4Normalize(XMVectorSubtract(rayDirectionWorldSpace, cameraTransform->GetPosition()));
-		XMFLOAT4 test2;
-		XMStoreFloat4(&test2, raydirection);
+
+		//Todo: remove if later!
+		if (m_sceneViewData[m_sceneSelectedIdx].SceneName == "Ramp")
+		{
+			m_rampScene->SetMapPath(cameraTransform->GetPosition(), raydirection);
+		}
 
 		//std::cout << "x: " << position.X << " y: " << position.Y << std::endl;
 	}

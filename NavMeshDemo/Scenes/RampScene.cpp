@@ -11,7 +11,6 @@
 #include "EngineSubSystems/EntityComponentSystem/Components/WireframeMeshComponent.h"
 #include "EngineSubSystems/EntityComponentSystem/Components/LineListComponent.h"
 
-
 static constexpr auto StartIndex = 49;
 static constexpr auto EndIndex = 30;
 
@@ -35,6 +34,83 @@ RampScene::RampScene(
 	m_pathMarkersEntity = m_sceneManager->CreateNewEntity();
 	m_pathEntity = m_sceneManager->CreateNewEntity();
 	m_pathSubDividedEntity = m_sceneManager->CreateNewEntity();
+
+	m_debugLineEntity = m_sceneManager->CreateNewEntity();
+}
+
+void RampScene::SetMapPath(const DirectX::XMVECTOR& rayOrigin, const DirectX::XMVECTOR& rayDirection)
+{
+	using namespace DirectX;
+	
+	using namespace dsr;
+
+	using namespace dsr::data;
+	using namespace dsr::data::manipulation;
+
+	using namespace dsr::directX;
+
+	using namespace dsr::ecs;
+
+	std::shared_ptr<TransformComponent> transform = m_sceneManager->GetComponentFrom<TransformComponent>(m_sceneId, m_mapEntity);
+	XMMATRIX model = transform->GetModelMatrix();
+	XMVECTOR determinant = XMMatrixDeterminant(model);
+	XMMATRIX inverseModel = XMMatrixInverse(&determinant, model);
+
+	std::vector<RaycastMeshHit> hits = GetMeshIntersections(
+		m_mapUpperSurfaceModel->Mesh,
+		XMVector4Transform(rayOrigin, inverseModel),
+		XMVector4Transform(rayDirection, inverseModel));
+	
+	std::shared_ptr<LineListComponent> debugLines = m_sceneManager->GetComponentFrom<LineListComponent>(m_sceneId, m_debugLineEntity);
+
+	if (!debugLines)
+	{
+		std::vector<float> vertexBufferData;
+		vertexBufferData.push_back(XMVectorGetX(rayOrigin));
+		vertexBufferData.push_back(XMVectorGetY(rayOrigin));
+		vertexBufferData.push_back(XMVectorGetZ(rayOrigin));
+
+		vertexBufferData.push_back(1.0f);
+		vertexBufferData.push_back(0.0f);
+		vertexBufferData.push_back(1.0f);
+		vertexBufferData.push_back(1.0f);
+
+		XMVECTOR dir = XMVectorAdd(rayOrigin, XMVectorScale(rayDirection, 100.0f));
+
+		vertexBufferData.push_back(XMVectorGetX(dir));
+		vertexBufferData.push_back(XMVectorGetY(dir));
+		vertexBufferData.push_back(XMVectorGetZ(dir));
+
+		vertexBufferData.push_back(1.0f);
+		vertexBufferData.push_back(0.0f);
+		vertexBufferData.push_back(1.0f);
+		vertexBufferData.push_back(1.0f);
+
+		std::variant<Direct3dBuffer, dsr_error> createVertexBuffer = Direct3dBuffer::CreateVertexBufferf(m_device, vertexBufferData);
+		if (std::holds_alternative<dsr_error>(createVertexBuffer))
+		{
+			const dsr_error& err = std::get<dsr_error>(createVertexBuffer);
+			std::cout << "error creatingVertexBuffer for MapFaceNormals: " << err.what() << std::endl;
+			return;
+		}
+
+		Direct3dShaderInputLayout inputLayout;
+		inputLayout.AddVector3f("POSITION");
+		inputLayout.AddVector4f("COLOR");
+
+		std::shared_ptr<dsr::ecs::LineListComponent> lines = m_sceneManager->AddComponent<dsr::ecs::LineListComponent>(m_sceneId, m_debugLineEntity);
+		lines->SetVertexCount(2);
+		lines->SetVertexBuffer(std::get<Direct3dBuffer>(createVertexBuffer));
+		lines->SetVertexShaderInputLayout(inputLayout);
+	}
+	else
+	{
+		
+	}
+
+	if (hits.size() > 0)
+		std::cout << "raycasthit: (x: " << hits[0].Intersection.x <<
+		" y: " << hits[0].Intersection.y << " z: " << hits[0].Intersection.z << std::endl;
 }
 
 dsr::DsrResult RampScene::BuildScene()
@@ -140,6 +216,7 @@ std::variant<dsr::ModelConfiguration, dsr::dsr_error> RampScene::LoadMapUpperSur
 
 	m_mapUpperSurfaceModel = std::make_shared<WavefrontModel>();
 	m_mapUpperSurfaceModel->Mesh = filteredMesh;
+	m_mapUpperSurfaceModel->Mesh->RefreshHitTestCache();
 
 	//Todo: Default VertexGroup
 	WavefrontModelMaterialGroup group;

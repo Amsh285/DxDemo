@@ -32,12 +32,11 @@ namespace dsr
 			DirectX::XMVECTOR GetRotation() const { return m_rotation; }
 			void SetRotation(const DirectX::XMVECTOR& quaternion) { m_rotation = quaternion; }
 
+			DirectX::XMMATRIX GetModelMatrix() const;
 			RenderTransform GetRenderTransform() const;
 
 			TransformComponent();
 		private:
-			DirectX::XMMATRIX CalculateModelMatrix() const;
-
 			DirectX::XMVECTOR m_position;
 			DirectX::XMVECTOR m_scale;
 			DirectX::XMVECTOR m_rotation;
