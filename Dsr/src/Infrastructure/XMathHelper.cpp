@@ -63,13 +63,9 @@ namespace dsr
 		float x = resx * mouseX;
 		float y = resy * mouseY;
 
-		XMVECTOR mClipSpace = XMVectorSet(2.0f * x - 1.0f, 1.0f - 2.0f * y, 1.0f, 0.0f);
-		XMVECTOR mWorldSpace = XMVector3Transform(mClipSpace, inverseProjectionMatrix);
+		XMVECTOR clipSpace = XMVectorSet(2.0f * x - 1.0f, 1.0f - 2.0f * y, 1.0f, 0.0f);
+		XMVECTOR viewSpace = XMVector3Transform(clipSpace, inverseProjectionMatrix);
 
-		// memo use this vector and apply inverse of model matrix for each geometry to test
-		// this will translate mWorldspace to the local space of the geometry
-		// you can calculate intersection there and dont net to transform geomtry to worldspace
-		XMVECTOR copium = XMVector3Transform(mWorldSpace, inverseViewMatrix);
-		return copium;
+		return XMVector3Transform(viewSpace, inverseViewMatrix);
 	}
 }

@@ -11,6 +11,8 @@
 #include "EngineSubSystems/EntityComponentSystem/Components/WireframeMeshComponent.h"
 #include "EngineSubSystems/EntityComponentSystem/Components/LineListComponent.h"
 
+#include "Shapes/ShapeBuilder.h"
+
 static constexpr auto StartIndex = 49;
 static constexpr auto EndIndex = 30;
 
@@ -61,36 +63,22 @@ void RampScene::SetMapPath(const DirectX::XMVECTOR& rayOrigin, const DirectX::XM
 		XMVector4Transform(rayOrigin, inverseModel),
 		XMVector4Transform(rayDirection, inverseModel));
 	
-	std::shared_ptr<LineListComponent> debugLines = m_sceneManager->GetComponentFrom<LineListComponent>(m_sceneId, m_debugLineEntity);
+	std::shared_ptr<LineListComponent> debugRayLineComponent = m_sceneManager->GetComponentFrom<LineListComponent>(m_sceneId, m_debugLineEntity);
 
-	if (!debugLines)
+	if (!debugRayLineComponent)
 	{
-		std::vector<float> vertexBufferData;
-		vertexBufferData.push_back(XMVectorGetX(rayOrigin));
-		vertexBufferData.push_back(XMVectorGetY(rayOrigin));
-		vertexBufferData.push_back(XMVectorGetZ(rayOrigin));
-
-		vertexBufferData.push_back(1.0f);
-		vertexBufferData.push_back(0.0f);
-		vertexBufferData.push_back(1.0f);
-		vertexBufferData.push_back(1.0f);
-
 		XMVECTOR dir = XMVectorAdd(rayOrigin, XMVectorScale(rayDirection, 100.0f));
+		XMFLOAT3 from, to;
+		XMStoreFloat3(&from, rayOrigin);
+		XMStoreFloat3(&to, dir);
 
-		vertexBufferData.push_back(XMVectorGetX(dir));
-		vertexBufferData.push_back(XMVectorGetY(dir));
-		vertexBufferData.push_back(XMVectorGetZ(dir));
-
-		vertexBufferData.push_back(1.0f);
-		vertexBufferData.push_back(0.0f);
-		vertexBufferData.push_back(1.0f);
-		vertexBufferData.push_back(1.0f);
+		std::vector<float> vertexBufferData = dsr::shapes::Line(from, to, XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f));
 
 		std::variant<Direct3dBuffer, dsr_error> createVertexBuffer = Direct3dBuffer::CreateVertexBufferf(m_device, vertexBufferData);
 		if (std::holds_alternative<dsr_error>(createVertexBuffer))
 		{
 			const dsr_error& err = std::get<dsr_error>(createVertexBuffer);
-			std::cout << "error creatingVertexBuffer for MapFaceNormals: " << err.what() << std::endl;
+			std::cout << "error creatingVertexBuffer for Rayline: " << err.what() << std::endl;
 			return;
 		}
 
@@ -105,7 +93,14 @@ void RampScene::SetMapPath(const DirectX::XMVECTOR& rayOrigin, const DirectX::XM
 	}
 	else
 	{
-		
+		std::shared_ptr<ID3D11Buffer> vertexBufferPtr = debugRayLineComponent->GetVertexBuffer().GetBufferPtr();
+		XMVECTOR dir = XMVectorAdd(rayOrigin, XMVectorScale(rayDirection, 100.0f));
+		XMFLOAT3 from, to;
+		XMStoreFloat3(&from, rayOrigin);
+		XMStoreFloat3(&to, dir);
+		std::vector<float> vertexBufferData = dsr::shapes::Line(from, to, XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f));
+
+		m_device->UpdateSubResource(vertexBufferPtr.get(), 0, nullptr, vertexBufferData.data(), 0, 0);
 	}
 
 	if (hits.size() > 0)
