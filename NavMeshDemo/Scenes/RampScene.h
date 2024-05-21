@@ -22,7 +22,7 @@ public:
 		const std::shared_ptr<dsr::BlenderModelLoader>& blenderModelLoader
 	);
 
-	void SetMapPath(const DirectX::XMVECTOR& rayOrigin, const DirectX::XMVECTOR& rayDirection);
+	void OnScreenToCameraRaycast(const DirectX::XMVECTOR& rayOrigin, const DirectX::XMVECTOR& rayDirection);
 
 	dsr::DsrResult BuildScene();
 	void SetActive();

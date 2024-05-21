@@ -1,6 +1,8 @@
 #pragma once
 
 #include "ErrorHandling/dsr_error.h"
+#include "ErrorHandling/DsrResult.h"
+
 #include "Shader/Direct3dShaderInputLayout.h"
 #include "Windows/Window.h"
 
@@ -41,6 +43,15 @@ namespace dsr
 				const void* dataPtr,
 				const uint32_t& srcRowPitch, 
 				const uint32_t& srcDepthPitch);
+
+			dsr::DsrResult Map(
+				ID3D11Resource* resourcePtr,
+				const uint32_t& dstSubResource,
+				const D3D11_MAP& mapType,
+				const uint32_t& mapFlags,
+				D3D11_MAPPED_SUBRESOURCE* mappedResourcePtr);
+
+			void Unmap(ID3D11Resource* resourcePtr, const uint32_t& dstSubResource);
 
 			template<class ShaderType>
 			std::variant<ShaderType*, dsr_error> CreateShader(ID3DBlob* pShaderBlob, ID3D11ClassLinkage* classLinkage) const;

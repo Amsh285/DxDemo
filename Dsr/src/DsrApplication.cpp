@@ -35,6 +35,9 @@ namespace dsr
 		m_ecsManager = std::make_shared<dsr::ecs::EcsManager>();
 		m_sceneManager = std::make_shared<dsr::scenesystem::SceneManager>(m_ecsManager);
 
+		Debug::Device = m_device;
+		Debug::SceneManager = m_sceneManager;
+
 		InitializeSystems();
 	}
 

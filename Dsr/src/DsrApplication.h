@@ -28,6 +28,7 @@
 
 #include "EngineSubSystems/SceneSystem/SceneManager.h"
 
+#include "EngineSubSystems/Debug/Debug.h"
 #include "EngineSubSystems/Input/InputSystem.h"
 #include "EngineSubSystems/Time/Time.h"
 

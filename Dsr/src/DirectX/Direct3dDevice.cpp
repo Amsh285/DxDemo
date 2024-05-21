@@ -229,6 +229,23 @@ namespace dsr
 			m_deviceContext->UpdateSubresource(resourcePtr, dstSubResource, pDstBox, dataPtr, srcRowPitch, srcDepthPitch);
 		}
 
+		dsr::DsrResult Direct3dDevice::Map(ID3D11Resource* resourcePtr, const uint32_t& dstSubResource, const D3D11_MAP& mapType, const uint32_t& mapFlags, D3D11_MAPPED_SUBRESOURCE* mappedResourcePtr)
+		{
+			HRESULT result = m_deviceContext->Map(resourcePtr, dstSubResource, mapType, mapFlags, mappedResourcePtr);
+
+			if (FAILED(result))
+			{
+				return DsrResult("Error mapping Resource.", result);
+			}
+
+			return DsrResult::Success("Device Successfully mapped.");
+		}
+
+		void Direct3dDevice::Unmap(ID3D11Resource* resourcePtr, const uint32_t& dstSubResource)
+		{
+			m_deviceContext->Unmap(resourcePtr, dstSubResource);
+		}
+
 		std::variant<ID3D11InputLayout*, dsr_error> Direct3dDevice::CreateInputLayout(
 			const Direct3dShaderInputLayout& layout,
 			ID3DBlob* shaderBlob) const

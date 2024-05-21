@@ -2,6 +2,8 @@
 #include "dsrpch.h"
 #include "WindowApplication.h"
 
+#include "EngineSubSystems/Debug/Debug.h"
+
 #include "imgui.h"
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
@@ -64,6 +66,8 @@ namespace dsr
 				ImGui::NewFrame();
 
 				m_device->Clear(0.3f, 0.3f, 0.3f, 1.0f);
+
+				dsr::Debug::OnUpdate();
 
 				dsr::events::UpdateFrameEvent event(deltaTime);
 				m_updateFrameEmitter.operator()(event);

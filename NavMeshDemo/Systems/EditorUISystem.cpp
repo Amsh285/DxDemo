@@ -100,7 +100,6 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 
 		MousePosition position = m_input->GetMouse()->GetCurrentClientAreaPosition();
 		std::shared_ptr<dsr::inputdevices::Screen> screen = m_input->GetScreen();
-
 		
 		XMVECTOR rayDirectionWorldSpace = dsr::ScreenToWorld(
 			 position.X, position.Y,
@@ -113,7 +112,7 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 		//Todo: remove if later!
 		if (m_sceneViewData[m_sceneSelectedIdx].SceneName == "Ramp")
 		{
-			m_rampScene->SetMapPath(cameraTransform->GetPosition(), raydirection);
+			m_rampScene->OnScreenToCameraRaycast(cameraTransform->GetPosition(), raydirection);
 		}
 
 		//std::cout << "x: " << position.X << " y: " << position.Y << std::endl;

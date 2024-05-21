@@ -102,5 +102,13 @@ namespace dsr
 			m_activeScene = std::make_unique<SceneProxy>(m_scenes[sceneId], m_ecsManager);
 			m_activeScene->LoadEntities();
 		}
+
+		std::optional<uint32_t> SceneManager::GetActiveSceneId() const
+		{
+			if (!m_activeScene)
+				return std::nullopt;
+
+			return m_activeScene->GetSceneId();
+		}
 	}
 }

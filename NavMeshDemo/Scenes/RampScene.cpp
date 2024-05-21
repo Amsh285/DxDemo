@@ -5,6 +5,7 @@
 
 #include "DirectX/Rendering/ModelLoaderExtensions/BlenderModelLoaderExtensions.h"
 
+#include "EngineSubSystems/Debug/Debug.h"
 #include "EngineSubSystems/EntityComponentSystem/Components/NameComponent.h"
 #include "EngineSubSystems/EntityComponentSystem/Components/TransformComponent.h"
 #include "EngineSubSystems/EntityComponentSystem/Components/StaticMeshComponent.h"
@@ -40,7 +41,7 @@ RampScene::RampScene(
 	m_debugLineEntity = m_sceneManager->CreateNewEntity();
 }
 
-void RampScene::SetMapPath(const DirectX::XMVECTOR& rayOrigin, const DirectX::XMVECTOR& rayDirection)
+void RampScene::OnScreenToCameraRaycast(const DirectX::XMVECTOR& rayOrigin, const DirectX::XMVECTOR& rayDirection)
 {
 	using namespace DirectX;
 	
@@ -65,43 +66,15 @@ void RampScene::SetMapPath(const DirectX::XMVECTOR& rayOrigin, const DirectX::XM
 	
 	std::shared_ptr<LineListComponent> debugRayLineComponent = m_sceneManager->GetComponentFrom<LineListComponent>(m_sceneId, m_debugLineEntity);
 
-	if (!debugRayLineComponent)
-	{
-		XMVECTOR dir = XMVectorAdd(rayOrigin, XMVectorScale(rayDirection, 100.0f));
-		XMFLOAT3 from, to;
-		XMStoreFloat3(&from, rayOrigin);
-		XMStoreFloat3(&to, dir);
+	/*XMVECTOR dir = XMVectorAdd(rayOrigin, XMVectorScale(rayDirection, 100.0f));
+	XMFLOAT3 from, to;
+	XMStoreFloat3(&from, rayOrigin);
+	XMStoreFloat3(&to, dir);
 
-		std::vector<float> vertexBufferData = dsr::shapes::Line(from, to, XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f));
+	Debug::DrawLine(from, to, XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f), std::chrono::seconds(5));*/
 
-		std::variant<Direct3dBuffer, dsr_error> createVertexBuffer = Direct3dBuffer::CreateVertexBufferf(m_device, vertexBufferData);
-		if (std::holds_alternative<dsr_error>(createVertexBuffer))
-		{
-			const dsr_error& err = std::get<dsr_error>(createVertexBuffer);
-			std::cout << "error creatingVertexBuffer for Rayline: " << err.what() << std::endl;
-			return;
-		}
-
-		Direct3dShaderInputLayout inputLayout;
-		inputLayout.AddVector3f("POSITION");
-		inputLayout.AddVector4f("COLOR");
-
-		std::shared_ptr<dsr::ecs::LineListComponent> lines = m_sceneManager->AddComponent<dsr::ecs::LineListComponent>(m_sceneId, m_debugLineEntity);
-		lines->SetVertexCount(2);
-		lines->SetVertexBuffer(std::get<Direct3dBuffer>(createVertexBuffer));
-		lines->SetVertexShaderInputLayout(inputLayout);
-	}
-	else
-	{
-		std::shared_ptr<ID3D11Buffer> vertexBufferPtr = debugRayLineComponent->GetVertexBuffer().GetBufferPtr();
-		XMVECTOR dir = XMVectorAdd(rayOrigin, XMVectorScale(rayDirection, 100.0f));
-		XMFLOAT3 from, to;
-		XMStoreFloat3(&from, rayOrigin);
-		XMStoreFloat3(&to, dir);
-		std::vector<float> vertexBufferData = dsr::shapes::Line(from, to, XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f));
-
-		m_device->UpdateSubResource(vertexBufferPtr.get(), 0, nullptr, vertexBufferData.data(), 0, 0);
-	}
+	//Debug::DrawLine(XMFLOAT3(-20.0f, 10.0f, -20.0f), XMFLOAT3(20.0f, 10.0f, -20.0f), XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f), std::chrono::seconds(10));
+	Debug::DrawRay(rayOrigin, rayDirection, XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f), 0.2f, 100.0f, std::chrono::seconds(5));
 
 	if (hits.size() > 0)
 		std::cout << "raycasthit: (x: " << hits[0].Intersection.x <<

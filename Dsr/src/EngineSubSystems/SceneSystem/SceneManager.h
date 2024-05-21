@@ -72,6 +72,7 @@ namespace dsr
 			);
 
 			void SetActiveScene(const uint32_t& sceneId);
+			std::optional<uint32_t> GetActiveSceneId() const;
 		private:
 			std::shared_ptr<dsr::ecs::EcsManager> m_ecsManager;
 

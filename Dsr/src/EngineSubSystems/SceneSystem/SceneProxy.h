@@ -10,6 +10,8 @@ namespace dsr
 		class SceneProxy final
 		{
 		public:
+			uint32_t GetSceneId() const { return m_scene->GetSceneId(); }
+
 			SceneProxy(const std::shared_ptr<Scene>& scene, const std::shared_ptr<dsr::ecs::EcsManager>& ecsManager);
 			SceneProxy(const SceneProxy& other) = delete;
 			SceneProxy& operator=(const SceneProxy& other) = delete;
