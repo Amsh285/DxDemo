@@ -3,7 +3,7 @@
 
 namespace dsr
 {
-	namespace scenesystem
+	namespace scene
 	{
 		Scene::Scene()
 		{

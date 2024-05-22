@@ -33,7 +33,7 @@ namespace dsr
 		m_eventDispatcher = std::make_shared<dsr::EventDispatcher>(m_window);
 
 		m_ecsManager = std::make_shared<dsr::ecs::EcsManager>();
-		m_sceneManager = std::make_shared<dsr::scenesystem::SceneManager>(m_ecsManager);
+		m_sceneManager = std::make_shared<dsr::scene::SceneManager>(m_ecsManager);
 
 		Debug::Device = m_device;
 		Debug::SceneManager = m_sceneManager;
@@ -103,7 +103,7 @@ namespace dsr
 		return m_windowApplication->GetTime();
 	}
 
-	std::shared_ptr<dsr::scenesystem::SceneManager> DsrApplication::GetSceneManager() const
+	std::shared_ptr<dsr::scene::SceneManager> DsrApplication::GetSceneManager() const
 	{
 		return m_sceneManager;
 	}

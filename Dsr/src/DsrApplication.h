@@ -49,7 +49,7 @@ namespace dsr
 	protected:
 		std::shared_ptr<dsr::input::Input> GetInput() const;
 		std::shared_ptr<dsr::time::Time> GetTime() const;
-		std::shared_ptr<dsr::scenesystem::SceneManager> GetSceneManager() const;
+		std::shared_ptr<dsr::scene::SceneManager> GetSceneManager() const;
 
 		std::shared_ptr<directX::Direct3dDevice> m_device;
 
@@ -57,7 +57,7 @@ namespace dsr
 		std::shared_ptr<BlenderModelLoader> m_blenderModelLoader;
 
 		std::shared_ptr<dsr::ecs::EcsManager> m_ecsManager;
-		std::shared_ptr<dsr::scenesystem::SceneManager> m_sceneManager;
+		std::shared_ptr<dsr::scene::SceneManager> m_sceneManager;
 
 		dsr::ecs::Entity m_cameraEntity;
 

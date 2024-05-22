@@ -33,7 +33,7 @@ public:
 	virtual std::vector<std::type_index> GetRequiredComponents() const override;
 
 	EditorUISystem(
-		const std::shared_ptr<dsr::scenesystem::SceneManager>& sceneManager,
+		const std::shared_ptr<dsr::scene::SceneManager>& sceneManager,
 		const std::shared_ptr<dsr::input::Input>& input,
 		const std::shared_ptr<RampScene>& rampScene
 	);
@@ -43,7 +43,7 @@ public:
 	void Start(const dsr::ecs::EngineStartupContext& context);
 	void Update(const dsr::ecs::EngineContext& context);
 private:
-	std::shared_ptr<dsr::scenesystem::SceneManager> m_sceneManager;
+	std::shared_ptr<dsr::scene::SceneManager> m_sceneManager;
 	std::shared_ptr<dsr::input::Input> m_input;
 	std::shared_ptr<RampScene> m_rampScene;
 

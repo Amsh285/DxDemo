@@ -8,7 +8,7 @@
 
 namespace dsr
 {
-	namespace scenesystem
+	namespace scene
 	{
 		class SceneManager final
 		{

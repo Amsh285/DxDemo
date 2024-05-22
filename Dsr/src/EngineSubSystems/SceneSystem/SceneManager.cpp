@@ -3,7 +3,7 @@
 
 namespace dsr
 {
-	namespace scenesystem
+	namespace scene
 	{
 		std::vector<std::shared_ptr<Scene>> SceneManager::GetScenes() const
 		{

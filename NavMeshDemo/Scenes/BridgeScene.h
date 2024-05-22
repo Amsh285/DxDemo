@@ -17,7 +17,7 @@ class BridgeScene
 {
 public:
 	BridgeScene(
-		const std::shared_ptr<dsr::scenesystem::SceneManager>& sceneManager,
+		const std::shared_ptr<dsr::scene::SceneManager>& sceneManager,
 		const std::shared_ptr<dsr::directX::Direct3dDevice>& device,
 		const std::shared_ptr<dsr::BlenderModelLoader>& blenderModelLoader
 	);
@@ -33,7 +33,7 @@ private:
 	std::shared_ptr<dsr::WavefrontModel> m_mapUpperSurfaceModel;
 	std::shared_ptr<dsr::WavefrontModel> m_mapUpperSurfaceSubDividedModel;
 
-	std::shared_ptr<dsr::scenesystem::SceneManager> m_sceneManager;
+	std::shared_ptr<dsr::scene::SceneManager> m_sceneManager;
 	std::shared_ptr<dsr::directX::Direct3dDevice> m_device;
 	std::shared_ptr<dsr::BlenderModelLoader> m_blenderModelLoader;
 

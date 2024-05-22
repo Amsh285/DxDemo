@@ -12,7 +12,7 @@ std::vector<std::type_index> EditorUISystem::GetRequiredComponents() const
 }
 
 EditorUISystem::EditorUISystem(
-	const std::shared_ptr<dsr::scenesystem::SceneManager>& sceneManager,
+	const std::shared_ptr<dsr::scene::SceneManager>& sceneManager,
 	const std::shared_ptr<dsr::input::Input>& input,
 	const std::shared_ptr<RampScene>& rampScene)
 	: dsr::ecs::System(std::type_index(typeid(EditorUISystem))),
@@ -24,7 +24,7 @@ EditorUISystem::EditorUISystem(
 
 void EditorUISystem::Start(const dsr::ecs::EngineStartupContext& context)
 {
-	using namespace dsr::scenesystem;
+	using namespace dsr::scene;
 
 	std::vector<std::shared_ptr<Scene>> scenes = m_sceneManager->GetScenes();
 

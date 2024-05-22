@@ -5,7 +5,7 @@
 
 namespace dsr
 {
-	namespace scenesystem
+	namespace scene
 	{
 		class SceneProxy final
 		{

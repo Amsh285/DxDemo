@@ -24,7 +24,7 @@ namespace dsr
 	{
 	public:
 		static std::shared_ptr<dsr::directX::Direct3dDevice> Device;
-		static std::shared_ptr<dsr::scenesystem::SceneManager> SceneManager;
+		static std::shared_ptr<dsr::scene::SceneManager> SceneManager;
 
 		static DsrResult DrawRay(
 			const DirectX::XMVECTOR& rayOrigin,

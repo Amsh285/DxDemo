@@ -10,7 +10,7 @@
 
 
 using namespace dsr::ecs;
-using namespace dsr::scenesystem;
+using namespace dsr::scene;
 using namespace dsr::tests;
 
 namespace SceneManagerTests

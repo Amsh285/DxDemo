@@ -6,7 +6,7 @@
 namespace dsr
 {
 	std::shared_ptr<dsr::directX::Direct3dDevice> Debug::Device;
-	std::shared_ptr<dsr::scenesystem::SceneManager> Debug::SceneManager;
+	std::shared_ptr<dsr::scene::SceneManager> Debug::SceneManager;
 
 	std::unordered_map<uint32_t, dsr::ecs::Entity> Debug::m_sceneDebugEntityMap;
 	std::vector<DebugLineData> Debug::m_lineData;

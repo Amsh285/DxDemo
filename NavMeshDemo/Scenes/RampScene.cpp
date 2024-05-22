@@ -21,7 +21,7 @@ static constexpr auto StartIndexSubDivided = 578;
 static constexpr auto EndIndexSubDivided = 320;
 
 RampScene::RampScene(
-	const std::shared_ptr<dsr::scenesystem::SceneManager>& sceneManager,
+	const std::shared_ptr<dsr::scene::SceneManager>& sceneManager,
 	const std::shared_ptr<dsr::directX::Direct3dDevice>& device,
 	const std::shared_ptr<dsr::BlenderModelLoader>& blenderModelLoader
 )	: m_sceneManager(sceneManager), m_device(device), m_blenderModelLoader(blenderModelLoader),
