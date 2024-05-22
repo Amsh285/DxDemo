@@ -29,6 +29,7 @@ namespace dsr
 		{
 			using namespace DirectX;
 
+			// Todo: Remove this class and use a new Camera class
 			std::shared_ptr<TransformComponent> transform = context.GetComponent<TransformComponent>();
 			std::shared_ptr<ViewFrustumComponent> viewFrustum = context.GetComponent<ViewFrustumComponent>();
 			std::shared_ptr<ViewProjectionComponent> viewProjection = context.GetComponent<ViewProjectionComponent>();

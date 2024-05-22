@@ -73,6 +73,8 @@ void RampScene::OnScreenToCameraRaycast(const DirectX::XMVECTOR& rayOrigin, cons
 
 	Debug::DrawLine(from, to, XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f), std::chrono::seconds(5));*/
 
+
+	//Debug::DrawLine(XMFLOAT3(0.0f, 10.0f, -49.99f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f), std::chrono::seconds(10));
 	//Debug::DrawLine(XMFLOAT3(-20.0f, 10.0f, -20.0f), XMFLOAT3(20.0f, 10.0f, -20.0f), XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f), std::chrono::seconds(10));
 	Debug::DrawRay(rayOrigin, rayDirection, XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f), 0.2f, 100.0f, std::chrono::seconds(5));
 
