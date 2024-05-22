@@ -42,8 +42,8 @@ namespace dsr
 
 		static void OnUpdate();
 	private:
-		static std::unordered_map<uint32_t, dsr::ecs::Entity> m_sceneDebugEntityMap;
-		static std::vector<DebugLineData> m_lineData;
+		static std::unordered_map<uint32_t, dsr::ecs::Entity> s_sceneDebugEntityMap;
+		static std::vector<DebugLineData> s_lineData;
 		
 		static void SyncDebugLines();
 		static void UpdateDebugLines(const uint32_t& sceneId, std::shared_ptr<dsr::ecs::LineListComponent> component);

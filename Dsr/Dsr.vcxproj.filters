@@ -306,6 +306,9 @@
     <ClInclude Include="src\EngineSubSystems\Debug\Debug.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\EngineSubSystems\SceneSystem\Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Windows\Window.cpp">
@@ -567,6 +570,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\EngineSubSystems\Debug\Debug.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EngineSubSystems\SceneSystem\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

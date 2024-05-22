@@ -8,8 +8,8 @@ namespace dsr
 	std::shared_ptr<dsr::directX::Direct3dDevice> Debug::Device;
 	std::shared_ptr<dsr::scene::SceneManager> Debug::SceneManager;
 
-	std::unordered_map<uint32_t, dsr::ecs::Entity> Debug::m_sceneDebugEntityMap;
-	std::vector<DebugLineData> Debug::m_lineData;
+	std::unordered_map<uint32_t, dsr::ecs::Entity> Debug::s_sceneDebugEntityMap;
+	std::vector<DebugLineData> Debug::s_lineData;
 
 	static constexpr uint32_t floatsPerLineVertex = 7;
 	static constexpr uint32_t maxLineCount = 100;
@@ -45,7 +45,7 @@ namespace dsr
 		using namespace dsr::directX;
 		using namespace dsr::ecs;
 
-		if (m_lineData.size() >= maxLineCount)
+		if (s_lineData.size() >= maxLineCount)
 			return DsrResult("Maximum numbers of debuglines.", 301);
 
 		std::optional<uint32_t> currentSceneId = SceneManager->GetActiveSceneId();
@@ -53,12 +53,12 @@ namespace dsr
 		if (!currentSceneId.has_value())
 			return DsrResult("No Scene active.", 302);
 
-		auto it = m_sceneDebugEntityMap.find(currentSceneId.value());
+		auto it = s_sceneDebugEntityMap.find(currentSceneId.value());
 		Entity debugLinesEntity;
 
 		std::shared_ptr<LineListComponent> component;
 
-		if (it != m_sceneDebugEntityMap.end())
+		if (it != s_sceneDebugEntityMap.end())
 		{
 			debugLinesEntity = it->second;
 			component = SceneManager->GetComponentFrom<LineListComponent>(currentSceneId.value(), debugLinesEntity);
@@ -66,7 +66,7 @@ namespace dsr
 		else
 		{
 			debugLinesEntity = SceneManager->CreateNewEntity();
-			m_sceneDebugEntityMap[currentSceneId.value()] = debugLinesEntity;
+			s_sceneDebugEntityMap[currentSceneId.value()] = debugLinesEntity;
 
 			D3D11_BUFFER_DESC bufferDesc;
 			ZeroMemory(&bufferDesc, sizeof(D3D11_BUFFER_DESC));
@@ -103,7 +103,7 @@ namespace dsr
 		lineData.Color = color;
 		lineData.SceneId = currentSceneId.value();
 		lineData.ExpirationDate = std::chrono::steady_clock::now() + expiration;
-		m_lineData.push_back(lineData);
+		s_lineData.push_back(lineData);
 
 		UpdateDebugLines(currentSceneId.value(), component);
 
@@ -130,12 +130,12 @@ namespace dsr
 
 		std::vector<float> remainingSceneVertexData;
 
-		for (auto it = m_lineData.begin(); it != m_lineData.end();)
+		for (auto it = s_lineData.begin(); it != s_lineData.end();)
 		{
 			if (now >= it->ExpirationDate)
 			{
 				erasedFromCurrentScene = erasedFromCurrentScene || (currentSceneId.has_value() && it->SceneId == currentSceneId.value());
-				it = m_lineData.erase(it);
+				it = s_lineData.erase(it);
 			}
 			else
 			{
@@ -166,7 +166,7 @@ namespace dsr
 
 		if (erasedFromCurrentScene)
 		{
-			const Entity& debugEntity = m_sceneDebugEntityMap[currentSceneId.value()];
+			const Entity& debugEntity = s_sceneDebugEntityMap[currentSceneId.value()];
 
 			std::shared_ptr<LineListComponent> component = SceneManager->GetComponentFrom<LineListComponent>(currentSceneId.value(), debugEntity);
 			Direct3dBuffer vertexBuffer = component->GetVertexBuffer();
@@ -192,7 +192,7 @@ namespace dsr
 		Direct3dBuffer vertexBuffer = component->GetVertexBuffer();
 		std::vector<float> vertexData;
 
-		for (const DebugLineData& lineData : m_lineData)
+		for (const DebugLineData& lineData : s_lineData)
 		{
 			if (lineData.SceneId == sceneId)
 			{

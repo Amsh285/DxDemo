@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\EngineSubSystems\SceneSystem\Camera.h" />
     <ClInclude Include="src\EngineSubSystems\Debug\Debug.h" />
     <ClInclude Include="src\Shapes\ShapeBuilder.h" />
     <ClInclude Include="src\EngineSubSystems\EntityComponentSystem\EntityComponentStore.h" />
@@ -110,6 +111,10 @@
     <ClInclude Include="src\Infrastructure\XMathHelper.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\EngineSubSystems\SceneSystem\Camera.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="src\EngineSubSystems\Debug\Debug.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>

@@ -107,5 +107,6 @@ dsr::DsrResult NavMeshDemoApplication::Setup()
 	cameraTransform->SetPositionVec3(cameraPosition);
 
 	m_rampScene->SetActive();
+
 	return dsr::DsrResult::Success("Setup Successful.");
 }
