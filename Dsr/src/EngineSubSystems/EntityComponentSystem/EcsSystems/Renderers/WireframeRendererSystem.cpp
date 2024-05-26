@@ -13,8 +13,7 @@ namespace dsr
 		}
 
 		WireframeRendererSystem::WireframeRendererSystem(const std::shared_ptr<directX::Direct3dDevice>& device)
-			: RendererSystem(std::type_index(typeid(WireframeRendererSystem))),
-			m_device(device)
+			: RendererSystem(typeid(WireframeRendererSystem), device)
 		{
 			OnStart = std::bind(&WireframeRendererSystem::Startup, this, std::placeholders::_1);
 			OnPrepareRendererUpdate = std::bind(&WireframeRendererSystem::PrepareRendererUpdate, this, std::placeholders::_1);
@@ -60,31 +59,16 @@ namespace dsr
 
 		void WireframeRendererSystem::PrepareRendererUpdate(const EnginePrepareRendererContext& context)
 		{
+			using namespace DirectX;
+
+			using namespace dsr::scene;
+
 			m_device->SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 			if (m_rasterizerState)
 				m_device->SetRasterizerState(m_rasterizerState.get());
 
-			std::vector<Entity> cameras = context.FindEntitiesByTag("Camera");
-
-			DirectX::XMMATRIX projectionMatrix = DirectX::XMMatrixIdentity();
-			DirectX::XMMATRIX viewMatrix = DirectX::XMMatrixIdentity();
-
-			if (!cameras.empty())
-			{
-				std::shared_ptr<ViewProjectionComponent> viewProjection = context.GetComponentFrom<ViewProjectionComponent>(cameras[0]);
-				projectionMatrix = viewProjection->GetProjectionMatrix();
-				viewMatrix = viewProjection->GetViewMatrix();
-
-				m_cameraTransform = context.GetComponentFrom<TransformComponent>(cameras[0]);
-			}
-			else
-			{
-				//Todo: seriously get a logger...
-			}
-
-			SetConstantBuffer(m_device, m_vsConstantBuffers, 0, projectionMatrix);
-			SetConstantBuffer(m_device, m_vsConstantBuffers, 1, viewMatrix);
+			SetupCamera();
 
 			if (m_shaderProgram)
 			{
@@ -124,7 +108,6 @@ namespace dsr
 				else
 					m_device->UseShader(m_shaderProgram->PixelShader->GetShaderPtr().get(), nullptr, 0);
 
-				DirectX::XMStoreFloat4(&group->PSData.CameraPosition, m_cameraTransform->GetPosition());
 				SetConstantBuffer(m_device, m_psConstantBuffers, 0, &group->PSData, sizeof(PixelShaderData));
 
 				ApplyConstantBuffers<ID3D11PixelShader>();

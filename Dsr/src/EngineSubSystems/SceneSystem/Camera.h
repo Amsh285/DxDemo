@@ -1,7 +1,6 @@
 #pragma once
 
 #include "EngineSubSystems/EntityComponentSystem/Entity.h"
-#include "EngineSubSystems/EntityComponentSystem/EcsManager.h"
 
 #include "EngineSubSystems/EntityComponentSystem/Components/NameComponent.h"
 #include "EngineSubSystems/EntityComponentSystem/Components/TagComponent.h"
@@ -9,13 +8,21 @@
 #include "EngineSubSystems/EntityComponentSystem/Components/ViewFrustumComponent.h"
 #include "EngineSubSystems/EntityComponentSystem/Components/ViewProjectionComponent.h"
 
-#include "EngineSubSystems/SceneSystem/SceneManager.h"
-
 namespace dsr
 {
 	namespace scene
 	{
 		constexpr const char DefaultCameraTag[] = "Camera";
+
+		struct PixelShaderCameraData
+		{
+			DirectX::XMFLOAT4 CameraPosition;
+
+			PixelShaderCameraData()
+				: CameraPosition(0.0f, 0.0f, 0.0f, 1.0f)
+			{
+			}
+		};
 
 		class Camera final
 		{
@@ -29,9 +36,6 @@ namespace dsr
 			std::shared_ptr<dsr::ecs::TransformComponent> GetTransform() const { return m_transform; }
 			std::shared_ptr<dsr::ecs::ViewFrustumComponent> GetViewFrustum() const { return m_viewFrustum; }
 			std::shared_ptr<dsr::ecs::ViewProjectionComponent> GetViewProjection() const { return m_viewProjection; }
-
-			static std::shared_ptr<Camera> CreateGlobal(const std::shared_ptr<dsr::ecs::EcsManager>& ecsManager);
-			static std::shared_ptr<Camera> CreateForActiveScene(const std::shared_ptr<SceneManager>& sceneManager);
 			
 			static std::shared_ptr<Camera> GetActiveCamera() { return s_activeCamera; }
 			static void SetActiveCamera(const std::shared_ptr<Camera>& camera) { s_activeCamera = camera; };

@@ -10,8 +10,11 @@ cbuffer Material : register(b0)
 	float OpticalDensity;
 	uint IlluminationModel;
 	float pad0;
+}
 
-	float4 CameraPosition;
+cbuffer Camera : register(b1)
+{
+    float4 CameraPosition;
 }
 
 struct PixelShaderInput

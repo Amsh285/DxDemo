@@ -48,9 +48,6 @@ namespace dsr
 				m_device->UseConstantBuffers<ID3D11PixelShader>(0, psConstantBuffers.size(), psConstantBuffers.data());
 			}*/
 
-			std::shared_ptr<directX::Direct3dDevice> m_device;
-
-			std::map<size_t, directX::Direct3dBuffer> m_vsConstantBuffers;
 			std::shared_ptr<directX::Direct3dShaderProgram> m_shaderProgram;
 		};
 	}

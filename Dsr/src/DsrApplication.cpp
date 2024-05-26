@@ -35,7 +35,7 @@ namespace dsr
 		m_ecsManager = std::make_shared<dsr::ecs::EcsManager>();
 		m_sceneManager = std::make_shared<dsr::scene::SceneManager>(m_ecsManager);
 
-		m_defaultCamera = dsr::scene::Camera::CreateGlobal(m_ecsManager);
+		m_defaultCamera = dsr::scene::CreateGlobalCamera(m_ecsManager);
 		dsr::scene::Camera::SetActiveCamera(m_defaultCamera);
 
 		Debug::Device = m_device;

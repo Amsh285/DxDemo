@@ -15,7 +15,7 @@ cbuffer RenderTransform : register(b2)
     matrix normalMatrix;
 }
 
-struct VertexufferData
+struct VertexBufferData
 {
     float3 Position : POSITION;
     float4 Color : COLOR;
@@ -27,7 +27,7 @@ struct VertexShaderOutput
     float4 Color : COLOR;
 };
 
-VertexShaderOutput main(VertexufferData IN)
+VertexShaderOutput main(VertexBufferData IN)
 {
     matrix mvp = mul(projectionMatrix, mul(viewMatrix, worldMatrix));
     

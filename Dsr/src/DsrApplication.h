@@ -27,6 +27,7 @@
 #include "EngineSubSystems/EntityComponentSystem/EcsSystems/Renderers/WireframeRendererSystem.h"
 
 #include "EngineSubSystems/SceneSystem/Camera.h"
+#include "EngineSubSystems/SceneSystem/CameraExtensions.h"
 #include "EngineSubSystems/SceneSystem/SceneManager.h"
 
 #include "EngineSubSystems/Debug/Debug.h"

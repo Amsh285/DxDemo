@@ -14,16 +14,11 @@ namespace dsr
 		}
 
 		StaticMeshRendererSystem::StaticMeshRendererSystem(const std::shared_ptr<directX::Direct3dDevice>& device)
-			: RendererSystem(std::type_index(typeid(StaticMeshRendererSystem)), 2000500)
+			: RendererSystem(typeid(StaticMeshRendererSystem), device)
 		{
 			OnStart = std::bind(&StaticMeshRendererSystem::Startup, this, std::placeholders::_1);
 			OnUpdate = std::bind(&StaticMeshRendererSystem::Update, this, std::placeholders::_1);
 			OnPrepareRendererUpdate = std::bind(&StaticMeshRendererSystem::PrepareRendererUpdate, this, std::placeholders::_1);
-			m_device = device;
-
-			m_viewMatrix = DirectX::XMMatrixIdentity();
-			m_projectionMatrix = DirectX::XMMatrixIdentity();
-			m_cameraPosition = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
 		}
 
 		DsrResult StaticMeshRendererSystem::Initialize()
@@ -66,24 +61,7 @@ namespace dsr
 			SetDefaultSamplerState();
 			m_device->SetDefaultRasterizerState();
 
-			std::shared_ptr<Camera> activeCamera = Camera::GetActiveCamera();
-
-			if (!activeCamera)
-			{
-				m_projectionMatrix = XMMatrixIdentity();
-				m_viewMatrix = XMMatrixIdentity();
-				m_cameraPosition = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
-			}
-			else
-			{
-				std::shared_ptr<ViewProjectionComponent> viewProjection = activeCamera->GetViewProjection();
-				std::shared_ptr<TransformComponent> cameraTransform = activeCamera->GetTransform();
-
-				m_projectionMatrix = viewProjection->GetProjectionMatrix();
-				m_viewMatrix = viewProjection->GetViewMatrix();
-
-				DirectX::XMStoreFloat4(&m_cameraPosition, cameraTransform->GetPosition());
-			}
+			SetupCamera();
 		}
 
 		void StaticMeshRendererSystem::Update(const EngineContext& context)
@@ -127,7 +105,6 @@ namespace dsr
 				else
 					m_device->UseShader(defaultShaderProgram->PixelShader->GetShaderPtr().get(), nullptr, 0);
 
-				vertexGroup->PSData.CameraPosition = m_cameraPosition;
 				SetConstantBuffer(m_device, m_psConstantBuffers, 0, &vertexGroup->PSData, sizeof(PixelShaderData));
 
 				ApplyConstantBuffers<ID3D11PixelShader>();
@@ -138,8 +115,6 @@ namespace dsr
 
 		void StaticMeshRendererSystem::SetupMvp(const EngineContext& context, const RenderTransform& renderTransform)
 		{
-			SetConstantBuffer(m_device, m_vsConstantBuffers, 0, m_projectionMatrix);
-			SetConstantBuffer(m_device, m_vsConstantBuffers, 1, m_viewMatrix);
 			SetConstantBuffer(m_device, m_vsConstantBuffers, 2, &renderTransform, sizeof(RenderTransform));
 			ApplyConstantBuffers<ID3D11VertexShader>();
 		}

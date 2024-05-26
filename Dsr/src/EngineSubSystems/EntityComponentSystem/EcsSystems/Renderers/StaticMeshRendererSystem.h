@@ -67,15 +67,6 @@ namespace dsr
 			void SetupTextures(std::shared_ptr<dsr::directX::rendering::VertexGroup> vertexGroup);
 
 			directX::Direct3dSamplerState m_defaultSamplerState;
-
-			std::shared_ptr<directX::Direct3dDevice> m_device;
-
-			DirectX::XMMATRIX m_projectionMatrix;
-			DirectX::XMMATRIX m_viewMatrix;
-			DirectX::XMFLOAT4 m_cameraPosition;
-
-			std::map<size_t, directX::Direct3dBuffer> m_vsConstantBuffers;
-			std::map<size_t, directX::Direct3dBuffer> m_psConstantBuffers;
 		};
 	}
 }

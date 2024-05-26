@@ -13,6 +13,7 @@
 
 #include "EngineSubSystems/EntityComponentSystem/EcsSystems/Renderers/RendererSystem.h"
 
+#include "EngineSubSystems/SceneSystem/Camera.h"
 
 namespace dsr
 {
@@ -54,11 +55,8 @@ namespace dsr
 
 			void BindVertexBuffer(const dsr::directX::Direct3dVertexBufferf& vertexBuffer);
 
-			std::shared_ptr<directX::Direct3dDevice> m_device;
 			std::shared_ptr<directX::Direct3dShaderProgram> m_shaderProgram;
 
-			std::map<size_t, directX::Direct3dBuffer> m_vsConstantBuffers;
-			std::map<size_t, directX::Direct3dBuffer> m_psConstantBuffers;
 			std::shared_ptr<ID3D11RasterizerState> m_rasterizerState;
 			std::shared_ptr<TransformComponent> m_cameraTransform;
 		};

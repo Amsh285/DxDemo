@@ -13,8 +13,7 @@ namespace dsr
 		}
 
 		LineListRendererSystem::LineListRendererSystem(const std::shared_ptr<directX::Direct3dDevice>& device)
-			: RendererSystem(std::type_index(typeid(LineListRendererSystem))),
-			m_device(device)
+			: RendererSystem(typeid(LineListRendererSystem), device)
 		{
 			OnStart = std::bind(&LineListRendererSystem::Startup, this, std::placeholders::_1);
 			OnUpdate = std::bind(&LineListRendererSystem::Update, this, std::placeholders::_1);
@@ -46,24 +45,7 @@ namespace dsr
 		{
 			m_device->SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 
-			std::vector<Entity> cameras = context.FindEntitiesByTag("Camera");
-
-			DirectX::XMMATRIX projectionMatrix = DirectX::XMMatrixIdentity();
-			DirectX::XMMATRIX viewMatrix = DirectX::XMMatrixIdentity();
-
-			if (!cameras.empty())
-			{
-				std::shared_ptr<ViewProjectionComponent> viewProjection = context.GetComponentFrom<ViewProjectionComponent>(cameras[0]);
-				projectionMatrix = viewProjection->GetProjectionMatrix();
-				viewMatrix = viewProjection->GetViewMatrix();
-			}
-			else
-			{
-				//Todo: log warn...
-			}
-
-			SetConstantBuffer(m_device, m_vsConstantBuffers, 0, projectionMatrix);
-			SetConstantBuffer(m_device, m_vsConstantBuffers, 1, viewMatrix);
+			SetupCamera();
 
 			if (m_shaderProgram)
 			{
