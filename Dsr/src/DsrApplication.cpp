@@ -35,6 +35,9 @@ namespace dsr
 		m_ecsManager = std::make_shared<dsr::ecs::EcsManager>();
 		m_sceneManager = std::make_shared<dsr::scene::SceneManager>(m_ecsManager);
 
+		m_defaultCamera = dsr::scene::Camera::CreateGlobal(m_ecsManager);
+		dsr::scene::Camera::SetActiveCamera(m_defaultCamera);
+
 		Debug::Device = m_device;
 		Debug::SceneManager = m_sceneManager;
 
@@ -86,7 +89,6 @@ namespace dsr
 		const int& width, const int& height)
 		: m_window(std::make_shared<windows::Window>(windows::WindowData(title, x, y, width, height))),
 		m_windowApplication(windows::WindowApplication::Get()),
-		m_cameraEntity(dsr::ecs::EcsManager::CreateNewEntity()),
 		m_defaultShaderProgramEntity(dsr::ecs::EcsManager::CreateNewEntity()),
 		m_lineListShaderProgramEntity(dsr::ecs::EcsManager::CreateNewEntity()),
 		m_executablePath(std::filesystem::path(""))
@@ -135,22 +137,8 @@ namespace dsr
 
 	void DsrApplication::SetupPredefinedEntities()
 	{
-		SetupPredefinedMainCameraEntity();
 		SetupDefaultShaderProgramEntity();
 		SetupLineListShaderProgramEntity();
-	}
-
-	void DsrApplication::SetupPredefinedMainCameraEntity()
-	{
-		using namespace dsr::ecs;
-
-		std::shared_ptr<NameComponent> cameraName = m_ecsManager->RegisterComponent<NameComponent>(m_cameraEntity);
-		std::shared_ptr<TagComponent> cameraTag = m_ecsManager->RegisterComponent<TagComponent>(m_cameraEntity, "Camera");
-		m_ecsManager->RegisterComponent<TransformComponent>(m_cameraEntity);
-		m_ecsManager->RegisterComponent<ViewFrustumComponent>(m_cameraEntity);
-		m_ecsManager->RegisterComponent<ViewProjectionComponent>(m_cameraEntity);
-
-		cameraName->SetName("MainCamera");
 	}
 
 	void DsrApplication::SetupDefaultShaderProgramEntity()

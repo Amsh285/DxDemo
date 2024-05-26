@@ -26,6 +26,7 @@
 #include "EngineSubSystems/EntityComponentSystem/EcsSystems/Renderers/StaticMeshRendererSystem.h"
 #include "EngineSubSystems/EntityComponentSystem/EcsSystems/Renderers/WireframeRendererSystem.h"
 
+#include "EngineSubSystems/SceneSystem/Camera.h"
 #include "EngineSubSystems/SceneSystem/SceneManager.h"
 
 #include "EngineSubSystems/Debug/Debug.h"
@@ -59,7 +60,7 @@ namespace dsr
 		std::shared_ptr<dsr::ecs::EcsManager> m_ecsManager;
 		std::shared_ptr<dsr::scene::SceneManager> m_sceneManager;
 
-		dsr::ecs::Entity m_cameraEntity;
+		std::shared_ptr<dsr::scene::Camera> m_defaultCamera;
 
 		std::filesystem::path m_executablePath;
 	private:
@@ -81,7 +82,6 @@ namespace dsr
 		void InitializeSystems();
 		DsrResult SetupSystems();
 		void SetupPredefinedEntities();
-		void SetupPredefinedMainCameraEntity();
 		void SetupDefaultShaderProgramEntity();
 		void SetupLineListShaderProgramEntity();
 

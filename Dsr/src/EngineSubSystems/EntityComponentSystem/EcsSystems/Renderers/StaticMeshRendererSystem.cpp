@@ -20,6 +20,10 @@ namespace dsr
 			OnUpdate = std::bind(&StaticMeshRendererSystem::Update, this, std::placeholders::_1);
 			OnPrepareRendererUpdate = std::bind(&StaticMeshRendererSystem::PrepareRendererUpdate, this, std::placeholders::_1);
 			m_device = device;
+
+			m_viewMatrix = DirectX::XMMatrixIdentity();
+			m_projectionMatrix = DirectX::XMMatrixIdentity();
+			m_cameraPosition = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
 		}
 
 		DsrResult StaticMeshRendererSystem::Initialize()
@@ -53,10 +57,33 @@ namespace dsr
 
 		void StaticMeshRendererSystem::PrepareRendererUpdate(const EnginePrepareRendererContext& context)
 		{
+			using namespace DirectX;
+
+			using namespace dsr::scene;
+
 			m_device->SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 			
 			SetDefaultSamplerState();
 			m_device->SetDefaultRasterizerState();
+
+			std::shared_ptr<Camera> activeCamera = Camera::GetActiveCamera();
+
+			if (!activeCamera)
+			{
+				m_projectionMatrix = XMMatrixIdentity();
+				m_viewMatrix = XMMatrixIdentity();
+				m_cameraPosition = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
+			}
+			else
+			{
+				std::shared_ptr<ViewProjectionComponent> viewProjection = activeCamera->GetViewProjection();
+				std::shared_ptr<TransformComponent> cameraTransform = activeCamera->GetTransform();
+
+				m_projectionMatrix = viewProjection->GetProjectionMatrix();
+				m_viewMatrix = viewProjection->GetViewMatrix();
+
+				DirectX::XMStoreFloat4(&m_cameraPosition, cameraTransform->GetPosition());
+			}
 		}
 
 		void StaticMeshRendererSystem::Update(const EngineContext& context)
@@ -66,13 +93,12 @@ namespace dsr
 			std::shared_ptr<TransformComponent> transform = context.GetComponent<TransformComponent>();
 			std::shared_ptr<StaticMeshComponent> staticMesh = context.GetComponent<StaticMeshComponent>();
 
-			std::vector<Entity> cameras = context.FindEntitiesByTag("Camera");
 			std::vector<Entity> defaultShaderProgramEntities = context.FindEntitiesByTag("DefaultShaderProgram");
 
-			if (cameras.size() < 1 || defaultShaderProgramEntities.size() < 1)
+			if (defaultShaderProgramEntities.size() < 1)
 				return;
 
-			SetupMvp(context, cameras[0], transform->GetRenderTransform());
+			SetupMvp(context, transform->GetRenderTransform());
 
 			std::shared_ptr<ShaderProgramComponent> defaultShaderProgramComponent = context.GetComponentFrom<ShaderProgramComponent>(defaultShaderProgramEntities[0]);
 			std::shared_ptr<Direct3dShaderProgram> defaultShaderProgram = defaultShaderProgramComponent->GetShaderProgram();
@@ -101,9 +127,7 @@ namespace dsr
 				else
 					m_device->UseShader(defaultShaderProgram->PixelShader->GetShaderPtr().get(), nullptr, 0);
 
-				std::shared_ptr<TransformComponent> cameraTransform = context.GetComponentFrom<TransformComponent>(cameras[0]);
-
-				DirectX::XMStoreFloat4(&vertexGroup->PSData.CameraPosition, cameraTransform->GetPosition());
+				vertexGroup->PSData.CameraPosition = m_cameraPosition;
 				SetConstantBuffer(m_device, m_psConstantBuffers, 0, &vertexGroup->PSData, sizeof(PixelShaderData));
 
 				ApplyConstantBuffers<ID3D11PixelShader>();
@@ -112,12 +136,10 @@ namespace dsr
 			}
 		}
 
-		void StaticMeshRendererSystem::SetupMvp(const EngineContext& context, const Entity& camera, const RenderTransform& renderTransform)
+		void StaticMeshRendererSystem::SetupMvp(const EngineContext& context, const RenderTransform& renderTransform)
 		{
-			std::shared_ptr<ViewProjectionComponent> viewProjection = context.GetComponentFrom<ViewProjectionComponent>(camera);
-
-			SetConstantBuffer(m_device, m_vsConstantBuffers, 0, viewProjection->GetProjectionMatrix());
-			SetConstantBuffer(m_device, m_vsConstantBuffers, 1, viewProjection->GetViewMatrix());
+			SetConstantBuffer(m_device, m_vsConstantBuffers, 0, m_projectionMatrix);
+			SetConstantBuffer(m_device, m_vsConstantBuffers, 1, m_viewMatrix);
 			SetConstantBuffer(m_device, m_vsConstantBuffers, 2, &renderTransform, sizeof(RenderTransform));
 			ApplyConstantBuffers<ID3D11VertexShader>();
 		}

@@ -15,6 +15,8 @@
 #include "EngineSubSystems/EntityComponentSystem/Components/TransformComponent.h"
 #include "EngineSubSystems/EntityComponentSystem/EcsSystems/Renderers/RendererSystem.h"
 
+#include "EngineSubSystems/SceneSystem/Camera.h"
+
 #include "Events/Application/WindowEvents.h"
 #include "Events/Application/FrameEvents.h"
 
@@ -61,12 +63,16 @@ namespace dsr
 				m_device->UseConstantBuffers<ID3D11PixelShader>(0, psConstantBuffers.size(), psConstantBuffers.data());
 			}
 
-			void SetupMvp(const EngineContext& context, const Entity& camera, const RenderTransform& renderTransform);
+			void SetupMvp(const EngineContext& context, const RenderTransform& renderTransform);
 			void SetupTextures(std::shared_ptr<dsr::directX::rendering::VertexGroup> vertexGroup);
 
 			directX::Direct3dSamplerState m_defaultSamplerState;
 
 			std::shared_ptr<directX::Direct3dDevice> m_device;
+
+			DirectX::XMMATRIX m_projectionMatrix;
+			DirectX::XMMATRIX m_viewMatrix;
+			DirectX::XMFLOAT4 m_cameraPosition;
 
 			std::map<size_t, directX::Direct3dBuffer> m_vsConstantBuffers;
 			std::map<size_t, directX::Direct3dBuffer> m_psConstantBuffers;

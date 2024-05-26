@@ -10,6 +10,8 @@ namespace dsr
 {
 	namespace scene
 	{
+		constexpr uint32_t SceneIdNoneValue = 0;
+
 		class Scene final : public dsr::ecs::EntityComponentStore
 		{
 		public:

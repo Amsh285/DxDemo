@@ -4,7 +4,7 @@ NavMeshDemoApplication::NavMeshDemoApplication()
 	: DsrApplication(L"Nav Mesh Demo", 100, 100, 1280, 768)
 {
 	using namespace dsr::ecs;
-
+;
 	m_lineEntity = EcsManager::CreateNewEntity();
 	m_editorUIEntity = EcsManager::CreateNewEntity();
 }
@@ -64,7 +64,7 @@ void NavMeshDemoApplication::RegisterCameraController()
 	m_cameraControllerSystem = std::make_shared<CameraControllerSystem>(GetInput(), GetTime());
 	m_ecsManager->RegisterSystem(m_cameraControllerSystem);
 
-	m_ecsManager->RegisterComponent<CameraControllerComponent>(m_cameraEntity);
+	m_ecsManager->RegisterComponent<CameraControllerComponent>(dsr::scene::Camera::GetActiveCamera()->GetEntity());
 }
 
 void NavMeshDemoApplication::RegisterEditorUI()

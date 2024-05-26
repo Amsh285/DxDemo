@@ -21,7 +21,6 @@ public:
 	
 	NavMeshDemoApplication();
 private:
-	
 	dsr::ecs::Entity m_lineEntity;
 	dsr::ecs::Entity m_editorUIEntity;
 

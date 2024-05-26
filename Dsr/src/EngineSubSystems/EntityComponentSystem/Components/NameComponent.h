@@ -13,7 +13,7 @@ namespace dsr
 			void SetName(const std::string& name) { m_name = name; }
 
 			NameComponent();
-			explicit NameComponent(const std::string& name);
+			NameComponent(const std::string& name);
 		private:
 			std::string m_name;
 		};
