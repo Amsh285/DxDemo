@@ -24,6 +24,9 @@ namespace dsr
 
 			static std::shared_ptr<Camera> CreateGlobal(const std::shared_ptr<dsr::ecs::EcsManager>& ecsManager);
 			static std::shared_ptr<Camera> CreateForActiveScene(const std::shared_ptr<SceneManager>& sceneManager);
+			
+			static std::shared_ptr<Camera> GetActiveCamera() { return s_activeCamera; }
+			static void SetActiveCamera(const std::shared_ptr<Camera>& camera) { s_activeCamera = camera; };
 
 			Camera(
 				const dsr::ecs::Entity& entity,

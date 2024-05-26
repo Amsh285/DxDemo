@@ -5,6 +5,8 @@ namespace dsr
 {
 	namespace scene
 	{
+		std::shared_ptr<Camera> Camera::s_activeCamera;
+
 		std::shared_ptr<Camera> Camera::CreateGlobal(const std::shared_ptr<dsr::ecs::EcsManager>& ecsManager)
 		{
 			using namespace dsr::ecs;
