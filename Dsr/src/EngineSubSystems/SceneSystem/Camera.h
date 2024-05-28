@@ -48,6 +48,10 @@ namespace dsr
 				const std::shared_ptr<dsr::ecs::TransformComponent>& transform,
 				const std::shared_ptr<dsr::ecs::ViewFrustumComponent>& viewFrustum,
 				const std::shared_ptr<dsr::ecs::ViewProjectionComponent>& viewProjection);
+
+			DirectX::XMVECTOR ScreenToWorld(
+				const int32_t& mouseX, const int32_t& mouseY,
+				const int32_t& clientWidth, const int32_t& clientHeight);
 		private:
 			dsr::ecs::Entity m_entity;
 			uint32_t m_sceneId;

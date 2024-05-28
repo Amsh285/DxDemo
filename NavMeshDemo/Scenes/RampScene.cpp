@@ -41,10 +41,8 @@ RampScene::RampScene(
 	m_debugLineEntity = m_sceneManager->CreateNewEntity();
 }
 
-void RampScene::OnScreenToCameraRaycast(const DirectX::XMVECTOR& rayOrigin, const DirectX::XMVECTOR& rayDirection)
+void RampScene::OnScreenClick(const dsr::events::MousePosition& position, const dsr::inputdevices::Screen& screen)
 {
-	using namespace DirectX;
-	
 	using namespace dsr;
 
 	using namespace dsr::data;
@@ -53,6 +51,20 @@ void RampScene::OnScreenToCameraRaycast(const DirectX::XMVECTOR& rayOrigin, cons
 	using namespace dsr::directX;
 
 	using namespace dsr::ecs;
+	using namespace dsr::scene;
+
+	using namespace DirectX;
+
+	std::shared_ptr<Camera> activeCamera = Camera::GetActiveCamera();
+
+	if (!activeCamera)
+		return;
+
+	XMVECTOR rayOrigin = activeCamera->GetTransform()->GetPosition();
+	XMVECTOR rayDirection = activeCamera->ScreenToWorld(
+		position.X, position.Y,
+		screen.GetClientWidth(), screen.GetClientHeight()
+	);
 
 	std::shared_ptr<TransformComponent> transform = m_sceneManager->GetComponentFrom<TransformComponent>(m_sceneId, m_mapEntity);
 	XMMATRIX model = transform->GetModelMatrix();
@@ -66,16 +78,6 @@ void RampScene::OnScreenToCameraRaycast(const DirectX::XMVECTOR& rayOrigin, cons
 	
 	std::shared_ptr<LineListComponent> debugRayLineComponent = m_sceneManager->GetComponentFrom<LineListComponent>(m_sceneId, m_debugLineEntity);
 
-	/*XMVECTOR dir = XMVectorAdd(rayOrigin, XMVectorScale(rayDirection, 100.0f));
-	XMFLOAT3 from, to;
-	XMStoreFloat3(&from, rayOrigin);
-	XMStoreFloat3(&to, dir);
-
-	Debug::DrawLine(from, to, XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f), std::chrono::seconds(5));*/
-
-
-	//Debug::DrawLine(XMFLOAT3(0.0f, 10.0f, -49.99f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f), std::chrono::seconds(10));
-	//Debug::DrawLine(XMFLOAT3(-20.0f, 10.0f, -20.0f), XMFLOAT3(20.0f, 10.0f, -20.0f), XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f), std::chrono::seconds(10));
 	Debug::DrawRay(rayOrigin, rayDirection, XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f), 0.2f, 100.0f, std::chrono::seconds(5));
 
 	if (hits.size() > 0)

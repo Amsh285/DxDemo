@@ -5,9 +5,12 @@
 #include "DirectX/Direct3dDevice.h"
 #include "DirectX/Data/ModelConfiguration.h"
 
+#include "EngineSubSystems/SceneSystem/Camera.h"
 #include "EngineSubSystems/SceneSystem/SceneManager.h"
 
 #include "ErrorHandling/DsrResult.h"
+
+#include "InputDevices/Screen.h"
 
 #include "ModelLoaders/BlenderModelLoader.h"
 
@@ -22,7 +25,7 @@ public:
 		const std::shared_ptr<dsr::BlenderModelLoader>& blenderModelLoader
 	);
 
-	void OnScreenToCameraRaycast(const DirectX::XMVECTOR& rayOrigin, const DirectX::XMVECTOR& rayDirection);
+	void OnScreenClick(const dsr::events::MousePosition& position, const dsr::inputdevices::Screen& screen);
 
 	dsr::DsrResult BuildScene();
 	void SetActive();

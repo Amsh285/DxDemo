@@ -87,34 +87,10 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 
 	if (m_input->GetKeyDown(KeyCode::MouseLeft))
 	{
-		std::vector<Entity> cameras = context.FindEntitiesByTag("Camera");
-
-		if (cameras.size() < 1)
-			return;
-
-		std::shared_ptr<TransformComponent> cameraTransform = context.GetComponentFrom<TransformComponent>(cameras[0]);
-		std::shared_ptr<ViewProjectionComponent> viewProjection = context.GetComponentFrom<ViewProjectionComponent>(cameras[0]);
-
-		XMMATRIX projectionMatrix = viewProjection->GetProjectionMatrix();
-		XMMATRIX viewMatrix = viewProjection->GetViewMatrix();
-
-		MousePosition position = m_input->GetMouse()->GetCurrentClientAreaPosition();
-		std::shared_ptr<dsr::inputdevices::Screen> screen = m_input->GetScreen();
-		
-		XMVECTOR rayDirectionWorldSpace = dsr::ScreenToWorld(
-			 position.X, position.Y,
-			 screen->GetClientWidth(), screen->GetClientHeight(),
-			 projectionMatrix, viewMatrix
-		);
-
-		XMVECTOR raydirection = XMVector4Normalize(XMVectorSubtract(rayDirectionWorldSpace, cameraTransform->GetPosition()));
-
 		//Todo: remove if later!
 		if (m_sceneViewData[m_sceneSelectedIdx].SceneName == "Ramp")
 		{
-			m_rampScene->OnScreenToCameraRaycast(cameraTransform->GetPosition(), raydirection);
+			m_rampScene->OnScreenClick(m_input->GetMouse()->GetCurrentClientAreaPosition(), *m_input->GetScreen());
 		}
-
-		//std::cout << "x: " << position.X << " y: " << position.Y << std::endl;
 	}
 }

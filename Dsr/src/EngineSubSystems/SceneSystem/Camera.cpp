@@ -1,6 +1,8 @@
 #include "dsrpch.h"
 #include "Camera.h"
 
+#include "Infrastructure/XMathHelper.h"
+
 namespace dsr
 {
 	namespace scene
@@ -19,6 +21,21 @@ namespace dsr
 			m_name(name), m_tag(tag),
 			m_transform(transform), m_viewFrustum(viewFrustum), m_viewProjection(viewProjection)
 		{
+		}
+
+		DirectX::XMVECTOR Camera::ScreenToWorld(
+			const int32_t& mouseX, const int32_t& mouseY,
+			const int32_t& clientWidth, const int32_t& clientHeight)
+		{
+			using namespace DirectX;
+
+			XMVECTOR rayDirectionWorldSpace = dsr::ScreenToWorld(
+				mouseX, mouseY,
+				clientWidth, clientHeight,
+				m_viewProjection->GetProjectionMatrix(), m_viewProjection->GetViewMatrix()
+			);
+
+			return XMVector4Normalize(XMVectorSubtract(rayDirectionWorldSpace, m_transform->GetPosition()));
 		}
 	}
 }
