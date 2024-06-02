@@ -59,6 +59,8 @@ namespace dsr
 			{
 				using namespace DirectX;
 
+				//std::vector<size_t> openListCounts;
+
 				if (startIndex == goalIndex)
 					return std::vector<uint32_t>();
 
@@ -78,7 +80,7 @@ namespace dsr
 					openList.pop();
 
 					// besser arrays
-					const std::set<uint32_t>& adjacentIndicies = m_adjacencyList[q->vertexIndex];
+					const std::vector<uint32_t>& adjacentIndicies = m_adjacencyList[q->vertexIndex];
 
 					for (const uint32_t& adjacentIndex : adjacentIndicies)
 					{
@@ -124,138 +126,15 @@ namespace dsr
 						openList.push(adjacentNode);
 					}
 
+					//openListCounts.push_back(openList.size());
+
 					closeList[q->vertexIndex] = q->f;
 				}
 
 				return std::vector<uint32_t>();
 			}
 
-			namespace
-			{
-				bool CheckOpenLists(const std::unordered_map<int, node_priority_queue>& openLists)
-				{
-					for (auto it = openLists.begin(); it != openLists.end(); ++it)
-					{
-						if (!it->second.empty())
-							return true;
-					}
 
-					return false;
-				}
-			}
-
-			std::vector<uint32_t> AStarStaticMeshPathfinder::SearchOmpGAStar(const uint32_t& startIndex, const uint32_t& goalIndex)
-			{
-				using namespace DirectX;
-
-				if (startIndex == goalIndex)
-					return std::vector<uint32_t>();
-
-				const XMVECTOR goalPosition = XMLoadFloat3(&m_vertexBuffer[goalIndex].Position);
-
-				int mainThread = omp_get_thread_num();
-				std::unordered_map<int, node_priority_queue> openLists;
-				openLists[mainThread].push(std::make_shared<node>(startIndex, 0.0f, 0.0f, 0.0f));
-				std::unordered_map<uint32_t, float> closeList;
-				closeList[startIndex] = 0.0f;
-
-				std::shared_ptr<node> m;
-
-				while (CheckOpenLists(openLists))
-				{
-					std::unordered_map<int, std::vector<std::shared_ptr<node>>> expansionLists;
-
-#pragma omp parallel
-					{
-						int numThreads = omp_get_num_threads();
-
-#pragma omp single
-						{
-							for (int i = 0; i < numThreads; i++)
-							{
-								expansionLists[i];
-
-								if (i != mainThread)
-									openLists[i];
-							}
-						}
-
-						int threadId = omp_get_thread_num();
-						node_priority_queue& openList = openLists[threadId];
-
-						if (!openList.empty())
-						{
-							std::shared_ptr<node> q = openList.top();
-							openList.pop();
-
-							if (q->vertexIndex == goalIndex)
-							{
-#pragma omp critical
-								{
-									if (!m || q->f < m->f)
-									{
-										m = q;
-									}
-								}
-							}
-							else
-							{
-								const std::set<uint32_t>& neighbours = m_adjacencyList[q->vertexIndex];
-
-								std::vector<std::shared_ptr<node>>& expansionList = expansionLists[threadId];
-
-								for (const uint32_t neighbour : neighbours)
-								{
-									const XMVECTOR qPosition = XMLoadFloat3(&m_vertexBuffer[q->vertexIndex].Position);
-									const XMVECTOR adjacentPosition = XMLoadFloat3(&m_vertexBuffer[neighbour].Position);
-									XMVECTOR deltaQ = XMVectorSubtract(qPosition, adjacentPosition);
-									XMVECTOR deltaGoal = XMVectorSubtract(goalPosition, adjacentPosition);
-
-									float g = q->g + XMVectorGetX(XMVector3Dot(deltaQ, deltaQ));
-									float h = XMVectorGetX(XMVector3Dot(deltaGoal, deltaGoal));
-									float f = g + h;
-
-									expansionList.push_back(std::make_shared<node>(neighbour, g, h, f, q));
-								}
-							}
-						}
-					}
-
-					if (m)
-					{
-						std::vector<uint32_t> path;
-
-						std::shared_ptr next = m;
-						while (next)
-						{
-							path.push_back(next->vertexIndex);
-							next = next->prev;
-						}
-
-						std::reverse(path.begin(), path.end());
-						return path;
-					}
-
-					size_t counter = 0;
-					size_t mod = expansionLists.size();
-
-					for (auto it_ex = expansionLists.begin(); it_ex != expansionLists.end(); ++it_ex)
-					{
-						for (auto it = it_ex->second.begin(); it != it_ex->second.end(); it++)
-						{
-							std::shared_ptr<node> current = *it;
-
-							if (closeList.find(current->vertexIndex) != closeList.end() && closeList[current->vertexIndex] < current->f)
-								continue;
-
-							openLists[counter++ % mod].push(current);
-							closeList[current->vertexIndex] = current->f;
-						}
-					}
-				}
-
-				return std::vector<uint32_t>();
-			}
 		}
 	}
 }

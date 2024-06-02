@@ -442,10 +442,10 @@ void RampScene::RegisterSubDividedPathEntity()
 	StaticMesh<Vertex3F> distincSubDivision = FilterDistinct(*m_mapUpperSurfaceSubDividedModel->Mesh);
 	AStarStaticMeshPathfinder pathfinderSubDivision(distincSubDivision);
 
-	/*std::chrono::time_point prev = std::chrono::high_resolution_clock::now();*/
+	std::chrono::time_point prev = std::chrono::high_resolution_clock::now();
 	std::vector<uint32_t> pathSubDivided = pathfinderSubDivision.SearchSequential(StartIndexSubDivided, EndIndexSubDivided);
-	/*std::chrono::time_point current = std::chrono::high_resolution_clock::now();
-	std::chrono::duration<float, std::milli> duration = current - prev;*/
+	std::chrono::time_point current = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<float, std::milli> duration = current - prev;
 
 	std::vector<float> vertexData = GetLinePath(distincSubDivision, pathSubDivided, { 1.0f, 0.0f, 1.0f, 1.0f });
 	std::variant<Direct3dBuffer, dsr_error> createVertexBuffer = Direct3dBuffer::CreateVertexBufferf(m_device, vertexData);

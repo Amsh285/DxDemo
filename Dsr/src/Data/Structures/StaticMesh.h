@@ -21,7 +21,7 @@ namespace dsr
 
 			const std::vector<float>& GetHitTestCache() const { return m_hitTestCache; }
 
-			std::unordered_map<uint32_t, std::set<uint32_t>> GetAdjacencyList() const;
+			std::unordered_map<uint32_t, std::vector<uint32_t>> GetAdjacencyList() const;
 
 			WindingOrder GetWindingOrder() const { return m_order; }
 			void SetWindingOrder(const WindingOrder& order) { m_order = order; }
@@ -41,7 +41,7 @@ namespace dsr
 			void InsertAdjacentIndices(
 				const size_t& currentTrianlgeIndex,
 				const size_t& nextTriangleIndex,
-				std::unordered_map<uint32_t, std::set<uint32_t>>& adjacencyList) const;
+				std::set<uint32_t>& neighbours) const;
 
 			std::vector<TVertex> m_vertexBuffer;
 			std::vector<uint32_t> m_indexBuffer;
@@ -52,18 +52,24 @@ namespace dsr
 		};
 
 		template<class TVertex>
-		inline std::unordered_map<uint32_t, std::set<uint32_t>> StaticMesh<TVertex>::GetAdjacencyList() const
+		inline std::unordered_map<uint32_t, std::vector<uint32_t>> StaticMesh<TVertex>::GetAdjacencyList() const
 		{
-			std::unordered_map<uint32_t, std::set<uint32_t>> adjacencyList;
+			std::unordered_map<uint32_t, std::vector<uint32_t>> adjacencyList;
 
 			for (size_t i = 0; i < m_indexBuffer.size(); i += 3)
 			{
+				std::set<uint32_t> neighboursV0, neighboursV1, neighboursV2;
+
 				for (size_t j = 0; j < m_indexBuffer.size(); j += 3)
 				{
-					InsertAdjacentIndices(i, j, adjacencyList);
-					InsertAdjacentIndices(i + 1, j, adjacencyList);
-					InsertAdjacentIndices(i + 2, j, adjacencyList);
+					InsertAdjacentIndices(i, j, neighboursV0);
+					InsertAdjacentIndices(i + 1, j, neighboursV1);
+					InsertAdjacentIndices(i + 2, j, neighboursV2);
 				}
+
+				adjacencyList[m_indexBuffer[i]] = std::vector<uint32_t>(neighboursV0.begin(), neighboursV0.end());
+				adjacencyList[m_indexBuffer[i + 1]] = std::vector<uint32_t>(neighboursV1.begin(), neighboursV1.end());
+				adjacencyList[m_indexBuffer[i + 2]] = std::vector<uint32_t>(neighboursV2.begin(), neighboursV2.end());
 			}
 
 			return adjacencyList;
@@ -91,7 +97,7 @@ namespace dsr
 		inline void StaticMesh<TVertex>::InsertAdjacentIndices(
 			const size_t& currentTrianlgeIndex,
 			const size_t& nextTriangleIndex,
-			std::unordered_map<uint32_t, std::set<uint32_t>>& adjacencyList
+			std::set<uint32_t>& neighbours
 		) const
 		{
 			using namespace DirectX;
@@ -105,18 +111,18 @@ namespace dsr
 
 			if (comparer.operator()(currentVertex, v0))
 			{
-				adjacencyList[m_indexBuffer[currentTrianlgeIndex]].insert(m_indexBuffer[nextTriangleIndex + 1]);
-				adjacencyList[m_indexBuffer[currentTrianlgeIndex]].insert(m_indexBuffer[nextTriangleIndex + 2]);
+				neighbours.insert(m_indexBuffer[nextTriangleIndex + 1]);
+				neighbours.insert(m_indexBuffer[nextTriangleIndex + 2]);
 			}
 			else if (comparer.operator()(currentVertex, v1))
 			{
-				adjacencyList[m_indexBuffer[currentTrianlgeIndex]].insert(m_indexBuffer[nextTriangleIndex]);
-				adjacencyList[m_indexBuffer[currentTrianlgeIndex]].insert(m_indexBuffer[nextTriangleIndex + 2]);
+				neighbours.insert(m_indexBuffer[nextTriangleIndex]);
+				neighbours.insert(m_indexBuffer[nextTriangleIndex + 2]);
 			}
 			else if (comparer.operator()(currentVertex, v2))
 			{
-				adjacencyList[m_indexBuffer[currentTrianlgeIndex]].insert(m_indexBuffer[nextTriangleIndex]);
-				adjacencyList[m_indexBuffer[currentTrianlgeIndex]].insert(m_indexBuffer[nextTriangleIndex + 1]);
+				neighbours.insert(m_indexBuffer[nextTriangleIndex]);
+				neighbours.insert(m_indexBuffer[nextTriangleIndex + 1]);
 			}
 		}
 	}
