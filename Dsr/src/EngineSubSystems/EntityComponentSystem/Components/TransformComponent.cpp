@@ -5,26 +5,9 @@ namespace dsr
 {
 	namespace ecs
 	{
-		DirectX::XMFLOAT3 TransformComponent::GetPositionVec3() const
-		{
-			using namespace DirectX;
-			return XMFLOAT3(XMVectorGetX(m_position), XMVectorGetY(m_position), XMVectorGetZ(m_position));
-		}
-
-		void TransformComponent::SetPositionVec3(const DirectX::XMFLOAT3& position)
-		{
-			m_position = DirectX::XMVectorSet(position.x, position.y, position.z, 1.0f);
-		}
-
 		void TransformComponent::SetPosition(const DirectX::XMVECTOR& vec)
 		{
 			m_position = vec;
-		}
-
-		DirectX::XMFLOAT3 TransformComponent::GetScaleVec3() const
-		{
-			using namespace DirectX;
-			return XMFLOAT3(XMVectorGetX(m_scale), XMVectorGetY(m_scale), XMVectorGetZ(m_scale));
 		}
 
 		void TransformComponent::SetScale(const DirectX::XMFLOAT3& scale)

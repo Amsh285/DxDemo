@@ -103,8 +103,7 @@ dsr::DsrResult NavMeshDemoApplication::Setup()
 	std::vector<dsr::ecs::Entity> cameraEntities = m_ecsManager->FindEntitiesByTag("Camera");
 	std::shared_ptr<dsr::ecs::TransformComponent> cameraTransform = m_ecsManager->GetComponentFrom<dsr::ecs::TransformComponent>(cameraEntities[0]);
 
-	DirectX::XMFLOAT3 cameraPosition = DirectX::XMFLOAT3(0.0f, 10.0f, -50.0f);
-	cameraTransform->SetPositionVec3(cameraPosition);
+	cameraTransform->SetPosition(DirectX::XMVectorSet(0.0f, 10.0f, -50.0f, 1.0f));
 
 	m_rampScene->SetActive();
 

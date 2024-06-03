@@ -20,12 +20,9 @@ namespace dsr
 		class TransformComponent : public Component
 		{
 		public:
-			DirectX::XMFLOAT3 GetPositionVec3() const;
 			DirectX::XMVECTOR GetPosition() const { return m_position; }
-			void SetPositionVec3(const DirectX::XMFLOAT3& position);
 			void SetPosition(const DirectX::XMVECTOR& vec);
 
-			DirectX::XMFLOAT3 GetScaleVec3() const;
 			DirectX::XMVECTOR GetScale() const { return m_scale; }
 			void SetScale(const DirectX::XMFLOAT3& scale);
 

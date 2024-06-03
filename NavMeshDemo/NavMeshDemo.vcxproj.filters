@@ -39,6 +39,9 @@
     <ClCompile Include="Scenes\BridgeScene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Scenes\NavMeshSimulationSceneBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NavMeshDemoApplication.h">
@@ -60,6 +63,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Scenes\BridgeScene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\NavMeshSimulationSceneBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
