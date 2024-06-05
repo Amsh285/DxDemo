@@ -38,10 +38,8 @@ private:
 	dsr::ecs::Entity m_pathSubDividedEntity;
 	
 	std::shared_ptr<dsr::WavefrontModel> m_barycentricSubdividedModel;
-	std::shared_ptr<dsr::WavefrontModel> m_mapUpperSurfaceModel;
 	std::shared_ptr<dsr::WavefrontModel> m_mapUpperSurfaceSubDividedModel;
 
-	void RegisterMapModel(const dsr::ModelConfiguration& map);
 	void RegisterMapBarycentricSubDivisionEntity();
 	void RegisterMapUpperSurfaceModel(const dsr::ModelConfiguration& mapUpperSurface);
 	void RegisterMapUpperSurfaceSubDividedModel();

@@ -26,12 +26,18 @@ RampScene::RampScene(
 	const std::shared_ptr<dsr::BlenderModelLoader>& blenderModelLoader
 )	: NavMeshSimulationSceneBase("Ramp", sceneManager, device, blenderModelLoader)
 {
+	using namespace DirectX;
+
 	m_mapFaceNormalsEntity = m_sceneManager->CreateNewEntity();
 	m_mapBarycentricSubdividedEntity = m_sceneManager->CreateNewEntity();
 	m_mapUpperSurfaceSubDividedEntity = m_sceneManager->CreateNewEntity();
 	m_pathMarkersEntity = m_sceneManager->CreateNewEntity();
 	m_pathEntity = m_sceneManager->CreateNewEntity();
 	m_pathSubDividedEntity = m_sceneManager->CreateNewEntity();
+
+	m_sceneSettings.UpperSurfaceModel = XMMatrixTranslation(0.0f, 40.0f, 0.0f);
+	m_sceneSettings.UpperSurfaceSubDivisonModel = XMMatrixTranslation(-80.0f, 0.0f, 0.0f);
+	m_sceneSettings.UpperSurfaceBarycentricSubDivisionModel = XMMatrixTranslation(80.0f, 0.0f, 0.0f);
 }
 
 void RampScene::OnScreenClick(const dsr::events::MousePosition& position, const dsr::inputdevices::Screen& screen)
@@ -65,7 +71,7 @@ void RampScene::OnScreenClick(const dsr::events::MousePosition& position, const 
 	XMMATRIX inverseModel = XMMatrixInverse(&determinant, model);
 
 	std::vector<RaycastMeshHit> hits = GetMeshIntersections(
-		m_mapUpperSurfaceModel->Mesh,
+		m_upperSurface->Mesh,
 		XMVector4Transform(rayOrigin, inverseModel),
 		XMVector4Transform(rayDirection, inverseModel));
 	
@@ -115,41 +121,6 @@ void RampScene::OnScreenClick(const dsr::events::MousePosition& position, const 
 //
 //	return configurations;
 //}
-
-//std::variant<dsr::ModelConfiguration, dsr::dsr_error> RampScene::LoadMapModel()
-//{
-//	using namespace dsr;
-//	using namespace dsr::directX;
-//	using namespace dsr::directX::rendering;
-//
-//	std::variant<std::shared_ptr<WavefrontModel>, dsr_error> loadMapWfResult = LoadWavefrontModel(m_blenderModelLoader,
-//		"Assets/",
-//		"map.wf",
-//		"map.mtl");
-//
-//	if (std::holds_alternative<dsr_error>(loadMapWfResult))
-//		return std::get<dsr_error>(loadMapWfResult);
-//
-//	m_mapModel = std::get<std::shared_ptr<WavefrontModel>>(loadMapWfResult);
-//
-//	return LoadWavefrontModelConfiguration(
-//		m_device,
-//		m_mapModel
-//	);
-//}
-
-void RampScene::RegisterMapModel(const dsr::ModelConfiguration& map)
-{
-	using namespace dsr::ecs;
-
-	m_sceneManager->AddComponent<NameComponent>(m_sceneId, m_baseMeshEntity, "map");
-	m_sceneManager->AddComponent<TagComponent>(m_sceneId, m_baseMeshEntity, "map");
-	m_sceneManager->AddComponent<TransformComponent>(m_sceneId, m_baseMeshEntity);
-
-	std::shared_ptr<StaticMeshComponent> mesh = m_sceneManager->AddComponent<StaticMeshComponent>(m_sceneId, m_baseMeshEntity);
-	mesh->SetVertexBuffer(map.GetVertexBuffer());
-	mesh->SetVertexGroups(map.GetVertexGroups());
-}
 
 void RampScene::RegisterMapBarycentricSubDivisionEntity()
 {
@@ -236,7 +207,7 @@ void RampScene::RegisterMapUpperSurfaceSubDividedModel()
 
 	// fix that... not really effective
 	m_mapUpperSurfaceSubDividedModel = std::make_shared<WavefrontModel>();
-	m_mapUpperSurfaceSubDividedModel->Mesh = SubDivide(m_mapUpperSurfaceModel->Mesh);
+	m_mapUpperSurfaceSubDividedModel->Mesh = SubDivide(m_upperSurface->Mesh);
 	m_mapUpperSurfaceSubDividedModel->Mesh = SubDivide(m_mapUpperSurfaceSubDividedModel->Mesh);
 	m_mapUpperSurfaceSubDividedModel->Mesh = SubDivide(m_mapUpperSurfaceSubDividedModel->Mesh);
 	m_mapUpperSurfaceSubDividedModel->Mesh = SubDivide(m_mapUpperSurfaceSubDividedModel->Mesh);
@@ -287,7 +258,7 @@ void RampScene::RegisterStartEndMarkerEntities()
 	std::shared_ptr<TransformComponent> surfaceTransform = m_sceneManager->GetComponentFrom<TransformComponent>(m_sceneId, m_upperSurfaceEntity);
 	XMMATRIX surfaceTransformationMatrix = XMMatrixTranslationFromVector(surfaceTransform->GetPosition());
 
-	const std::vector<Vertex3FP2FTx3FN>& vertexBuffer = m_mapUpperSurfaceModel->Mesh->GetVertexBuffer();
+	const std::vector<Vertex3FP2FTx3FN>& vertexBuffer = m_upperSurface->Mesh->GetVertexBuffer();
 
 	std::vector<float> vertexData;
 	AddMarkerLine(vertexBuffer[StartIndex], surfaceTransformationMatrix, vertexData);
@@ -330,7 +301,7 @@ void RampScene::RegisterPathEntity()
 
 	using namespace DirectX;
 
-	StaticMesh<Vertex3F> distinctMesh = FilterDistinct(*m_mapUpperSurfaceModel->Mesh);
+	StaticMesh<Vertex3F> distinctMesh = FilterDistinct(*m_upperSurface->Mesh);
 	AStarStaticMeshPathfinder pathfinder(distinctMesh);
 	std::vector<uint32_t> path = pathfinder.SearchSequential(StartIndex, EndIndex);
 	std::vector<float> vertexData = GetLinePath(distinctMesh, path, {1.0f, 0.0f, 1.0f, 1.0f});

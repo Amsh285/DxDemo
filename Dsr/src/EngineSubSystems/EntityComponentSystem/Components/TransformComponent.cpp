@@ -10,9 +10,9 @@ namespace dsr
 			m_position = vec;
 		}
 
-		void TransformComponent::SetScale(const DirectX::XMFLOAT3& scale)
+		void TransformComponent::SetScale(const DirectX::XMVECTOR& scale)
 		{
-			m_scale = DirectX::XMVectorSet(scale.x, scale.y, scale.z, 0.0f);
+			m_scale = scale;
 		}
 
 		DirectX::XMMATRIX TransformComponent::GetModelMatrix() const

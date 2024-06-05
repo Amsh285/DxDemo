@@ -24,7 +24,7 @@ namespace dsr
 			void SetPosition(const DirectX::XMVECTOR& vec);
 
 			DirectX::XMVECTOR GetScale() const { return m_scale; }
-			void SetScale(const DirectX::XMFLOAT3& scale);
+			void SetScale(const DirectX::XMVECTOR& scale);
 
 			DirectX::XMVECTOR GetRotation() const { return m_rotation; }
 			void SetRotation(const DirectX::XMVECTOR& quaternion) { m_rotation = quaternion; }
