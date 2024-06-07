@@ -15,6 +15,14 @@ constexpr const char* MARKER_TAG = "Pathmarker";
 
 constexpr auto ERROR_REGISTER_MARKER_SETUPMODEL = 600;
 
+constexpr auto ERROR_UPDATEMARKERPOSITION_COMPONENTMISSING = 700;
+
+enum class MarkerType
+{
+	StartMarker,
+	FinishMarker
+};
+
 class NavMeshSimulationSceneMarkers
 {
 public:
@@ -55,5 +63,12 @@ private:
 		const DirectX::XMMATRIX& model,
 		const DirectX::XMVECTOR& startPosition,
 		const DirectX::XMVECTOR& finishPosition
+	);
+
+	dsr::DsrResult UpdateMarkerPosition(
+		const dsr::ecs::Entity& entity,
+		const MarkerType& type,
+		const DirectX::XMVECTOR& newPosition,
+		const float& markerLineOffset = 3.0f
 	);
 };

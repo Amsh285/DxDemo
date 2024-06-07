@@ -194,3 +194,34 @@ dsr::DsrResult NavMeshSimulationSceneMarkers::RegisterMarkers(
 
 	return DsrResult::Success("Register Marker Success.");
 }
+
+dsr::DsrResult NavMeshSimulationSceneMarkers::UpdateMarkerPosition(
+	const dsr::ecs::Entity& entity,
+	const MarkerType& type,
+	const DirectX::XMVECTOR& newPosition,
+	const float& markerLineOffset)
+{
+	using namespace dsr;
+	using namespace dsr::directX;
+	using namespace dsr::ecs;
+
+	using namespace DirectX;
+
+	std::shared_ptr<LineListComponent> lineListComponent = m_sceneManager
+		->GetComponentFrom<LineListComponent>(m_sceneId, entity);
+
+	if (!lineListComponent)
+		return DsrResult("LineListComponent not found for Entity: " + entity, ERROR_UPDATEMARKERPOSITION_COMPONENTMISSING);
+
+	Direct3dBuffer vertexBuffer = lineListComponent->GetVertexBuffer();
+
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
+
+	DsrResult mapToDeviceResult = m_device->Map(vertexBuffer.GetBufferPtr().get(), 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &mappedResource);
+	if (mapToDeviceResult.GetResultStatusCode() != RESULT_SUCCESS)
+		return mapToDeviceResult;
+
+
+
+	return DsrResult::Success("Update Markerposition Success.");
+}
