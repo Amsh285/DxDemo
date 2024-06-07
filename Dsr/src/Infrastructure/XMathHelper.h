@@ -18,6 +18,12 @@ namespace dsr
 		}
 	};
 
+	DirectX::XMVECTOR Barycenter(
+		const DirectX::XMVECTOR& a,
+		const DirectX::XMVECTOR& b,
+		const DirectX::XMVECTOR& c
+	);
+
 	float Vector3Determinant(
 		const DirectX::XMVECTOR& v0,
 		const DirectX::XMVECTOR& v1,

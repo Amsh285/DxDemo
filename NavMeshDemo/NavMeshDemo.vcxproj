@@ -133,6 +133,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Scenes\Data\NavMeshSimulationSceneSettings.cpp" />
+    <ClCompile Include="Scenes\NavMeshSimulationSceneMarkers.cpp" />
     <ClCompile Include="Scenes\NavMeshSimulationSceneBase.cpp" />
     <ClCompile Include="Scenes\BridgeScene.cpp" />
     <ClCompile Include="Components\CameraControllerComponent.cpp" />
@@ -144,6 +146,8 @@
     <ClCompile Include="Systems\CameraControllerSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Scenes\Data\NavMeshSimulationSceneSettings.h" />
+    <ClInclude Include="Scenes\NavMeshSimulationSceneMarkers.h" />
     <ClInclude Include="Scenes\NavMeshSimulationSceneBase.h" />
     <ClInclude Include="Scenes\BridgeScene.h" />
     <ClInclude Include="Components\CameraControllerComponent.h" />

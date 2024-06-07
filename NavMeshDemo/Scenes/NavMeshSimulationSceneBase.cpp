@@ -12,12 +12,12 @@ NavMeshSimulationSceneBase::NavMeshSimulationSceneBase(
 	const std::shared_ptr<dsr::scene::SceneManager>& sceneManager,
 	const std::shared_ptr<dsr::directX::Direct3dDevice>& device,
 	const std::shared_ptr<dsr::BlenderModelLoader>& blenderModelLoader
-) : m_sceneName(sceneName), m_sceneManager(sceneManager), m_device(device), m_blenderModelLoader(blenderModelLoader)
+) : m_sceneName(sceneName), m_sceneId(sceneManager->CreateNewScene(sceneName)),
+m_sceneManager(sceneManager), m_device(device), m_blenderModelLoader(blenderModelLoader),
+m_markers(m_sceneId, sceneManager, device)
 {
 	m_sceneSettings.BaseMeshFileName = m_sceneName + ".wf";
 	m_sceneSettings.BaseMeshMaterialFileName = m_sceneName + ".mtl";
-
-	m_sceneId = m_sceneManager->CreateNewScene(m_sceneName);
 
 	m_baseMeshEntity = m_sceneManager->CreateNewEntity();
 	m_upperSurfaceEntity = m_sceneManager->CreateNewEntity();
@@ -67,6 +67,10 @@ dsr::DsrResult NavMeshSimulationSceneBase::LoadSceneData()
 	DsrResult registerUpperSurfaceSubDivisionResult = RegisterUpperSurfaceSubDivision();
 	if (registerUpperSurfaceSubDivisionResult.GetResultStatusCode() != RESULT_SUCCESS)
 		return registerUpperSurfaceSubDivisionResult;
+
+	DsrResult setupMarkersResult = m_markers.SetupMarkers(m_sceneSettings, m_baseMesh);
+	if (setupMarkersResult.GetResultStatusCode() != RESULT_SUCCESS)
+		return setupMarkersResult;
 
 	return DsrResult::Success("Load SceneData: " + m_sceneName + " Success.");
 }

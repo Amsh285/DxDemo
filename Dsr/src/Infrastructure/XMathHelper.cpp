@@ -3,6 +3,18 @@
 
 namespace dsr
 {
+	DirectX::XMVECTOR Barycenter(const DirectX::XMVECTOR& a, const DirectX::XMVECTOR& b, const DirectX::XMVECTOR& c)
+	{
+		using namespace DirectX;
+
+		const float scale = 1.0f / 3.0f;
+
+		return XMVectorAdd(
+			XMVectorScale(a, scale),
+			XMVectorAdd(XMVectorScale(b, scale), XMVectorScale(c, scale))
+		);
+	}
+
 	float Vector3Determinant(const DirectX::XMVECTOR& v0, const DirectX::XMVECTOR& v1, const DirectX::XMVECTOR& v2)
 	{
 		using namespace DirectX;
