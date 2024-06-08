@@ -36,6 +36,9 @@ public:
 		const NavMeshSimulationSceneSettings& settings,
 		const std::shared_ptr<dsr::WavefrontModel>& baseMesh
 	);
+
+	dsr::DsrResult SetStartMarkerPositions(const DirectX::XMVECTOR& newPosition);
+	dsr::DsrResult SetFinishMarkerPositions(const DirectX::XMVECTOR& newPosition);
 private:
 	uint32_t m_sceneId;
 

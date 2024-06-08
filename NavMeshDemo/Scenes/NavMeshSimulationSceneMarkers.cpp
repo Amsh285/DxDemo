@@ -36,13 +36,13 @@ dsr::DsrResult NavMeshSimulationSceneMarkers::SetupMarkers(
 	const std::vector<Vertex3FP2FTx3FN>& vertexBuffer = baseMesh->Mesh->GetVertexBuffer();
 	const std::vector<uint32_t>& indexBuffer = baseMesh->Mesh->GetIndexBuffer();
 
-	XMVECTOR startPosition = dsr::Barycenter(
+	XMVECTOR startPosition = Barycenter(
 		XMLoadFloat3(&vertexBuffer[indexBuffer[0]].Position),
 		XMLoadFloat3(&vertexBuffer[indexBuffer[1]].Position),
 		XMLoadFloat3(&vertexBuffer[indexBuffer[2]].Position)
 	);
 
-	XMVECTOR finishPosition = dsr::Barycenter(
+	XMVECTOR finishPosition = Barycenter(
 		XMLoadFloat3(&vertexBuffer[indexBuffer[indexBuffer.size() - 3]].Position),
 		XMLoadFloat3(&vertexBuffer[indexBuffer[indexBuffer.size() - 2]].Position),
 		XMLoadFloat3(&vertexBuffer[indexBuffer[indexBuffer.size() - 1]].Position)
@@ -87,6 +87,52 @@ dsr::DsrResult NavMeshSimulationSceneMarkers::SetupMarkers(
 		return registerUpperSurfaceBarycentricSubdivisionMarkersResult;
 
 	return DsrResult::Success("Setup Markers Success.");
+}
+
+dsr::DsrResult NavMeshSimulationSceneMarkers::SetStartMarkerPositions(const DirectX::XMVECTOR& newPosition)
+{
+	using namespace dsr;
+
+	DsrResult result = UpdateMarkerPosition(m_baseMeshMarkersEntity, MarkerType::StartMarker, newPosition);
+	if (result.GetResultStatusCode() != RESULT_SUCCESS)
+		return result;
+
+	result = UpdateMarkerPosition(m_upperSurfaceMarkersEntity, MarkerType::StartMarker, newPosition);
+	if (result.GetResultStatusCode() != RESULT_SUCCESS)
+		return result;
+
+	result = UpdateMarkerPosition(m_upperSurfaceSubDivisionMarkersEntity, MarkerType::StartMarker, newPosition);
+	if (result.GetResultStatusCode() != RESULT_SUCCESS)
+		return result;
+
+	result = UpdateMarkerPosition(m_upperSurfaceBarycentricSubDivisionMarkersEntity, MarkerType::StartMarker, newPosition);
+	if (result.GetResultStatusCode() != RESULT_SUCCESS)
+		return result;
+
+	return DsrResult::Success("SetStartMarkerPositions Success.");
+}
+
+dsr::DsrResult NavMeshSimulationSceneMarkers::SetFinishMarkerPositions(const DirectX::XMVECTOR& newPosition)
+{
+	using namespace dsr;
+
+	DsrResult result = UpdateMarkerPosition(m_baseMeshMarkersEntity, MarkerType::FinishMarker, newPosition);
+	if (result.GetResultStatusCode() != RESULT_SUCCESS)
+		return result;
+
+	result = UpdateMarkerPosition(m_upperSurfaceMarkersEntity, MarkerType::FinishMarker, newPosition);
+	if (result.GetResultStatusCode() != RESULT_SUCCESS)
+		return result;
+
+	result = UpdateMarkerPosition(m_upperSurfaceSubDivisionMarkersEntity, MarkerType::FinishMarker, newPosition);
+	if (result.GetResultStatusCode() != RESULT_SUCCESS)
+		return result;
+
+	result = UpdateMarkerPosition(m_upperSurfaceBarycentricSubDivisionMarkersEntity, MarkerType::FinishMarker, newPosition);
+	if (result.GetResultStatusCode() != RESULT_SUCCESS)
+		return result;
+
+	return DsrResult::Success("SetFinishMarkerPositions Success.");
 }
 
 std::vector<float> NavMeshSimulationSceneMarkers::BuildMarkerVertexBuffer(
@@ -202,26 +248,63 @@ dsr::DsrResult NavMeshSimulationSceneMarkers::UpdateMarkerPosition(
 	const float& markerLineOffset)
 {
 	using namespace dsr;
-	using namespace dsr::directX;
 	using namespace dsr::ecs;
+	using namespace dsr::directX;
 
 	using namespace DirectX;
-
+	 
 	std::shared_ptr<LineListComponent> lineListComponent = m_sceneManager
 		->GetComponentFrom<LineListComponent>(m_sceneId, entity);
 
 	if (!lineListComponent)
 		return DsrResult("LineListComponent not found for Entity: " + entity, ERROR_UPDATEMARKERPOSITION_COMPONENTMISSING);
 
+	XMVECTOR up = XMVectorAdd(newPosition, XMVectorSet(0.0f, markerLineOffset, 0.0f, 0.0f));
+	XMVECTOR down = XMVectorAdd(newPosition, XMVectorSet(0.0f, -markerLineOffset, 0.0f, 0.0f));
+
 	Direct3dBuffer vertexBuffer = lineListComponent->GetVertexBuffer();
 
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 
-	DsrResult mapToDeviceResult = m_device->Map(vertexBuffer.GetBufferPtr().get(), 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &mappedResource);
+	DsrResult mapToDeviceResult = m_device->Map(
+		vertexBuffer.GetBufferPtr().get(), 0,
+		D3D11_MAP_WRITE_NO_OVERWRITE, 0,
+		&mappedResource
+	);
+
 	if (mapToDeviceResult.GetResultStatusCode() != RESULT_SUCCESS)
 		return mapToDeviceResult;
 
+	float* vertexDataBuffer = reinterpret_cast<float*>(mappedResource.pData);
 
+	switch (type)
+	{
+	case MarkerType::StartMarker:
+	{
+		vertexDataBuffer[0] = XMVectorGetX(up);
+		vertexDataBuffer[1] = XMVectorGetY(up);
+		vertexDataBuffer[2] = XMVectorGetZ(up);
 
+		vertexDataBuffer[7] = XMVectorGetX(down);
+		vertexDataBuffer[8] = XMVectorGetX(down);
+		vertexDataBuffer[9] = XMVectorGetX(down);
+		break;
+	}
+	case MarkerType::FinishMarker:
+	{
+		vertexDataBuffer[14] = XMVectorGetX(up);
+		vertexDataBuffer[15] = XMVectorGetY(up);
+		vertexDataBuffer[16] = XMVectorGetZ(up);
+
+		vertexDataBuffer[21] = XMVectorGetX(down);
+		vertexDataBuffer[22] = XMVectorGetX(down);
+		vertexDataBuffer[23] = XMVectorGetX(down);
+		break;
+	}
+	default:
+		break;
+	}
+
+	m_device->Unmap(vertexBuffer.GetBufferPtr().get(), 0);
 	return DsrResult::Success("Update Markerposition Success.");
 }
