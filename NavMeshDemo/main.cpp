@@ -22,6 +22,6 @@ int main(int argc, const char* const* argv)
 	}
 	catch (const std::exception& ex)
 	{
-		std::cout << ex.what() << std::endl;
+ 		std::cout << ex.what() << std::endl;
 	}
 }

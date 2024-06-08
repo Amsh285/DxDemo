@@ -29,6 +29,8 @@ public:
 	uint32_t GetSceneId() const { return m_sceneId; }
 	std::string GetSceneName() const { return m_sceneName; }
 
+	std::unique_ptr<NavMeshSimulationSceneMarkers> Markers;
+
 	NavMeshSimulationSceneSettings GetSceneSettings() const { return m_sceneSettings; }
 	void SetSceneSettings(const NavMeshSimulationSceneSettings& settings) { m_sceneSettings = settings; }
 
@@ -47,7 +49,7 @@ protected:
 	std::string m_sceneName;
 
 	NavMeshSimulationSceneSettings m_sceneSettings;
-	NavMeshSimulationSceneMarkers m_markers;
+	
 
 	dsr::ecs::Entity m_baseMeshEntity;
 	dsr::ecs::Entity m_upperSurfaceEntity;
