@@ -13,9 +13,9 @@ NavMeshSimulationSceneBase::NavMeshSimulationSceneBase(
 	const std::shared_ptr<dsr::directX::Direct3dDevice>& device,
 	const std::shared_ptr<dsr::BlenderModelLoader>& blenderModelLoader
 ) : m_sceneName(sceneName), m_sceneId(sceneManager->CreateNewScene(sceneName)),
-	m_sceneManager(sceneManager), m_device(device), m_blenderModelLoader(blenderModelLoader)
+m_sceneManager(sceneManager), m_device(device), m_blenderModelLoader(blenderModelLoader)
 {
-	Markers = std::make_unique<NavMeshSimulationSceneMarkers>(m_sceneId, sceneManager, device);
+	m_markers = std::make_unique<NavMeshSimulationSceneMarkers>(m_sceneId, sceneManager, device);
 
 	m_sceneSettings.BaseMeshFileName = m_sceneName + ".wf";
 	m_sceneSettings.BaseMeshMaterialFileName = m_sceneName + ".mtl";
@@ -41,6 +41,62 @@ dsr::DsrResult NavMeshSimulationSceneBase::BuildScene()
 		return loadSceneDataResult;
 
 	return DsrResult::Success("Build Scene: " + m_sceneName + " Success.");
+}
+
+void NavMeshSimulationSceneBase::OnScreenClick(const EditorScreenClickEvent& screenClickEvent)
+{
+	using namespace dsr;
+
+	using namespace dsr::data;
+	using namespace dsr::data::manipulation;
+	using namespace dsr::events;
+	using namespace dsr::inputdevices;
+
+	using namespace dsr::directX;
+
+	using namespace dsr::ecs;
+	using namespace dsr::scene;
+
+	using namespace DirectX;
+
+	std::shared_ptr<Camera> activeCamera = Camera::GetActiveCamera();
+
+	if (!activeCamera)
+		return;
+
+	MousePosition position = screenClickEvent.GetPosition();
+	Screen screen = screenClickEvent.GetScreen();
+
+	XMVECTOR rayOrigin = activeCamera->GetTransform()->GetPosition();
+	XMVECTOR rayDirection = activeCamera->ScreenToWorld(
+		position.X, position.Y,
+		screen.GetClientWidth(), screen.GetClientHeight()
+	);
+
+	std::shared_ptr<TransformComponent> transform = m_sceneManager->GetComponentFrom<TransformComponent>(m_sceneId, m_baseMeshEntity);
+	XMMATRIX model = transform->GetModelMatrix();
+	XMVECTOR determinant = XMMatrixDeterminant(model);
+	XMMATRIX inverseModel = XMMatrixInverse(&determinant, model);
+
+	std::vector<RaycastMeshHit> hits = GetMeshIntersections(
+		m_upperSurface->Mesh,
+		XMVector4Transform(rayOrigin, inverseModel),
+		XMVector4Transform(rayDirection, inverseModel));
+
+
+
+	//Debug::DrawRay(rayOrigin, rayDirection, XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f), 0.2f, 100.0f, std::chrono::seconds(5));
+
+	if (hits.size() > 0)
+	{
+		std::cout << "raycasthit: (x: " << hits[0].Intersection.x <<
+			" y: " << hits[0].Intersection.y << " z: " << hits[0].Intersection.z << std::endl;
+
+		m_markers->SetMarkerPositions(
+			screenClickEvent.GetPathSelectionMode(),
+			XMVectorSet(hits[0].Intersection.x, hits[0].Intersection.y, hits[0].Intersection.z, 1.0f)
+		);
+	}
 }
 
 dsr::DsrResult NavMeshSimulationSceneBase::LoadSceneData()
@@ -69,7 +125,7 @@ dsr::DsrResult NavMeshSimulationSceneBase::LoadSceneData()
 	if (registerUpperSurfaceSubDivisionResult.GetResultStatusCode() != RESULT_SUCCESS)
 		return registerUpperSurfaceSubDivisionResult;
 
-	DsrResult setupMarkersResult = Markers->SetupMarkers(m_sceneSettings, m_baseMesh);
+	DsrResult setupMarkersResult = m_markers->SetupMarkers(m_sceneSettings, m_baseMesh);
 	if (setupMarkersResult.GetResultStatusCode() != RESULT_SUCCESS)
 		return setupMarkersResult;
 

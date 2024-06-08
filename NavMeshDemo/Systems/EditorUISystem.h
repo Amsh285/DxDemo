@@ -14,6 +14,7 @@
 #include "Components/EditorUIComponent.h"
 
 #include "Scenes/RampScene.h"
+#include "Scenes/Data/Events/EditorScreenClickEvent.h"
 
 struct SceneViewData
 {
@@ -50,4 +51,3 @@ private:
 	std::vector<SceneViewData> m_sceneViewData;
 	size_t m_sceneSelectedIdx;
 };
-

@@ -6,10 +6,9 @@
 class EditorUIComponent : public dsr::ecs::Component
 {
 public:
-	int RaycastMode;
+	int PathSelectMode;
 	bool ShowColliders;
 
 	EditorUIComponent();
 private:
 };
-

@@ -10,18 +10,13 @@
 #include "ModelLoaders/BlenderModelLoader.h"
 
 #include "Scenes/Data/NavMeshSimulationSceneSettings.h"
+#include "Scenes/Data/PathSelectType.h"
 
 constexpr const char* MARKER_TAG = "Pathmarker";
 
 constexpr auto ERROR_REGISTER_MARKER_SETUPMODEL = 600;
 
 constexpr auto ERROR_UPDATEMARKERPOSITION_COMPONENTMISSING = 700;
-
-enum class MarkerType
-{
-	StartMarker,
-	FinishMarker
-};
 
 class NavMeshSimulationSceneMarkers
 {
@@ -37,8 +32,7 @@ public:
 		const std::shared_ptr<dsr::WavefrontModel>& baseMesh
 	);
 
-	dsr::DsrResult SetStartMarkerPositions(const DirectX::XMVECTOR& newPosition);
-	dsr::DsrResult SetFinishMarkerPositions(const DirectX::XMVECTOR& newPosition);
+	dsr::DsrResult SetMarkerPositions(const PathSelectType& type, const DirectX::XMVECTOR& newPosition);
 private:
 	uint32_t m_sceneId;
 
@@ -70,7 +64,7 @@ private:
 
 	dsr::DsrResult UpdateMarkerPosition(
 		const dsr::ecs::Entity& entity,
-		const MarkerType& type,
+		const PathSelectType& type,
 		const DirectX::XMVECTOR& newPosition,
 		const float& markerLineOffset = 3.0f
 	);

@@ -13,6 +13,8 @@
 
 #include "Scenes/Data/NavMeshSimulationSceneSettings.h"
 
+#include "Scenes/Data/Events/EditorScreenClickEvent.h"
+
 constexpr auto ERROR_LOAD_BASEMESH = 100;
 
 constexpr auto ERROR_REGISTER_BASEMESH_SETUPMODEL = 200;
@@ -29,8 +31,6 @@ public:
 	uint32_t GetSceneId() const { return m_sceneId; }
 	std::string GetSceneName() const { return m_sceneName; }
 
-	std::unique_ptr<NavMeshSimulationSceneMarkers> Markers;
-
 	NavMeshSimulationSceneSettings GetSceneSettings() const { return m_sceneSettings; }
 	void SetSceneSettings(const NavMeshSimulationSceneSettings& settings) { m_sceneSettings = settings; }
 
@@ -44,12 +44,14 @@ public:
 	void SetActive();
 
 	dsr::DsrResult BuildScene();
+
+	void OnScreenClick(const EditorScreenClickEvent& screenClickEvent);
 protected:
 	uint32_t m_sceneId;
 	std::string m_sceneName;
 
 	NavMeshSimulationSceneSettings m_sceneSettings;
-	
+	std::unique_ptr<NavMeshSimulationSceneMarkers> m_markers;
 
 	dsr::ecs::Entity m_baseMeshEntity;
 	dsr::ecs::Entity m_upperSurfaceEntity;

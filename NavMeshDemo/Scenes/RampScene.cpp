@@ -40,50 +40,6 @@ RampScene::RampScene(
 	m_sceneSettings.UpperSurfaceBarycentricSubDivisionModel = XMMatrixTranslation(80.0f, 0.0f, 0.0f);
 }
 
-void RampScene::OnScreenClick(const dsr::events::MousePosition& position, const dsr::inputdevices::Screen& screen)
-{
-	using namespace dsr;
-
-	using namespace dsr::data;
-	using namespace dsr::data::manipulation;
-
-	using namespace dsr::directX;
-
-	using namespace dsr::ecs;
-	using namespace dsr::scene;
-
-	using namespace DirectX;
-
-	std::shared_ptr<Camera> activeCamera = Camera::GetActiveCamera();
-
-	if (!activeCamera)
-		return;
-
-	XMVECTOR rayOrigin = activeCamera->GetTransform()->GetPosition();
-	XMVECTOR rayDirection = activeCamera->ScreenToWorld(
-		position.X, position.Y,
-		screen.GetClientWidth(), screen.GetClientHeight()
-	);
-
-	std::shared_ptr<TransformComponent> transform = m_sceneManager->GetComponentFrom<TransformComponent>(m_sceneId, m_baseMeshEntity);
-	XMMATRIX model = transform->GetModelMatrix();
-	XMVECTOR determinant = XMMatrixDeterminant(model);
-	XMMATRIX inverseModel = XMMatrixInverse(&determinant, model);
-
-	std::vector<RaycastMeshHit> hits = GetMeshIntersections(
-		m_upperSurface->Mesh,
-		XMVector4Transform(rayOrigin, inverseModel),
-		XMVector4Transform(rayDirection, inverseModel));
-	
-	 
-
-	//Debug::DrawRay(rayOrigin, rayDirection, XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f), 0.2f, 100.0f, std::chrono::seconds(5));
-
-	if (hits.size() > 0)
-		std::cout << "raycasthit: (x: " << hits[0].Intersection.x <<
-		" y: " << hits[0].Intersection.y << " z: " << hits[0].Intersection.z << std::endl;
-}
-
 //dsr::DsrResult RampScene::Build()
 //{
 //	using namespace dsr;

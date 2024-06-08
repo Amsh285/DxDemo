@@ -27,8 +27,6 @@ public:
 		const std::shared_ptr<dsr::BlenderModelLoader>& blenderModelLoader
 	);
 
-	void OnScreenClick(const dsr::events::MousePosition& position, const dsr::inputdevices::Screen& screen);
-
 private:
 	dsr::ecs::Entity m_mapFaceNormalsEntity;
 	dsr::ecs::Entity m_mapBarycentricSubdividedEntity;

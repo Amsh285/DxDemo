@@ -51,14 +51,6 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 
 	std::shared_ptr<EditorUIComponent> uiData = context.GetComponent<EditorUIComponent>();
 
-	//sweet
-	ImGui::Begin("Raycasting", nullptr);
-	ImGui::RadioButton("Startpoint", &uiData->RaycastMode, 0);
-	ImGui::RadioButton("Endpoint", &uiData->RaycastMode, 1);
-	ImGui::NewLine();
-	ImGui::Checkbox("Show Colliders", &uiData->ShowColliders);
-	ImGui::End();
-
 	ImGui::Begin("Editor", nullptr);
 
 	if (ImGui::BeginListBox("Scenes"))
@@ -81,6 +73,19 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 		}
 
 		ImGui::EndListBox();
+		ImGui::NewLine();
+
+		if (ImGui::CollapsingHeader("Debug"))
+		{
+			ImGui::Checkbox("Show Colliders", &uiData->ShowColliders);
+		}
+
+		if (ImGui::CollapsingHeader("Pathfinding"))
+		{
+			ImGui::Text("Node select:");
+			ImGui::RadioButton("Start", &uiData->PathSelectMode, 0);
+			ImGui::RadioButton("Finish", &uiData->PathSelectMode, 1);
+		}
 	}
 
 	ImGui::End();
@@ -90,7 +95,12 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 		//Todo: remove if later!
 		if (m_sceneViewData[m_sceneSelectedIdx].SceneName == "Ramp")
 		{
-			m_rampScene->OnScreenClick(m_input->GetMouse()->GetCurrentClientAreaPosition(), *m_input->GetScreen());
+			EditorScreenClickEvent screenClickEvent(
+				m_input->GetMouse()->GetCurrentClientAreaPosition(),
+				*m_input->GetScreen(),
+				(PathSelectType)uiData->PathSelectMode);
+
+			m_rampScene->OnScreenClick(screenClickEvent);
 		}
 	}
 }

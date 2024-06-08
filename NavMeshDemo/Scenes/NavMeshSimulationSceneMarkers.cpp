@@ -89,50 +89,27 @@ dsr::DsrResult NavMeshSimulationSceneMarkers::SetupMarkers(
 	return DsrResult::Success("Setup Markers Success.");
 }
 
-dsr::DsrResult NavMeshSimulationSceneMarkers::SetStartMarkerPositions(const DirectX::XMVECTOR& newPosition)
+dsr::DsrResult NavMeshSimulationSceneMarkers::SetMarkerPositions(const PathSelectType& type, const DirectX::XMVECTOR& newPosition)
 {
 	using namespace dsr;
 
-	DsrResult result = UpdateMarkerPosition(m_baseMeshMarkersEntity, MarkerType::StartMarker, newPosition);
+	DsrResult result = UpdateMarkerPosition(m_baseMeshMarkersEntity, type, newPosition);
 	if (result.GetResultStatusCode() != RESULT_SUCCESS)
 		return result;
 
-	result = UpdateMarkerPosition(m_upperSurfaceMarkersEntity, MarkerType::StartMarker, newPosition);
+	result = UpdateMarkerPosition(m_upperSurfaceMarkersEntity, type, newPosition);
 	if (result.GetResultStatusCode() != RESULT_SUCCESS)
 		return result;
 
-	result = UpdateMarkerPosition(m_upperSurfaceSubDivisionMarkersEntity, MarkerType::StartMarker, newPosition);
+	result = UpdateMarkerPosition(m_upperSurfaceSubDivisionMarkersEntity, type, newPosition);
 	if (result.GetResultStatusCode() != RESULT_SUCCESS)
 		return result;
 
-	result = UpdateMarkerPosition(m_upperSurfaceBarycentricSubDivisionMarkersEntity, MarkerType::StartMarker, newPosition);
+	result = UpdateMarkerPosition(m_upperSurfaceBarycentricSubDivisionMarkersEntity, type, newPosition);
 	if (result.GetResultStatusCode() != RESULT_SUCCESS)
 		return result;
 
-	return DsrResult::Success("SetStartMarkerPositions Success.");
-}
-
-dsr::DsrResult NavMeshSimulationSceneMarkers::SetFinishMarkerPositions(const DirectX::XMVECTOR& newPosition)
-{
-	using namespace dsr;
-
-	DsrResult result = UpdateMarkerPosition(m_baseMeshMarkersEntity, MarkerType::FinishMarker, newPosition);
-	if (result.GetResultStatusCode() != RESULT_SUCCESS)
-		return result;
-
-	result = UpdateMarkerPosition(m_upperSurfaceMarkersEntity, MarkerType::FinishMarker, newPosition);
-	if (result.GetResultStatusCode() != RESULT_SUCCESS)
-		return result;
-
-	result = UpdateMarkerPosition(m_upperSurfaceSubDivisionMarkersEntity, MarkerType::FinishMarker, newPosition);
-	if (result.GetResultStatusCode() != RESULT_SUCCESS)
-		return result;
-
-	result = UpdateMarkerPosition(m_upperSurfaceBarycentricSubDivisionMarkersEntity, MarkerType::FinishMarker, newPosition);
-	if (result.GetResultStatusCode() != RESULT_SUCCESS)
-		return result;
-
-	return DsrResult::Success("SetFinishMarkerPositions Success.");
+	return DsrResult::Success("SetMarkerPositions Success.");
 }
 
 std::vector<float> NavMeshSimulationSceneMarkers::BuildMarkerVertexBuffer(
@@ -243,7 +220,7 @@ dsr::DsrResult NavMeshSimulationSceneMarkers::RegisterMarkers(
 
 dsr::DsrResult NavMeshSimulationSceneMarkers::UpdateMarkerPosition(
 	const dsr::ecs::Entity& entity,
-	const MarkerType& type,
+	const PathSelectType& type,
 	const DirectX::XMVECTOR& newPosition,
 	const float& markerLineOffset)
 {
@@ -279,26 +256,26 @@ dsr::DsrResult NavMeshSimulationSceneMarkers::UpdateMarkerPosition(
 
 	switch (type)
 	{
-	case MarkerType::StartMarker:
+	case PathSelectType::Start:
 	{
 		vertexDataBuffer[0] = XMVectorGetX(up);
 		vertexDataBuffer[1] = XMVectorGetY(up);
 		vertexDataBuffer[2] = XMVectorGetZ(up);
 
 		vertexDataBuffer[7] = XMVectorGetX(down);
-		vertexDataBuffer[8] = XMVectorGetX(down);
-		vertexDataBuffer[9] = XMVectorGetX(down);
+		vertexDataBuffer[8] = XMVectorGetY(down);
+		vertexDataBuffer[9] = XMVectorGetZ(down);
 		break;
 	}
-	case MarkerType::FinishMarker:
+	case PathSelectType::Finish:
 	{
 		vertexDataBuffer[14] = XMVectorGetX(up);
 		vertexDataBuffer[15] = XMVectorGetY(up);
 		vertexDataBuffer[16] = XMVectorGetZ(up);
 
 		vertexDataBuffer[21] = XMVectorGetX(down);
-		vertexDataBuffer[22] = XMVectorGetX(down);
-		vertexDataBuffer[23] = XMVectorGetX(down);
+		vertexDataBuffer[22] = XMVectorGetY(down);
+		vertexDataBuffer[23] = XMVectorGetZ(down);
 		break;
 	}
 	default:
