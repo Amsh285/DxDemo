@@ -122,4 +122,56 @@ namespace SceneManagerTests
 		EXPECT_EQ(ecsMap.at(m_nextSceneEntity2).size(), 1);
 		EXPECT_TRUE(ecsMap.at(m_nextSceneEntity2).contains(typeid(TestNameComponent)));
 	}
+
+	TEST_F(SceneManagerSynchronizationTests, Remove_MissingComponentOnNonActiveScene_NoEffect)
+	{
+		EntityComponentStore::EntityComponentMap& ecsMap = m_ecsManager->GetContext()->GetEntityComponentMap();
+		EntityComponentStore::EntityComponentMap& mainSceneMap = m_sceneManager->GetEntityComponentMap(m_mainScene);
+
+		ASSERT_EQ(mainSceneMap.at(m_mainEntity1).size(), 1);
+
+		m_sceneManager->RemoveComponent<TestTagComponent>(m_mainScene, m_mainEntity1);
+
+		EXPECT_EQ(mainSceneMap.at(m_mainEntity1).size(), 1);
+	}
+
+	TEST_F(SceneManagerSynchronizationTests, Remove_MissingComponentOnActiveScene_NoEffect)
+	{
+		EntityComponentStore::EntityComponentMap& ecsMap = m_ecsManager->GetContext()->GetEntityComponentMap();
+		EntityComponentStore::EntityComponentMap& mainSceneMap = m_sceneManager->GetEntityComponentMap(m_mainScene);
+
+		ASSERT_EQ(mainSceneMap.at(m_mainEntity1).size(), 1);
+
+		m_sceneManager->SetActiveScene(m_mainScene);
+		m_sceneManager->RemoveComponent<TestTagComponent>(m_mainScene, m_mainEntity1);
+
+		EXPECT_EQ(mainSceneMap.at(m_mainEntity1).size(), 1);
+		ASSERT_EQ(ecsMap.at(m_mainEntity1).size(), 1);
+	}
+
+	TEST_F(SceneManagerSynchronizationTests, Remove_ExistingComponentOnNonActiveScene_ValidState)
+	{
+		EntityComponentStore::EntityComponentMap& ecsMap = m_ecsManager->GetContext()->GetEntityComponentMap();
+		EntityComponentStore::EntityComponentMap& mainSceneMap = m_sceneManager->GetEntityComponentMap(m_mainScene);
+
+		ASSERT_EQ(mainSceneMap.at(m_mainEntity2).size(), 2);
+
+		m_sceneManager->RemoveComponent<TestTagComponent>(m_mainScene, m_mainEntity2);
+
+		EXPECT_EQ(mainSceneMap.at(m_mainEntity2).size(), 1);
+	}
+
+	TEST_F(SceneManagerSynchronizationTests, Remove_ExistingComponentOnActiveScene_ValidState)
+	{
+		EntityComponentStore::EntityComponentMap& ecsMap = m_ecsManager->GetContext()->GetEntityComponentMap();
+		EntityComponentStore::EntityComponentMap& mainSceneMap = m_sceneManager->GetEntityComponentMap(m_mainScene);
+
+		ASSERT_EQ(mainSceneMap.at(m_mainEntity2).size(), 2);
+
+		m_sceneManager->SetActiveScene(m_mainScene);
+		m_sceneManager->RemoveComponent<TestTagComponent>(m_mainScene, m_mainEntity2);
+
+		EXPECT_EQ(mainSceneMap.at(m_mainEntity2).size(), 1);
+		EXPECT_EQ(ecsMap.at(m_mainEntity2).size(), 1);
+	}
 }

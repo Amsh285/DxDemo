@@ -86,6 +86,23 @@ namespace dsr
 			}
 		}
 
+		void SceneManager::RemoveComponent(const uint32_t& sceneId, const dsr::ecs::Entity& entity, const std::type_index& componentType)
+		{
+			if (m_activeScene && m_activeScene->Equals(sceneId))
+			{
+				m_activeScene->RemoveComponent(entity, componentType);
+			}
+			else
+			{
+				auto it = m_scenes.find(sceneId);
+
+				if (it == m_scenes.end())
+					return;
+
+				it->second->RemoveComponent(entity, componentType);
+			}
+		}
+
 		void SceneManager::SetActiveScene(const uint32_t& sceneId)
 		{
 			if (m_scenes.count(sceneId) == 0)

@@ -71,6 +71,23 @@ namespace dsr
 				const std::shared_ptr<dsr::ecs::Component>& component
 			);
 
+			template<class TComponent>
+			void RemoveComponent(
+				const uint32_t& sceneId,
+				const dsr::ecs::Entity& entity
+			)
+			{
+				static_assert(std::is_base_of<dsr::ecs::Component, TComponent>::value, "TComponent must be derived from Component.");
+
+				RemoveComponent(sceneId, entity, typeid(TComponent));
+			}
+
+			void RemoveComponent(
+				const uint32_t& sceneId,
+				const dsr::ecs::Entity& entity,
+				const std::type_index& componentType
+			);
+
 			void SetActiveScene(const uint32_t& sceneId);
 			std::optional<uint32_t> GetActiveSceneId() const;
 		private:

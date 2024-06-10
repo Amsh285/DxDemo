@@ -13,9 +13,10 @@ NavMeshSimulationSceneBase::NavMeshSimulationSceneBase(
 	const std::shared_ptr<dsr::directX::Direct3dDevice>& device,
 	const std::shared_ptr<dsr::BlenderModelLoader>& blenderModelLoader
 ) : m_sceneName(sceneName), m_sceneId(sceneManager->CreateNewScene(sceneName)),
-m_sceneManager(sceneManager), m_device(device), m_blenderModelLoader(blenderModelLoader)
+	m_sceneManager(sceneManager), m_device(device), m_blenderModelLoader(blenderModelLoader)
 {
 	m_markers = std::make_unique<NavMeshSimulationSceneMarkers>(m_sceneId, sceneManager, device);
+	m_paths = std::make_unique<NavMeshSimulationScenePaths>(m_sceneId, sceneManager, device);
 
 	m_sceneSettings.BaseMeshFileName = m_sceneName + ".wf";
 	m_sceneSettings.BaseMeshMaterialFileName = m_sceneName + ".mtl";
@@ -81,21 +82,19 @@ void NavMeshSimulationSceneBase::OnScreenClick(const EditorScreenClickEvent& scr
 	std::vector<RaycastMeshHit> hits = GetMeshIntersections(
 		m_upperSurface->Mesh,
 		XMVector4Transform(rayOrigin, inverseModel),
-		XMVector4Transform(rayDirection, inverseModel));
-
-
+		XMVector4Transform(rayDirection, inverseModel)
+	);
 
 	//Debug::DrawRay(rayOrigin, rayDirection, XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f), 0.2f, 100.0f, std::chrono::seconds(5));
 
 	if (hits.size() > 0)
 	{
-		std::cout << "raycasthit: (x: " << hits[0].Intersection.x <<
-			" y: " << hits[0].Intersection.y << " z: " << hits[0].Intersection.z << std::endl;
-
 		m_markers->SetMarkerPositions(
 			screenClickEvent.GetPathSelectionMode(),
 			XMVectorSet(hits[0].Intersection.x, hits[0].Intersection.y, hits[0].Intersection.z, 1.0f)
 		);
+
+
 	}
 }
 
@@ -128,6 +127,15 @@ dsr::DsrResult NavMeshSimulationSceneBase::LoadSceneData()
 	DsrResult setupMarkersResult = m_markers->SetupMarkers(m_sceneSettings, m_baseMesh);
 	if (setupMarkersResult.GetResultStatusCode() != RESULT_SUCCESS)
 		return setupMarkersResult;
+
+	m_paths->Setup(
+		m_markers->GetStartPositionLocal(),
+		m_markers->GetFinishPositionLocal(),
+		m_baseMesh,
+		m_upperSurface,
+		m_upperSurfaceSubDivision,
+		m_upperSurfaceBarycentricSubDivision
+	);
 
 	return DsrResult::Success("Load SceneData: " + m_sceneName + " Success.");
 }

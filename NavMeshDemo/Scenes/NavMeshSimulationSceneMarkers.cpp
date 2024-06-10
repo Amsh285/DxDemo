@@ -36,24 +36,24 @@ dsr::DsrResult NavMeshSimulationSceneMarkers::SetupMarkers(
 	const std::vector<Vertex3FP2FTx3FN>& vertexBuffer = baseMesh->Mesh->GetVertexBuffer();
 	const std::vector<uint32_t>& indexBuffer = baseMesh->Mesh->GetIndexBuffer();
 
-	XMVECTOR startPosition = Barycenter(
+	m_startPositionLocal = Barycenter(
 		XMLoadFloat3(&vertexBuffer[indexBuffer[0]].Position),
 		XMLoadFloat3(&vertexBuffer[indexBuffer[1]].Position),
 		XMLoadFloat3(&vertexBuffer[indexBuffer[2]].Position)
 	);
 
-	XMVECTOR finishPosition = Barycenter(
+	m_finishPositionLocal = Barycenter(
 		XMLoadFloat3(&vertexBuffer[indexBuffer[indexBuffer.size() - 3]].Position),
 		XMLoadFloat3(&vertexBuffer[indexBuffer[indexBuffer.size() - 2]].Position),
 		XMLoadFloat3(&vertexBuffer[indexBuffer[indexBuffer.size() - 1]].Position)
 	);
 
-	std::vector<float> vertexData = BuildMarkerVertexBuffer(startPosition, finishPosition);
+	std::vector<float> vertexData = BuildMarkerVertexBuffer(m_startPositionLocal, m_finishPositionLocal);
 
 	DsrResult registerBaseMeshMarkersResult = RegisterMarkers(
 		m_baseMeshMarkersEntity, "Basemesh_Markers",
 		vertexData,
-		settings.BaseMeshModel, startPosition, finishPosition
+		settings.BaseMeshModel, m_startPositionLocal, m_finishPositionLocal
 	);
 
 	if (registerBaseMeshMarkersResult.GetResultStatusCode() != RESULT_SUCCESS)
@@ -62,7 +62,7 @@ dsr::DsrResult NavMeshSimulationSceneMarkers::SetupMarkers(
 	DsrResult registerUpperSurfaceMarkersResult = RegisterMarkers(
 		m_upperSurfaceMarkersEntity, "UpperSurface_Markers",
 		vertexData,
-		settings.UpperSurfaceModel, startPosition, finishPosition
+		settings.UpperSurfaceModel, m_startPositionLocal, m_finishPositionLocal
 	);
 
 	if (registerUpperSurfaceMarkersResult.GetResultStatusCode() != RESULT_SUCCESS)
@@ -71,7 +71,7 @@ dsr::DsrResult NavMeshSimulationSceneMarkers::SetupMarkers(
 	DsrResult registerUpperSurfaceSubdivisionMarkersResult = RegisterMarkers(
 		m_upperSurfaceSubDivisionMarkersEntity, "UpperSurface_SubdivisionMarkers",
 		vertexData,
-		settings.UpperSurfaceSubDivisonModel, startPosition, finishPosition
+		settings.UpperSurfaceSubDivisonModel, m_startPositionLocal, m_finishPositionLocal
 	);
 
 	if (registerUpperSurfaceSubdivisionMarkersResult.GetResultStatusCode() != RESULT_SUCCESS)
@@ -80,7 +80,7 @@ dsr::DsrResult NavMeshSimulationSceneMarkers::SetupMarkers(
 	DsrResult registerUpperSurfaceBarycentricSubdivisionMarkersResult = RegisterMarkers(
 		m_upperSurfaceBarycentricSubDivisionMarkersEntity, "UpperSurface_BarycentricSubdivisionMarkers",
 		vertexData,
-		settings.UpperSurfaceBarycentricSubDivisionModel, startPosition, finishPosition
+		settings.UpperSurfaceBarycentricSubDivisionModel, m_startPositionLocal, m_finishPositionLocal
 	);
 
 	if (registerUpperSurfaceBarycentricSubdivisionMarkersResult.GetResultStatusCode() != RESULT_SUCCESS)
@@ -108,6 +108,18 @@ dsr::DsrResult NavMeshSimulationSceneMarkers::SetMarkerPositions(const PathSelec
 	result = UpdateMarkerPosition(m_upperSurfaceBarycentricSubDivisionMarkersEntity, type, newPosition);
 	if (result.GetResultStatusCode() != RESULT_SUCCESS)
 		return result;
+
+	switch (type)
+	{
+	case PathSelectType::Start:
+		m_startPositionLocal = newPosition;
+		break;
+	case PathSelectType::Finish:
+		m_finishPositionLocal = newPosition;
+		break;
+	default:
+		break;
+	}
 
 	return DsrResult::Success("SetMarkerPositions Success.");
 }

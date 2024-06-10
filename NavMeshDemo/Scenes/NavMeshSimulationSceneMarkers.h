@@ -21,6 +21,9 @@ constexpr auto ERROR_UPDATEMARKERPOSITION_COMPONENTMISSING = 700;
 class NavMeshSimulationSceneMarkers
 {
 public:
+	DirectX::XMVECTOR GetStartPositionLocal() const { return m_startPositionLocal; }
+	DirectX::XMVECTOR GetFinishPositionLocal() const { return m_finishPositionLocal; }
+
 	NavMeshSimulationSceneMarkers(
 		const uint32_t& sceneId,
 		const std::shared_ptr<dsr::scene::SceneManager>& sceneManager,
@@ -35,6 +38,9 @@ public:
 	dsr::DsrResult SetMarkerPositions(const PathSelectType& type, const DirectX::XMVECTOR& newPosition);
 private:
 	uint32_t m_sceneId;
+
+	DirectX::XMVECTOR m_startPositionLocal;
+	DirectX::XMVECTOR m_finishPositionLocal;
 
 	DirectX::XMVECTORF32 m_startColor;
 	DirectX::XMVECTORF32 m_finishColor;
