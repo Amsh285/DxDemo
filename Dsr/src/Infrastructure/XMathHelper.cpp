@@ -56,6 +56,54 @@ namespace dsr
 		return RaycastPlaneHit(false, num / denom);
 	}
 
+	bool Intersects(const DirectX::XMVECTOR& value, const DirectX::XMVECTOR& planeNormal, const DirectX::XMVECTOR& planeOrigin, const float& epsilon)
+	{
+		using namespace DirectX;
+
+		XMVECTOR hitTest = XMVector3Normalize(XMVectorSubtract(value, planeOrigin));
+		return std::abs(XMVectorGetX(XMVector3Dot(hitTest, planeNormal))) < epsilon;
+	}
+
+	std::pair<uint32_t, uint32_t> FindClosestVertices(
+		const DirectX::XMVECTOR& v0, const uint32_t& idx0,
+		const DirectX::XMVECTOR& v1, const uint32_t& idx1,
+		const DirectX::XMVECTOR& v2, const uint32_t& idx2,
+		const DirectX::XMVECTOR& v3, const uint32_t& idx3,
+		const DirectX::XMVECTOR& v4, const uint32_t& idx4,
+		const DirectX::XMVECTOR& v5, const uint32_t& idx5
+	)
+	{
+		using namespace DirectX;
+
+		auto computeSquaredDistance = [](const XMVECTOR& a, const XMVECTOR& b) -> float
+		{
+			XMVECTOR diff = XMVectorSubtract(a, b);
+			return XMVectorGetX(XMVector3LengthSq(diff));
+		};
+
+		std::tuple<uint32_t, uint32_t, float> distanceIndexMap[9];
+		distanceIndexMap[0] = std::make_tuple(idx0, idx3, computeSquaredDistance(v0, v3));
+		distanceIndexMap[1] = std::make_tuple(idx0, idx4, computeSquaredDistance(v0, v4));
+		distanceIndexMap[2] = std::make_tuple(idx0, idx5, computeSquaredDistance(v0, v5));
+
+		distanceIndexMap[3] = std::make_tuple(idx1, idx3, computeSquaredDistance(v1, v3));
+		distanceIndexMap[4] = std::make_tuple(idx1, idx4, computeSquaredDistance(v1, v4));
+		distanceIndexMap[5] = std::make_tuple(idx1, idx5, computeSquaredDistance(v1, v5));
+
+		distanceIndexMap[6] = std::make_tuple(idx2, idx3, computeSquaredDistance(v2, v3));
+		distanceIndexMap[7] = std::make_tuple(idx2, idx4, computeSquaredDistance(v2, v4));
+		distanceIndexMap[8] = std::make_tuple(idx2, idx5, computeSquaredDistance(v2, v5));
+
+		std::sort(
+			distanceIndexMap,
+			distanceIndexMap + 8,
+			[](std::tuple<uint32_t, uint32_t, float> left, std::tuple<uint32_t, uint32_t, float> right)
+			{ return std::get<2>(left) < std::get<2>(right); }
+		);
+
+		return std::make_pair(std::get<0>(distanceIndexMap[0]), std::get<1>(distanceIndexMap[0]));
+	}
+
 	DirectX::XMVECTOR ScreenToWorld(
 		const int32_t& mouseX, const int32_t& mouseY, const int32_t& clientWidth, const int32_t& clientHeight,
 		const DirectX::XMMATRIX& projectionMatrix,

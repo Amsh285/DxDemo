@@ -312,6 +312,9 @@
     <ClInclude Include="src\EngineSubSystems\SceneSystem\CameraExtensions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Data\Structures\StaticMeshTriangle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Windows\Window.cpp">
@@ -579,6 +582,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\EngineSubSystems\SceneSystem\CameraExtensions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Data\Structures\StaticMeshTriangle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

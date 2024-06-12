@@ -43,6 +43,22 @@ namespace dsr
 		const DirectX::XMVECTOR& planeOrigin
 	);
 
+	bool Intersects(
+		const DirectX::XMVECTOR& value,
+		const DirectX::XMVECTOR& planeNormal,
+		const DirectX::XMVECTOR& planeOrigin,
+		const float& epsilon = 1e-6f
+	);
+
+	std::pair<uint32_t, uint32_t> FindClosestVertices(
+		const DirectX::XMVECTOR& v0, const uint32_t& idx0,
+		const DirectX::XMVECTOR& v1, const uint32_t& idx1,
+		const DirectX::XMVECTOR& v2, const uint32_t& idx2,
+		const DirectX::XMVECTOR& v3, const uint32_t& idx3,
+		const DirectX::XMVECTOR& v4, const uint32_t& idx4,
+		const DirectX::XMVECTOR& v5, const uint32_t& idx5
+	);
+
 	DirectX::XMVECTOR ScreenToWorld(
 		const int32_t& mouseX, const int32_t& mouseY,
 		const int32_t& clientWidth, const int32_t& clientHeight,

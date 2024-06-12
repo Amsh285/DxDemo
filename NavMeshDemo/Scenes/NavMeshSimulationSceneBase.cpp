@@ -129,8 +129,6 @@ dsr::DsrResult NavMeshSimulationSceneBase::LoadSceneData()
 		return setupMarkersResult;
 
 	m_paths->Setup(
-		m_markers->GetStartPositionLocal(),
-		m_markers->GetFinishPositionLocal(),
 		m_baseMesh,
 		m_upperSurface,
 		m_upperSurfaceSubDivision,

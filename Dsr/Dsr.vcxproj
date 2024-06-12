@@ -110,6 +110,7 @@
     <ClInclude Include="src\Data\Structures\StaticMesh.h" />
     <ClInclude Include="src\Data\Manipulation\StaticMeshExtData.h" />
     <ClInclude Include="src\Infrastructure\XMathHelper.h" />
+    <ClInclude Include="src\Data\Structures\StaticMeshTriangle.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\EngineSubSystems\SceneSystem\CameraExtensions.cpp">
@@ -436,6 +437,10 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="src\Infrastructure\XMathHelper.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="src\Data\Structures\StaticMeshTriangle.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>

@@ -112,20 +112,6 @@ namespace dsr
 
 							//std::reverse(path.begin(), path.end());
 							return path;
-
-							/*std::vector<uint32_t> path;
-							path.push_back(adjacentIndex);
-							path.push_back(q->vertexIndex);
-							std::shared_ptr<node> next = q->prev;
-
-							while (next)
-							{
-								path.push_back(next->vertexIndex);
-								next = next->prev;
-							}
-
-							std::reverse(path.begin(), path.end());
-							return path;*/
 						}
 
 						const XMVECTOR qPosition = XMLoadFloat3(&m_vertexBuffer[q.vertexIndex].Position);

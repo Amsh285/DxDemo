@@ -3,6 +3,7 @@
 #include "dsrpch.h"
 
 #include "Data/Pathfinding/AStarStaticMeshPathfinder.h"
+#include "Data/Structures/StaticMeshTriangle.h"
 
 #include "DirectX/Direct3dDevice.h"
 
@@ -10,6 +11,8 @@
 #include "EngineSubSystems/SceneSystem/SceneManager.h"
 
 #include "ModelLoaders/BlenderModelLoader.h"
+
+constexpr auto ERROR_SETPATH_TRIANGLESNOTFOUND = 700;
 
 class NavMeshSimulationScenePaths
 {
@@ -21,18 +24,18 @@ public:
 	);
 
 	void Setup(
-		const DirectX::XMVECTOR& start,
-		const DirectX::XMVECTOR& finish,
 		std::shared_ptr<dsr::WavefrontModel> baseMesh,
 		std::shared_ptr<dsr::WavefrontModel> upperSurface,
 		std::shared_ptr<dsr::WavefrontModel> upperSurfaceSubDivision,
 		std::shared_ptr<dsr::WavefrontModel> upperSurfaceBarycentricSubDivision
 	);
+
+	dsr::DsrResult SetPaths(
+		const DirectX::XMVECTOR& start,
+		const DirectX::XMVECTOR& finish
+	);
 private:
 	uint32_t m_sceneId;
-
-	DirectX::XMVECTOR m_start;
-	DirectX::XMVECTOR m_finish;
 
 	dsr::ecs::Entity m_baseMeshPathEntity;
 	dsr::ecs::Entity m_upperSurfacePathEntity;
@@ -52,5 +55,19 @@ private:
 	std::shared_ptr<dsr::scene::SceneManager> m_sceneManager;
 	std::shared_ptr<dsr::directX::Direct3dDevice> m_device;
 
+	dsr::DsrResult SetPath(
+		const DirectX::XMVECTOR& start,
+		const DirectX::XMVECTOR& finish,
+		const dsr::ecs::Entity& entity,
+		const dsr::data::StaticMesh<dsr::data::Vertex3F>& mesh,
+		dsr::data::pathfinding::AStarStaticMeshPathfinder& pathfinder
+	);
 
+	std::vector<float> BuildVertexBuffer(
+		const DirectX::XMVECTOR& start,
+		const DirectX::XMVECTOR& finish,
+		const std::vector<uint32_t>& path,
+		const std::vector<dsr::data::Vertex3F>& vertexData,
+		const DirectX::XMVECTORF32& lineColor
+	);
 };

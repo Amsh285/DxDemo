@@ -1,8 +1,9 @@
 #pragma once
 
-#include "Data/Manipulation/StaticMeshExtData.h"
 #include "Data/Vertex.h"
+#include "Data/Manipulation/StaticMeshExtData.h"
 #include "Data/Structures/StaticMesh.h"
+#include "Data/Structures/StaticMeshTriangle.h"
 
 #include "Infrastructure/DsrTypes.h"
 #include "Infrastructure/XMathHelper.h"
@@ -112,7 +113,7 @@ namespace dsr
 						float w = dsr::Vector3Determinant(v0, v1, interSection) * denom;
 						float u = 1.0f - v - w;
 
-						if (u >= 0 && v >= 0 && w >= 0 /*&& (u + v + w) == 1.0f*/)
+						if (u >= 0 && v >= 0 && w >= 0)
 						{
 							RaycastMeshHit meshHitData;
 							meshHitData.IndexBuffer0 = sourceIndexBuffer[i];
@@ -137,6 +138,11 @@ namespace dsr
 
 				return hits;
 			}
+
+			std::optional<StaticMeshTriangle> FindIntersectionTriangle(
+				const DirectX::XMVECTOR& value,
+				const dsr::data::StaticMesh<dsr::data::Vertex3F>& mesh
+			);
 
 			std::vector<float> GetLinePath(
 				const StaticMesh<Vertex3F>& sourcemesh,
