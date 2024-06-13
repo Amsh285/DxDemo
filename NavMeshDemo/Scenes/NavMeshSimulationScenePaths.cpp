@@ -69,27 +69,18 @@ dsr::DsrResult NavMeshSimulationScenePaths::SetPath(
 
 	using namespace DirectX;
 
-	std::optional<StaticMeshTriangle> startTriangle = FindIntersectionTriangle(start, mesh);
-	std::optional<StaticMeshTriangle> finishTriangle = FindIntersectionTriangle(finish, mesh);
+	
 
-	if (!startTriangle.has_value() || !finishTriangle.has_value())
-		return DsrResult("Could not find Triangles by intersection.", ERROR_SETPATH_TRIANGLESNOTFOUND);
+	/*if (!startTriangle.has_value() || !finishTriangle.has_value())
+		return DsrResult("Could not find Triangles by intersection.", ERROR_SETPATH_TRIANGLESNOTFOUND);*/
 
 	std::vector<uint32_t> path;
 
-	if (!startTriangle.value().Equal(finishTriangle.value()))
+	
 	{
-		const StaticMeshTriangle t0 = startTriangle.value();
-		const StaticMeshTriangle t1 = finishTriangle.value();
+		
 
-		std::pair<uint32_t, uint32_t> closestVertices = FindClosestVertices(
-			t0.V0, t0.Index0,
-			t0.V1, t0.Index1,
-			t0.V2, t0.Index2,
-			t1.V0, t1.Index0,
-			t1.V1, t1.Index1,
-			t1.V2, t1.Index2
-		);
+		
 		path = pathfinder.SearchSequential(closestVertices.first, closestVertices.second);
 	}
 
@@ -101,48 +92,4 @@ dsr::DsrResult NavMeshSimulationScenePaths::SetPath(
 
 
 	return DsrResult::Success("Set Path Success on Entity: " + entity);
-}
-
-std::vector<float> NavMeshSimulationScenePaths::BuildVertexBuffer(
-	const DirectX::XMVECTOR& start,
-	const DirectX::XMVECTOR& finish,
-	const std::vector<uint32_t>& path,
-	const std::vector<dsr::data::Vertex3F>& vertexData,
-	const DirectX::XMVECTORF32& lineColor
-)
-{
-	using namespace DirectX;
-
-	std::vector<float> buffer;
-	buffer.push_back(XMVectorGetX(start));
-	buffer.push_back(XMVectorGetY(start));
-	buffer.push_back(XMVectorGetZ(start));
-
-	buffer.push_back(XMVectorGetX(lineColor));
-	buffer.push_back(XMVectorGetY(lineColor));
-	buffer.push_back(XMVectorGetZ(lineColor));
-	buffer.push_back(XMVectorGetW(lineColor));
-
-	for (auto it = vertexData.rbegin(); it != vertexData.rend(); ++it)
-	{
-		buffer.push_back(it->Position.x);
-		buffer.push_back(it->Position.y);
-		buffer.push_back(it->Position.z);
-
-		buffer.push_back(XMVectorGetX(lineColor));
-		buffer.push_back(XMVectorGetY(lineColor));
-		buffer.push_back(XMVectorGetZ(lineColor));
-		buffer.push_back(XMVectorGetW(lineColor));
-	}
-
-	buffer.push_back(XMVectorGetX(finish));
-	buffer.push_back(XMVectorGetY(finish));
-	buffer.push_back(XMVectorGetZ(finish));
-
-	buffer.push_back(XMVectorGetX(lineColor));
-	buffer.push_back(XMVectorGetY(lineColor));
-	buffer.push_back(XMVectorGetZ(lineColor));
-	buffer.push_back(XMVectorGetW(lineColor));
-
-	return buffer;
 }

@@ -3,6 +3,8 @@
 #include "dsrpch.h"
 
 #include "Data/Pathfinding/AStarStaticMeshPathfinder.h"
+#include "Data/Pathfinding/PathPreProcessor.h"
+
 #include "Data/Structures/StaticMeshTriangle.h"
 
 #include "DirectX/Direct3dDevice.h"
@@ -61,13 +63,5 @@ private:
 		const dsr::ecs::Entity& entity,
 		const dsr::data::StaticMesh<dsr::data::Vertex3F>& mesh,
 		dsr::data::pathfinding::AStarStaticMeshPathfinder& pathfinder
-	);
-
-	std::vector<float> BuildVertexBuffer(
-		const DirectX::XMVECTOR& start,
-		const DirectX::XMVECTOR& finish,
-		const std::vector<uint32_t>& path,
-		const std::vector<dsr::data::Vertex3F>& vertexData,
-		const DirectX::XMVECTORF32& lineColor
 	);
 };

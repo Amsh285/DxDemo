@@ -315,6 +315,15 @@
     <ClInclude Include="src\Data\Structures\StaticMeshTriangle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Data\Pathfinding\PathPreProcessor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Data\Pathfinding\PathPostProcessor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Data\Pathfinding\VertexIndexSearchResult.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Windows\Window.cpp">
@@ -585,6 +594,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Data\Structures\StaticMeshTriangle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Data\Pathfinding\PathPreProcessor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Data\Pathfinding\PathPostProcessor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Data\Pathfinding\VertexIndexSearchResult.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

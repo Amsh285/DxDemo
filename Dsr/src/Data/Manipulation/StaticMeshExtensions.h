@@ -83,7 +83,7 @@ namespace dsr
 				const std::shared_ptr<StaticMesh<TVertex>>& mesh,
 				const DirectX::XMVECTOR& rayOrigin,
 				const DirectX::XMVECTOR& rayDirection)
-			{ 
+			{
 				using namespace DirectX;
 
 				XMVECTOR rayDirectionNormalized = XMVector4Normalize(rayDirection);
@@ -139,15 +139,59 @@ namespace dsr
 				return hits;
 			}
 
+			template<class TVertex>
 			std::optional<StaticMeshTriangle> FindIntersectionTriangle(
 				const DirectX::XMVECTOR& value,
-				const dsr::data::StaticMesh<dsr::data::Vertex3F>& mesh
-			);
+				const dsr::data::StaticMesh<TVertex>& mesh
+			)
+			{
+				using namespace DirectX;
+
+				const std::vector<TVertex>& vertexBuffer = mesh.GetVertexBuffer();
+				const std::vector<uint32_t>& indexBuffer = mesh.GetIndexBuffer();
+				const std::vector<float>& hitTestCache = mesh.GetHitTestCache();
+
+				size_t cacheIndex = 0;
+
+				for (size_t i = 0; i < indexBuffer.size(); i += 3)
+				{
+					XMVECTOR v0 = XMLoadFloat3(&vertexBuffer[indexBuffer[i]].Position);
+					XMVECTOR v1 = XMLoadFloat3(&vertexBuffer[indexBuffer[i + 1]].Position);
+					XMVECTOR v2 = XMLoadFloat3(&vertexBuffer[indexBuffer[i + 2]].Position);
+
+					XMVECTOR planeNormal = XMVector3Cross(XMVectorSubtract(v1, v0), XMVectorSubtract(v2, v0));
+
+					if (Intersects(value, planeNormal, v0))
+					{
+						float denom = hitTestCache[cacheIndex];
+						float v = dsr::Vector3Determinant(v0, value, v2) * denom;
+						float w = dsr::Vector3Determinant(v0, v1, value) * denom;
+						float u = 1.0f - v - w;
+
+						if (u >= 0 && v >= 0 && w >= 0)
+						{
+							StaticMeshTriangle triangle;
+							triangle.V0 = v0;
+							triangle.Index0 = indexBuffer[i];
+							triangle.V1 = v1;
+							triangle.Index1 = indexBuffer[i + 1];
+							triangle.V2 = v2;
+							triangle.Index2 = indexBuffer[i + 2];
+							return triangle;
+						}
+					}
+
+					++cacheIndex;
+				}
+
+				return std::nullopt;
+			}
 
 			std::vector<float> GetLinePath(
 				const StaticMesh<Vertex3F>& sourcemesh,
 				const std::vector<uint32_t>& indexPath,
-				const std::array<float, 4>& color);
+				const std::array<float, 4>& color
+			);
 		}
 	}
 }

@@ -11,6 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Data\Pathfinding\PathPostProcessor.h" />
+    <ClInclude Include="src\Data\Pathfinding\PathPreProcessor.h" />
     <ClInclude Include="src\EngineSubSystems\SceneSystem\CameraExtensions.h" />
     <ClInclude Include="src\EngineSubSystems\SceneSystem\Camera.h" />
     <ClInclude Include="src\EngineSubSystems\Debug\Debug.h" />
@@ -111,8 +113,17 @@
     <ClInclude Include="src\Data\Manipulation\StaticMeshExtData.h" />
     <ClInclude Include="src\Infrastructure\XMathHelper.h" />
     <ClInclude Include="src\Data\Structures\StaticMeshTriangle.h" />
+    <ClInclude Include="src\Data\Pathfinding\VertexIndexSearchResult.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Data\Pathfinding\PathPostProcessor.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="src\Data\Pathfinding\PathPreProcessor.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="src\EngineSubSystems\SceneSystem\CameraExtensions.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
@@ -441,6 +452,10 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="src\Data\Structures\StaticMeshTriangle.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="src\Data\Pathfinding\VertexIndexSearchResult.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
