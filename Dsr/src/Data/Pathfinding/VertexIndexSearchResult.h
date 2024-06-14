@@ -9,6 +9,8 @@ namespace dsr
 			class VertexIndexSearchResult
 			{
 			public:
+				uint32_t GetStartIndex() const { return m_startIndex; }
+				uint32_t GetFinishIndex() const { return m_finishIndex; }
 
 				// Check if start and finish points are in the same triangle
 				bool IsCoTriangular() const { return m_coTriangular; }

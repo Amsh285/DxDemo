@@ -83,6 +83,7 @@ std::variant<dsr::ModelConfiguration, dsr::dsr_error> BridgeScene::LoadMapModel(
 		return std::get<dsr_error>(loadMapWfResult);
 
 	m_mapModel = std::get<std::shared_ptr<WavefrontModel>>(loadMapWfResult);
+	m_mapModel->Mesh->RefreshHitTestCache();
 
 	return LoadWavefrontModelConfiguration(
 		m_device,

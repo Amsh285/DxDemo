@@ -20,6 +20,8 @@ namespace dsr
 				const StaticMesh<TVertex>& mesh
 			)
 			{
+				using namespace dsr::data::manipulation;
+
 				// Find the triangles intersected by the start and finish points
 				std::optional<StaticMeshTriangle> startTriangle = FindIntersectionTriangle(start, mesh);
 				std::optional<StaticMeshTriangle> finishTriangle = FindIntersectionTriangle(finish, mesh);

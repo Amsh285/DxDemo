@@ -88,7 +88,8 @@ namespace dsr
 				XMVECTOR b = XMLoadFloat3(&m_vertexBuffer[m_indexBuffer[i + 1]].Position);
 				XMVECTOR c = XMLoadFloat3(&m_vertexBuffer[m_indexBuffer[i + 2]].Position);
 
-				float denom = 1.0f / Vector3Determinant(a, b, c);
+				float det = Vector3Determinant(a, b, c);
+				float denom = 1.0f / det;
 				m_hitTestCache.push_back(denom);
 			}
 		}

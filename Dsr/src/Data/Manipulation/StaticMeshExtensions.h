@@ -108,12 +108,21 @@ namespace dsr
 					{
 						XMVECTOR interSection = XMVectorAdd(rayOrigin, XMVectorScale(rayDirectionNormalized, planeHit.Distance));
 
-						float denom = hitTestCache[hitTestCacheIndex];
-						float v = dsr::Vector3Determinant(v0, interSection, v2) * denom;
-						float w = dsr::Vector3Determinant(v0, v1, interSection) * denom;
-						float u = 1.0f - v - w;
+						bool insideTriangle = true;
 
-						if (u >= 0 && v >= 0 && w >= 0)
+						XMVECTOR edge0 = XMVectorSubtract(v1, v0);
+						XMVECTOR edge1 = XMVectorSubtract(v2, v1);
+						XMVECTOR edge2 = XMVectorSubtract(v0, v2);
+
+						XMVECTOR C0 = XMVectorSubtract(interSection, v0);
+						XMVECTOR C1 = XMVectorSubtract(interSection, v1);
+						XMVECTOR C2 = XMVectorSubtract(interSection, v2);
+
+						insideTriangle &= XMVector3Dot(planeNormal, XMVector3Cross(edge0, C0)).m128_f32[0] >= 0;
+						insideTriangle &= XMVector3Dot(planeNormal, XMVector3Cross(edge1, C1)).m128_f32[0] >= 0;
+						insideTriangle &= XMVector3Dot(planeNormal, XMVector3Cross(edge2, C2)).m128_f32[0] >= 0;
+
+						if (insideTriangle)
 						{
 							RaycastMeshHit meshHitData;
 							meshHitData.IndexBuffer0 = sourceIndexBuffer[i];
@@ -124,8 +133,6 @@ namespace dsr
 							hits.push_back(meshHitData);
 						}
 					}
-
-					++hitTestCacheIndex;
 				}
 
 				std::sort(
@@ -161,7 +168,7 @@ namespace dsr
 
 					XMVECTOR planeNormal = XMVector3Cross(XMVectorSubtract(v1, v0), XMVectorSubtract(v2, v0));
 
-					if (Intersects(value, planeNormal, v0))
+					if (Intersects(value, planeNormal, v0, 0.1f))
 					{
 						float denom = hitTestCache[cacheIndex];
 						float v = dsr::Vector3Determinant(v0, value, v2) * denom;

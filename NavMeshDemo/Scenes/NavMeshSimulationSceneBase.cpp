@@ -13,7 +13,7 @@ NavMeshSimulationSceneBase::NavMeshSimulationSceneBase(
 	const std::shared_ptr<dsr::directX::Direct3dDevice>& device,
 	const std::shared_ptr<dsr::BlenderModelLoader>& blenderModelLoader
 ) : m_sceneName(sceneName), m_sceneId(sceneManager->CreateNewScene(sceneName)),
-	m_sceneManager(sceneManager), m_device(device), m_blenderModelLoader(blenderModelLoader)
+m_sceneManager(sceneManager), m_device(device), m_blenderModelLoader(blenderModelLoader)
 {
 	m_markers = std::make_unique<NavMeshSimulationSceneMarkers>(m_sceneId, sceneManager, device);
 	m_paths = std::make_unique<NavMeshSimulationScenePaths>(m_sceneId, sceneManager, device);
@@ -94,7 +94,13 @@ void NavMeshSimulationSceneBase::OnScreenClick(const EditorScreenClickEvent& scr
 			XMVectorSet(hits[0].Intersection.x, hits[0].Intersection.y, hits[0].Intersection.z, 1.0f)
 		);
 
+		DsrResult setPathsResult = m_paths->SetPaths(
+			m_markers->GetStartPositionLocal(),
+			m_markers->GetFinishPositionLocal()
+		);
 
+		if (setPathsResult.GetResultStatusCode() != RESULT_SUCCESS)
+			std::cout << setPathsResult.GetResultMessage() << std::endl;
 	}
 }
 
@@ -129,11 +135,13 @@ dsr::DsrResult NavMeshSimulationSceneBase::LoadSceneData()
 		return setupMarkersResult;
 
 	m_paths->Setup(
-		m_baseMesh,
+		m_sceneSettings,
 		m_upperSurface,
 		m_upperSurfaceSubDivision,
 		m_upperSurfaceBarycentricSubDivision
 	);
+
+	m_paths->SetPaths(m_markers->GetStartPositionLocal(), m_markers->GetFinishPositionLocal());
 
 	return DsrResult::Success("Load SceneData: " + m_sceneName + " Success.");
 }
@@ -159,7 +167,6 @@ dsr::DsrResult NavMeshSimulationSceneBase::LoadBaseMesh()
 	}
 
 	m_baseMesh = std::get<std::shared_ptr<WavefrontModel>>(loadBaseMeshResult);
-
 	return DsrResult::Success("Load Basemesh Success.");
 }
 
