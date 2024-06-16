@@ -152,6 +152,9 @@ dsr::DsrResult NavMeshSimulationSceneBase::LoadBaseMesh()
 	using namespace dsr::directX;
 	using namespace dsr::directX::rendering;
 
+	using namespace dsr::data;
+	using namespace dsr::data::manipulation;
+
 	std::variant<std::shared_ptr<WavefrontModel>, dsr_error> loadBaseMeshResult = LoadWavefrontModel(m_blenderModelLoader,
 		m_sceneSettings.AssetBaseDirectory,
 		m_sceneSettings.BaseMeshFileName,
@@ -167,6 +170,8 @@ dsr::DsrResult NavMeshSimulationSceneBase::LoadBaseMesh()
 	}
 
 	m_baseMesh = std::get<std::shared_ptr<WavefrontModel>>(loadBaseMeshResult);
+	m_baseMesh->Mesh = std::make_shared<StaticMesh<Vertex3FP2FTx3FN>>(RemoveDegenerateTriangles(*m_baseMesh->Mesh));
+
 	return DsrResult::Success("Load Basemesh Success.");
 }
 

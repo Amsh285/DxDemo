@@ -15,6 +15,66 @@ namespace dsr
 		namespace manipulation
 		{
 			template<class TVertex>
+			StaticMesh<TVertex> RemoveDegenerateTriangles(
+				const StaticMesh<TVertex>& source,
+				const float epsilon = 1e-6
+			)
+			{
+				using namespace DirectX;
+
+				constexpr float denom = 0.5f;
+
+				const std::vector<TVertex>& sourceVertexBuffer = source.GetVertexBuffer();
+				const std::vector<uint32_t>& sourceIndexBuffer = source.GetIndexBuffer();
+
+				if (sourceIndexBuffer.size() % 3 != 0)
+					return StaticMesh<TVertex>();
+
+				std::vector<TVertex> filteredVertexBuffer;
+				std::vector<uint32_t> filteredIndexBuffer;
+
+				std::unordered_map<uint32_t, uint32_t> indexMap;
+				uint32_t index = 0;
+
+				for (size_t i = 0; i < sourceIndexBuffer.size(); i += 3)
+				{
+					const TVertex& vertex0 = sourceVertexBuffer[sourceIndexBuffer[i]];
+					const TVertex& vertex1 = sourceVertexBuffer[sourceIndexBuffer[i + 1]];
+					const TVertex& vertex2 = sourceVertexBuffer[sourceIndexBuffer[i + 2]];
+
+					XMVECTOR v0 = XMLoadFloat3(&vertex0.Position);
+					XMVECTOR v1 = XMLoadFloat3(&vertex1.Position);
+					XMVECTOR v2 = XMLoadFloat3(&vertex2.Position);
+
+					XMVECTOR edge1 = XMVectorSubtract(v1, v0);
+					XMVECTOR edge2 = XMVectorSubtract(v2, v0);
+					float area = denom * XMVectorGetX(XMVector3LengthSq(XMVector3Cross(edge1, edge2)));
+
+					if (area > epsilon)
+					{
+						for (size_t j = i; j < i + 3; j++)
+						{
+							auto it = indexMap.find(sourceIndexBuffer[j]);
+
+							if (it == indexMap.end())
+							{
+								indexMap[sourceIndexBuffer[j]] = index++;
+								filteredVertexBuffer.push_back(sourceVertexBuffer[sourceIndexBuffer[j]]);
+							}
+
+							filteredIndexBuffer.push_back(indexMap.at(sourceIndexBuffer[j]));
+						}
+					}
+				}
+
+				StaticMesh<TVertex> result;
+				result.SetVertexBuffer(filteredVertexBuffer);
+				result.SetIndexBuffer(filteredIndexBuffer);
+				result.SetWindingOrder(source.GetWindingOrder());
+				return result;
+			}
+
+			template<class TVertex>
 			std::shared_ptr<StaticMesh<TVertex>> FilterByNormalAngles(
 				const std::shared_ptr<StaticMesh<TVertex>> sourceMesh,
 				const Radiansf& thresholdAngle,
@@ -156,39 +216,47 @@ namespace dsr
 
 				const std::vector<TVertex>& vertexBuffer = mesh.GetVertexBuffer();
 				const std::vector<uint32_t>& indexBuffer = mesh.GetIndexBuffer();
-				const std::vector<float>& hitTestCache = mesh.GetHitTestCache();
-
-				size_t cacheIndex = 0;
 
 				for (size_t i = 0; i < indexBuffer.size(); i += 3)
 				{
+					bool insideTriangle = true;
+
 					XMVECTOR v0 = XMLoadFloat3(&vertexBuffer[indexBuffer[i]].Position);
 					XMVECTOR v1 = XMLoadFloat3(&vertexBuffer[indexBuffer[i + 1]].Position);
 					XMVECTOR v2 = XMLoadFloat3(&vertexBuffer[indexBuffer[i + 2]].Position);
+					XMVECTOR planeNormal = XMVector3Normalize(XMVector3Cross(XMVectorSubtract(v1, v0), XMVectorSubtract(v2, v0)));
 
-					XMVECTOR planeNormal = XMVector3Cross(XMVectorSubtract(v1, v0), XMVectorSubtract(v2, v0));
+					// Check if the point is on the plane
+					float planeD = -XMVector3Dot(planeNormal, v0).m128_f32[0];
+					float pointToPlaneDistance = XMVector3Dot(planeNormal, value).m128_f32[0] + planeD;
 
-					if (Intersects(value, planeNormal, v0, 0.1f))
+					// If the point is not on the plane, continue to the next triangle
+					// Todo: make epsilon paramter and consider method from before
+					if (fabs(pointToPlaneDistance) > 0.1f) continue;
+
+					XMVECTOR edge0 = XMVectorSubtract(v1, v0);
+					XMVECTOR edge1 = XMVectorSubtract(v2, v1);
+					XMVECTOR edge2 = XMVectorSubtract(v0, v2);
+
+					XMVECTOR C0 = XMVectorSubtract(value, v0);
+					XMVECTOR C1 = XMVectorSubtract(value, v1);
+					XMVECTOR C2 = XMVectorSubtract(value, v2);
+
+					insideTriangle &= XMVector3Dot(planeNormal, XMVector3Cross(edge0, C0)).m128_f32[0] >= 0;
+					insideTriangle &= XMVector3Dot(planeNormal, XMVector3Cross(edge1, C1)).m128_f32[0] >= 0;
+					insideTriangle &= XMVector3Dot(planeNormal, XMVector3Cross(edge2, C2)).m128_f32[0] >= 0;
+
+					if (insideTriangle)
 					{
-						float denom = hitTestCache[cacheIndex];
-						float v = dsr::Vector3Determinant(v0, value, v2) * denom;
-						float w = dsr::Vector3Determinant(v0, v1, value) * denom;
-						float u = 1.0f - v - w;
-
-						if (u >= 0 && v >= 0 && w >= 0)
-						{
-							StaticMeshTriangle triangle;
-							triangle.V0 = v0;
-							triangle.Index0 = indexBuffer[i];
-							triangle.V1 = v1;
-							triangle.Index1 = indexBuffer[i + 1];
-							triangle.V2 = v2;
-							triangle.Index2 = indexBuffer[i + 2];
-							return triangle;
-						}
+						StaticMeshTriangle triangle;
+						triangle.V0 = v0;
+						triangle.Index0 = indexBuffer[i];
+						triangle.V1 = v1;
+						triangle.Index1 = indexBuffer[i + 1];
+						triangle.V2 = v2;
+						triangle.Index2 = indexBuffer[i + 2];
+						return triangle;
 					}
-
-					++cacheIndex;
 				}
 
 				return std::nullopt;
