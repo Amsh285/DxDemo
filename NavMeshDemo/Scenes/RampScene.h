@@ -8,8 +8,6 @@
 
 #include "NavMeshSimulationSceneBase.h"
 
-constexpr auto ERROR_LOADRAMPSCENE_MODELS = 100;
-
 class RampScene final : public NavMeshSimulationSceneBase
 {
 public:

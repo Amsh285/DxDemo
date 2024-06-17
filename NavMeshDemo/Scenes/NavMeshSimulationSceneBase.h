@@ -42,6 +42,8 @@ public:
 		const std::shared_ptr<dsr::BlenderModelLoader>& blenderModelLoader
 	);
 
+	virtual ~NavMeshSimulationSceneBase() = default;
+
 	void SetActive();
 
 	dsr::DsrResult BuildScene();
