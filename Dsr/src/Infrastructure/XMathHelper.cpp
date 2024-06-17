@@ -96,7 +96,7 @@ namespace dsr
 
 		std::sort(
 			distanceIndexMap,
-			distanceIndexMap + 8,
+			distanceIndexMap + 9,
 			[](std::tuple<uint32_t, uint32_t, float> left, std::tuple<uint32_t, uint32_t, float> right)
 			{ return std::get<2>(left) < std::get<2>(right); }
 		);

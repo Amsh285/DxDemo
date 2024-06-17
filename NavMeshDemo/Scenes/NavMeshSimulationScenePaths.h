@@ -50,7 +50,7 @@ private:
 
 	dsr::ecs::Entity m_baseMeshPathEntity;
 	dsr::ecs::Entity m_upperSurfacePathEntity;
-	dsr::ecs::Entity m_upperSurfaceSurfaceSubDivisionPathEntity;
+	dsr::ecs::Entity m_upperSurfaceSubDivisionPathEntity;
 	dsr::ecs::Entity m_upperSurfaceBarycentricSubDivisionPathEntity;
 
 	dsr::data::StaticMesh<dsr::data::Vertex3F> m_upperSurface;
@@ -58,7 +58,7 @@ private:
 	dsr::data::StaticMesh<dsr::data::Vertex3F> m_upperSurfaceBarycentricSubDivision;
 
 	dsr::data::pathfinding::AStarStaticMeshPathfinder m_upperSurfacePathfinder;
-	dsr::data::pathfinding::AStarStaticMeshPathfinder m_upperSurfaceSurfaceSubDivisionPathfinder;
+	dsr::data::pathfinding::AStarStaticMeshPathfinder m_upperSurfaceSubDivisionPathfinder;
 	dsr::data::pathfinding::AStarStaticMeshPathfinder m_upperSurfaceBarycentricSubDivisionPathfinder;
 
 	std::shared_ptr<dsr::scene::SceneManager> m_sceneManager;
