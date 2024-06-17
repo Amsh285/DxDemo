@@ -236,7 +236,6 @@ namespace dsr
 
 					uint32_t centroidIndex, v0Idx, v1Idx, v2Idx;
 
-					//Todo: test if the windingorder is correct
 					v0Idx = index++;
 					subdividedVertexBuffer.push_back(vertex0);
 					subdividedIndexBuffer.push_back(v0Idx);

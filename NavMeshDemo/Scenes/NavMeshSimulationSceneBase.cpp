@@ -130,7 +130,7 @@ dsr::DsrResult NavMeshSimulationSceneBase::LoadSceneData()
 	if (registerUpperSurfaceSubDivisionResult.GetResultStatusCode() != RESULT_SUCCESS)
 		return registerUpperSurfaceSubDivisionResult;
 
-	DsrResult setupMarkersResult = m_markers->SetupMarkers(m_sceneSettings, m_baseMesh);
+	DsrResult setupMarkersResult = m_markers->SetupMarkers(m_sceneSettings, m_upperSurface);
 	if (setupMarkersResult.GetResultStatusCode() != RESULT_SUCCESS)
 		return setupMarkersResult;
 
