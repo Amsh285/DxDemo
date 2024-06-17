@@ -1,25 +1,5 @@
 #include "RampScene.h"
 
-#include <Data/Manipulation/StaticMeshExtensions.h>
-#include "Data/Pathfinding/AStarStaticMeshPathfinder.h"
-
-#include "DirectX/Rendering/ModelLoaderExtensions/BlenderModelLoaderExtensions.h"
-
-#include "EngineSubSystems/Debug/Debug.h"
-#include "EngineSubSystems/EntityComponentSystem/Components/NameComponent.h"
-#include "EngineSubSystems/EntityComponentSystem/Components/TransformComponent.h"
-#include "EngineSubSystems/EntityComponentSystem/Components/StaticMeshComponent.h"
-#include "EngineSubSystems/EntityComponentSystem/Components/WireframeMeshComponent.h"
-#include "EngineSubSystems/EntityComponentSystem/Components/LineListComponent.h"
-
-#include "Shapes/ShapeBuilder.h"
-
-static constexpr auto StartIndex = 49;
-static constexpr auto EndIndex = 30;
-
-static constexpr auto StartIndexSubDivided = 578;
-static constexpr auto EndIndexSubDivided = 320;
-
 RampScene::RampScene(
 	const std::shared_ptr<dsr::scene::SceneManager>& sceneManager,
 	const std::shared_ptr<dsr::directX::Direct3dDevice>& device,

@@ -3,16 +3,8 @@
 #include "dsrpch.h"
 
 #include "DirectX/Direct3dDevice.h"
-#include "DirectX/Data/ModelConfiguration.h"
 
-#include "EngineSubSystems/SceneSystem/Camera.h"
 #include "EngineSubSystems/SceneSystem/SceneManager.h"
-
-#include "ErrorHandling/DsrResult.h"
-
-#include "InputDevices/Screen.h"
-
-#include "ModelLoaders/BlenderModelLoader.h"
 
 #include "NavMeshSimulationSceneBase.h"
 
