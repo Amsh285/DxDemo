@@ -12,34 +12,18 @@ std::vector<std::type_index> EditorUISystem::GetRequiredComponents() const
 }
 
 EditorUISystem::EditorUISystem(
-	const std::shared_ptr<dsr::scene::SceneManager>& sceneManager,
 	const std::shared_ptr<dsr::input::Input>& input,
-	const std::shared_ptr<RampScene>& rampScene)
-	: dsr::ecs::System(std::type_index(typeid(EditorUISystem))),
-	m_sceneManager(sceneManager), m_input(input), m_rampScene(rampScene), m_sceneSelectedIdx(0)
+	const std::vector<std::shared_ptr<NavMeshSimulationSceneBase>>& scenes)
+	: dsr::ecs::System(typeid(EditorUISystem)),
+	m_input(input), m_scenes(scenes), m_sceneSelectedIdx(0)
 {
+	//OnStart = std::bind(&EditorUISystem::Start, this, std::placeholders::_1);
 	OnUpdate = std::bind(&EditorUISystem::Update, this, std::placeholders::_1);
-	OnStart = std::bind(&EditorUISystem::Start, this, std::placeholders::_1);
 }
 
-void EditorUISystem::Start(const dsr::ecs::EngineStartupContext& context)
-{
-	using namespace dsr::scene;
-
-	std::vector<std::shared_ptr<Scene>> scenes = m_sceneManager->GetScenes();
-
-	for (size_t i = 0; i < scenes.size(); ++i)
-	{
-		std::shared_ptr<Scene> scene = scenes[i];
-		SceneViewData viewData;
-		viewData.SceneName = scene->GetName();
-		viewData.SceneId = scene->GetSceneId();
-		m_sceneViewData.push_back(viewData);
-
-		if (scene->GetName() == "Ramp")
-			m_sceneSelectedIdx = i;
-	}
-}
+//void EditorUISystem::Start(const dsr::ecs::EngineStartupContext& context)
+//{
+//}
 
 void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 {
@@ -55,15 +39,15 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 
 	if (ImGui::BeginListBox("Scenes"))
 	{
-		for (size_t i = 0; i < m_sceneViewData.size(); i++)
+		for (size_t i = 0; i < m_scenes.size(); i++)
 		{
 			//m_sceneViewData[i].IsSelected = itemCurrentIndex == i;
 			const bool isSelected = m_sceneSelectedIdx == i;
 
-			if (ImGui::Selectable(m_sceneViewData[i].SceneName.c_str(), isSelected))
+			if (ImGui::Selectable(m_scenes[i]->GetSceneName().c_str(), isSelected))
 			{
 				if (m_sceneSelectedIdx != i)
-					m_sceneManager->SetActiveScene(m_sceneViewData[i].SceneId);
+					m_scenes[i]->SetActive();
 
 				m_sceneSelectedIdx = i;
 			}
@@ -92,15 +76,11 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 
 	if (m_input->GetKeyDown(KeyCode::MouseLeft))
 	{
-		//Todo: remove if later!
-		if (m_sceneViewData[m_sceneSelectedIdx].SceneName == "Ramp")
-		{
-			EditorScreenClickEvent screenClickEvent(
-				m_input->GetMouse()->GetCurrentClientAreaPosition(),
-				*m_input->GetScreen(),
-				(PathSelectType)uiData->PathSelectMode);
+		EditorScreenClickEvent screenClickEvent(
+			m_input->GetMouse()->GetCurrentClientAreaPosition(),
+			*m_input->GetScreen(),
+			(PathSelectType)uiData->PathSelectMode);
 
-			m_rampScene->OnScreenClick(screenClickEvent);
-		}
+		m_scenes[m_sceneSelectedIdx]->OnScreenClick(screenClickEvent);
 	}
 }
