@@ -262,6 +262,68 @@ namespace dsr
 				return std::nullopt;
 			}
 
+			template<class TVertex>
+			std::vector<StaticMeshTriangle> FindIntersectionTriangles(
+				const DirectX::XMVECTOR& value,
+				const dsr::data::StaticMesh<TVertex>& mesh,
+				const float planeEpsilon = 0.1f // Adjustable epsilon for plane distance check
+			)
+			{
+				using namespace DirectX;
+
+				const std::vector<TVertex>& vertexBuffer = mesh.GetVertexBuffer();
+				const std::vector<uint32_t>& indexBuffer = mesh.GetIndexBuffer();
+
+				std::vector<StaticMeshTriangle> intersectionTriangles;
+
+				for (size_t i = 0; i < indexBuffer.size(); i += 3)
+				{
+					bool insideTriangle = true;
+
+					XMVECTOR v0 = XMLoadFloat3(&vertexBuffer[indexBuffer[i]].Position);
+					XMVECTOR v1 = XMLoadFloat3(&vertexBuffer[indexBuffer[i + 1]].Position);
+					XMVECTOR v2 = XMLoadFloat3(&vertexBuffer[indexBuffer[i + 2]].Position);
+					XMVECTOR planeNormal = XMVector3Normalize(XMVector3Cross(XMVectorSubtract(v1, v0), XMVectorSubtract(v2, v0)));
+
+					// Check if the point is on the plane
+					float planeD = -XMVector3Dot(planeNormal, v0).m128_f32[0];
+					float pointToPlaneDistance = XMVector3Dot(planeNormal, value).m128_f32[0] + planeD;
+
+					// If the point is not on the plane, continue to the next triangle
+					if (fabs(pointToPlaneDistance) > planeEpsilon) continue;
+
+					// Calculate the vectors for the triangle edges
+					XMVECTOR edge0 = XMVectorSubtract(v1, v0);
+					XMVECTOR edge1 = XMVectorSubtract(v2, v1);
+					XMVECTOR edge2 = XMVectorSubtract(v0, v2);
+
+					// Calculate the vectors from the triangle vertices to the point
+					XMVECTOR C0 = XMVectorSubtract(value, v0);
+					XMVECTOR C1 = XMVectorSubtract(value, v1);
+					XMVECTOR C2 = XMVectorSubtract(value, v2);
+
+					// If the point is inside the triangle, add the triangle to the result list
+					insideTriangle &= XMVector3Dot(planeNormal, XMVector3Cross(edge0, C0)).m128_f32[0] >= 0;
+					insideTriangle &= XMVector3Dot(planeNormal, XMVector3Cross(edge1, C1)).m128_f32[0] >= 0;
+					insideTriangle &= XMVector3Dot(planeNormal, XMVector3Cross(edge2, C2)).m128_f32[0] >= 0;
+
+					if (insideTriangle)
+					{
+						StaticMeshTriangle triangle;
+						triangle.V0 = v0;
+						triangle.Index0 = indexBuffer[i];
+						triangle.V1 = v1;
+						triangle.Index1 = indexBuffer[i + 1];
+						triangle.V2 = v2;
+						triangle.Index2 = indexBuffer[i + 2];
+						intersectionTriangles.push_back(triangle);
+					}
+				}
+
+				// Return the list of intersecting triangles
+				return intersectionTriangles;
+			}
+
 			std::vector<float> GetLinePath(
 				const StaticMesh<Vertex3F>& sourcemesh,
 				const std::vector<uint32_t>& indexPath,

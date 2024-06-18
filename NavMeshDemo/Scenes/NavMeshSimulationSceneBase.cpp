@@ -116,7 +116,6 @@ dsr::DsrResult NavMeshSimulationSceneBase::LoadSceneData()
 	LoadUpperSurface();
 	LoadUpperSurfaceSubDivision();
 	LoadUpperSurfaceBarycentricSubDivision();
-	RegisterUpperSurfaceBarycentricSubDivision();
 
 	DsrResult registerBaseMeshResult = RegisterBaseMesh();
 	if (registerBaseMeshResult.GetResultStatusCode() != RESULT_SUCCESS)
@@ -129,6 +128,10 @@ dsr::DsrResult NavMeshSimulationSceneBase::LoadSceneData()
 	DsrResult registerUpperSurfaceSubDivisionResult = RegisterUpperSurfaceSubDivision();
 	if (registerUpperSurfaceSubDivisionResult.GetResultStatusCode() != RESULT_SUCCESS)
 		return registerUpperSurfaceSubDivisionResult;
+
+	DsrResult registerUpperSurfaceBarycentricSubDivisionResult = RegisterUpperSurfaceBarycentricSubDivision();
+	if (registerUpperSurfaceBarycentricSubDivisionResult.GetResultStatusCode() != RESULT_SUCCESS)
+		return registerUpperSurfaceBarycentricSubDivisionResult;
 
 	DsrResult setupMarkersResult = m_markers->SetupMarkers(m_sceneSettings, m_upperSurface);
 	if (setupMarkersResult.GetResultStatusCode() != RESULT_SUCCESS)
