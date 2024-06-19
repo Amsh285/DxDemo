@@ -9,6 +9,14 @@ namespace dsr
 	{
 		namespace manipulation
 		{
+			void SetSubDivision(
+				const Vertex3FP2FTx3FN& key,
+				uint32_t& currentIndex,
+				uint32_t& vertexIndex,
+				std::vector<Vertex3FP2FTx3FN>& subdividedVertexBuffer,
+				std::unordered_map<Vertex3FP2FTx3FN, uint32_t, Vertex3FP2FTx3FNHasher, Vertex3FP2FTx3FNEq>& indexMap
+			);
+
 			void SetSubdivisionData(
 				const SubDivisionVertex& subDivisionData,
 				uint32_t& index,
@@ -181,29 +189,28 @@ namespace dsr
 				return subdividedMesh;
 			}
 
-			std::shared_ptr<StaticMesh<Vertex3FP2FTx3FN>> SubDivideBarycentric(const std::shared_ptr<StaticMesh<Vertex3FP2FTx3FN>> sourceMesh)
+			StaticMesh<Vertex3FP2FTx3FN> SubDivideBarycentric(const StaticMesh<Vertex3FP2FTx3FN>& sourceMesh)
 			{
 				using namespace DirectX;
 
 				constexpr float c = 1.0f / 3.0f;
 
-				const std::vector<Vertex3FP2FTx3FN>& sourceVertexBuffer = sourceMesh->GetVertexBuffer();
-				const std::vector<uint32_t>& sourceIndexBuffer = sourceMesh->GetIndexBuffer();
+				const std::vector<Vertex3FP2FTx3FN>& sourceVertexBuffer = sourceMesh.GetVertexBuffer();
+				const std::vector<uint32_t>& sourceIndexBuffer = sourceMesh.GetIndexBuffer();
 
 				if (sourceIndexBuffer.size() % 3 != 0)
 				{
-					return std::make_shared<StaticMesh<Vertex3FP2FTx3FN>>();
+					return StaticMesh<Vertex3FP2FTx3FN>();
 				}
 
-				std::shared_ptr<StaticMesh<Vertex3FP2FTx3FN>> subdividedMesh = std::make_shared<StaticMesh<Vertex3FP2FTx3FN>>();
+				StaticMesh<Vertex3FP2FTx3FN> subdividedMesh;
 				std::vector<Vertex3FP2FTx3FN> subdividedVertexBuffer;
 				std::vector<uint32_t> subdividedIndexBuffer;
 
 				SubDivisionTriangle subDivisionData;
 
+				std::unordered_map<Vertex3FP2FTx3FN, uint32_t, Vertex3FP2FTx3FNHasher, Vertex3FP2FTx3FNEq> indexMap;
 				uint32_t index = 0;
-				std::unordered_map<uint32_t, uint32_t> indexMap;
-				std::unordered_map<XMVECTOR, uint32_t, XMVectorHasher, XMVectorEqualComparer<1e-6f>> splitMap;
 
 				for (size_t i = 0; i < sourceIndexBuffer.size(); i += 3)
 				{
@@ -216,7 +223,6 @@ namespace dsr
 					XMVECTOR v2 = XMLoadFloat3(&vertex2.Position);
 
 					Vertex3FP2FTx3FN centroidVertex;
-
 					centroidVertex.Position = XMFLOAT3(
 						(vertex0.Position.x + vertex1.Position.x + vertex2.Position.x) * c,
 						(vertex0.Position.y + vertex1.Position.y + vertex2.Position.y) * c,
@@ -236,33 +242,53 @@ namespace dsr
 
 					uint32_t centroidIndex, v0Idx, v1Idx, v2Idx;
 
-					v0Idx = index++;
-					subdividedVertexBuffer.push_back(vertex0);
+					// Set subdivision vertices and retrieve their indices
+					SetSubDivision(vertex0, index, v0Idx, subdividedVertexBuffer, indexMap);
+					SetSubDivision(vertex1, index, v1Idx, subdividedVertexBuffer, indexMap);
+					SetSubDivision(vertex2, index, v2Idx, subdividedVertexBuffer, indexMap);
+					SetSubDivision(centroidVertex, index, centroidIndex, subdividedVertexBuffer, indexMap);
+
+					// Define the new triangles using the centroid
 					subdividedIndexBuffer.push_back(v0Idx);
-
-					v1Idx = index++;
-					subdividedVertexBuffer.push_back(vertex1);
 					subdividedIndexBuffer.push_back(v1Idx);
-
-					centroidIndex = index++;
-					subdividedVertexBuffer.push_back(centroidVertex);
 					subdividedIndexBuffer.push_back(centroidIndex);
 
-					v2Idx = index++;
-					subdividedVertexBuffer.push_back(vertex2);
+					subdividedIndexBuffer.push_back(v1Idx);
 					subdividedIndexBuffer.push_back(v2Idx);
 					subdividedIndexBuffer.push_back(centroidIndex);
-					subdividedIndexBuffer.push_back(v1Idx);
 
 					subdividedIndexBuffer.push_back(v2Idx);
 					subdividedIndexBuffer.push_back(v0Idx);
 					subdividedIndexBuffer.push_back(centroidIndex);
 				}
 
-				subdividedMesh->SetVertexBuffer(subdividedVertexBuffer);
-				subdividedMesh->SetIndexBuffer(subdividedIndexBuffer);
-				subdividedMesh->SetWindingOrder(sourceMesh->GetWindingOrder());
+				subdividedMesh.SetVertexBuffer(subdividedVertexBuffer);
+				subdividedMesh.SetIndexBuffer(subdividedIndexBuffer);
+				subdividedMesh.SetWindingOrder(sourceMesh.GetWindingOrder());
 				return subdividedMesh;
+			}
+
+			void SetSubDivision(
+				const Vertex3FP2FTx3FN& key,
+				uint32_t& currentIndex,
+				uint32_t& vertexIndex,
+				std::vector<Vertex3FP2FTx3FN>& subdividedVertexBuffer,
+				std::unordered_map<Vertex3FP2FTx3FN, uint32_t, Vertex3FP2FTx3FNHasher, Vertex3FP2FTx3FNEq>& indexMap
+			)
+			{
+				auto it = indexMap.find(key);
+
+				if (it == indexMap.end())
+				{
+					indexMap[key] = currentIndex;
+					vertexIndex = currentIndex;
+					subdividedVertexBuffer.push_back(key);
+					++currentIndex;
+				}
+				else
+				{
+					vertexIndex = it->second;
+				}
 			}
 
 			std::vector<float> GetLinePath(

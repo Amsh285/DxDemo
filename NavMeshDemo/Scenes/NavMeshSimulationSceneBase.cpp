@@ -233,7 +233,7 @@ void NavMeshSimulationSceneBase::LoadUpperSurfaceBarycentricSubDivision()
 	using namespace DirectX;
 
 	m_upperSurfaceBarycentricSubDivision = std::make_shared<dsr::WavefrontModel>();
-	m_upperSurfaceBarycentricSubDivision->Mesh = SubDivideBarycentric(m_upperSurface->Mesh);
+	m_upperSurfaceBarycentricSubDivision->Mesh = std::make_shared<StaticMesh<Vertex3FP2FTx3FN>>(SubDivideBarycentric(*m_upperSurface->Mesh));
 
 	WavefrontModelMaterialGroup group;
 	group.IndexCount = m_upperSurfaceBarycentricSubDivision->Mesh->GetIndexBuffer().size();
@@ -415,6 +415,19 @@ dsr::DsrResult NavMeshSimulationSceneBase::RegisterUpperSurfaceBarycentricSubDiv
 
 	std::shared_ptr<WireframeMeshComponent> wireframe = m_sceneManager->AddComponent<WireframeMeshComponent>(m_sceneId, m_upperSurfaceBarycentricSubDivisionEntity);
 	wireframe->SetMesh(mesh);
+
+
+
+	/*Entity entity = m_sceneManager->CreateNewEntity();
+	m_sceneManager->AddComponent<StaticMeshComponent>(m_sceneId, entity, mesh);
+	std::shared_ptr<TransformComponent> transformComponent2 = m_sceneManager->AddComponent<TransformComponent>(m_sceneId, entity);
+
+	XMMATRIX mat = XMMatrixMultiply(m_sceneSettings.UpperSurfaceBarycentricSubDivisionModel, XMMatrixTranslation(0.0f, 20.0f, 0.0f));
+
+	XMMatrixDecompose(&scale, &rotationQuaternion, &transform, mat);
+	transformComponent2->SetScale(scale);
+	transformComponent2->SetRotation(rotationQuaternion);
+	transformComponent2->SetPosition(transform);*/
 
 	return DsrResult::Success("Register Upper surface Barycentric subdivision success.");
 }
