@@ -174,6 +174,7 @@ dsr::DsrResult NavMeshSimulationSceneBase::LoadBaseMesh()
 
 	m_baseMesh = std::get<std::shared_ptr<WavefrontModel>>(loadBaseMeshResult);
 	m_baseMesh->Mesh = std::make_shared<StaticMesh<Vertex3FP2FTx3FN>>(RemoveDegenerateTriangles(*m_baseMesh->Mesh));
+	m_baseMesh->MaterialGroups[0].IndexCount = m_baseMesh->Mesh->GetIndexBuffer().size();
 
 	return DsrResult::Success("Load Basemesh Success.");
 }

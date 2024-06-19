@@ -152,7 +152,7 @@ namespace dsr
 				for (const Entity& entity : entities)
 				{
 					m_engineContext->SetCurrentEntity(entity);
-					renderer->OnUpdate(*m_engineContext);
+ 					renderer->OnUpdate(*m_engineContext);
 				}
 			}
 		}
