@@ -35,7 +35,8 @@ void CameraControllerSystem::Update(const dsr::ecs::EngineContext& context)
 	}
 	else if (m_input->GetKeyHold(KeyCode::MouseMiddle))
 	{
-		constexpr float speed = 80.0f;
+		// consider using a speedfactor
+		constexpr float speed = 100.0f;
 		constexpr XMINT2 threshold = XMINT2(5, 5);
 
 		MousePosition position = m_input->GetMouse()->GetCurrentClientAreaPosition();
@@ -58,7 +59,7 @@ void CameraControllerSystem::Update(const dsr::ecs::EngineContext& context)
 		XMVECTOR side = XMVector3Cross(up, forward);
 
 		float deltaTimeSeconds = m_time->GetDeltaTime()
-			.Capped(std::chrono::duration<float>(1))
+			.Capped(std::chrono::duration<float, std::milli>(0.3f))
 			.Seconds();
 
 		if (movesOnXAxis)
