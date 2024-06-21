@@ -23,7 +23,13 @@ public:
 
 	void Update(const dsr::ecs::EngineContext& context);
 private:
+	DirectX::XMVECTOR m_forward;
+	DirectX::XMVECTOR m_up;
+	
 	std::shared_ptr<dsr::input::Input> m_input;
 	std::shared_ptr<dsr::time::Time> m_time;
-};
 
+	float m_mouseMiddleDeltaTime;
+	DirectX::XMINT2 m_mouseMiddleDelta;
+	DirectX::XMINT2 m_mouseMiddleReferencePoint;
+};

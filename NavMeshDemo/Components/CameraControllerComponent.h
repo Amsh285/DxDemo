@@ -6,8 +6,6 @@
 class CameraControllerComponent : public dsr::ecs::Component
 {
 public:
-	DirectX::XMINT2 MouseMiddleCenter;
-
 	DirectX::XMINT2 MouseRightCenter;
 	float MouseRightYaw;
 	float MouseRightPitch;
