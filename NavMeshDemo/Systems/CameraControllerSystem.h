@@ -29,7 +29,7 @@ private:
 	std::shared_ptr<dsr::input::Input> m_input;
 	std::shared_ptr<dsr::time::Time> m_time;
 
-	float m_mouseMiddleDeltaTime;
-	DirectX::XMINT2 m_mouseMiddleDelta;
+	/*float m_mouseMiddleDeltaTime;
+	DirectX::XMINT2 m_mouseMiddleDelta;*/
 	DirectX::XMINT2 m_mouseMiddleReferencePoint;
 };
