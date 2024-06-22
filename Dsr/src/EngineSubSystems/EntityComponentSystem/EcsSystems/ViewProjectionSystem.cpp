@@ -58,6 +58,7 @@ namespace dsr
 			XMVECTOR upVector = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 			XMVECTOR forwardVector = XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
 
+			upVector = XMVector3Rotate(upVector, eyeRotation);
 			forwardVector = XMVector3Rotate(forwardVector, eyeRotation);
 			XMVECTOR focusPoint = XMVectorAdd(eyePosition, forwardVector);
 

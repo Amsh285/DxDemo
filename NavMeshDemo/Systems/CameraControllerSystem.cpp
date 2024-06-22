@@ -13,7 +13,8 @@ CameraControllerSystem::CameraControllerSystem(
 	m_up(DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f)),
 	m_input(input),
 	m_time(time),
-	m_mouseMiddleReferencePoint(DirectX::XMINT2(0, 0))
+	m_mouseMiddleReferencePoint(DirectX::XMINT2(0, 0)),
+	m_mouseRightReferencePoint(DirectX::XMINT2(0, 0))
 {
 	OnUpdate = std::bind(&CameraControllerSystem::Update, this, std::placeholders::_1);
 }
@@ -84,53 +85,43 @@ void CameraControllerSystem::Update(const dsr::ecs::EngineContext& context)
 	else if (m_input->GetKeyDown(KeyCode::MouseRight))
 	{
 		MousePosition position = m_input->GetMouse()->GetCurrentClientAreaPosition();
-		cameraControllerData->MouseRightCenter = XMINT2(position.X, position.Y);
+		m_mouseRightReferencePoint.x = position.X;
+		m_mouseRightReferencePoint.y = position.Y;
 	}
 	else if (m_input->GetKeyHold(KeyCode::MouseRight))
 	{
-		constexpr float speed = 200.0f;
+		constexpr float speed = 0.25f;
 		constexpr XMINT2 threshold = XMINT2(5, 5);
 
 		MousePosition position = m_input->GetMouse()->GetCurrentClientAreaPosition();
 
-		XMINT2 center = cameraControllerData->MouseRightCenter;
 		XMINT2 currentPosition = XMINT2(position.X, position.Y);
-		XMINT2 delta = XMINT2(currentPosition.x - center.x, currentPosition.y - center.y);
+		XMINT2 delta = XMINT2(currentPosition.x - m_mouseRightReferencePoint.x, currentPosition.y - m_mouseRightReferencePoint.y);
 
 		bool movesOnXAxis = abs(delta.x) >= threshold.x, movesOnYAxis = abs(delta.y) >= threshold.y;
 		bool movesOnAnyAxis = movesOnXAxis || movesOnYAxis;
 
-		float deltaTimeSeconds = m_time->GetDeltaTime()
-			.Capped(std::chrono::duration<float>(1))
-			.Seconds();
-
-		// Todo: check delta values low deltas lead to stuttering
-		// maybe try to increase threshold
 		if (movesOnXAxis)
-			cameraControllerData->MouseRightYaw = fmod(cameraControllerData->MouseRightYaw + static_cast<float>(delta.x) * speed * deltaTimeSeconds, 360.0f);
+			cameraControllerData->MouseRightYaw = fmod(cameraControllerData->MouseRightYaw + static_cast<float>(delta.x) * speed, 360.0f);
 
 		if (movesOnYAxis)
-			cameraControllerData->MouseRightPitch = fmod(cameraControllerData->MouseRightPitch + static_cast<float>(delta.y) * speed * deltaTimeSeconds, 360.0f);
+			cameraControllerData->MouseRightPitch = fmod(cameraControllerData->MouseRightPitch + static_cast<float>(delta.y) * speed, 360.0f);
 
 		if (movesOnAnyAxis)
 		{
-			// probably winapi related error mousewheel rotation sets mouse position for some reason...
-
 			cameraTransform->SetRotation(
 				XMQuaternionRotationRollPitchYaw(
 					XMConvertToRadians(cameraControllerData->MouseRightPitch),
 					XMConvertToRadians(cameraControllerData->MouseRightYaw),
 					0.0f));
 
-			cameraControllerData->MouseRightCenter = XMINT2(position.X, position.Y);
+			m_mouseRightReferencePoint.x = position.X;
+			m_mouseRightReferencePoint.y = position.Y;
 		}
 	}
 	else if (abs(deltaZ) >= 0.1f)
 	{
-		constexpr float speed = 3000.0f;
-		float deltaTimeSeconds = m_time->GetDeltaTime()
-			.Capped(std::chrono::duration<float>(1))
-			.Seconds();
+		constexpr float speed = 3.0f;
 
 		XMVECTOR forward = XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
 		XMVECTOR rotation = XMQuaternionRotationRollPitchYaw(
@@ -139,7 +130,7 @@ void CameraControllerSystem::Update(const dsr::ecs::EngineContext& context)
 			0.0f);
 
 		forward = XMVector3Rotate(forward, rotation);
-		forward = XMVectorScale(forward, deltaZ * speed * deltaTimeSeconds);
+		forward = XMVectorScale(forward, deltaZ / std::abs(deltaZ) * speed);
 
 		XMVECTOR position = XMVectorAdd(forward, cameraTransform->GetPosition());
 		cameraTransform->SetPosition(position);

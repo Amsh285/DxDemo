@@ -32,4 +32,6 @@ private:
 	/*float m_mouseMiddleDeltaTime;
 	DirectX::XMINT2 m_mouseMiddleDelta;*/
 	DirectX::XMINT2 m_mouseMiddleReferencePoint;
+
+	DirectX::XMINT2 m_mouseRightReferencePoint;
 };
