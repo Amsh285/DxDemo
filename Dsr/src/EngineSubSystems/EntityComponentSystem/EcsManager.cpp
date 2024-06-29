@@ -72,15 +72,25 @@ namespace dsr
 
 			for (const std::shared_ptr<System>& system : m_systems)
 			{
-				std::pair<std::vector<Entity>, ska::flat_hash_map<Entity, size_t>>& systemEntities = m_systemEntities[system->GetType()];
-
-				std::vector<Entity>& entityVec = systemEntities.first;
-				ska::flat_hash_map<Entity, size_t>& entityIndexMap = systemEntities.second;
-
-				if (entityIndexMap.count(entity) > 0 && !HasComponentTypeIntersection(system, m_engineContext->GetComponentTypeMap(entity)))
+				if (!HasComponentTypeIntersection(system, m_engineContext->GetComponentTypeMap(entity)))
 				{
-					entityVec.erase(entityVec.begin() + entityIndexMap[entity]);
-					entityIndexMap.erase(entity);
+					std::vector<Entity>& systemEntities = m_systemEntities[system->GetType()];
+					auto itErase = std::find(systemEntities.begin(), systemEntities.end(), entity);
+
+					if (itErase != systemEntities.end())
+						systemEntities.erase(itErase);
+				}
+			}
+
+			for (const std::shared_ptr<RendererSystem>& renderer : m_renderers)
+			{
+				if (!HasComponentTypeIntersection(renderer, m_engineContext->GetComponentTypeMap(entity)))
+				{
+					std::vector<Entity>& systemEntities = m_systemEntities[renderer->GetType()];
+					auto itErase = std::find(systemEntities.begin(), systemEntities.end(), entity);
+
+					if (itErase != systemEntities.end())
+						systemEntities.erase(itErase);
 				}
 			}
 		}
@@ -93,23 +103,11 @@ namespace dsr
 
 			for (auto it = m_systemEntities.begin(); it != m_systemEntities.end(); it++)
 			{
-				EntityVectorIndexMapPair& systemAssignedEntities = it->second;
+				std::vector<Entity>& systemAssignedEntities = it->second;
+				auto itErase = std::find(systemAssignedEntities.begin(), systemAssignedEntities.end(), entity);
 
-				auto itAssignedEntities = systemAssignedEntities.second.find(entity);
-
-				if (itAssignedEntities != systemAssignedEntities.second.end())
-				{
-					size_t entityIdx = itAssignedEntities->second;
-
-					//cant do that indices will be invalidated
-					//Todo: refactor indexmap. maybe just remove it make it simplier
-					//For now just use linear search not optimal but get it working for now
-					//systemAssignedEntities.first.erase(systemAssignedEntities.first.begin() + entityIdx);
-
-					auto itErase = std::find(systemAssignedEntities.first.begin(), systemAssignedEntities.first.end(), entity);
-					systemAssignedEntities.first.erase(itErase);
-					systemAssignedEntities.second.erase(entity);
-				}
+				if(itErase != systemAssignedEntities.end())
+					systemAssignedEntities.erase(itErase);
 			}
 		}
 
@@ -128,7 +126,7 @@ namespace dsr
 			for (auto it = m_systems.begin(); it != m_systems.end(); ++it)
 			{
 				std::shared_ptr<System> system = *it;
-				const std::vector<Entity>& entities = m_systemEntities[system->GetType()].first;
+				const std::vector<Entity>& entities = m_systemEntities[system->GetType()];
 
 				for (const Entity& entity : entities)
 				{
@@ -147,7 +145,7 @@ namespace dsr
 				m_engineContext->SetCurrentEntity(0);
 				renderer->OnPrepareRendererUpdate(EnginePrepareRendererContext(m_engineContext));
 
-				const std::vector<Entity>& entities = m_systemEntities[renderer->GetType()].first;
+				const std::vector<Entity>& entities = m_systemEntities[renderer->GetType()];
 
 				for (const Entity& entity : entities)
 				{
@@ -183,15 +181,11 @@ namespace dsr
 			const std::unordered_map<std::type_index, std::shared_ptr<Component>>& componentMap,
 			const Entity& entity)
 		{
-			std::pair<std::vector<Entity>, ska::flat_hash_map<Entity, size_t>>& systemEntities = m_systemEntities[system->GetType()];
+			std::vector<Entity>& systemEntities = m_systemEntities[system->GetType()];
 
-			std::vector<Entity>& entityVec = systemEntities.first;
-			ska::flat_hash_map<Entity, size_t>& entityIndexMap = systemEntities.second;
-
-			if (entityIndexMap.count(entity) == 0 && HasComponentTypeIntersection(system, componentMap))
+			if (std::count(systemEntities.begin(), systemEntities.end(), entity) == 0 && HasComponentTypeIntersection(system, componentMap))
 			{
-				entityVec.push_back(entity);
-				entityIndexMap[entity] = entityVec.size() - 1;
+				systemEntities.push_back(entity);
 			}
 		}
 	}

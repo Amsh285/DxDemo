@@ -214,7 +214,7 @@ void NavMeshSimulationSceneBase::LoadUpperSurfaceSubDivision()
 	using namespace DirectX;
 
 	m_upperSurfaceSubDivision = std::make_shared<WavefrontModel>();
-	m_upperSurfaceSubDivision->Mesh = SubDivide(m_upperSurface->Mesh);
+	m_upperSurfaceSubDivision->Mesh = std::make_shared<StaticMesh<Vertex3FP2FTx3FN>>(SubDivide(*m_upperSurface->Mesh));
 
 	WavefrontModelMaterialGroup group;
 	group.IndexCount = m_upperSurfaceSubDivision->Mesh->GetIndexBuffer().size();

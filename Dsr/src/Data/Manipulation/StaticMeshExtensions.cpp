@@ -85,19 +85,19 @@ namespace dsr
 				return filteredMesh;
 			}
 
-			std::shared_ptr<StaticMesh<Vertex3FP2FTx3FN>> SubDivide(const std::shared_ptr<StaticMesh<Vertex3FP2FTx3FN>> sourceMesh)
+			StaticMesh<Vertex3FP2FTx3FN> SubDivide(const StaticMesh<Vertex3FP2FTx3FN>& sourceMesh)
 			{
 				using namespace DirectX;
 
-				const std::vector<Vertex3FP2FTx3FN>& sourceVertexBuffer = sourceMesh->GetVertexBuffer();
-				const std::vector<uint32_t>& sourceIndexBuffer = sourceMesh->GetIndexBuffer();
+				const std::vector<Vertex3FP2FTx3FN>& sourceVertexBuffer = sourceMesh.GetVertexBuffer();
+				const std::vector<uint32_t>& sourceIndexBuffer = sourceMesh.GetIndexBuffer();
 
 				if (sourceIndexBuffer.size() % 3 != 0)
 				{
-					return std::make_shared<StaticMesh<Vertex3FP2FTx3FN>>();
+					return StaticMesh<Vertex3FP2FTx3FN>();
 				}
 
-				std::shared_ptr<StaticMesh<Vertex3FP2FTx3FN>> subdividedMesh = std::make_shared<StaticMesh<Vertex3FP2FTx3FN>>();
+				StaticMesh<Vertex3FP2FTx3FN> subdividedMesh;
 				std::vector<Vertex3FP2FTx3FN> subdividedVertexBuffer;
 				std::vector<uint32_t> subdividedIndexBuffer;
 
@@ -185,7 +185,7 @@ namespace dsr
 
 				subdividedMesh->SetVertexBuffer(subdividedVertexBuffer);
 				subdividedMesh->SetIndexBuffer(subdividedIndexBuffer);
-				subdividedMesh->SetWindingOrder(sourceMesh->GetWindingOrder());
+				subdividedMesh->SetWindingOrder(sourceMesh.GetWindingOrder());
 				return subdividedMesh;
 			}
 

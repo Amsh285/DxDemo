@@ -209,6 +209,9 @@ dsr::DsrResult NavMeshSimulationScenePaths::SetPath(
 
 	m_sceneManager->RemoveComponent<LineListComponent>(m_sceneId, entity);
 
+	if(pathBuffer.empty())
+		return DsrResult::Success("No Path to set on Entity: " + entity);
+
 	std::variant<Direct3dBuffer, dsr_error> createBufferResult = Direct3dBuffer::CreateVertexBufferf(
 		m_device, pathBuffer
 	);

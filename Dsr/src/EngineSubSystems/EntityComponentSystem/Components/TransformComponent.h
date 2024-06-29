@@ -17,6 +17,9 @@ namespace dsr
 			}
 		};
 
+		//Todo: The Component should only store and provide the model matrix.
+		//Getters and Setters can maybe stay as helpers to modify the model matrix.
+
 		class TransformComponent : public Component
 		{
 		public:

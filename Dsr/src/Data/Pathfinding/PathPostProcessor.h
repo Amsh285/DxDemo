@@ -34,6 +34,9 @@ namespace dsr
 			{
 				using namespace DirectX;
 
+				if (path.empty())
+					return std::vector<float>();
+
 				std::vector<float> buffer;
 				buffer.push_back(XMVectorGetX(start));
 				buffer.push_back(XMVectorGetY(start));
@@ -55,7 +58,7 @@ namespace dsr
 				buffer.push_back(XMVectorGetZ(color));
 				buffer.push_back(XMVectorGetW(color));
 
-				for (size_t i = path.size() -1; i > 0; i--)
+				for (size_t i = path.size() - 1; i > 0; i--)
 				{
 					const uint32_t currentIndex = path[i];
 					const uint32_t nextIndex = path[i - 1];

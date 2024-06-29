@@ -21,37 +21,28 @@ namespace EcsManagerTests
 	public:
 		bool HasEntityAssigned(const std::type_index& systemType, const Entity& entity)
 		{
-			const std::unordered_map<std::type_index, EcsManager::EntityVectorIndexMapPair>& systemEntityAssignment = m_ecsManager.GetSystemEntityAssignments();
+			const std::unordered_map<std::type_index, std::vector<Entity>>& systemEntityAssignment = m_ecsManager.GetSystemEntityAssignments();
 
 			auto itSystemType = systemEntityAssignment.find(systemType);
 
 			if (itSystemType == systemEntityAssignment.end())
 				return false;
 
-			std::vector<Entity> assignedEntities = itSystemType->second.first;
-			ska::flat_hash_map<Entity, size_t> assignedEntityIndexPairs = itSystemType->second.second;
-
-			if (std::find(assignedEntities.begin(), assignedEntities.end(), entity) == assignedEntities.end())
-				return false;
-
-			if (assignedEntityIndexPairs.count(entity) == false)
-				return false;
-
-			return true;
+			return std::find(itSystemType->second.begin(), itSystemType->second.end(), entity) != itSystemType->second.end();
 		}
 
 		std::vector<Entity> FindSystemAssignedEntities(const std::type_index& systemType) const
 		{
 			using namespace dsr::ecs;
 
-			std::unordered_map<std::type_index, EcsManager::EntityVectorIndexMapPair> systemEntities = m_ecsManager.GetSystemEntityAssignments();
+			std::unordered_map<std::type_index, std::vector<Entity>> systemEntities = m_ecsManager.GetSystemEntityAssignments();
 
 			auto it = systemEntities.find(systemType);
 
 			if (it == systemEntities.end())
 				return std::vector<Entity>();
 
-			return it->second.first;
+			return it->second;
 		}
 	protected:
 		EcsManagerSystemEntityTests() {
@@ -94,7 +85,7 @@ namespace EcsManagerTests
 		ASSERT_EQ(tagSystemEntities.size(), 1);
 		EXPECT_EQ(std::count(tagSystemEntities.begin(), tagSystemEntities.end(), m_nameTagEntity), 1);
 
-		std::unordered_map<std::type_index, EcsManager::EntityVectorIndexMapPair> systemEntities = m_ecsManager.GetSystemEntityAssignments();
+		std::unordered_map<std::type_index, std::vector<Entity>> systemEntities = m_ecsManager.GetSystemEntityAssignments();
 		EXPECT_EQ(systemEntities.size(), 3);
 	}
 
@@ -116,7 +107,7 @@ namespace EcsManagerTests
 		ASSERT_EQ(tagSystemEntities.size(), 1);
 		EXPECT_EQ(std::count(tagSystemEntities.begin(), tagSystemEntities.end(), m_nameTagEntity), 1);
 
-		std::unordered_map<std::type_index, EcsManager::EntityVectorIndexMapPair> systemEntities = m_ecsManager.GetSystemEntityAssignments();
+		std::unordered_map<std::type_index, std::vector<Entity>> systemEntities = m_ecsManager.GetSystemEntityAssignments();
 		EXPECT_EQ(systemEntities.size(), 3);
 	}
 
@@ -127,7 +118,7 @@ namespace EcsManagerTests
 
 		m_ecsManager.RemoveSystem<TestTagSystem>();
 
-		std::unordered_map<std::type_index, EcsManager::EntityVectorIndexMapPair> systemEntityAssignments = m_ecsManager.GetSystemEntityAssignments();
+		std::unordered_map<std::type_index, std::vector<Entity>> systemEntityAssignments = m_ecsManager.GetSystemEntityAssignments();
 
 		EXPECT_EQ(systemEntityAssignments.count(typeid(TestTagSystem)), 0);
 	}
