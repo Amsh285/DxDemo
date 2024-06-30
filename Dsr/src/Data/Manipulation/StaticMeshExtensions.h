@@ -148,10 +148,8 @@ namespace dsr
 
 				XMVECTOR rayDirectionNormalized = XMVector4Normalize(rayDirection);
 
-				const std::vector<float>& hitTestCache = mesh->GetHitTestCache();
 				const std::vector<TVertex>& sourceVertexBuffer = mesh->GetVertexBuffer();
 				const std::vector<uint32_t>& sourceIndexBuffer = mesh->GetIndexBuffer();
-				size_t hitTestCacheIndex = 0;
 
 				std::vector<RaycastMeshHit> hits;
 

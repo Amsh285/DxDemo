@@ -33,9 +33,6 @@ void NavMeshSimulationScenePaths::Setup(
 	m_upperSurface = FilterDistinct(*upperSurface->Mesh);
 	m_upperSurfaceSubDivision = FilterDistinct(*upperSurfaceSubDivision->Mesh);
 	m_upperSurfaceBarycentricSubDivision = FilterDistinct(*upperSurfaceBarycentricSubDivision->Mesh);
-	m_upperSurface.RefreshHitTestCache();
-	m_upperSurfaceSubDivision.RefreshHitTestCache();
-	m_upperSurfaceBarycentricSubDivision.RefreshHitTestCache();
 
 	m_upperSurfacePathfinder.SetGraph(m_upperSurface);
 	m_upperSurfaceSubDivisionPathfinder.SetGraph(m_upperSurfaceSubDivision);

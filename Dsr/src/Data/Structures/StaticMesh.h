@@ -19,8 +19,6 @@ namespace dsr
 			const std::vector<uint32_t>& GetIndexBuffer() const { return m_indexBuffer; }
 			void SetIndexBuffer(const std::vector<uint32_t>& indexBuffer) { m_indexBuffer = indexBuffer; }
 
-			const std::vector<float>& GetHitTestCache() const { return m_hitTestCache; }
-
 			std::unordered_map<uint32_t, std::vector<uint32_t>> GetAdjacencyList() const;
 
 			WindingOrder GetWindingOrder() const { return m_order; }
@@ -35,8 +33,6 @@ namespace dsr
 				: m_order(order)
 			{
 			}
-
-			void RefreshHitTestCache();
 		private:
 			void InsertAdjacentIndices(
 				const size_t& currentTrianlgeIndex,
@@ -45,8 +41,6 @@ namespace dsr
 
 			std::vector<TVertex> m_vertexBuffer;
 			std::vector<uint32_t> m_indexBuffer;
-
-			std::vector<float> m_hitTestCache;
 
 			WindingOrder m_order;
 		};
@@ -73,25 +67,6 @@ namespace dsr
 			}
 
 			return adjacencyList;
-		}
-
-		template<class TVertex>
-		inline void StaticMesh<TVertex>::RefreshHitTestCache()
-		{
-			using namespace DirectX;
-
-			m_hitTestCache.clear();
-
-			for (size_t i = 0; i < m_indexBuffer.size(); i += 3)
-			{
-				XMVECTOR a = XMLoadFloat3(&m_vertexBuffer[m_indexBuffer[i]].Position);
-				XMVECTOR b = XMLoadFloat3(&m_vertexBuffer[m_indexBuffer[i + 1]].Position);
-				XMVECTOR c = XMLoadFloat3(&m_vertexBuffer[m_indexBuffer[i + 2]].Position);
-
-				float det = Vector3Determinant(a, b, c);
-				float denom = 1.0f / det;
-				m_hitTestCache.push_back(denom);
-			}
 		}
 
 		template<class TVertex>

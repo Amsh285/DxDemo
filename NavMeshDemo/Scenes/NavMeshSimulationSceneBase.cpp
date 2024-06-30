@@ -194,7 +194,6 @@ void NavMeshSimulationSceneBase::LoadUpperSurface()
 
 	m_upperSurface = std::make_shared<WavefrontModel>();
 	m_upperSurface->Mesh = filteredMesh;
-	m_upperSurface->Mesh->RefreshHitTestCache();
 
 	WavefrontModelMaterialGroup group;
 	group.IndexCount = m_upperSurface->Mesh->GetIndexBuffer().size();
