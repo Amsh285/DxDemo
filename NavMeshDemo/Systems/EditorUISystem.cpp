@@ -16,7 +16,7 @@ EditorUISystem::EditorUISystem(
 	const std::vector<std::shared_ptr<NavMeshSimulationSceneBase>>& scenes)
 	: dsr::ecs::System(typeid(EditorUISystem)),
 	m_input(input), m_scenes(scenes), m_sceneSelectedIdx(0),
-	subDivisionCount(1), barycentricSubDivisionCount(1)
+	m_subDivisionCount(1), m_barycentricSubDivisionCount(1)
 {
 	//OnStart = std::bind(&EditorUISystem::Start, this, std::placeholders::_1);
 	OnUpdate = std::bind(&EditorUISystem::Update, this, std::placeholders::_1);
@@ -70,14 +70,19 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 
 	if(ImGui::CollapsingHeader("Mesh Subdivision"))
 	{
-		if (ImGui::SliderInt("Subdivision Count", &subDivisionCount, 1, 5))
+		if (ImGui::SliderInt("Subdivision Count", &m_subDivisionCount, 1, 5))
 		{
-			std::cout << "Subdivision count: " << subDivisionCount << std::endl;
+			assert(m_subDivisionCount >= 1 && m_subDivisionCount <= 5);
+
+			for(auto it = m_scenes.begin(); it != m_scenes.end(); it++)
+			{
+				(*it)->UpdateUpperSurfaceSubDivision(static_cast<uint32_t>(m_subDivisionCount));
+			}
 		}
 
-		if(ImGui::SliderInt("Barycentric Subdivision Count", &barycentricSubDivisionCount, 1, 5))
+		if(ImGui::SliderInt("Barycentric Subdivision Count", &m_barycentricSubDivisionCount, 1, 5))
 		{
-			
+			assert(m_barycentricSubDivisionCount >= 1 && m_barycentricSubDivisionCount <= 5);
 		}
 	}
 

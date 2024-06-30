@@ -50,6 +50,7 @@ public:
 	dsr::DsrResult BuildScene();
 
 	void OnScreenClick(const EditorScreenClickEvent& screenClickEvent);
+	dsr::DsrResult UpdateUpperSurfaceSubDivision(const uint32_t count);
 protected:
 	uint32_t m_sceneId;
 	std::string m_sceneName;

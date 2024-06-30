@@ -28,13 +28,13 @@ public:
 	EditorUISystem(const EditorUISystem& other) = delete;
 	EditorUISystem& operator=(const EditorUISystem& other) = delete;
 
-	void Start(const dsr::ecs::EngineStartupContext& context);
+	//void Start(const dsr::ecs::EngineStartupContext& context);
 	void Update(const dsr::ecs::EngineContext& context);
 private:
 	std::shared_ptr<dsr::input::Input> m_input;
 	std::vector<std::shared_ptr<NavMeshSimulationSceneBase>> m_scenes;
 
 	size_t m_sceneSelectedIdx;
-	int32_t subDivisionCount;
-	int32_t barycentricSubDivisionCount;
+	int32_t m_subDivisionCount;
+	int32_t m_barycentricSubDivisionCount;
 };

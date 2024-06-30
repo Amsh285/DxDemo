@@ -103,6 +103,17 @@ void NavMeshSimulationSceneBase::OnScreenClick(const EditorScreenClickEvent& scr
 	}
 }
 
+dsr::DsrResult NavMeshSimulationSceneBase::UpdateUpperSurfaceSubDivision(const uint32_t count)
+{
+	using namespace dsr;
+
+	m_upperSurfaceSubDivision->SubDivide(count);
+
+
+
+	return DsrResult::Success("Update SubDivision Success.");
+}
+
 dsr::DsrResult NavMeshSimulationSceneBase::LoadSceneData()
 {
 	using namespace dsr;
