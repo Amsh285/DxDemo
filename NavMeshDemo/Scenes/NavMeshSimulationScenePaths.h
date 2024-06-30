@@ -28,6 +28,10 @@ constexpr auto ERROR_SETPATH_SETUPD3D11BUFFER = 900;
 class NavMeshSimulationScenePaths
 {
 public:
+
+	void SetUpperSurfaceSubDivision(const dsr::data::StaticMesh<dsr::data::Vertex3F>& upperSurfaceSubDivision);
+	dsr::DsrResult SetUpperSurfaceSubDivisionPath(const DirectX::XMVECTOR& start, const DirectX::XMVECTOR& finish);
+
 	NavMeshSimulationScenePaths(
 		const uint32_t& sceneId,
 		const std::shared_ptr<dsr::scene::SceneManager>& sceneManager,

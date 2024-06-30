@@ -6,6 +6,43 @@
 
 #include "Infrastructure/XMathHelper.h"
 
+void NavMeshSimulationScenePaths::SetUpperSurfaceSubDivision(const dsr::data::StaticMesh<dsr::data::Vertex3F>& upperSurfaceSubDivision)
+{
+	m_upperSurfaceSubDivision = upperSurfaceSubDivision;
+	m_upperSurfaceSubDivisionPathfinder.SetGraph(m_upperSurfaceSubDivision);
+}
+
+dsr::DsrResult NavMeshSimulationScenePaths::SetUpperSurfaceSubDivisionPath(const DirectX::XMVECTOR& start, const DirectX::XMVECTOR& finish)
+{
+	using namespace dsr;
+
+	using namespace DirectX;
+
+	std::variant<std::vector<float>, dsr_error> constructUpperSurfacePathSubDivisionResult = ConstructPath(
+		start,
+		finish,
+		m_upperSurfaceSubDivision,
+		m_upperSurfaceSubDivisionPathfinder,
+		Colors::Green
+	);
+
+	if (std::holds_alternative<dsr_error>(constructUpperSurfacePathSubDivisionResult))
+	{
+		const dsr_error& error = std::get<dsr_error>(constructUpperSurfacePathSubDivisionResult);
+		std::string errorMessage = "Error constructing Path for Upper surface SubDivision: ";
+		errorMessage += error.what();
+		return DsrResult(errorMessage, ERROR_CONSTRUCTPATH_UPPERSURFACE);
+	}
+
+	const std::vector<float>& upperSurfaceSubDivisionPath = std::get<std::vector<float>>(constructUpperSurfacePathSubDivisionResult);
+
+	DsrResult setUpperSurfaceSubDivisionPathResult = SetPath(m_upperSurfaceSubDivisionPathEntity, upperSurfaceSubDivisionPath);
+	if (setUpperSurfaceSubDivisionPathResult.GetResultStatusCode() != RESULT_SUCCESS)
+		return setUpperSurfaceSubDivisionPathResult;
+
+	return DsrResult::Success("SetUpperSurfaceSubDivisionPath Success.");
+}
+
 NavMeshSimulationScenePaths::NavMeshSimulationScenePaths(
 	const uint32_t& sceneId,
 	const std::shared_ptr<dsr::scene::SceneManager>& sceneManager,

@@ -107,9 +107,11 @@ dsr::DsrResult NavMeshSimulationSceneBase::UpdateUpperSurfaceSubDivision(const u
 {
 	using namespace dsr;
 
+	using namespace dsr::data::manipulation;
+
 	m_upperSurfaceSubDivision->SubDivide(count);
-
-
+	m_paths->SetUpperSurfaceSubDivision(FilterDistinct(m_upperSurfaceSubDivision->GetSubDividedMesh()));
+	m_paths->SetPaths(m_markers->GetStartPositionLocal(), m_markers->GetFinishPositionLocal());
 
 	return DsrResult::Success("Update SubDivision Success.");
 }

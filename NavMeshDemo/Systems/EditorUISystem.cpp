@@ -74,10 +74,11 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 		{
 			assert(m_subDivisionCount >= 1 && m_subDivisionCount <= 5);
 
-			for(auto it = m_scenes.begin(); it != m_scenes.end(); it++)
+			/*for(auto it = m_scenes.begin(); it != m_scenes.end(); it++)
 			{
 				(*it)->UpdateUpperSurfaceSubDivision(static_cast<uint32_t>(m_subDivisionCount));
-			}
+			}*/
+			m_scenes[m_sceneSelectedIdx]->UpdateUpperSurfaceSubDivision(static_cast<uint32_t>(m_subDivisionCount));
 		}
 
 		if(ImGui::SliderInt("Barycentric Subdivision Count", &m_barycentricSubDivisionCount, 1, 5))
