@@ -183,9 +183,9 @@ namespace dsr
 					SetSubdivisionData(subDivisionData.C, index, indexMap, subdividedVertexBuffer, subdividedIndexBuffer);
 				}
 
-				subdividedMesh->SetVertexBuffer(subdividedVertexBuffer);
-				subdividedMesh->SetIndexBuffer(subdividedIndexBuffer);
-				subdividedMesh->SetWindingOrder(sourceMesh.GetWindingOrder());
+				subdividedMesh.SetVertexBuffer(subdividedVertexBuffer);
+				subdividedMesh.SetIndexBuffer(subdividedIndexBuffer);
+				subdividedMesh.SetWindingOrder(sourceMesh.GetWindingOrder());
 				return subdividedMesh;
 			}
 
