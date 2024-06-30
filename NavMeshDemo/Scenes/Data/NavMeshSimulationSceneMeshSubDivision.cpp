@@ -35,7 +35,8 @@ NavMeshSimulationSceneMeshSubDivision::NavMeshSimulationSceneMeshSubDivision(
 	const dsr::data::StaticMesh<dsr::data::Vertex3FP2FTx3FN>& baseMesh,
 	const std::shared_ptr<dsr::scene::SceneManager>& sceneManager,
 	const std::shared_ptr<dsr::directX::Direct3dDevice>& device
-) : m_sceneId(sceneId), m_baseMesh(baseMesh), m_sceneManager(sceneManager), m_device(device)
+) : m_sceneId(sceneId), m_baseMesh(baseMesh), m_sceneManager(sceneManager), m_device(device),
+	m_subDivisionCount(0)
 {
 	m_entity = m_sceneManager->CreateNewEntity();
 	m_sceneManager->AddComponent<dsr::ecs::TransformComponent>(m_sceneId, m_entity);
@@ -106,6 +107,9 @@ dsr::DsrResult NavMeshSimulationSceneMeshSubDivision::UpdateScene()
 	std::shared_ptr<StaticMeshComponent> mesh = std::make_shared<StaticMeshComponent>();
 	mesh->SetVertexBuffer(std::get<Direct3dVertexBufferf>(setupVertexBufferResult));
 	mesh->SetVertexGroups({ vertexGroup });
+
+	std::shared_ptr<WireframeMeshComponent> wireframeMeshComponent = m_sceneManager->AddComponent<WireframeMeshComponent>(m_sceneId, m_entity);
+	wireframeMeshComponent->SetMesh(mesh);
 
 	return DsrResult::Success("Update Scene Success.");
 }

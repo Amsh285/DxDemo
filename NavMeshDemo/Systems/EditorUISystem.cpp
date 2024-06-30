@@ -15,7 +15,8 @@ EditorUISystem::EditorUISystem(
 	const std::shared_ptr<dsr::input::Input>& input,
 	const std::vector<std::shared_ptr<NavMeshSimulationSceneBase>>& scenes)
 	: dsr::ecs::System(typeid(EditorUISystem)),
-	m_input(input), m_scenes(scenes), m_sceneSelectedIdx(0)
+	m_input(input), m_scenes(scenes), m_sceneSelectedIdx(0),
+	subDivisionCount(1), barycentricSubDivisionCount(1)
 {
 	//OnStart = std::bind(&EditorUISystem::Start, this, std::placeholders::_1);
 	OnUpdate = std::bind(&EditorUISystem::Update, this, std::placeholders::_1);
@@ -57,19 +58,34 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 		}
 
 		ImGui::EndListBox();
-		ImGui::NewLine();
 
-		if (ImGui::CollapsingHeader("Debug"))
+	}
+
+	ImGui::NewLine();
+
+	if (ImGui::CollapsingHeader("Debug"))
+	{
+		ImGui::Checkbox("Show Colliders", &uiData->ShowColliders);
+	}
+
+	if(ImGui::CollapsingHeader("Mesh Subdivision"))
+	{
+		if (ImGui::SliderInt("Subdivision Count", &subDivisionCount, 1, 5))
 		{
-			ImGui::Checkbox("Show Colliders", &uiData->ShowColliders);
+			std::cout << "Subdivision count: " << subDivisionCount << std::endl;
 		}
 
-		if (ImGui::CollapsingHeader("Pathfinding"))
+		if(ImGui::SliderInt("Barycentric Subdivision Count", &barycentricSubDivisionCount, 1, 5))
 		{
-			ImGui::Text("Node select:");
-			ImGui::RadioButton("Start", &uiData->PathSelectMode, 0);
-			ImGui::RadioButton("Finish", &uiData->PathSelectMode, 1);
+			
 		}
+	}
+
+	if (ImGui::CollapsingHeader("Pathfinding"))
+	{
+		ImGui::Text("Node select:");
+		ImGui::RadioButton("Start", &uiData->PathSelectMode, 0);
+		ImGui::RadioButton("Finish", &uiData->PathSelectMode, 1);
 	}
 
 	ImGui::End();

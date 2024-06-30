@@ -37,7 +37,7 @@ public:
 	void Setup(
 		const NavMeshSimulationSceneSettings& settings,
 		std::shared_ptr<dsr::WavefrontModel> upperSurface,
-		std::shared_ptr<dsr::WavefrontModel> upperSurfaceSubDivision,
+		const dsr::data::StaticMesh<dsr::data::Vertex3F>& upperSurfaceSubDivision,
 		std::shared_ptr<dsr::WavefrontModel> upperSurfaceBarycentricSubDivision
 	);
 

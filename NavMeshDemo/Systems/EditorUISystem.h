@@ -35,4 +35,6 @@ private:
 	std::vector<std::shared_ptr<NavMeshSimulationSceneBase>> m_scenes;
 
 	size_t m_sceneSelectedIdx;
+	int32_t subDivisionCount;
+	int32_t barycentricSubDivisionCount;
 };

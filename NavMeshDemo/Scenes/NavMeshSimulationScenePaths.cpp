@@ -21,7 +21,7 @@ NavMeshSimulationScenePaths::NavMeshSimulationScenePaths(
 void NavMeshSimulationScenePaths::Setup(
 	const NavMeshSimulationSceneSettings& settings,
 	std::shared_ptr<dsr::WavefrontModel> upperSurface,
-	std::shared_ptr<dsr::WavefrontModel> upperSurfaceSubDivision,
+	const dsr::data::StaticMesh<dsr::data::Vertex3F>& upperSurfaceSubDivision,
 	std::shared_ptr<dsr::WavefrontModel> upperSurfaceBarycentricSubDivision
 )
 {
@@ -31,7 +31,7 @@ void NavMeshSimulationScenePaths::Setup(
 	using namespace DirectX;
 
 	m_upperSurface = FilterDistinct(*upperSurface->Mesh);
-	m_upperSurfaceSubDivision = FilterDistinct(*upperSurfaceSubDivision->Mesh);
+	m_upperSurfaceSubDivision = upperSurfaceSubDivision;
 	m_upperSurfaceBarycentricSubDivision = FilterDistinct(*upperSurfaceBarycentricSubDivision->Mesh);
 
 	m_upperSurfacePathfinder.SetGraph(m_upperSurface);

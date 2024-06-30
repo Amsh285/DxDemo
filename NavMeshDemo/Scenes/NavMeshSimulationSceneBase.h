@@ -11,6 +11,7 @@
 
 #include "Scenes/NavMeshSimulationSceneMarkers.h"
 #include "Scenes/NavMeshSimulationScenePaths.h"
+#include "Scenes/Data/NavMeshSimulationSceneMeshSubDivision.h"
 
 #include "Scenes/Data/NavMeshSimulationSceneSettings.h"
 
@@ -59,12 +60,13 @@ protected:
 
 	dsr::ecs::Entity m_baseMeshEntity;
 	dsr::ecs::Entity m_upperSurfaceEntity;
-	dsr::ecs::Entity m_upperSurfaceSubDivisionEntity;
 	dsr::ecs::Entity m_upperSurfaceBarycentricSubDivisionEntity;
 
 	std::shared_ptr<dsr::WavefrontModel> m_baseMesh;
 	std::shared_ptr<dsr::WavefrontModel> m_upperSurface;
-	std::shared_ptr<dsr::WavefrontModel> m_upperSurfaceSubDivision;
+
+	std::shared_ptr<NavMeshSimulationSceneMeshSubDivision> m_upperSurfaceSubDivision;
+
 	std::shared_ptr<dsr::WavefrontModel> m_upperSurfaceBarycentricSubDivision;
 
 	std::shared_ptr<dsr::scene::SceneManager> m_sceneManager;
@@ -74,11 +76,9 @@ private:
 	dsr::DsrResult LoadSceneData();
 	dsr::DsrResult LoadBaseMesh();
 	void LoadUpperSurface();
-	void LoadUpperSurfaceSubDivision();
 	void LoadUpperSurfaceBarycentricSubDivision();
 
 	dsr::DsrResult RegisterBaseMesh();
 	dsr::DsrResult RegisterUpperSurface();
-	dsr::DsrResult RegisterUpperSurfaceSubDivision();
 	dsr::DsrResult RegisterUpperSurfaceBarycentricSubDivision();
 };

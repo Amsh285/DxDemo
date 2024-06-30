@@ -23,7 +23,6 @@ m_sceneManager(sceneManager), m_device(device), m_blenderModelLoader(blenderMode
 
 	m_baseMeshEntity = m_sceneManager->CreateNewEntity();
 	m_upperSurfaceEntity = m_sceneManager->CreateNewEntity();
-	m_upperSurfaceSubDivisionEntity = m_sceneManager->CreateNewEntity();
 	m_upperSurfaceBarycentricSubDivisionEntity = m_sceneManager->CreateNewEntity();
 }
 
@@ -114,7 +113,6 @@ dsr::DsrResult NavMeshSimulationSceneBase::LoadSceneData()
 		return loadBaseMeshResult;
 
 	LoadUpperSurface();
-	LoadUpperSurfaceSubDivision();
 	LoadUpperSurfaceBarycentricSubDivision();
 
 	DsrResult registerBaseMeshResult = RegisterBaseMesh();
@@ -125,10 +123,6 @@ dsr::DsrResult NavMeshSimulationSceneBase::LoadSceneData()
 	if (registerUpperSurfaceResult.GetResultStatusCode() != RESULT_SUCCESS)
 		return registerUpperSurfaceResult;
 
-	DsrResult registerUpperSurfaceSubDivisionResult = RegisterUpperSurfaceSubDivision();
-	if (registerUpperSurfaceSubDivisionResult.GetResultStatusCode() != RESULT_SUCCESS)
-		return registerUpperSurfaceSubDivisionResult;
-
 	DsrResult registerUpperSurfaceBarycentricSubDivisionResult = RegisterUpperSurfaceBarycentricSubDivision();
 	if (registerUpperSurfaceBarycentricSubDivisionResult.GetResultStatusCode() != RESULT_SUCCESS)
 		return registerUpperSurfaceBarycentricSubDivisionResult;
@@ -137,10 +131,14 @@ dsr::DsrResult NavMeshSimulationSceneBase::LoadSceneData()
 	if (setupMarkersResult.GetResultStatusCode() != RESULT_SUCCESS)
 		return setupMarkersResult;
 
+	m_upperSurfaceSubDivision = std::make_shared<NavMeshSimulationSceneMeshSubDivision>(m_sceneId, *m_upperSurface->Mesh, m_sceneManager, m_device);
+	m_upperSurfaceSubDivision->SetModelMatrix(m_sceneSettings.UpperSurfaceSubDivisonModel);
+	m_upperSurfaceSubDivision->SubDivide(1);
+
 	m_paths->Setup(
 		m_sceneSettings,
 		m_upperSurface,
-		m_upperSurfaceSubDivision,
+		dsr::data::manipulation::FilterDistinct(m_upperSurfaceSubDivision->GetSubDividedMesh()),
 		m_upperSurfaceBarycentricSubDivision
 	);
 
@@ -202,26 +200,6 @@ void NavMeshSimulationSceneBase::LoadUpperSurface()
 	group.MaterialData.SpecularColor = XMFLOAT3(0.8f, 0.8f, 0.8f);
 	group.MaterialData.DiffuseColor = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
 	m_upperSurface->MaterialGroups.push_back(group);
-}
-
-void NavMeshSimulationSceneBase::LoadUpperSurfaceSubDivision()
-{
-	using namespace dsr;
-	using namespace dsr::data;
-	using namespace dsr::data::manipulation;
-
-	using namespace DirectX;
-
-	m_upperSurfaceSubDivision = std::make_shared<WavefrontModel>();
-	m_upperSurfaceSubDivision->Mesh = std::make_shared<StaticMesh<Vertex3FP2FTx3FN>>(SubDivide(*m_upperSurface->Mesh));
-
-	WavefrontModelMaterialGroup group;
-	group.IndexCount = m_upperSurfaceSubDivision->Mesh->GetIndexBuffer().size();
-	group.StartIndexLocation = 0;
-	group.MaterialName = "mat";
-	group.MaterialData.SpecularColor = XMFLOAT3(0.8f, 0.8f, 0.8f);
-	group.MaterialData.DiffuseColor = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
-	m_upperSurfaceSubDivision->MaterialGroups.push_back(group);
 }
 
 void NavMeshSimulationSceneBase::LoadUpperSurfaceBarycentricSubDivision()
@@ -331,50 +309,6 @@ dsr::DsrResult NavMeshSimulationSceneBase::RegisterUpperSurface()
 	return DsrResult::Success("Register Upper surface success");
 }
 
-dsr::DsrResult NavMeshSimulationSceneBase::RegisterUpperSurfaceSubDivision()
-{
-	using namespace dsr;
-
-	using namespace dsr::directX::rendering;
-
-	using namespace dsr::ecs;
-
-	using namespace DirectX;
-
-	std::variant<ModelConfiguration, dsr_error> loadSurfaceResult = LoadWavefrontModelConfiguration(
-		m_device,
-		m_upperSurfaceSubDivision
-	);
-
-	if (std::holds_alternative<dsr_error>(loadSurfaceResult))
-	{
-		const dsr_error& error = std::get<dsr_error>(loadSurfaceResult);
-		std::string errorMessage = "Error setup Model-configuration for subdivided Upper surface: ";
-		errorMessage += error.what();
-		return DsrResult(errorMessage, ERROR_REGISTER_SUBDIVIDED_UPPERSURFACE_SETUPMODEL);
-	}
-
-	ModelConfiguration config = std::get<ModelConfiguration>(loadSurfaceResult);
-
-	m_sceneManager->AddComponent<NameComponent>(m_sceneId, m_upperSurfaceSubDivisionEntity, "Subdivided Upper Surface");
-	std::shared_ptr<TransformComponent> transformComponent = m_sceneManager->AddComponent<TransformComponent>(m_sceneId, m_upperSurfaceSubDivisionEntity);
-
-	XMVECTOR scale, rotationQuaternion, transform;
-	XMMatrixDecompose(&scale, &rotationQuaternion, &transform, m_sceneSettings.UpperSurfaceSubDivisonModel);
-	transformComponent->SetScale(scale);
-	transformComponent->SetRotation(rotationQuaternion);
-	transformComponent->SetPosition(transform);
-
-	std::shared_ptr<StaticMeshComponent> mesh = std::make_shared<StaticMeshComponent>();
-	mesh->SetVertexBuffer(config.GetVertexBuffer());
-	mesh->SetVertexGroups(config.GetVertexGroups());
-
-	std::shared_ptr<WireframeMeshComponent> wireframe = m_sceneManager->AddComponent<WireframeMeshComponent>(m_sceneId, m_upperSurfaceSubDivisionEntity);
-	wireframe->SetMesh(mesh);
-
-	return DsrResult::Success("Register Upper surface subdivision success.");
-}
-
 dsr::DsrResult NavMeshSimulationSceneBase::RegisterUpperSurfaceBarycentricSubDivision()
 {
 	using namespace dsr;
@@ -400,7 +334,7 @@ dsr::DsrResult NavMeshSimulationSceneBase::RegisterUpperSurfaceBarycentricSubDiv
 
 	ModelConfiguration config = std::get<ModelConfiguration>(loadSurfaceResult);
 
-	m_sceneManager->AddComponent<NameComponent>(m_sceneId, m_upperSurfaceSubDivisionEntity, "Subdivided Upper Surface");
+	m_sceneManager->AddComponent<NameComponent>(m_sceneId, m_upperSurfaceBarycentricSubDivisionEntity, "Barycentric Subdivided Upper Surface");
 	std::shared_ptr<TransformComponent> transformComponent = m_sceneManager->AddComponent<TransformComponent>(m_sceneId, m_upperSurfaceBarycentricSubDivisionEntity);
 
 	XMVECTOR scale, rotationQuaternion, transform;
@@ -415,19 +349,6 @@ dsr::DsrResult NavMeshSimulationSceneBase::RegisterUpperSurfaceBarycentricSubDiv
 
 	std::shared_ptr<WireframeMeshComponent> wireframe = m_sceneManager->AddComponent<WireframeMeshComponent>(m_sceneId, m_upperSurfaceBarycentricSubDivisionEntity);
 	wireframe->SetMesh(mesh);
-
-
-
-	/*Entity entity = m_sceneManager->CreateNewEntity();
-	m_sceneManager->AddComponent<StaticMeshComponent>(m_sceneId, entity, mesh);
-	std::shared_ptr<TransformComponent> transformComponent2 = m_sceneManager->AddComponent<TransformComponent>(m_sceneId, entity);
-
-	XMMATRIX mat = XMMatrixMultiply(m_sceneSettings.UpperSurfaceBarycentricSubDivisionModel, XMMatrixTranslation(0.0f, 20.0f, 0.0f));
-
-	XMMatrixDecompose(&scale, &rotationQuaternion, &transform, mat);
-	transformComponent2->SetScale(scale);
-	transformComponent2->SetRotation(rotationQuaternion);
-	transformComponent2->SetPosition(transform);*/
 
 	return DsrResult::Success("Register Upper surface Barycentric subdivision success.");
 }
