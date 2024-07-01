@@ -119,8 +119,8 @@ namespace dsr
 						XMVECTOR deltaQ = XMVectorSubtract(qPosition, adjacentPosition);
 						XMVECTOR deltaGoal = XMVectorSubtract(goalPosition, adjacentPosition);
 
-						float g = q.g + XMVectorGetX(XMVector3Dot(deltaQ, deltaQ));
-						float h = XMVectorGetX(XMVector3Dot(deltaGoal, deltaGoal));
+						float g = q.g + XMVectorGetX(XMVector3Length(deltaQ));
+						float h = XMVectorGetX(XMVector3Length(deltaGoal));
 						float f = g + h;
 
 						if (openListSearch.find(adjacentIndex) != openListSearch.end() && openListSearch[adjacentIndex] < f)

@@ -138,7 +138,8 @@ dsr::DsrResult NavMeshSimulationScenePaths::SetPaths(const DirectX::XMVECTOR& st
 		finish,
 		m_upperSurfaceSubDivision,
 		m_upperSurfaceSubDivisionPathfinder,
-		Colors::Green
+		Colors::Green,
+		true
 	);
 
 	std::variant<std::vector<float>, dsr_error> constructUpperSurfaceBarycentricSubDivisionResult = ConstructPath(
