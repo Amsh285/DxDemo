@@ -51,6 +51,9 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 					m_scenes[i]->SetActive();
 
 				m_sceneSelectedIdx = i;
+
+				m_subDivisionCount = m_scenes[m_sceneSelectedIdx]->GetUpperSurfaceSubDivisionCount();
+				m_barycentricSubDivisionCount = m_scenes[m_sceneSelectedIdx]->GetUpperSurfaceBarycentricSubDivisionCount();
 			}
 
 			if (isSelected)
@@ -74,10 +77,6 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 		{
 			assert(m_subDivisionCount >= 1 && m_subDivisionCount <= 5);
 
-			/*for(auto it = m_scenes.begin(); it != m_scenes.end(); it++)
-			{
-				(*it)->UpdateUpperSurfaceSubDivision(static_cast<uint32_t>(m_subDivisionCount));
-			}*/
 			m_scenes[m_sceneSelectedIdx]->UpdateUpperSurfaceSubDivision(static_cast<uint32_t>(m_subDivisionCount));
 		}
 

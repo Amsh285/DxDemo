@@ -30,6 +30,9 @@ constexpr auto ERROR_REGISTER_BARYCENTRICSUBDIVIDED_UPPERSURFACE_SETUPMODEL = 50
 class NavMeshSimulationSceneBase
 {
 public:
+	uint32_t GetUpperSurfaceSubDivisionCount() const { return m_upperSurfaceSubDivision->GetSubDivisionCount(); }
+	uint32_t GetUpperSurfaceBarycentricSubDivisionCount() const { return m_upperSurfaceBarycentricSubDivision->GetSubDivisionCount(); }
+
 	uint32_t GetSceneId() const { return m_sceneId; }
 	std::string GetSceneName() const { return m_sceneName; }
 
