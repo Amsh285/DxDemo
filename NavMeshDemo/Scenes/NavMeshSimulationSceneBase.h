@@ -51,6 +51,7 @@ public:
 
 	void OnScreenClick(const EditorScreenClickEvent& screenClickEvent);
 	dsr::DsrResult UpdateUpperSurfaceSubDivision(const uint32_t count);
+	dsr::DsrResult UpdateUpperSurfaceBarycentricSubDivision(const uint32_t count);
 protected:
 	uint32_t m_sceneId;
 	std::string m_sceneName;
@@ -61,14 +62,12 @@ protected:
 
 	dsr::ecs::Entity m_baseMeshEntity;
 	dsr::ecs::Entity m_upperSurfaceEntity;
-	dsr::ecs::Entity m_upperSurfaceBarycentricSubDivisionEntity;
 
 	std::shared_ptr<dsr::WavefrontModel> m_baseMesh;
 	std::shared_ptr<dsr::WavefrontModel> m_upperSurface;
 
 	std::shared_ptr<NavMeshSimulationSceneMeshSubDivision> m_upperSurfaceSubDivision;
-
-	std::shared_ptr<dsr::WavefrontModel> m_upperSurfaceBarycentricSubDivision;
+	std::shared_ptr<NavMeshSimulationSceneMeshSubDivision> m_upperSurfaceBarycentricSubDivision;
 
 	std::shared_ptr<dsr::scene::SceneManager> m_sceneManager;
 	std::shared_ptr<dsr::directX::Direct3dDevice> m_device;
@@ -77,9 +76,7 @@ private:
 	dsr::DsrResult LoadSceneData();
 	dsr::DsrResult LoadBaseMesh();
 	void LoadUpperSurface();
-	void LoadUpperSurfaceBarycentricSubDivision();
 
 	dsr::DsrResult RegisterBaseMesh();
 	dsr::DsrResult RegisterUpperSurface();
-	dsr::DsrResult RegisterUpperSurfaceBarycentricSubDivision();
 };

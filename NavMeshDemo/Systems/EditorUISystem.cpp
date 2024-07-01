@@ -84,6 +84,8 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 		if(ImGui::SliderInt("Barycentric Subdivision Count", &m_barycentricSubDivisionCount, 1, 5))
 		{
 			assert(m_barycentricSubDivisionCount >= 1 && m_barycentricSubDivisionCount <= 5);
+
+			m_scenes[m_sceneSelectedIdx]->UpdateUpperSurfaceBarycentricSubDivision(static_cast<uint32_t>(m_barycentricSubDivisionCount));
 		}
 	}
 

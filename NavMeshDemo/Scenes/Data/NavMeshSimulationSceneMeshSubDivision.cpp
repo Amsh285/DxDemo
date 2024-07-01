@@ -44,7 +44,7 @@ NavMeshSimulationSceneMeshSubDivision::NavMeshSimulationSceneMeshSubDivision(
 
 dsr::DsrResult NavMeshSimulationSceneMeshSubDivision::SubDivide(const uint32_t count)
 {
-	m_subDivisionCount = count;
+	
 	m_subDividedMesh = m_baseMesh;
 
 	for (uint32_t i = 0; i < count; i++)
@@ -52,6 +52,8 @@ dsr::DsrResult NavMeshSimulationSceneMeshSubDivision::SubDivide(const uint32_t c
 		m_subDividedMesh = dsr::data::manipulation::SubDivide(m_subDividedMesh);
 	}
 
+
+	m_subDivisionCount = count;
 	return UpdateScene();
 }
 

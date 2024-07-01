@@ -22,6 +22,8 @@ constexpr const char* PATHLINE_TAG = "Pathlinemarker";
 constexpr auto ERROR_SETPATH_TRIANGLESNOTFOUND = 700;
 
 constexpr auto ERROR_CONSTRUCTPATH_UPPERSURFACE = 800;
+constexpr auto ERROR_CONSTRUCTPATH_UPPERSURFACE_SUBDIVISION = 801;
+constexpr auto ERROR_CONSTRUCTPATH_UPPERSURFACE_BARYCENTRICSUBDIVISION = 802;
 
 constexpr auto ERROR_SETPATH_SETUPD3D11BUFFER = 900;
 
@@ -31,6 +33,9 @@ public:
 
 	void SetUpperSurfaceSubDivision(const dsr::data::StaticMesh<dsr::data::Vertex3F>& upperSurfaceSubDivision);
 	dsr::DsrResult SetUpperSurfaceSubDivisionPath(const DirectX::XMVECTOR& start, const DirectX::XMVECTOR& finish);
+
+	void SetUpperSurfaceBarycentricSubDivision(const dsr::data::StaticMesh<dsr::data::Vertex3F>& upperSurfaceBarycentricSubDivision);
+	dsr::DsrResult SetUpperSurfaceBarycentricSubDivisionPath(const DirectX::XMVECTOR& start, const DirectX::XMVECTOR& finish);
 
 	NavMeshSimulationScenePaths(
 		const uint32_t& sceneId,
@@ -42,7 +47,7 @@ public:
 		const NavMeshSimulationSceneSettings& settings,
 		std::shared_ptr<dsr::WavefrontModel> upperSurface,
 		const dsr::data::StaticMesh<dsr::data::Vertex3F>& upperSurfaceSubDivision,
-		std::shared_ptr<dsr::WavefrontModel> upperSurfaceBarycentricSubDivision
+		const dsr::data::StaticMesh<dsr::data::Vertex3F>& upperSurfaceBarycentricSubDivision
 	);
 
 	dsr::DsrResult SetPaths(
@@ -79,7 +84,8 @@ private:
 		const DirectX::XMVECTOR& finish,
 		const dsr::data::StaticMesh<dsr::data::Vertex3F>& mesh,
 		dsr::data::pathfinding::AStarStaticMeshPathfinder& pathfinder,
-		const DirectX::XMVECTORF32& color
+		const DirectX::XMVECTORF32& color,
+		const bool debugPathIndices = false
 	);
 
 	dsr::DsrResult SetPath(
