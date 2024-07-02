@@ -97,6 +97,11 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 
 	ImGui::End();
 
+
+	ImGui::Begin("Benchmark", nullptr);
+	
+	ImGui::End();
+
 	if (m_input->GetKeyDown(KeyCode::MouseLeft))
 	{
 		EditorScreenClickEvent screenClickEvent(

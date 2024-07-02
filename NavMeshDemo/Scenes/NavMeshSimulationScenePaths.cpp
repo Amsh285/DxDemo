@@ -239,6 +239,49 @@ std::variant<std::vector<float>, dsr::dsr_error> NavMeshSimulationScenePaths::Co
 
 	using namespace DirectX;
 
+	//Todo extract ConstructPath into separate class and track States: IsCoTriangular, IsConcurrent, IsSequential
+	/*
+		class
+		{
+			Properties
+			{
+				IsCoTriangular
+				IsConcurrent
+				
+				GetStartIndex
+
+				SetStartPosition -> UpdateVertexIndices
+
+
+				GetFinishIndex
+				
+				
+				SetFinishPosition -> UpdateVertexIndices
+
+
+				VertexIndices
+			}
+
+			// cannot execute when concurrent or co-triangular
+			// Will return empty pathhistoriy when concurrent or co-triangular
+			ExecutePathSearch
+			{
+			}
+
+			ConstructPath
+			{
+				BuildVertexBufferCoTriangular
+				BuildVertexBufferConcurrent
+				ExecutePathSearch -> BuildVertexBuffer
+			}
+
+			SearchNearestVertexIndices
+			{
+				SearchNearestVertexIndices
+			}
+		}
+	*/
+
 	std::variant<VertexIndexSearchResult, NotFoundError> searchResult = SearchNearestVertexIndices(start, finish, mesh);
 
 	if (std::holds_alternative<NotFoundError>(searchResult))
