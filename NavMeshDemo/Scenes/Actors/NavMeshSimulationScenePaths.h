@@ -2,7 +2,7 @@
 
 #include "dsrpch.h"
 
-#include "Data/NavMeshSimulationSceneSettings.h"
+#include "Scenes/Data/NavMeshSimulationSceneSettings.h"
 
 #include "Data/Pathfinding/AStarPathfinder.h"
 #include "Data/Pathfinding/PathPreProcessor.h"

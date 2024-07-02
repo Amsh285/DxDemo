@@ -133,11 +133,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Scenes\Data\NavMeshSimulationSceneMeshSubDivision.cpp" />
-    <ClCompile Include="Scenes\NavMeshSimulationScenePaths.cpp" />
+    <ClCompile Include="Scenes\Actors\NavMeshSimulationSceneMeshSubDivision.cpp" />
+    <ClCompile Include="Scenes\Actors\NavMeshSimulationScenePaths.cpp" />
     <ClCompile Include="Scenes\Data\PathSelectType.cpp" />
     <ClCompile Include="Scenes\Data\NavMeshSimulationSceneSettings.cpp" />
-    <ClCompile Include="Scenes\NavMeshSimulationSceneMarkers.cpp" />
+    <ClCompile Include="Scenes\Actors\NavMeshSimulationSceneMarkers.cpp" />
     <ClCompile Include="Scenes\NavMeshSimulationSceneBase.cpp" />
     <ClCompile Include="Scenes\BridgeScene.cpp" />
     <ClCompile Include="Components\CameraControllerComponent.cpp" />
@@ -150,11 +150,11 @@
     <ClCompile Include="Systems\CameraControllerSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Scenes\Data\NavMeshSimulationSceneMeshSubDivision.h" />
-    <ClInclude Include="Scenes\NavMeshSimulationScenePaths.h" />
+    <ClInclude Include="Scenes\Actors\NavMeshSimulationSceneMeshSubDivision.h" />
+    <ClInclude Include="Scenes\Actors\NavMeshSimulationScenePaths.h" />
     <ClInclude Include="Scenes\Data\PathSelectType.h" />
     <ClInclude Include="Scenes\Data\NavMeshSimulationSceneSettings.h" />
-    <ClInclude Include="Scenes\NavMeshSimulationSceneMarkers.h" />
+    <ClInclude Include="Scenes\Actors\NavMeshSimulationSceneMarkers.h" />
     <ClInclude Include="Scenes\NavMeshSimulationSceneBase.h" />
     <ClInclude Include="Scenes\BridgeScene.h" />
     <ClInclude Include="Components\CameraControllerComponent.h" />

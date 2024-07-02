@@ -9,9 +9,9 @@
 
 #include "ModelLoaders/BlenderModelLoader.h"
 
-#include "Scenes/NavMeshSimulationSceneMarkers.h"
-#include "Scenes/NavMeshSimulationScenePaths.h"
-#include "Scenes/Data/NavMeshSimulationSceneMeshSubDivision.h"
+#include "Scenes/Actors/NavMeshSimulationSceneMarkers.h"
+#include "Scenes/Actors/NavMeshSimulationScenePaths.h"
+#include "Scenes/Actors/NavMeshSimulationSceneMeshSubDivision.h"
 
 #include "Scenes/Data/NavMeshSimulationSceneSettings.h"
 

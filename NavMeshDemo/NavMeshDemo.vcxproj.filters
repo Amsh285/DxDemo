@@ -42,7 +42,7 @@
     <ClCompile Include="Scenes\NavMeshSimulationSceneBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Scenes\NavMeshSimulationSceneMarkers.cpp">
+    <ClCompile Include="Scenes\Actors\NavMeshSimulationSceneMarkers.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Scenes\Data\NavMeshSimulationSceneSettings.cpp">
@@ -54,10 +54,10 @@
     <ClCompile Include="Scenes\Data\PathSelectType.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Scenes\NavMeshSimulationScenePaths.cpp">
+    <ClCompile Include="Scenes\Actors\NavMeshSimulationScenePaths.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Scenes\Data\NavMeshSimulationSceneMeshSubDivision.cpp">
+    <ClCompile Include="Scenes\Actors\NavMeshSimulationSceneMeshSubDivision.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -86,7 +86,7 @@
     <ClInclude Include="Scenes\NavMeshSimulationSceneBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Scenes\NavMeshSimulationSceneMarkers.h">
+    <ClInclude Include="Scenes\Actors\NavMeshSimulationSceneMarkers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Scenes\Data\NavMeshSimulationSceneSettings.h">
@@ -98,10 +98,10 @@
     <ClInclude Include="Scenes\Data\PathSelectType.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Scenes\NavMeshSimulationScenePaths.h">
+    <ClInclude Include="Scenes\Actors\NavMeshSimulationScenePaths.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Scenes\Data\NavMeshSimulationSceneMeshSubDivision.h">
+    <ClInclude Include="Scenes\Actors\NavMeshSimulationSceneMeshSubDivision.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
