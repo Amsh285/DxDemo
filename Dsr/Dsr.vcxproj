@@ -23,7 +23,7 @@
     <ClInclude Include="src\ErrorHandling\InvalidOperationError.h" />
     <ClInclude Include="src\EngineSubSystems\SceneSystem\Scene.h" />
     <ClInclude Include="src\InputDevices\Screen.h" />
-    <ClInclude Include="src\Data\Pathfinding\AStarStaticMeshPathfinder.h" />
+    <ClInclude Include="src\Data\Pathfinding\AStarPathfinder.h" />
     <ClInclude Include="src\Data\Face.h" />
     <ClInclude Include="src\Data\WindingOrder.h" />
     <ClInclude Include="src\Data\Manipulation\StaticMeshExtensions.h" />
@@ -165,7 +165,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="src\Data\Pathfinding\AStarStaticMeshPathfinder.cpp">
+    <ClCompile Include="src\Data\Pathfinding\AStarPathfinder.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>

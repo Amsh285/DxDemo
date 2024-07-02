@@ -1,5 +1,5 @@
 #include "dsrpch.h"
-#include "AStarStaticMeshPathfinder.h"
+#include "AStarPathfinder.h"
 
 namespace dsr
 {
@@ -7,17 +7,17 @@ namespace dsr
 	{
 		namespace pathfinding
 		{
-			void AStarStaticMeshPathfinder::SetGraph(const StaticMesh<Vertex3F>& sourceMesh)
+			void AStarPathfinder::SetGraph(const StaticMesh<Vertex3F>& sourceMesh)
 			{
 				m_vertexBuffer = sourceMesh.GetVertexBuffer();
 				m_adjacencyList = sourceMesh.GetAdjacencyList();
 			}
 
-			AStarStaticMeshPathfinder::AStarStaticMeshPathfinder()
+			AStarPathfinder::AStarPathfinder()
 			{
 			}
 
-			AStarStaticMeshPathfinder::AStarStaticMeshPathfinder(const StaticMesh<Vertex3F>& sourceMesh)
+			AStarPathfinder::AStarPathfinder(const StaticMesh<Vertex3F>& sourceMesh)
 				: m_vertexBuffer(sourceMesh.GetVertexBuffer()), m_adjacencyList(sourceMesh.GetAdjacencyList())
 			{
 			}
@@ -66,7 +66,7 @@ namespace dsr
 				typedef std::priority_queue<Node, std::vector<Node>> node_priority_queue;
 			}
 
-			std::vector<uint32_t> AStarStaticMeshPathfinder::SearchSequential(const uint32_t& startIndex, const uint32_t& goalIndex)
+			std::vector<uint32_t> AStarPathfinder::SearchSequential(const uint32_t& startIndex, const uint32_t& goalIndex)
 			{
 				using namespace DirectX;
 

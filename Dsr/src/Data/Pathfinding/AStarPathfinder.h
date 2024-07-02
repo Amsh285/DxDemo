@@ -10,13 +10,13 @@ namespace dsr
 	{
 		namespace pathfinding
 		{
-			class AStarStaticMeshPathfinder
+			class AStarPathfinder
 			{
 			public:
 				void SetGraph(const StaticMesh<Vertex3F>& sourceMesh);
 
-				AStarStaticMeshPathfinder();
-				AStarStaticMeshPathfinder(const StaticMesh<Vertex3F>& sourceMesh);
+				AStarPathfinder();
+				AStarPathfinder(const StaticMesh<Vertex3F>& sourceMesh);
 
 				std::vector<uint32_t> SearchSequential(const uint32_t& startIndex, const uint32_t& goalIndex);
 			private:

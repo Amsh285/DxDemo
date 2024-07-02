@@ -228,7 +228,7 @@ std::variant<std::vector<float>, dsr::dsr_error> NavMeshSimulationScenePaths::Co
 	const DirectX::XMVECTOR& start,
 	const DirectX::XMVECTOR& finish,
 	const dsr::data::StaticMesh<dsr::data::Vertex3F>& mesh,
-	dsr::data::pathfinding::AStarStaticMeshPathfinder& pathfinder,
+	dsr::data::pathfinding::AStarPathfinder& pathfinder,
 	const DirectX::XMVECTORF32& color,
 	const bool debugPathIndices
 )

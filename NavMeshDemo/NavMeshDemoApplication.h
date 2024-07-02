@@ -4,7 +4,6 @@
 #include "DsrApplication.h"
 
 #include "Data/Manipulation/StaticMeshExtensions.h"
-#include "Data/Pathfinding/AStarStaticMeshPathfinder.h"
 
 #include "DirectX/Rendering/ModelLoaderExtensions/BlenderModelLoaderExtensions.h"
 
