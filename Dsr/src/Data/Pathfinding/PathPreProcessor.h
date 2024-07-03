@@ -14,7 +14,7 @@ namespace dsr
 		namespace pathfinding
 		{
 			template<class TVertex>
-			std::variant<VertexIndexSearchResult, NotFoundError> SearchNearestVertexIndices(
+			VertexIndexSearchResult SearchNearestVertexIndices(
 				const DirectX::XMVECTOR& start,
 				const DirectX::XMVECTOR& finish,
 				const StaticMesh<TVertex>& mesh
@@ -41,12 +41,12 @@ namespace dsr
 
 				// If either triangle is not found, return an error
 				if (!startTriangle.has_value() || !finishTriangle.has_value()) {
-					return NotFoundError("Intersection Triangles not found.");
+					return VertexIndexSearchResult(0, 0, VertexIndexSearchResultType::NoIntersection);
 				}
 
 				// If the start and finish points intersect the same triangle
 				if (startTriangle.value().Equal(finishTriangle.value())) {
-					return VertexIndexSearchResult(0, 0, true);
+					return VertexIndexSearchResult(0, 0, VertexIndexSearchResultType::CoTriangular);
 				}
 
 				// If the start and finish points intersect different triangles, find the closest vertices
@@ -62,7 +62,10 @@ namespace dsr
 					t1.V2, t1.Index2
 				);
 
-				return VertexIndexSearchResult(closest.first, closest.second, false);
+				if(closest.first == closest.second)
+					return VertexIndexSearchResult(closest.first, closest.second, VertexIndexSearchResultType::Concurrent);
+
+				return VertexIndexSearchResult(closest.first, closest.second, VertexIndexSearchResultType::PathSearchRequired);
 			}
 		}
 	}

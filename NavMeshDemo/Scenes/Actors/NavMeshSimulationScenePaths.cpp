@@ -227,7 +227,7 @@ std::variant<std::vector<float>, dsr::dsr_error> NavMeshSimulationScenePaths::Co
 	const DirectX::XMVECTOR& start,
 	const DirectX::XMVECTOR& finish,
 	const dsr::data::StaticMesh<dsr::data::Vertex3F>& mesh,
-	dsr::data::pathfinding::AStarPathfinder& pathfinder,
+	dsr::data::pathfinding::AStarStaticMeshPathfinder& pathfinder,
 	const DirectX::XMVECTORF32& color
 )
 {
@@ -244,11 +244,11 @@ std::variant<std::vector<float>, dsr::dsr_error> NavMeshSimulationScenePaths::Co
 
 	const VertexIndexSearchResult result = std::get<VertexIndexSearchResult>(searchResult);
 
-	if (result.IsCoTriangular())
+	if (result.GetResultType() == VertexIndexSearchResultType::CoTriangular)
 	{
 		return BuildVertexBufferCoTriangular(start, finish, color);
 	}
-	else if (result.IsConcurrent())
+	else if (result.GetResultType() == VertexIndexSearchResultType::Concurrent)
 	{
 		const std::vector<Vertex3F>& vertexBuffer = mesh.GetVertexBuffer();
 		return BuildVertexBufferConcurrent(
@@ -259,7 +259,7 @@ std::variant<std::vector<float>, dsr::dsr_error> NavMeshSimulationScenePaths::Co
 		);
 	}
 
-	std::vector<uint32_t> path = pathfinder.SearchSequential(result.GetStartIndex(), result.GetFinishIndex());
+	std::vector<uint32_t> path = pathfinder.Search(result.GetStartIndex(), result.GetFinishIndex());
 	return BuildVertexBuffer(start, finish, path, mesh.GetVertexBuffer(), color);
 }
 

@@ -10,10 +10,9 @@ namespace dsr
 	{
 		namespace pathfinding
 		{
-			class AStarPathfinder
+			class AStarPathfinder final
 			{
 			public:
-				void SetGraph(const StaticMesh<Vertex3F>& sourceMesh);
 				void SetGraph(
 					const std::vector<Vertex3F>& vertexBuffer,
 					const std::unordered_map<uint32_t, std::vector<uint32_t>>& adjacencyList

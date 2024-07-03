@@ -4,7 +4,7 @@
 
 #include "Scenes/Data/NavMeshSimulationSceneSettings.h"
 
-#include "Data/Pathfinding/AStarPathfinder.h"
+#include "Data/Pathfinding/AStarStaticMeshPathfinder.h"
 #include "Data/Pathfinding/PathPreProcessor.h"
 #include "Data/Pathfinding/PathPostProcessor.h"
 
@@ -66,9 +66,9 @@ private:
 	dsr::data::StaticMesh<dsr::data::Vertex3F> m_upperSurfaceSubDivision;
 	dsr::data::StaticMesh<dsr::data::Vertex3F> m_upperSurfaceBarycentricSubDivision;
 
-	dsr::data::pathfinding::AStarPathfinder m_upperSurfacePathfinder;
-	dsr::data::pathfinding::AStarPathfinder m_upperSurfaceSubDivisionPathfinder;
-	dsr::data::pathfinding::AStarPathfinder m_upperSurfaceBarycentricSubDivisionPathfinder;
+	dsr::data::pathfinding::AStarStaticMeshPathfinder m_upperSurfacePathfinder;
+	dsr::data::pathfinding::AStarStaticMeshPathfinder m_upperSurfaceSubDivisionPathfinder;
+	dsr::data::pathfinding::AStarStaticMeshPathfinder m_upperSurfaceBarycentricSubDivisionPathfinder;
 
 	std::shared_ptr<dsr::scene::SceneManager> m_sceneManager;
 	std::shared_ptr<dsr::directX::Direct3dDevice> m_device;
@@ -83,7 +83,7 @@ private:
 		const DirectX::XMVECTOR& start,
 		const DirectX::XMVECTOR& finish,
 		const dsr::data::StaticMesh<dsr::data::Vertex3F>& mesh,
-		dsr::data::pathfinding::AStarPathfinder& pathfinder,
+		dsr::data::pathfinding::AStarStaticMeshPathfinder& pathfinder,
 		const DirectX::XMVECTORF32& color
 	);
 

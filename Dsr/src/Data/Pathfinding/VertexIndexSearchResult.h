@@ -6,31 +6,33 @@ namespace dsr
 	{
 		namespace pathfinding
 		{
+			enum class VertexIndexSearchResultType
+			{
+				NoIntersection,
+				CoTriangular,
+				Concurrent,
+				PathSearchRequired
+			};
+
 			class VertexIndexSearchResult
 			{
 			public:
 				uint32_t GetStartIndex() const { return m_startIndex; }
 				uint32_t GetFinishIndex() const { return m_finishIndex; }
-
-				// Check if start and finish points are in the same triangle
-				bool IsCoTriangular() const { return m_coTriangular; }
-
-				// Check if nearest Triangle Vertices are the same
-				bool IsConcurrent() const { return m_startIndex == m_finishIndex; }
+				VertexIndexSearchResultType GetResultType() const { return m_ResultType; }
 
 				VertexIndexSearchResult(
 					const uint32_t startIndex,
 					const uint32_t finishIndex,
-					const bool coTriangular
-				) : m_startIndex(startIndex), m_finishIndex(finishIndex), m_coTriangular(coTriangular)
+					const VertexIndexSearchResultType resultType
+				) : m_startIndex(startIndex), m_finishIndex(finishIndex), m_ResultType(resultType)
 				{
 				}
 
 			private:
 				uint32_t m_startIndex;
 				uint32_t m_finishIndex;
-
-				bool m_coTriangular;
+				VertexIndexSearchResultType m_ResultType;
 			};
 		}
 	}

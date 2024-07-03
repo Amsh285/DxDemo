@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Data\Pathfinding\AStarStaticMeshPathfinder.h" />
     <ClInclude Include="src\Data\Pathfinding\PathPostProcessor.h" />
     <ClInclude Include="src\Data\Pathfinding\PathPreProcessor.h" />
     <ClInclude Include="src\EngineSubSystems\SceneSystem\CameraExtensions.h" />
@@ -117,6 +118,10 @@
     <ClInclude Include="src\Data\Manipulation\StaticMeshVertexBufferExtensions.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Data\Pathfinding\AStarStaticMeshPathfinder.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="src\Data\Pathfinding\PathPostProcessor.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>

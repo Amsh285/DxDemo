@@ -7,12 +7,6 @@ namespace dsr
 	{
 		namespace pathfinding
 		{
-			void AStarPathfinder::SetGraph(const StaticMesh<Vertex3F>& sourceMesh)
-			{
-				m_vertexBuffer = sourceMesh.GetVertexBuffer();
-				m_adjacencyList = sourceMesh.GetAdjacencyList();
-			}
-
 			void AStarPathfinder::SetGraph(
 				const std::vector<Vertex3F>& vertexBuffer,
 				const std::unordered_map<uint32_t, std::vector<uint32_t>>& adjacencyList
