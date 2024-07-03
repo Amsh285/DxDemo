@@ -138,8 +138,7 @@ dsr::DsrResult NavMeshSimulationScenePaths::SetPaths(const DirectX::XMVECTOR& st
 		finish,
 		m_upperSurfaceSubDivision,
 		m_upperSurfaceSubDivisionPathfinder,
-		Colors::Green,
-		true
+		Colors::Green
 	);
 
 	std::variant<std::vector<float>, dsr_error> constructUpperSurfaceBarycentricSubDivisionResult = ConstructPath(
@@ -229,8 +228,7 @@ std::variant<std::vector<float>, dsr::dsr_error> NavMeshSimulationScenePaths::Co
 	const DirectX::XMVECTOR& finish,
 	const dsr::data::StaticMesh<dsr::data::Vertex3F>& mesh,
 	dsr::data::pathfinding::AStarPathfinder& pathfinder,
-	const DirectX::XMVECTORF32& color,
-	const bool debugPathIndices
+	const DirectX::XMVECTORF32& color
 )
 {
 	using namespace dsr;
@@ -238,49 +236,6 @@ std::variant<std::vector<float>, dsr::dsr_error> NavMeshSimulationScenePaths::Co
 	using namespace dsr::data::pathfinding;
 
 	using namespace DirectX;
-
-	//Todo extract ConstructPath into separate class and track States: IsCoTriangular, IsConcurrent, IsSequential
-	/*
-		class
-		{
-			Properties
-			{
-				IsCoTriangular
-				IsConcurrent
-				
-				GetStartIndex
-
-				SetStartPosition -> UpdateVertexIndices
-
-
-				GetFinishIndex
-				
-				
-				SetFinishPosition -> UpdateVertexIndices
-
-
-				VertexIndices
-			}
-
-			// cannot execute when concurrent or co-triangular
-			// Will return empty pathhistoriy when concurrent or co-triangular
-			ExecutePathSearch
-			{
-			}
-
-			ConstructPath
-			{
-				BuildVertexBufferCoTriangular
-				BuildVertexBufferConcurrent
-				ExecutePathSearch -> BuildVertexBuffer
-			}
-
-			SearchNearestVertexIndices
-			{
-				SearchNearestVertexIndices
-			}
-		}
-	*/
 
 	std::variant<VertexIndexSearchResult, NotFoundError> searchResult = SearchNearestVertexIndices(start, finish, mesh);
 
@@ -305,19 +260,6 @@ std::variant<std::vector<float>, dsr::dsr_error> NavMeshSimulationScenePaths::Co
 	}
 
 	std::vector<uint32_t> path = pathfinder.SearchSequential(result.GetStartIndex(), result.GetFinishIndex());
-
-	if (debugPathIndices)
-	{
-		std::cout << "Path Indices: " << std::endl;
-
-		for (size_t i = 0; i < path.size(); i++)
-		{
-			std::cout << path[i] << std::endl;
-		}
-
-		std::cout << "End Path Indices" << std::endl;
-	}
-
 	return BuildVertexBuffer(start, finish, path, mesh.GetVertexBuffer(), color);
 }
 

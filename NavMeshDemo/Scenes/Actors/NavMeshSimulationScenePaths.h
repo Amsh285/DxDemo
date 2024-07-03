@@ -84,8 +84,7 @@ private:
 		const DirectX::XMVECTOR& finish,
 		const dsr::data::StaticMesh<dsr::data::Vertex3F>& mesh,
 		dsr::data::pathfinding::AStarPathfinder& pathfinder,
-		const DirectX::XMVECTORF32& color,
-		const bool debugPathIndices = false
+		const DirectX::XMVECTORF32& color
 	);
 
 	dsr::DsrResult SetPath(

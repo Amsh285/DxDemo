@@ -13,12 +13,23 @@ namespace dsr
 				m_adjacencyList = sourceMesh.GetAdjacencyList();
 			}
 
+			void AStarPathfinder::SetGraph(
+				const std::vector<Vertex3F>& vertexBuffer,
+				const std::unordered_map<uint32_t, std::vector<uint32_t>>& adjacencyList
+			)
+			{
+				m_vertexBuffer = vertexBuffer;
+				m_adjacencyList = adjacencyList;
+			}
+
 			AStarPathfinder::AStarPathfinder()
 			{
 			}
 
-			AStarPathfinder::AStarPathfinder(const StaticMesh<Vertex3F>& sourceMesh)
-				: m_vertexBuffer(sourceMesh.GetVertexBuffer()), m_adjacencyList(sourceMesh.GetAdjacencyList())
+			AStarPathfinder::AStarPathfinder(
+				const std::vector<Vertex3F>& vertexBuffer,
+				const std::unordered_map<uint32_t, std::vector<uint32_t>>& adjacencyList
+			) : m_vertexBuffer(vertexBuffer), m_adjacencyList(adjacencyList)
 			{
 			}
 
