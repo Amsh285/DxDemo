@@ -40,7 +40,7 @@ namespace dsr
 			std::vector<float> BuildVertexBufferConcurrent(
 				const DirectX::XMVECTOR& start,
 				const DirectX::XMVECTOR& finish,
-				const DirectX::XMVECTOR& edge,
+				const DirectX::XMVECTOR& connectionVertex,
 				const DirectX::XMVECTORF32& color
 			)
 			{
@@ -56,18 +56,18 @@ namespace dsr
 				vertexBuffer.push_back(XMVectorGetZ(color));
 				vertexBuffer.push_back(XMVectorGetW(color));
 
-				vertexBuffer.push_back(XMVectorGetX(edge));
-				vertexBuffer.push_back(XMVectorGetY(edge));
-				vertexBuffer.push_back(XMVectorGetZ(edge));
+				vertexBuffer.push_back(XMVectorGetX(connectionVertex));
+				vertexBuffer.push_back(XMVectorGetY(connectionVertex));
+				vertexBuffer.push_back(XMVectorGetZ(connectionVertex));
 
 				vertexBuffer.push_back(XMVectorGetX(color));
 				vertexBuffer.push_back(XMVectorGetY(color));
 				vertexBuffer.push_back(XMVectorGetZ(color));
 				vertexBuffer.push_back(XMVectorGetW(color));
 				
-				vertexBuffer.push_back(XMVectorGetX(edge));
-				vertexBuffer.push_back(XMVectorGetY(edge));
-				vertexBuffer.push_back(XMVectorGetZ(edge));
+				vertexBuffer.push_back(XMVectorGetX(connectionVertex));
+				vertexBuffer.push_back(XMVectorGetY(connectionVertex));
+				vertexBuffer.push_back(XMVectorGetZ(connectionVertex));
 
 				vertexBuffer.push_back(XMVectorGetX(color));
 				vertexBuffer.push_back(XMVectorGetY(color));

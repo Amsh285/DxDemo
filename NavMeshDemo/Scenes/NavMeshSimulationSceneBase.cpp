@@ -166,6 +166,11 @@ dsr::DsrResult NavMeshSimulationSceneBase::LoadSceneData()
 	m_upperSurfaceBarycentricSubDivision->SetModelMatrix(m_sceneSettings.UpperSurfaceBarycentricSubDivisionModel);
 	m_upperSurfaceBarycentricSubDivision->SubDivideBarycentric(1);
 
+	m_pathfinders.SetUpperSurfaceMesh(dsr::data::manipulation::FilterDistinct(*m_upperSurface->Mesh));
+	m_pathfinders.SetUpperSurfaceSubDivisionMesh(dsr::data::manipulation::FilterDistinct(m_upperSurfaceSubDivision->GetSubDividedMesh()));
+	m_pathfinders.SetUpperSurfaceBarycentricSubDivisionMesh(dsr::data::manipulation::FilterDistinct(m_upperSurfaceBarycentricSubDivision->GetSubDividedMesh()));
+
+	//Todo: Refactor m_paths they should only update the scene now
 	m_paths->Setup(
 		m_sceneSettings,
 		m_upperSurface,

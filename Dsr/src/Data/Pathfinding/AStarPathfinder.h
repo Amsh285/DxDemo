@@ -24,7 +24,7 @@ namespace dsr
 					const std::unordered_map<uint32_t, std::vector<uint32_t>>& adjacencyList
 				);
 
-				std::vector<uint32_t> SearchSequential(const uint32_t& startIndex, const uint32_t& goalIndex);
+				std::vector<uint32_t> Search(const uint32_t& startIndex, const uint32_t& goalIndex);
 			private:
 				std::vector<Vertex3F> m_vertexBuffer;
 				std::unordered_map<uint32_t, std::vector<uint32_t>> m_adjacencyList;

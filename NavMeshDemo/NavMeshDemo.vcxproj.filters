@@ -60,6 +60,9 @@
     <ClCompile Include="Scenes\Actors\NavMeshSimulationSceneMeshSubDivision.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Scenes\Actors\NavMeshSimulationScenePathfinders.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NavMeshDemoApplication.h">
@@ -102,6 +105,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Scenes\Actors\NavMeshSimulationSceneMeshSubDivision.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\Actors\NavMeshSimulationScenePathfinders.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

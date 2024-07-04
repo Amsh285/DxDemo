@@ -229,6 +229,8 @@ namespace dsr
 						(vertex0.Position.z + vertex1.Position.z + vertex2.Position.z) * c
 					);
 					
+					//interpolation nochmal ansehen
+					//okay solange flat shading später fixen
 					centroidVertex.Normal = XMFLOAT3(
 						(vertex0.Normal.x + vertex1.Normal.x + vertex2.Normal.x) * c,
 						(vertex0.Normal.y + vertex1.Normal.y + vertex2.Normal.y) * c,

@@ -133,6 +133,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Scenes\Actors\NavMeshSimulationScenePathfinders.cpp" />
     <ClCompile Include="Scenes\Actors\NavMeshSimulationSceneMeshSubDivision.cpp" />
     <ClCompile Include="Scenes\Actors\NavMeshSimulationScenePaths.cpp" />
     <ClCompile Include="Scenes\Data\PathSelectType.cpp" />
@@ -150,6 +151,7 @@
     <ClCompile Include="Systems\CameraControllerSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Scenes\Actors\NavMeshSimulationScenePathfinders.h" />
     <ClInclude Include="Scenes\Actors\NavMeshSimulationSceneMeshSubDivision.h" />
     <ClInclude Include="Scenes\Actors\NavMeshSimulationScenePaths.h" />
     <ClInclude Include="Scenes\Data\PathSelectType.h" />

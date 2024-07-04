@@ -71,7 +71,7 @@ namespace dsr
 				typedef std::priority_queue<Node, std::vector<Node>> node_priority_queue;
 			}
 
-			std::vector<uint32_t> AStarPathfinder::SearchSequential(const uint32_t& startIndex, const uint32_t& goalIndex)
+			std::vector<uint32_t> AStarPathfinder::Search(const uint32_t& startIndex, const uint32_t& goalIndex)
 			{
 				using namespace DirectX;
 

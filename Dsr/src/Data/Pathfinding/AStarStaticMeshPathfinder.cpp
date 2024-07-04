@@ -50,19 +50,18 @@ namespace dsr
 				return dsr::data::pathfinding::SearchNearestVertexIndices(start, finish, m_navMesh);
 			}
 
-			std::vector<uint32_t> AStarStaticMeshPathfinder::Search(const uint32_t& startIndex, const uint32_t& goalIndex)
+			DirectX::XMVECTOR AStarStaticMeshPathfinder::GetConnectionVertex(const VertexIndexSearchResult& result) const
 			{
-				return m_pathfinder.SearchSequential(startIndex, goalIndex);
+				using namespace DirectX;
+
+				assert(result.GetResultType() == VertexIndexSearchResultType::Concurrent);
+
+				return XMLoadFloat3(&m_navMesh.GetVertexBuffer()[result.GetStartIndex()].Position);
 			}
 
-			std::pair<VertexIndexSearchResult, std::vector<uint32_t>> AStarStaticMeshPathfinder::Search(const DirectX::XMVECTOR& start, const DirectX::XMVECTOR& finish)
+			std::vector<uint32_t> AStarStaticMeshPathfinder::Search(const uint32_t& startIndex, const uint32_t& goalIndex)
 			{
-				VertexIndexSearchResult searchResult = SearchNearestVertexIndices(start, finish);
-
-				if(searchResult.GetResultType() == VertexIndexSearchResultType::PathSearchRequired)
-					return std::make_pair(searchResult, m_pathfinder.SearchSequential(searchResult.GetStartIndex(), searchResult.GetFinishIndex()));
-
-				return std::make_pair(searchResult, std::vector<uint32_t>());
+				return m_pathfinder.Search(startIndex, goalIndex);
 			}
 		}
 	}

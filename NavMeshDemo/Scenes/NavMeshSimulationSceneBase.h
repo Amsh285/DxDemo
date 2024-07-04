@@ -9,6 +9,7 @@
 
 #include "ModelLoaders/BlenderModelLoader.h"
 
+#include "Scenes/Actors/NavMeshSimulationScenePathfinders.h"
 #include "Scenes/Actors/NavMeshSimulationSceneMarkers.h"
 #include "Scenes/Actors/NavMeshSimulationScenePaths.h"
 #include "Scenes/Actors/NavMeshSimulationSceneMeshSubDivision.h"
@@ -62,6 +63,7 @@ protected:
 	NavMeshSimulationSceneSettings m_sceneSettings;
 	std::unique_ptr<NavMeshSimulationSceneMarkers> m_markers;
 	std::unique_ptr<NavMeshSimulationScenePaths> m_paths;
+	NavMeshSimulationScenePathfinders m_pathfinders;
 
 	dsr::ecs::Entity m_baseMeshEntity;
 	dsr::ecs::Entity m_upperSurfaceEntity;
