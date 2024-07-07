@@ -10,7 +10,7 @@ BridgeScene::BridgeScene(
 	const std::shared_ptr<dsr::scene::SceneManager>& sceneManager,
 	const std::shared_ptr<dsr::directX::Direct3dDevice>& device,
 	const std::shared_ptr<dsr::BlenderModelLoader>& blenderModelLoader
-)	: NavMeshSimulationSceneBase("Bridges", sceneManager, device, blenderModelLoader)
+)	: NavMeshSimulationSceneBase("Bridges2", sceneManager, device, blenderModelLoader)
 {
 	using namespace DirectX;
 
