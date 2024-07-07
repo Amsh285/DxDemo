@@ -16,6 +16,10 @@ public:
 	std::shared_ptr<dsr::data::pathfinding::AStarStaticMeshPathfinder> GetUpperSurfaceBarycentricSubDivisionPathfinder() const { return m_upperSurfaceBarycentricSubDivisionPathfinder; }
 	
 	NavMeshSimulationScenePathfinders();
+
+	std::vector<float> ConstructUpperSurfacePath(const DirectX::XMVECTOR& start, const DirectX::XMVECTOR& finish);
+	std::vector<float> ConstructUpperSurfaceSubDivisionPath(const DirectX::XMVECTOR& start, const DirectX::XMVECTOR& finish);
+	std::vector<float> ConstructUpperSurfaceBarycentricSubDivisionPath(const DirectX::XMVECTOR& start, const DirectX::XMVECTOR& finish);
 private:
 	std::shared_ptr<dsr::data::pathfinding::AStarStaticMeshPathfinder> m_upperSurfacePathfinder;
 	std::shared_ptr<dsr::data::pathfinding::AStarStaticMeshPathfinder> m_upperSurfaceSubDivisionPathfinder;

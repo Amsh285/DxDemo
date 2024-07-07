@@ -26,6 +26,21 @@ NavMeshSimulationScenePathfinders::NavMeshSimulationScenePathfinders()
 	m_upperSurfaceBarycentricSubDivisionPathfinder = std::make_shared<AStarStaticMeshPathfinder>();
 }
 
+std::vector<float> NavMeshSimulationScenePathfinders::ConstructUpperSurfacePath(const DirectX::XMVECTOR& start, const DirectX::XMVECTOR& finish)
+{
+	return ConstructPath(start, finish, *m_upperSurfacePathfinder, DirectX::Colors::Blue);
+}
+
+std::vector<float> NavMeshSimulationScenePathfinders::ConstructUpperSurfaceSubDivisionPath(const DirectX::XMVECTOR& start, const DirectX::XMVECTOR& finish)
+{
+	return ConstructPath(start, finish, *m_upperSurfaceSubDivisionPathfinder, DirectX::Colors::Green);
+}
+
+std::vector<float> NavMeshSimulationScenePathfinders::ConstructUpperSurfaceBarycentricSubDivisionPath(const DirectX::XMVECTOR& start, const DirectX::XMVECTOR& finish)
+{
+	return ConstructPath(start, finish, *m_upperSurfaceBarycentricSubDivisionPathfinder, DirectX::Colors::Red);
+}
+
 std::vector<float> NavMeshSimulationScenePathfinders::ConstructPath(
 	const DirectX::XMVECTOR& start,
 	const DirectX::XMVECTOR& finish,
@@ -42,8 +57,6 @@ std::vector<float> NavMeshSimulationScenePathfinders::ConstructPath(
 
 	switch (result.GetResultType())
 	{
-	case VertexIndexSearchResultType::NoIntersection:
-		return std::vector<float>();
 	case VertexIndexSearchResultType::CoTriangular:
 		return BuildVertexBufferCoTriangular(start, finish, color);
 	case VertexIndexSearchResultType::Concurrent:

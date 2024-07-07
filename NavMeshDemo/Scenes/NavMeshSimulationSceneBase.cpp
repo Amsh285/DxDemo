@@ -15,8 +15,10 @@ NavMeshSimulationSceneBase::NavMeshSimulationSceneBase(
 ) : m_sceneName(sceneName), m_sceneId(sceneManager->CreateNewScene(sceneName)),
 m_sceneManager(sceneManager), m_device(device), m_blenderModelLoader(blenderModelLoader)
 {
+	m_pathfinders = std::make_shared<NavMeshSimulationScenePathfinders>();
+
 	m_markers = std::make_unique<NavMeshSimulationSceneMarkers>(m_sceneId, sceneManager, device);
-	m_paths = std::make_unique<NavMeshSimulationScenePaths>(m_sceneId, sceneManager, device);
+	m_paths = std::make_unique<NavMeshSimulationScenePaths>(m_sceneId, m_pathfinders, sceneManager, device);
 
 	m_sceneSettings.BaseMeshFileName = m_sceneName + ".wf";
 	m_sceneSettings.BaseMeshMaterialFileName = m_sceneName + ".mtl";
@@ -127,9 +129,6 @@ dsr::DsrResult NavMeshSimulationSceneBase::UpdateUpperSurfaceBarycentricSubDivis
 
 	m_upperSurfaceBarycentricSubDivision->SubDivideBarycentric(count);
 	m_paths->SetUpperSurfaceBarycentricSubDivision(FilterDistinct(m_upperSurfaceBarycentricSubDivision->GetSubDividedMesh()));
-
-	/*m_paths->SetUpperSurfaceBarycentricSubDivisionPath(m_markers->GetStartPositionLocal(), m_markers->GetFinishPositionLocal());*/
-
 	m_paths->SetPaths(m_markers->GetStartPositionLocal(), m_markers->GetFinishPositionLocal());
 
 	return DsrResult::Success("Update Barycentric SubDivision Success.");
@@ -166,9 +165,9 @@ dsr::DsrResult NavMeshSimulationSceneBase::LoadSceneData()
 	m_upperSurfaceBarycentricSubDivision->SetModelMatrix(m_sceneSettings.UpperSurfaceBarycentricSubDivisionModel);
 	m_upperSurfaceBarycentricSubDivision->SubDivideBarycentric(1);
 
-	m_pathfinders.SetUpperSurfaceMesh(dsr::data::manipulation::FilterDistinct(*m_upperSurface->Mesh));
-	m_pathfinders.SetUpperSurfaceSubDivisionMesh(dsr::data::manipulation::FilterDistinct(m_upperSurfaceSubDivision->GetSubDividedMesh()));
-	m_pathfinders.SetUpperSurfaceBarycentricSubDivisionMesh(dsr::data::manipulation::FilterDistinct(m_upperSurfaceBarycentricSubDivision->GetSubDividedMesh()));
+	m_pathfinders->SetUpperSurfaceMesh(dsr::data::manipulation::FilterDistinct(*m_upperSurface->Mesh));
+	m_pathfinders->SetUpperSurfaceSubDivisionMesh(dsr::data::manipulation::FilterDistinct(m_upperSurfaceSubDivision->GetSubDividedMesh()));
+	m_pathfinders->SetUpperSurfaceBarycentricSubDivisionMesh(dsr::data::manipulation::FilterDistinct(m_upperSurfaceBarycentricSubDivision->GetSubDividedMesh()));
 
 	//Todo: Refactor m_paths they should only update the scene now
 	m_paths->Setup(

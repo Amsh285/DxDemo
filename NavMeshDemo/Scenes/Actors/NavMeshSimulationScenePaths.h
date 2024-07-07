@@ -17,6 +17,8 @@
 
 #include "ModelLoaders/BlenderModelLoader.h"
 
+#include "NavMeshSimulationScenePathfinders.h"
+
 constexpr const char* PATHLINE_TAG = "Pathlinemarker";
 
 constexpr auto ERROR_SETPATH_TRIANGLESNOTFOUND = 700;
@@ -32,13 +34,12 @@ class NavMeshSimulationScenePaths
 public:
 
 	void SetUpperSurfaceSubDivision(const dsr::data::StaticMesh<dsr::data::Vertex3F>& upperSurfaceSubDivision);
-	dsr::DsrResult SetUpperSurfaceSubDivisionPath(const DirectX::XMVECTOR& start, const DirectX::XMVECTOR& finish);
 
 	void SetUpperSurfaceBarycentricSubDivision(const dsr::data::StaticMesh<dsr::data::Vertex3F>& upperSurfaceBarycentricSubDivision);
-	dsr::DsrResult SetUpperSurfaceBarycentricSubDivisionPath(const DirectX::XMVECTOR& start, const DirectX::XMVECTOR& finish);
 
 	NavMeshSimulationScenePaths(
 		const uint32_t& sceneId,
+		const std::shared_ptr<NavMeshSimulationScenePathfinders>& pathfinders,
 		const std::shared_ptr<dsr::scene::SceneManager>& sceneManager,
 		const std::shared_ptr<dsr::directX::Direct3dDevice>& device
 	);
@@ -62,14 +63,7 @@ private:
 	dsr::ecs::Entity m_upperSurfaceSubDivisionPathEntity;
 	dsr::ecs::Entity m_upperSurfaceBarycentricSubDivisionPathEntity;
 
-	dsr::data::StaticMesh<dsr::data::Vertex3F> m_upperSurface;
-	dsr::data::StaticMesh<dsr::data::Vertex3F> m_upperSurfaceSubDivision;
-	dsr::data::StaticMesh<dsr::data::Vertex3F> m_upperSurfaceBarycentricSubDivision;
-
-	dsr::data::pathfinding::AStarStaticMeshPathfinder m_upperSurfacePathfinder;
-	dsr::data::pathfinding::AStarStaticMeshPathfinder m_upperSurfaceSubDivisionPathfinder;
-	dsr::data::pathfinding::AStarStaticMeshPathfinder m_upperSurfaceBarycentricSubDivisionPathfinder;
-
+	std::shared_ptr<NavMeshSimulationScenePathfinders> m_pathfinders;
 	std::shared_ptr<dsr::scene::SceneManager> m_sceneManager;
 	std::shared_ptr<dsr::directX::Direct3dDevice> m_device;
 
@@ -77,14 +71,6 @@ private:
 		const dsr::ecs::Entity entity,
 		const std::string& name,
 		const DirectX::XMMATRIX& model
-	);
-
-	std::variant<std::vector<float>, dsr::dsr_error> ConstructPath(
-		const DirectX::XMVECTOR& start,
-		const DirectX::XMVECTOR& finish,
-		const dsr::data::StaticMesh<dsr::data::Vertex3F>& mesh,
-		dsr::data::pathfinding::AStarStaticMeshPathfinder& pathfinder,
-		const DirectX::XMVECTORF32& color
 	);
 
 	dsr::DsrResult SetPath(

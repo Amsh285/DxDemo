@@ -8,83 +8,20 @@
 
 void NavMeshSimulationScenePaths::SetUpperSurfaceSubDivision(const dsr::data::StaticMesh<dsr::data::Vertex3F>& upperSurfaceSubDivision)
 {
-	m_upperSurfaceSubDivision = upperSurfaceSubDivision;
-	m_upperSurfaceSubDivisionPathfinder.SetGraph(m_upperSurfaceSubDivision);
-}
-
-dsr::DsrResult NavMeshSimulationScenePaths::SetUpperSurfaceSubDivisionPath(const DirectX::XMVECTOR& start, const DirectX::XMVECTOR& finish)
-{
-	using namespace dsr;
-
-	using namespace DirectX;
-
-	std::variant<std::vector<float>, dsr_error> constructUpperSurfacePathSubDivisionResult = ConstructPath(
-		start,
-		finish,
-		m_upperSurfaceSubDivision,
-		m_upperSurfaceSubDivisionPathfinder,
-		Colors::Green
-	);
-
-	if (std::holds_alternative<dsr_error>(constructUpperSurfacePathSubDivisionResult))
-	{
-		const dsr_error& error = std::get<dsr_error>(constructUpperSurfacePathSubDivisionResult);
-		std::string errorMessage = "Error constructing Path for Upper surface SubDivision: ";
-		errorMessage += error.what();
-		return DsrResult(errorMessage, ERROR_CONSTRUCTPATH_UPPERSURFACE_SUBDIVISION);
-	}
-
-	const std::vector<float>& upperSurfaceSubDivisionPath = std::get<std::vector<float>>(constructUpperSurfacePathSubDivisionResult);
-
-	DsrResult setUpperSurfaceSubDivisionPathResult = SetPath(m_upperSurfaceSubDivisionPathEntity, upperSurfaceSubDivisionPath);
-	if (setUpperSurfaceSubDivisionPathResult.GetResultStatusCode() != RESULT_SUCCESS)
-		return setUpperSurfaceSubDivisionPathResult;
-
-	return DsrResult::Success("SetUpperSurfaceSubDivisionPath Success.");
+	m_pathfinders->SetUpperSurfaceSubDivisionMesh(upperSurfaceSubDivision);
 }
 
 void NavMeshSimulationScenePaths::SetUpperSurfaceBarycentricSubDivision(const dsr::data::StaticMesh<dsr::data::Vertex3F>& upperSurfaceBarycentricSubDivision)
 {
-	m_upperSurfaceBarycentricSubDivision = upperSurfaceBarycentricSubDivision;
-	m_upperSurfaceBarycentricSubDivisionPathfinder.SetGraph(m_upperSurfaceBarycentricSubDivision);
-}
-
-dsr::DsrResult NavMeshSimulationScenePaths::SetUpperSurfaceBarycentricSubDivisionPath(const DirectX::XMVECTOR& start, const DirectX::XMVECTOR& finish)
-{
-	using namespace dsr;
-
-	using namespace DirectX;
-
-	std::variant<std::vector<float>, dsr_error> constructUpperSurfaceBarycentricSubDivisionResult = ConstructPath(
-		start,
-		finish,
-		m_upperSurfaceBarycentricSubDivision,
-		m_upperSurfaceBarycentricSubDivisionPathfinder,
-		Colors::Red
-	);
-
-	if (std::holds_alternative<dsr_error>(constructUpperSurfaceBarycentricSubDivisionResult))
-	{
-		const dsr_error& error = std::get<dsr_error>(constructUpperSurfaceBarycentricSubDivisionResult);
-		std::string errorMessage = "Error constructing Path for Upper surface barycentric SubDivision: ";
-		errorMessage += error.what();
-		return DsrResult(errorMessage, ERROR_CONSTRUCTPATH_UPPERSURFACE_BARYCENTRICSUBDIVISION);
-	}
-
-	const std::vector<float>& upperSurfaceBarycentricSubDivisionPath = std::get<std::vector<float>>(constructUpperSurfaceBarycentricSubDivisionResult);
-
-	DsrResult setUpperSuraceBarycentricSubDivisionPathResult = SetPath(m_upperSurfaceBarycentricSubDivisionPathEntity, upperSurfaceBarycentricSubDivisionPath);
-	if(setUpperSuraceBarycentricSubDivisionPathResult.GetResultStatusCode() != RESULT_SUCCESS)
-		return setUpperSuraceBarycentricSubDivisionPathResult;
-
-	return DsrResult::Success("SetUpperSurfaceBarycentricSubDivisionPath Success.");
+	m_pathfinders->SetUpperSurfaceBarycentricSubDivisionMesh(upperSurfaceBarycentricSubDivision);
 }
 
 NavMeshSimulationScenePaths::NavMeshSimulationScenePaths(
 	const uint32_t& sceneId,
+	const std::shared_ptr<NavMeshSimulationScenePathfinders>& pathfinders,
 	const std::shared_ptr<dsr::scene::SceneManager>& sceneManager,
 	const std::shared_ptr<dsr::directX::Direct3dDevice>& device
-) : m_sceneId(sceneId), m_sceneManager(sceneManager), m_device(device)
+) : m_sceneId(sceneId), m_pathfinders(pathfinders), m_sceneManager(sceneManager), m_device(device)
 {
 	m_baseMeshPathEntity = m_sceneManager->CreateNewEntity();
 	m_upperSurfacePathEntity = m_sceneManager->CreateNewEntity();
@@ -104,14 +41,6 @@ void NavMeshSimulationScenePaths::Setup(
 
 	using namespace DirectX;
 
-	m_upperSurface = FilterDistinct(*upperSurface->Mesh);
-	m_upperSurfaceSubDivision = upperSurfaceSubDivision;
-	m_upperSurfaceBarycentricSubDivision = upperSurfaceBarycentricSubDivision;
-
-	m_upperSurfacePathfinder.SetGraph(m_upperSurface);
-	m_upperSurfaceSubDivisionPathfinder.SetGraph(m_upperSurfaceSubDivision);
-	m_upperSurfaceBarycentricSubDivisionPathfinder.SetGraph(m_upperSurfaceBarycentricSubDivision);
-
 	XMMATRIX translationOffset = XMMatrixTranslation(0.0, 0.5f, 0.0f);
 
 	SetupPathLineEntity(m_baseMeshPathEntity, "BaseMeshPath", XMMatrixMultiply(settings.BaseMeshModel, translationOffset));
@@ -126,56 +55,10 @@ dsr::DsrResult NavMeshSimulationScenePaths::SetPaths(const DirectX::XMVECTOR& st
 
 	using namespace DirectX;
 
-	std::variant<std::vector<float>, dsr_error> constructUpperSurfacePathResult = ConstructPath(
-		start,
-		finish,
-		m_upperSurface,
-		m_upperSurfacePathfinder,
-		Colors::Blue);
-
-	std::variant<std::vector<float>, dsr_error> constructUpperSurfacePathSubDivisionResult = ConstructPath(
-		start,
-		finish,
-		m_upperSurfaceSubDivision,
-		m_upperSurfaceSubDivisionPathfinder,
-		Colors::Green
-	);
-
-	std::variant<std::vector<float>, dsr_error> constructUpperSurfaceBarycentricSubDivisionResult = ConstructPath(
-		start,
-		finish,
-		m_upperSurfaceBarycentricSubDivision,
-		m_upperSurfaceBarycentricSubDivisionPathfinder,
-		Colors::Red
-	);
-
-	if (std::holds_alternative<dsr_error>(constructUpperSurfacePathResult))
-	{
-		const dsr_error& error = std::get<dsr_error>(constructUpperSurfacePathResult);
-		std::string errorMessage = "Error constructing Path for Upper surface: ";
-		errorMessage += error.what();
-		return DsrResult(errorMessage, ERROR_CONSTRUCTPATH_UPPERSURFACE);
-	}
-
-	if (std::holds_alternative<dsr_error>(constructUpperSurfacePathSubDivisionResult))
-	{
-		const dsr_error& error = std::get<dsr_error>(constructUpperSurfacePathSubDivisionResult);
-		std::string errorMessage = "Error constructing Path for Upper surface SubDivision: ";
-		errorMessage += error.what();
-		return DsrResult(errorMessage, ERROR_CONSTRUCTPATH_UPPERSURFACE_SUBDIVISION);
-	}
-
-	if (std::holds_alternative<dsr_error>(constructUpperSurfaceBarycentricSubDivisionResult))
-	{
-		const dsr_error& error = std::get<dsr_error>(constructUpperSurfaceBarycentricSubDivisionResult);
-		std::string errorMessage = "Error constructing Path for Upper surface barycentric SubDivision: ";
-		errorMessage += error.what();
-		return DsrResult(errorMessage, ERROR_CONSTRUCTPATH_UPPERSURFACE_BARYCENTRICSUBDIVISION);
-	}
-
-	const std::vector<float>& upperSurfacePath = std::get<std::vector<float>>(constructUpperSurfacePathResult);
-	const std::vector<float>& upperSurfaceSubDivisionPath = std::get<std::vector<float>>(constructUpperSurfacePathSubDivisionResult);
-	const std::vector<float>& upperSurfaceBarycentricSubDivisionPath = std::get<std::vector<float>>(constructUpperSurfaceBarycentricSubDivisionResult);
+	//Todo: check for overlapping triangles
+	const std::vector<float> upperSurfacePath = m_pathfinders->ConstructUpperSurfacePath(start, finish);
+	const std::vector<float> upperSurfaceSubDivisionPath = m_pathfinders->ConstructUpperSurfaceSubDivisionPath(start, finish);
+	const std::vector<float> upperSurfaceBarycentricSubDivisionPath = m_pathfinders->ConstructUpperSurfaceBarycentricSubDivisionPath(start, finish);
 
 	std::vector<float> surfacePath;
 	surfacePath.insert(surfacePath.end(), upperSurfacePath.begin(), upperSurfacePath.end());
@@ -221,46 +104,6 @@ void NavMeshSimulationScenePaths::SetupPathLineEntity(
 	transformComponent->SetScale(scale);
 	transformComponent->SetRotation(rotationQuaternion);
 	transformComponent->SetPosition(transform);
-}
-
-std::variant<std::vector<float>, dsr::dsr_error> NavMeshSimulationScenePaths::ConstructPath(
-	const DirectX::XMVECTOR& start,
-	const DirectX::XMVECTOR& finish,
-	const dsr::data::StaticMesh<dsr::data::Vertex3F>& mesh,
-	dsr::data::pathfinding::AStarStaticMeshPathfinder& pathfinder,
-	const DirectX::XMVECTORF32& color
-)
-{
-	using namespace dsr;
-	using namespace dsr::data;
-	using namespace dsr::data::pathfinding;
-
-	using namespace DirectX;
-
-	std::variant<VertexIndexSearchResult, NotFoundError> searchResult = SearchNearestVertexIndices(start, finish, mesh);
-
-	if (std::holds_alternative<NotFoundError>(searchResult))
-		return dsr_error(std::get<NotFoundError>(searchResult).what(), ERROR_SETPATH_TRIANGLESNOTFOUND);
-
-	const VertexIndexSearchResult result = std::get<VertexIndexSearchResult>(searchResult);
-
-	if (result.GetResultType() == VertexIndexSearchResultType::CoTriangular)
-	{
-		return BuildVertexBufferCoTriangular(start, finish, color);
-	}
-	else if (result.GetResultType() == VertexIndexSearchResultType::Concurrent)
-	{
-		const std::vector<Vertex3F>& vertexBuffer = mesh.GetVertexBuffer();
-		return BuildVertexBufferConcurrent(
-			start,
-			finish,
-			XMLoadFloat3(&vertexBuffer[result.GetStartIndex()].Position),
-			color
-		);
-	}
-
-	std::vector<uint32_t> path = pathfinder.Search(result.GetStartIndex(), result.GetFinishIndex());
-	return BuildVertexBuffer(start, finish, path, mesh.GetVertexBuffer(), color);
 }
 
 dsr::DsrResult NavMeshSimulationScenePaths::SetPath(

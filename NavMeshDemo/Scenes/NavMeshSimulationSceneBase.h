@@ -63,7 +63,7 @@ protected:
 	NavMeshSimulationSceneSettings m_sceneSettings;
 	std::unique_ptr<NavMeshSimulationSceneMarkers> m_markers;
 	std::unique_ptr<NavMeshSimulationScenePaths> m_paths;
-	NavMeshSimulationScenePathfinders m_pathfinders;
+	std::shared_ptr<NavMeshSimulationScenePathfinders> m_pathfinders;
 
 	dsr::ecs::Entity m_baseMeshEntity;
 	dsr::ecs::Entity m_upperSurfaceEntity;
