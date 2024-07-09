@@ -15,10 +15,9 @@ NavMeshSimulationSceneBase::NavMeshSimulationSceneBase(
 ) : m_sceneName(sceneName), m_sceneId(sceneManager->CreateNewScene(sceneName)),
 m_sceneManager(sceneManager), m_device(device), m_blenderModelLoader(blenderModelLoader)
 {
-	m_pathfinders = std::make_shared<NavMeshSimulationScenePathfinders>();
-
 	m_markers = std::make_shared<NavMeshSimulationSceneMarkers>(m_sceneId, sceneManager, device);
-	m_paths = std::make_shared<NavMeshSimulationScenePaths>(m_sceneId, m_pathfinders, sceneManager, device);
+	m_paths = std::make_shared<NavMeshSimulationScenePaths>(m_sceneId, sceneManager, device);
+	m_pathfinders = std::make_shared<NavMeshSimulationScenePathfinders>();
 	m_benchmarks = std::make_shared<NavMeshSimulationSceneBenchmarks>();
 
 	m_sceneSettings.BaseMeshFileName = m_sceneName + ".wf";
@@ -95,7 +94,7 @@ void NavMeshSimulationSceneBase::OnScreenClick(const EditorScreenClickEvent& scr
 			XMVectorSet(hits[0].Intersection.x, hits[0].Intersection.y, hits[0].Intersection.z, 1.0f)
 		);
 
-		DsrResult setPathsResult = m_paths->SetPaths(
+		m_sceneMediator.SetPaths(
 			m_markers->GetStartPositionLocal(),
 			m_markers->GetFinishPositionLocal()
 		);
@@ -106,16 +105,7 @@ dsr::DsrResult NavMeshSimulationSceneBase::UpdateUpperSurfaceSubDivision(const u
 {
 	using namespace dsr;
 
-	using namespace dsr::data::manipulation;
-
-	m_upperSurfaceSubDivision->SubDivide(count);
-	m_paths->SetUpperSurfaceSubDivision(FilterDistinct(m_upperSurfaceSubDivision->GetSubDividedMesh()));
-	
-	//Todo: Only update necessary paths
-	//m_paths->SetUpperSurfaceSubDivisionPath(m_markers->GetStartPositionLocal(), m_markers->GetFinishPositionLocal());
-
-	m_paths->SetPaths(m_markers->GetStartPositionLocal(), m_markers->GetFinishPositionLocal());
-
+	m_sceneMediator.SetUpperSurfaceSubDivision(count);
 	return DsrResult::Success("Update SubDivision Success.");
 }
 
@@ -123,12 +113,7 @@ dsr::DsrResult NavMeshSimulationSceneBase::UpdateUpperSurfaceBarycentricSubDivis
 {
 	using namespace dsr;
 
-	using namespace dsr::data::manipulation;
-
-	m_upperSurfaceBarycentricSubDivision->SubDivideBarycentric(count);
-	m_paths->SetUpperSurfaceBarycentricSubDivision(FilterDistinct(m_upperSurfaceBarycentricSubDivision->GetSubDividedMesh()));
-	m_paths->SetPaths(m_markers->GetStartPositionLocal(), m_markers->GetFinishPositionLocal());
-
+	m_sceneMediator.SetUpperSurfaceBarycentricSubDivision(count);
 	return DsrResult::Success("Update Barycentric SubDivision Success.");
 }
 
@@ -175,14 +160,9 @@ dsr::DsrResult NavMeshSimulationSceneBase::LoadSceneData()
 	m_sceneMediator.SetBenchmarks(m_benchmarks);
 
 	//Todo: Refactor m_paths they should only update the scene now
-	m_paths->Setup(
-		m_sceneSettings,
-		m_upperSurface,
-		dsr::data::manipulation::FilterDistinct(m_upperSurfaceSubDivision->GetSubDividedMesh()),
-		dsr::data::manipulation::FilterDistinct(m_upperSurfaceBarycentricSubDivision->GetSubDividedMesh())
-	);
+	m_paths->Setup(m_sceneSettings);
 
-	m_paths->SetPaths(m_markers->GetStartPositionLocal(), m_markers->GetFinishPositionLocal());
+	m_sceneMediator.SetPaths(m_markers->GetStartPositionLocal(), m_markers->GetFinishPositionLocal());
 
 	return DsrResult::Success("Load SceneData: " + m_sceneName + " Success.");
 }

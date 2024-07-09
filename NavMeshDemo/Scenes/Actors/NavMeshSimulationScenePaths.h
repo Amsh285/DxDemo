@@ -32,29 +32,18 @@ constexpr auto ERROR_SETPATH_SETUPD3D11BUFFER = 900;
 class NavMeshSimulationScenePaths
 {
 public:
-
-	void SetUpperSurfaceSubDivision(const dsr::data::StaticMesh<dsr::data::Vertex3F>& upperSurfaceSubDivision);
-
-	void SetUpperSurfaceBarycentricSubDivision(const dsr::data::StaticMesh<dsr::data::Vertex3F>& upperSurfaceBarycentricSubDivision);
-
 	NavMeshSimulationScenePaths(
 		const uint32_t& sceneId,
-		const std::shared_ptr<NavMeshSimulationScenePathfinders>& pathfinders,
 		const std::shared_ptr<dsr::scene::SceneManager>& sceneManager,
 		const std::shared_ptr<dsr::directX::Direct3dDevice>& device
 	);
 
-	void Setup(
-		const NavMeshSimulationSceneSettings& settings,
-		std::shared_ptr<dsr::WavefrontModel> upperSurface,
-		const dsr::data::StaticMesh<dsr::data::Vertex3F>& upperSurfaceSubDivision,
-		const dsr::data::StaticMesh<dsr::data::Vertex3F>& upperSurfaceBarycentricSubDivision
-	);
+	void Setup(const NavMeshSimulationSceneSettings& settings);
 
-	dsr::DsrResult SetPaths(
-		const DirectX::XMVECTOR& start,
-		const DirectX::XMVECTOR& finish
-	);
+	dsr::DsrResult SetBaseMeshPath(const std::vector<float>& pathBuffer);
+	dsr::DsrResult SetUpperSurfacePath(const std::vector<float>& pathBuffer);
+	dsr::DsrResult SetUpperSurfaceSubDivisionPath(const std::vector<float>& pathBuffer);
+	dsr::DsrResult SetUpperSurfaceBarycentricSubDivisionPath(const std::vector<float>& pathBuffer);
 private:
 	uint32_t m_sceneId;
 
@@ -63,7 +52,6 @@ private:
 	dsr::ecs::Entity m_upperSurfaceSubDivisionPathEntity;
 	dsr::ecs::Entity m_upperSurfaceBarycentricSubDivisionPathEntity;
 
-	std::shared_ptr<NavMeshSimulationScenePathfinders> m_pathfinders;
 	std::shared_ptr<dsr::scene::SceneManager> m_sceneManager;
 	std::shared_ptr<dsr::directX::Direct3dDevice> m_device;
 

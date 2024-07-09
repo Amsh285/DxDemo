@@ -26,22 +26,22 @@ NavMeshSimulationScenePathfinders::NavMeshSimulationScenePathfinders()
 	m_upperSurfaceBarycentricSubDivisionPathfinder = std::make_shared<AStarStaticMeshPathfinder>();
 }
 
-std::vector<float> NavMeshSimulationScenePathfinders::ConstructUpperSurfacePath(const DirectX::XMVECTOR& start, const DirectX::XMVECTOR& finish)
+std::pair<std::vector<float>, dsr::data::pathfinding::VertexIndexSearchResultType> NavMeshSimulationScenePathfinders::ConstructUpperSurfacePath(const DirectX::XMVECTOR& start, const DirectX::XMVECTOR& finish)
 {
 	return ConstructPath(start, finish, *m_upperSurfacePathfinder, DirectX::Colors::Blue);
 }
 
-std::vector<float> NavMeshSimulationScenePathfinders::ConstructUpperSurfaceSubDivisionPath(const DirectX::XMVECTOR& start, const DirectX::XMVECTOR& finish)
+std::pair<std::vector<float>, dsr::data::pathfinding::VertexIndexSearchResultType> NavMeshSimulationScenePathfinders::ConstructUpperSurfaceSubDivisionPath(const DirectX::XMVECTOR& start, const DirectX::XMVECTOR& finish)
 {
 	return ConstructPath(start, finish, *m_upperSurfaceSubDivisionPathfinder, DirectX::Colors::Green);
 }
 
-std::vector<float> NavMeshSimulationScenePathfinders::ConstructUpperSurfaceBarycentricSubDivisionPath(const DirectX::XMVECTOR& start, const DirectX::XMVECTOR& finish)
+std::pair<std::vector<float>, dsr::data::pathfinding::VertexIndexSearchResultType> NavMeshSimulationScenePathfinders::ConstructUpperSurfaceBarycentricSubDivisionPath(const DirectX::XMVECTOR& start, const DirectX::XMVECTOR& finish)
 {
 	return ConstructPath(start, finish, *m_upperSurfaceBarycentricSubDivisionPathfinder, DirectX::Colors::Red);
 }
 
-std::vector<float> NavMeshSimulationScenePathfinders::ConstructPath(
+std::pair<std::vector<float>, dsr::data::pathfinding::VertexIndexSearchResultType> NavMeshSimulationScenePathfinders::ConstructPath(
 	const DirectX::XMVECTOR& start,
 	const DirectX::XMVECTOR& finish,
 	dsr::data::pathfinding::AStarStaticMeshPathfinder& pathfinder,
@@ -58,15 +58,15 @@ std::vector<float> NavMeshSimulationScenePathfinders::ConstructPath(
 	switch (result.GetResultType())
 	{
 	case VertexIndexSearchResultType::CoTriangular:
-		return BuildVertexBufferCoTriangular(start, finish, color);
+		return std::pair(BuildVertexBufferCoTriangular(start, finish, color), result.GetResultType());
 	case VertexIndexSearchResultType::Concurrent:
-		return BuildVertexBufferConcurrent(start, finish, pathfinder.GetConnectionVertex(result), color);
+		return std::pair(BuildVertexBufferConcurrent(start, finish, pathfinder.GetConnectionVertex(result), color), result.GetResultType());
 	case VertexIndexSearchResultType::PathSearchRequired:
 	{
 		std::vector<uint32_t> path = pathfinder.Search(result.GetStartIndex(), result.GetFinishIndex());
-		return BuildVertexBuffer(start, finish, path, pathfinder.GetNavMesh().GetVertexBuffer(), color);
+		return std::pair(BuildVertexBuffer(start, finish, path, pathfinder.GetNavMesh().GetVertexBuffer(), color), result.GetResultType());
 	}
 	default:
-		return std::vector<float>();
+		return std::pair(std::vector<float>(), result.GetResultType());
 	}
 }

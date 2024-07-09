@@ -17,15 +17,15 @@ public:
 	
 	NavMeshSimulationScenePathfinders();
 
-	std::vector<float> ConstructUpperSurfacePath(const DirectX::XMVECTOR& start, const DirectX::XMVECTOR& finish);
-	std::vector<float> ConstructUpperSurfaceSubDivisionPath(const DirectX::XMVECTOR& start, const DirectX::XMVECTOR& finish);
-	std::vector<float> ConstructUpperSurfaceBarycentricSubDivisionPath(const DirectX::XMVECTOR& start, const DirectX::XMVECTOR& finish);
+	std::pair<std::vector<float>, dsr::data::pathfinding::VertexIndexSearchResultType> ConstructUpperSurfacePath(const DirectX::XMVECTOR& start, const DirectX::XMVECTOR& finish);
+	std::pair<std::vector<float>, dsr::data::pathfinding::VertexIndexSearchResultType> ConstructUpperSurfaceSubDivisionPath(const DirectX::XMVECTOR& start, const DirectX::XMVECTOR& finish);
+	std::pair<std::vector<float>, dsr::data::pathfinding::VertexIndexSearchResultType> ConstructUpperSurfaceBarycentricSubDivisionPath(const DirectX::XMVECTOR& start, const DirectX::XMVECTOR& finish);
 private:
 	std::shared_ptr<dsr::data::pathfinding::AStarStaticMeshPathfinder> m_upperSurfacePathfinder;
 	std::shared_ptr<dsr::data::pathfinding::AStarStaticMeshPathfinder> m_upperSurfaceSubDivisionPathfinder;
 	std::shared_ptr<dsr::data::pathfinding::AStarStaticMeshPathfinder> m_upperSurfaceBarycentricSubDivisionPathfinder;
 
-	std::vector<float> ConstructPath(
+	std::pair<std::vector<float>, dsr::data::pathfinding::VertexIndexSearchResultType> ConstructPath(
 		const DirectX::XMVECTOR& start,
 		const DirectX::XMVECTOR& finish,
 		dsr::data::pathfinding::AStarStaticMeshPathfinder& pathfinder,

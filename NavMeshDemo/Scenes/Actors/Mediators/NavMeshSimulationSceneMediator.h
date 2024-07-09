@@ -30,6 +30,11 @@ public:
 	void SetBenchmarks(const std::shared_ptr<NavMeshSimulationSceneBenchmarks>& benchmarks) { m_benchmarks = benchmarks; }
 
 	NavMeshSimulationSceneMediator() = default;
+
+	void SetUpperSurfaceSubDivision(const uint32_t count);
+	void SetUpperSurfaceBarycentricSubDivision(const uint32_t count);
+
+	void SetPaths(const DirectX::XMVECTOR& start, const DirectX::XMVECTOR& finish);
 private:
 	std::shared_ptr<NavMeshSimulationSceneMarkers> m_markers;
 	std::shared_ptr<NavMeshSimulationScenePaths> m_paths;
