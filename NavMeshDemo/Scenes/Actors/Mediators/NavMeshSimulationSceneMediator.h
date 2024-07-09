@@ -1,0 +1,41 @@
+#pragma once
+
+#include "dsrpch.h"
+
+#include "Scenes/Actors/NavMeshSimulationSceneBenchmarks.h"
+#include "Scenes/Actors/NavMeshSimulationSceneMarkers.h"
+#include "Scenes/Actors/NavMeshSimulationSceneMeshSubDivision.h"
+#include "Scenes/Actors/NavMeshSimulationScenePaths.h"
+#include "Scenes/Actors/NavMeshSimulationScenePathfinders.h"
+
+class NavMeshSimulationSceneMediator
+{
+public:
+	std::shared_ptr<NavMeshSimulationSceneMarkers> GetMarkers() const { return m_markers; }
+	void SetMarkers(const std::shared_ptr<NavMeshSimulationSceneMarkers>& markers) { m_markers = markers; }
+
+	std::shared_ptr<NavMeshSimulationScenePaths> GetPaths() const { return m_paths; }
+	void SetPaths(const std::shared_ptr<NavMeshSimulationScenePaths>& paths) { m_paths = paths; }
+
+	std::shared_ptr<NavMeshSimulationScenePathfinders> GetPathfinders() const { return m_pathfinders; }
+	void SetPathfinders(const std::shared_ptr<NavMeshSimulationScenePathfinders>& pathfinders) { m_pathfinders = pathfinders; }
+
+	std::shared_ptr<NavMeshSimulationSceneMeshSubDivision> GetUpperSurfaceSubDivision() const { return m_upperSurfaceSubDivision; }
+	void SetUpperSurfaceSubDivision(const std::shared_ptr<NavMeshSimulationSceneMeshSubDivision>& upperSurfaceSubDivision) { m_upperSurfaceSubDivision = upperSurfaceSubDivision; }
+
+	std::shared_ptr<NavMeshSimulationSceneMeshSubDivision> GetUpperSurfaceBarycentricSubDivision() const { return m_upperSurfaceBarycentricSubDivision; }
+	void SetUpperSurfaceBarycentricSubDivision(const std::shared_ptr<NavMeshSimulationSceneMeshSubDivision>& upperSurfaceBarycentricSubDivision) { m_upperSurfaceBarycentricSubDivision = upperSurfaceBarycentricSubDivision; }
+
+	std::shared_ptr<NavMeshSimulationSceneBenchmarks> GetBenchmarks() const { return m_benchmarks; }
+	void SetBenchmarks(const std::shared_ptr<NavMeshSimulationSceneBenchmarks>& benchmarks) { m_benchmarks = benchmarks; }
+
+	NavMeshSimulationSceneMediator() = default;
+private:
+	std::shared_ptr<NavMeshSimulationSceneMarkers> m_markers;
+	std::shared_ptr<NavMeshSimulationScenePaths> m_paths;
+	std::shared_ptr<NavMeshSimulationScenePathfinders> m_pathfinders;
+	std::shared_ptr<NavMeshSimulationSceneBenchmarks> m_benchmarks;
+
+	std::shared_ptr<NavMeshSimulationSceneMeshSubDivision> m_upperSurfaceSubDivision;
+	std::shared_ptr<NavMeshSimulationSceneMeshSubDivision> m_upperSurfaceBarycentricSubDivision;
+};

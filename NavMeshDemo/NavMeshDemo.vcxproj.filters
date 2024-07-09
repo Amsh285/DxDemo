@@ -63,6 +63,12 @@
     <ClCompile Include="Scenes\Actors\NavMeshSimulationScenePathfinders.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Scenes\Actors\Mediators\NavMeshSimulationSceneMediator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\Actors\NavMeshSimulationSceneBenchmarks.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NavMeshDemoApplication.h">
@@ -108,6 +114,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Scenes\Actors\NavMeshSimulationScenePathfinders.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\Actors\Mediators\NavMeshSimulationSceneMediator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\Actors\NavMeshSimulationSceneBenchmarks.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

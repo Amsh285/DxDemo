@@ -17,8 +17,9 @@ m_sceneManager(sceneManager), m_device(device), m_blenderModelLoader(blenderMode
 {
 	m_pathfinders = std::make_shared<NavMeshSimulationScenePathfinders>();
 
-	m_markers = std::make_unique<NavMeshSimulationSceneMarkers>(m_sceneId, sceneManager, device);
-	m_paths = std::make_unique<NavMeshSimulationScenePaths>(m_sceneId, m_pathfinders, sceneManager, device);
+	m_markers = std::make_shared<NavMeshSimulationSceneMarkers>(m_sceneId, sceneManager, device);
+	m_paths = std::make_shared<NavMeshSimulationScenePaths>(m_sceneId, m_pathfinders, sceneManager, device);
+	m_benchmarks = std::make_shared<NavMeshSimulationSceneBenchmarks>();
 
 	m_sceneSettings.BaseMeshFileName = m_sceneName + ".wf";
 	m_sceneSettings.BaseMeshMaterialFileName = m_sceneName + ".mtl";
@@ -98,9 +99,6 @@ void NavMeshSimulationSceneBase::OnScreenClick(const EditorScreenClickEvent& scr
 			m_markers->GetStartPositionLocal(),
 			m_markers->GetFinishPositionLocal()
 		);
-
-		if (setPathsResult.GetResultStatusCode() != RESULT_SUCCESS)
-			std::cout << setPathsResult.GetResultMessage() << std::endl;
 	}
 }
 
@@ -168,6 +166,13 @@ dsr::DsrResult NavMeshSimulationSceneBase::LoadSceneData()
 	m_pathfinders->SetUpperSurfaceMesh(dsr::data::manipulation::FilterDistinct(*m_upperSurface->Mesh));
 	m_pathfinders->SetUpperSurfaceSubDivisionMesh(dsr::data::manipulation::FilterDistinct(m_upperSurfaceSubDivision->GetSubDividedMesh()));
 	m_pathfinders->SetUpperSurfaceBarycentricSubDivisionMesh(dsr::data::manipulation::FilterDistinct(m_upperSurfaceBarycentricSubDivision->GetSubDividedMesh()));
+
+	m_sceneMediator.SetMarkers(m_markers);
+	m_sceneMediator.SetPaths(m_paths);
+	m_sceneMediator.SetPathfinders(m_pathfinders);
+	m_sceneMediator.SetUpperSurfaceSubDivision(m_upperSurfaceSubDivision);
+	m_sceneMediator.SetUpperSurfaceBarycentricSubDivision(m_upperSurfaceBarycentricSubDivision);
+	m_sceneMediator.SetBenchmarks(m_benchmarks);
 
 	//Todo: Refactor m_paths they should only update the scene now
 	m_paths->Setup(
