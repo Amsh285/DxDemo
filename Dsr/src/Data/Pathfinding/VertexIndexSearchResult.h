@@ -8,6 +8,7 @@ namespace dsr
 		{
 			enum class VertexIndexSearchResultType
 			{
+				Undefined,
 				NoIntersection,
 				CoTriangular,
 				Concurrent,

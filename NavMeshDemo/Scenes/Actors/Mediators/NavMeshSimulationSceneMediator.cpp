@@ -33,16 +33,17 @@ void NavMeshSimulationSceneMediator::SetPaths(const DirectX::XMVECTOR& start, co
 
 	using namespace dsr::data::pathfinding;
 
-	std::pair<std::vector<float>, VertexIndexSearchResultType> upperSurfaceResult = m_pathfinders->ConstructUpperSurfacePath(start, finish);
-	std::pair<std::vector<float>, VertexIndexSearchResultType> upperSurfaceSubDivisionResult = m_pathfinders->ConstructUpperSurfaceSubDivisionPath(start, finish);
-	std::pair<std::vector<float>, VertexIndexSearchResultType> upperSurfaceBarycentricSubDivisionResult = m_pathfinders->ConstructUpperSurfaceBarycentricSubDivisionPath(start, finish);
+	std::pair<std::vector<float>, PathSearchStats> upperSurfaceResult = m_pathfinders->ConstructUpperSurfacePath(start, finish);
+	std::pair<std::vector<float>, PathSearchStats> upperSurfaceSubDivisionResult = m_pathfinders->ConstructUpperSurfaceSubDivisionPath(start, finish);
+	std::pair<std::vector<float>, PathSearchStats> upperSurfaceBarycentricSubDivisionResult = m_pathfinders->ConstructUpperSurfaceBarycentricSubDivisionPath(start, finish);
 
-	m_benchmarks->UpperSurfaceStats.CanExecuteBenchmark = upperSurfaceResult.second == VertexIndexSearchResultType::PathSearchRequired;
-	m_benchmarks->UpperSurfaceSubDivisionStats.CanExecuteBenchmark = upperSurfaceSubDivisionResult.second == VertexIndexSearchResultType::PathSearchRequired;
-	m_benchmarks->UpperSurfaceBarycentricSubDivisionStats.CanExecuteBenchmark = upperSurfaceBarycentricSubDivisionResult.second == VertexIndexSearchResultType::PathSearchRequired;
-	m_benchmarks->UpperSurfaceStats.VertexIndexSearchResultType = upperSurfaceResult.second;
-	m_benchmarks->UpperSurfaceSubDivisionStats.VertexIndexSearchResultType = upperSurfaceSubDivisionResult.second;
-	m_benchmarks->UpperSurfaceBarycentricSubDivisionStats.VertexIndexSearchResultType = upperSurfaceBarycentricSubDivisionResult.second;
+	m_benchmarks->UpperSurfaceStats.SetVertexIndexSearchResultType(upperSurfaceResult.second.IndexSearchResultType);
+	m_benchmarks->UpperSurfaceSubDivisionStats.SetVertexIndexSearchResultType(upperSurfaceSubDivisionResult.second.IndexSearchResultType);
+	m_benchmarks->UpperSurfaceBarycentricSubDivisionStats.SetVertexIndexSearchResultType(upperSurfaceBarycentricSubDivisionResult.second.IndexSearchResultType);
+
+	m_benchmarks->UpperSurfaceStats.SetNodesTraveled(upperSurfaceResult.second.NodesTraveled);
+	m_benchmarks->UpperSurfaceSubDivisionStats.SetNodesTraveled(upperSurfaceSubDivisionResult.second.NodesTraveled);
+	m_benchmarks->UpperSurfaceBarycentricSubDivisionStats.SetNodesTraveled(upperSurfaceBarycentricSubDivisionResult.second.NodesTraveled);
 
 	std::vector<float> baseMeshPath;
 	baseMeshPath.insert(baseMeshPath.end(), upperSurfaceResult.first.begin(), upperSurfaceResult.first.end());

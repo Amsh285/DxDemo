@@ -69,6 +69,9 @@
     <ClCompile Include="Scenes\Actors\NavMeshSimulationSceneBenchmarks.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Scenes\Data\NavMeshSimulationSceneBenchmarkStats.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NavMeshDemoApplication.h">
@@ -120,6 +123,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Scenes\Actors\NavMeshSimulationSceneBenchmarks.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\Data\NavMeshSimulationSceneBenchmarkStats.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

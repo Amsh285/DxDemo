@@ -32,6 +32,8 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 	using namespace dsr::events;
 	using namespace dsr::input;
 
+	using namespace dsr::data::pathfinding;
+
 	using namespace DirectX;
 
 	std::shared_ptr<EditorUIComponent> uiData = context.GetComponent<EditorUIComponent>();
@@ -112,7 +114,23 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 	
 	if (ImGui::CollapsingHeader("Upper Surface"))
 	{
+		NavMeshSimulationSceneBenchmarkStats stats = m_scenes[m_sceneSelectedIdx]->GetBenchmarks()->UpperSurfaceStats;
+		bool canExecuteBenchmark = stats.GetVertexIndexSearchResultType() == VertexIndexSearchResultType::PathSearchRequired;
 
+		ImGui::Text("Benchmark Enabled:");
+		ImGui::SameLine();
+		ImGui::ColorButton(
+			"##BenchmarkUpperSurfaceEnabledColor",
+			canExecuteBenchmark ? ImVec4(0.0f, 1.0f, 0.0f, 1.0f) : ImVec4(1.0f, 0.0f, 0.0f, 1.0f),
+			ImGuiColorEditFlags_NoTooltip | ImGuiColorEditFlags_NoDragDrop,
+			ImVec2(15, 15)
+		);
+
+		ImGui::Text("Index Search: %s", stats.GetVertexIndexSearchResultTypeText().c_str());
+
+		ImGui::Text("Triangle Count: %d", stats.GetNavMeshTriangleCount());
+		ImGui::Text("Avg Branching Factor: %d", stats.GetAverageBranchingFactor());
+		ImGui::Text("Nodes Traveled: %d", stats.GetNodesTraveled());
 	}
 
 	ImGui::End();
