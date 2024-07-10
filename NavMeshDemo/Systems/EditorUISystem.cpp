@@ -36,6 +36,16 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 
 	std::shared_ptr<EditorUIComponent> uiData = context.GetComponent<EditorUIComponent>();
 
+	if (m_input->GetKeyDown(KeyCode::MouseLeft) && !ImGui::GetIO().WantCaptureMouse)
+	{
+		EditorScreenClickEvent screenClickEvent(
+			m_input->GetMouse()->GetCurrentClientAreaPosition(),
+			*m_input->GetScreen(),
+			(PathSelectType)uiData->PathSelectMode);
+
+		m_scenes[m_sceneSelectedIdx]->OnScreenClick(screenClickEvent);
+	}
+
 	ImGui::Begin("Editor", nullptr);
 
 	if (ImGui::BeginListBox("Scenes"))
@@ -100,15 +110,10 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 
 	ImGui::Begin("Benchmark", nullptr);
 	
-	ImGui::End();
-
-	if (m_input->GetKeyDown(KeyCode::MouseLeft))
+	if (ImGui::CollapsingHeader("Upper Surface"))
 	{
-		EditorScreenClickEvent screenClickEvent(
-			m_input->GetMouse()->GetCurrentClientAreaPosition(),
-			*m_input->GetScreen(),
-			(PathSelectType)uiData->PathSelectMode);
 
-		m_scenes[m_sceneSelectedIdx]->OnScreenClick(screenClickEvent);
 	}
+
+	ImGui::End();
 }

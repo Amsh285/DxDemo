@@ -40,6 +40,9 @@ void NavMeshSimulationSceneMediator::SetPaths(const DirectX::XMVECTOR& start, co
 	m_benchmarks->UpperSurfaceStats.CanExecuteBenchmark = upperSurfaceResult.second == VertexIndexSearchResultType::PathSearchRequired;
 	m_benchmarks->UpperSurfaceSubDivisionStats.CanExecuteBenchmark = upperSurfaceSubDivisionResult.second == VertexIndexSearchResultType::PathSearchRequired;
 	m_benchmarks->UpperSurfaceBarycentricSubDivisionStats.CanExecuteBenchmark = upperSurfaceBarycentricSubDivisionResult.second == VertexIndexSearchResultType::PathSearchRequired;
+	m_benchmarks->UpperSurfaceStats.VertexIndexSearchResultType = upperSurfaceResult.second;
+	m_benchmarks->UpperSurfaceSubDivisionStats.VertexIndexSearchResultType = upperSurfaceSubDivisionResult.second;
+	m_benchmarks->UpperSurfaceBarycentricSubDivisionStats.VertexIndexSearchResultType = upperSurfaceBarycentricSubDivisionResult.second;
 
 	std::vector<float> baseMeshPath;
 	baseMeshPath.insert(baseMeshPath.end(), upperSurfaceResult.first.begin(), upperSurfaceResult.first.end());
