@@ -13,6 +13,9 @@ namespace dsr
 			class AStarPathfinder final
 			{
 			public:
+				double GetAverrageBranchingFactor() const;
+				const std::unordered_map<uint32_t, std::vector<uint32_t>>& GetAdjacencyList() const { return m_adjacencyList; }
+
 				void SetGraph(
 					const std::vector<Vertex3F>& vertexBuffer,
 					const std::unordered_map<uint32_t, std::vector<uint32_t>>& adjacencyList

@@ -7,6 +7,15 @@ namespace dsr
 	{
 		namespace pathfinding
 		{
+			double AStarPathfinder::GetAverrageBranchingFactor() const
+			{
+				double sum = 0.0;
+				for (const auto& adjacency : m_adjacencyList)
+					sum += adjacency.second.size();
+
+				return sum / m_adjacencyList.size();
+			}
+
 			void AStarPathfinder::SetGraph(
 				const std::vector<Vertex3F>& vertexBuffer,
 				const std::unordered_map<uint32_t, std::vector<uint32_t>>& adjacencyList

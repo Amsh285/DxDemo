@@ -15,6 +15,8 @@ namespace dsr
 			class AStarStaticMeshPathfinder final
 			{
 			public:
+				double GetAverrageBranchingFactor() const { return m_pathfinder.GetAverrageBranchingFactor(); }
+				const std::unordered_map<uint32_t, std::vector<uint32_t>>& GetAdjacencyList() const { return m_pathfinder.GetAdjacencyList(); }
 				const StaticMesh<Vertex3F>& GetNavMesh() const { return m_navMesh; }
 
 				void SetGraph(const StaticMesh<Vertex3FP2FTx3FN>& navMesh);
@@ -32,7 +34,6 @@ namespace dsr
 				DirectX::XMVECTOR GetConnectionVertex(const VertexIndexSearchResult& result) const;
 
 				std::vector<uint32_t> Search(const uint32_t& startIndex, const uint32_t& goalIndex);
-
 			private:
 				AStarPathfinder m_pathfinder;
 				StaticMesh<Vertex3F> m_navMesh;

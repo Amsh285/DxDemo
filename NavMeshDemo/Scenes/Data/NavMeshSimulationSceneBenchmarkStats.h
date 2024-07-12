@@ -12,8 +12,8 @@ public:
 
 	std::string GetVertexIndexSearchResultTypeText() const { return m_vertexIndexSearchResultTypeText; }
 
-	uint32_t GetAverageBranchingFactor() const { return m_averageBranchingFactor; }
-	void SetAverageBranchingFactor(const uint32_t averageBranchingFactor) { m_averageBranchingFactor = averageBranchingFactor; }
+	double GetAverageBranchingFactor() const { return m_averageBranchingFactor; }
+	void SetAverageBranchingFactor(const double averageBranchingFactor) { m_averageBranchingFactor = averageBranchingFactor; }
 
 	uint32_t GetNodesTraveled() const { return m_nodesTraveled; }
 	void SetNodesTraveled(const uint32_t nodesTraveled) { m_nodesTraveled = nodesTraveled; }
@@ -26,7 +26,7 @@ private:
 	dsr::data::pathfinding::VertexIndexSearchResultType m_vertexIndexSearchResultType;
 	std::string m_vertexIndexSearchResultTypeText;
 
-	uint32_t m_averageBranchingFactor;
+	double m_averageBranchingFactor;
 	uint32_t m_nodesTraveled;
 	size_t m_navMeshTriangleCount;
 };

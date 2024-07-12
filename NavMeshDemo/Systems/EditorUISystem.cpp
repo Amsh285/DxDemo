@@ -129,7 +129,7 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 		ImGui::Text("Index Search: %s", stats.GetVertexIndexSearchResultTypeText().c_str());
 
 		ImGui::Text("Triangle Count: %d", stats.GetNavMeshTriangleCount());
-		ImGui::Text("Avg Branching Factor: %d", stats.GetAverageBranchingFactor());
+		ImGui::Text("Avg Branching Factor: %.4f", stats.GetAverageBranchingFactor());
 		ImGui::Text("Nodes Traveled: %d", stats.GetNodesTraveled());
 	}
 

@@ -2,6 +2,8 @@
 
 #include "dsrpch.h"
 
+#include "Data/Structures/StaticMesh.h"
+
 #include "Scenes/Actors/NavMeshSimulationSceneBenchmarks.h"
 #include "Scenes/Actors/NavMeshSimulationSceneMarkers.h"
 #include "Scenes/Actors/NavMeshSimulationSceneMeshSubDivision.h"
@@ -20,6 +22,9 @@ public:
 	std::shared_ptr<NavMeshSimulationScenePathfinders> GetPathfinders() const { return m_pathfinders; }
 	void SetPathfinders(const std::shared_ptr<NavMeshSimulationScenePathfinders>& pathfinders) { m_pathfinders = pathfinders; }
 
+	const dsr::data::StaticMesh<dsr::data::Vertex3FP2FTx3FN>& GetUpperSurface() const { return m_upperSurface; }
+	void SetUpperSurface(const dsr::data::StaticMesh<dsr::data::Vertex3FP2FTx3FN>& upperSurface) { m_upperSurface = upperSurface; }
+
 	std::shared_ptr<NavMeshSimulationSceneMeshSubDivision> GetUpperSurfaceSubDivision() const { return m_upperSurfaceSubDivision; }
 	void SetUpperSurfaceSubDivision(const std::shared_ptr<NavMeshSimulationSceneMeshSubDivision>& upperSurfaceSubDivision) { m_upperSurfaceSubDivision = upperSurfaceSubDivision; }
 
@@ -31,6 +36,8 @@ public:
 
 	NavMeshSimulationSceneMediator() = default;
 
+	void Setup();
+
 	void SetUpperSurfaceSubDivision(const uint32_t count);
 	void SetUpperSurfaceBarycentricSubDivision(const uint32_t count);
 
@@ -41,6 +48,7 @@ private:
 	std::shared_ptr<NavMeshSimulationScenePathfinders> m_pathfinders;
 	std::shared_ptr<NavMeshSimulationSceneBenchmarks> m_benchmarks;
 
+	dsr::data::StaticMesh<dsr::data::Vertex3FP2FTx3FN> m_upperSurface;
 	std::shared_ptr<NavMeshSimulationSceneMeshSubDivision> m_upperSurfaceSubDivision;
 	std::shared_ptr<NavMeshSimulationSceneMeshSubDivision> m_upperSurfaceBarycentricSubDivision;
 };

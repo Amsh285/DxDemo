@@ -152,17 +152,17 @@ dsr::DsrResult NavMeshSimulationSceneBase::LoadSceneData()
 	m_pathfinders->SetUpperSurfaceSubDivisionMesh(dsr::data::manipulation::FilterDistinct(m_upperSurfaceSubDivision->GetSubDividedMesh()));
 	m_pathfinders->SetUpperSurfaceBarycentricSubDivisionMesh(dsr::data::manipulation::FilterDistinct(m_upperSurfaceBarycentricSubDivision->GetSubDividedMesh()));
 
+	m_paths->Setup(m_sceneSettings);
+
 	m_sceneMediator.SetMarkers(m_markers);
 	m_sceneMediator.SetPaths(m_paths);
 	m_sceneMediator.SetPathfinders(m_pathfinders);
+	m_sceneMediator.SetUpperSurface(*m_upperSurface->Mesh);
 	m_sceneMediator.SetUpperSurfaceSubDivision(m_upperSurfaceSubDivision);
 	m_sceneMediator.SetUpperSurfaceBarycentricSubDivision(m_upperSurfaceBarycentricSubDivision);
 	m_sceneMediator.SetBenchmarks(m_benchmarks);
 
-	//Todo: Refactor m_paths they should only update the scene now
-	m_paths->Setup(m_sceneSettings);
-
-	m_sceneMediator.SetPaths(m_markers->GetStartPositionLocal(), m_markers->GetFinishPositionLocal());
+	m_sceneMediator.Setup();
 
 	return DsrResult::Success("Load SceneData: " + m_sceneName + " Success.");
 }
