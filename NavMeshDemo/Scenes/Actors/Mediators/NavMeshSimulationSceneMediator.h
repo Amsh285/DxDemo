@@ -10,6 +10,8 @@
 #include "Scenes/Actors/NavMeshSimulationScenePaths.h"
 #include "Scenes/Actors/NavMeshSimulationScenePathfinders.h"
 
+#include "Scenes/Data/NavMeshSimulationSceneBenchmarkResult.h"
+
 class NavMeshSimulationSceneMediator
 {
 public:
@@ -38,6 +40,8 @@ public:
 
 	void Setup();
 
+	NavMeshSimulationSceneBenchmarkResult RunUpperSurfaceBenchmark(const uint32_t iterations);
+
 	void SetUpperSurfaceSubDivision(const uint32_t count);
 	void SetUpperSurfaceBarycentricSubDivision(const uint32_t count);
 
@@ -51,4 +55,9 @@ private:
 	dsr::data::StaticMesh<dsr::data::Vertex3FP2FTx3FN> m_upperSurface;
 	std::shared_ptr<NavMeshSimulationSceneMeshSubDivision> m_upperSurfaceSubDivision;
 	std::shared_ptr<NavMeshSimulationSceneMeshSubDivision> m_upperSurfaceBarycentricSubDivision;
+
+	NavMeshSimulationSceneBenchmarkResult RunBenchmark(
+		dsr::data::pathfinding::AStarStaticMeshPathfinder& pathfinder,
+		const uint32_t iterations
+	);
 };

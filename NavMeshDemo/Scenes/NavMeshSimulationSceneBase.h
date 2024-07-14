@@ -60,6 +60,8 @@ public:
 	void OnScreenClick(const EditorScreenClickEvent& screenClickEvent);
 	dsr::DsrResult UpdateUpperSurfaceSubDivision(const uint32_t count);
 	dsr::DsrResult UpdateUpperSurfaceBarycentricSubDivision(const uint32_t count);
+
+	NavMeshSimulationSceneBenchmarkResult RunUpperSurfaceBenchmark(const uint32_t iterations);
 protected:
 	uint32_t m_sceneId;
 	std::string m_sceneName;

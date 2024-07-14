@@ -16,6 +16,14 @@
 #include "Scenes/RampScene.h"
 #include "Scenes/Data/Events/EditorScreenClickEvent.h"
 
+enum class TimeUnit
+{
+	Nanoseconds,
+	Microseconds,
+	Milliseconds,
+	Seconds
+};;
+
 class EditorUISystem : public dsr::ecs::System
 {
 public:
@@ -37,4 +45,11 @@ private:
 	size_t m_sceneSelectedIdx;
 	int32_t m_subDivisionCount;
 	int32_t m_barycentricSubDivisionCount;
+
+	size_t m_timeUnitSelectedIdx = 0;
+	std::vector<std::pair<std::string, TimeUnit>> m_timeUnits;
+	int32_t m_upperSurfaceBenchmarkIterations;
+	NavMeshSimulationSceneBenchmarkResult m_upperSurfaceBenchmark;
+
+	void DisplayBenchmarkResult(const NavMeshSimulationSceneBenchmarkResult& benchmarkResult, const TimeUnit unit);
 };

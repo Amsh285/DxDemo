@@ -13,6 +13,11 @@ void NavMeshSimulationSceneMediator::Setup()
 	SetPaths(m_markers->GetStartPositionLocal(), m_markers->GetFinishPositionLocal());
 }
 
+NavMeshSimulationSceneBenchmarkResult NavMeshSimulationSceneMediator::RunUpperSurfaceBenchmark(const uint32_t iterations)
+{
+	return RunBenchmark(*m_pathfinders->GetUpperSurfacePathfinder(), iterations);
+}
+
 void NavMeshSimulationSceneMediator::SetUpperSurfaceSubDivision(const uint32_t count)
 {
 	using namespace dsr;
@@ -73,4 +78,45 @@ void NavMeshSimulationSceneMediator::SetPaths(const DirectX::XMVECTOR& start, co
 	m_paths->SetUpperSurfacePath(upperSurfaceResult.first);
 	m_paths->SetUpperSurfaceSubDivisionPath(upperSurfaceSubDivisionResult.first);
 	m_paths->SetUpperSurfaceBarycentricSubDivisionPath(upperSurfaceBarycentricSubDivisionResult.first);
+}
+
+NavMeshSimulationSceneBenchmarkResult NavMeshSimulationSceneMediator::RunBenchmark(
+	dsr::data::pathfinding::AStarStaticMeshPathfinder& pathfinder,
+	const uint32_t iterations
+)
+{
+	using namespace dsr::data::pathfinding;
+
+	using namespace std::chrono;
+
+	VertexIndexSearchResult indexSearchResult = pathfinder.SearchNearestVertexIndices(m_markers->GetStartPositionLocal(), m_markers->GetFinishPositionLocal());
+	assert(indexSearchResult.GetResultType() == VertexIndexSearchResultType::PathSearchRequired);
+
+	duration<double, std::nano> sum = duration<double, std::nano>::zero();
+	std::vector<duration<double, std::nano>> iterationTimes;
+
+	for (size_t i = 0; i < iterations; i++)
+	{
+		time_point<high_resolution_clock> start = high_resolution_clock::now();
+		pathfinder.Search(indexSearchResult.GetStartIndex(), indexSearchResult.GetFinishIndex());
+		duration<double, std::nano> elapsed = high_resolution_clock::now() - start;
+		sum += elapsed;
+		iterationTimes.push_back(elapsed);
+	}
+
+	NavMeshSimulationSceneBenchmarkResult result;
+	result.IterationTimes = iterationTimes;
+	result.TotalTime = sum;
+	result.AverageIterationTime = sum / iterations;
+
+	double sumSquared = 0;
+
+	for (size_t i = 0; i < iterationTimes.size(); i++)
+	{
+		double time = iterationTimes[i].count() - result.AverageIterationTime.count();
+		sumSquared += time * time;
+	}
+
+	result.StandardDeviationTime = duration<double, std::nano>(sqrt(sumSquared / iterations));
+	return result;
 }

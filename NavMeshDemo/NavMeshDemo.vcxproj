@@ -133,6 +133,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Scenes\Data\NavMeshSimulationSceneBenchmarkResult.cpp" />
     <ClCompile Include="Scenes\Data\NavMeshSimulationSceneBenchmarkStats.cpp" />
     <ClCompile Include="Scenes\Actors\NavMeshSimulationSceneBenchmarks.cpp" />
     <ClCompile Include="Scenes\Actors\Mediators\NavMeshSimulationSceneMediator.cpp" />
@@ -154,6 +155,7 @@
     <ClCompile Include="Systems\CameraControllerSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Scenes\Data\NavMeshSimulationSceneBenchmarkResult.h" />
     <ClInclude Include="Scenes\Data\NavMeshSimulationSceneBenchmarkStats.h" />
     <ClInclude Include="Scenes\Actors\NavMeshSimulationSceneBenchmarks.h" />
     <ClInclude Include="Scenes\Actors\Mediators\NavMeshSimulationSceneMediator.h" />

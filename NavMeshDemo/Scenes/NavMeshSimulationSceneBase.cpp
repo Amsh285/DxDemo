@@ -117,6 +117,11 @@ dsr::DsrResult NavMeshSimulationSceneBase::UpdateUpperSurfaceBarycentricSubDivis
 	return DsrResult::Success("Update Barycentric SubDivision Success.");
 }
 
+NavMeshSimulationSceneBenchmarkResult NavMeshSimulationSceneBase::RunUpperSurfaceBenchmark(const uint32_t iterations)
+{
+	return m_sceneMediator.RunUpperSurfaceBenchmark(iterations);
+}
+
 dsr::DsrResult NavMeshSimulationSceneBase::LoadSceneData()
 {
 	using namespace dsr;
