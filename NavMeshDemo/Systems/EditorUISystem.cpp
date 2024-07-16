@@ -167,10 +167,20 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 
 		m_upperSurfaceBenchmarkIterations = std::clamp(m_upperSurfaceBenchmarkIterations, 1, 100000);
 
+		ImGui::BeginDisabled(!canExecuteBenchmark || m_isUpperSurfaceBenchmarkRunning.load());
+
 		if (ImGui::Button("Run Benchmark") && canExecuteBenchmark)
 		{
-			m_scenes[m_sceneSelectedIdx]->RunUpperSurfaceBenchmark(m_upperSurfaceBenchmarkIterations);
+			m_isUpperSurfaceBenchmarkRunning.store(true);
+
+
+			std::thread([this]() {
+				m_scenes[m_sceneSelectedIdx]->RunUpperSurfaceBenchmark(m_upperSurfaceBenchmarkIterations);
+				m_isUpperSurfaceBenchmarkRunning.store(false);
+			}).detach();
 		}
+
+		ImGui::EndDisabled();
 
 		DisplayBenchmarkResult(m_scenes[m_sceneSelectedIdx]->GetBenchmarks()->UpperSurfaceBenchmark, m_timeUnits[m_timeUnitSelectedIdx].second);
 	}

@@ -1,5 +1,8 @@
 #pragma once
 
+#include <future>
+#include <thread>
+
 #include "dsrpch.h"
 
 #include "EngineSubSystems/EntityComponentSystem/Entity.h"
@@ -48,8 +51,9 @@ private:
 
 	size_t m_timeUnitSelectedIdx = 0;
 	std::vector<std::pair<std::string, TimeUnit>> m_timeUnits;
+
 	int32_t m_upperSurfaceBenchmarkIterations;
-	NavMeshSimulationSceneBenchmarkResult m_upperSurfaceBenchmark;
+	std::atomic<bool> m_isUpperSurfaceBenchmarkRunning = false;
 
 	void DisplayBenchmarkResult(const NavMeshSimulationSceneBenchmarkResult& benchmarkResult, const TimeUnit unit);
 };
