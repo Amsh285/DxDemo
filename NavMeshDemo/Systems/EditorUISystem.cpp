@@ -169,10 +169,10 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 
 		if (ImGui::Button("Run Benchmark") && canExecuteBenchmark)
 		{
-			m_upperSurfaceBenchmark = m_scenes[m_sceneSelectedIdx]->RunUpperSurfaceBenchmark(m_upperSurfaceBenchmarkIterations);
+			m_scenes[m_sceneSelectedIdx]->RunUpperSurfaceBenchmark(m_upperSurfaceBenchmarkIterations);
 		}
 
-		DisplayBenchmarkResult(m_upperSurfaceBenchmark, m_timeUnits[m_timeUnitSelectedIdx].second);
+		DisplayBenchmarkResult(m_scenes[m_sceneSelectedIdx]->GetBenchmarks()->UpperSurfaceBenchmark, m_timeUnits[m_timeUnitSelectedIdx].second);
 	}
 
 	ImGui::End();

@@ -1,9 +1,7 @@
 #pragma once
 
-#include "dsrpch.h"
-
+#include "Scenes/Data/NavMeshSimulationSceneBenchmarkResult.h"
 #include "Scenes/Data/NavMeshSimulationSceneBenchmarkStats.h"
-
 
 class NavMeshSimulationSceneBenchmarks
 {
@@ -11,5 +9,9 @@ public:
 	NavMeshSimulationSceneBenchmarkStats UpperSurfaceStats;
 	NavMeshSimulationSceneBenchmarkStats UpperSurfaceSubDivisionStats;
 	NavMeshSimulationSceneBenchmarkStats UpperSurfaceBarycentricSubDivisionStats;
+
+	NavMeshSimulationSceneBenchmarkResult UpperSurfaceBenchmark;
+	NavMeshSimulationSceneBenchmarkResult UpperSurfaceSubDivisionBenchmark;
+	NavMeshSimulationSceneBenchmarkResult UpperSurfaceBarycentricSubDivisionBenchmark;
 private:
 };

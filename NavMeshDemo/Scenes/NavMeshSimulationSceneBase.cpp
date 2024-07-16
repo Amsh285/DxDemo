@@ -98,6 +98,8 @@ void NavMeshSimulationSceneBase::OnScreenClick(const EditorScreenClickEvent& scr
 			m_markers->GetStartPositionLocal(),
 			m_markers->GetFinishPositionLocal()
 		);
+
+		m_sceneMediator.ResetBenchmarks();
 	}
 }
 
@@ -117,7 +119,7 @@ dsr::DsrResult NavMeshSimulationSceneBase::UpdateUpperSurfaceBarycentricSubDivis
 	return DsrResult::Success("Update Barycentric SubDivision Success.");
 }
 
-NavMeshSimulationSceneBenchmarkResult NavMeshSimulationSceneBase::RunUpperSurfaceBenchmark(const uint32_t iterations)
+void NavMeshSimulationSceneBase::RunUpperSurfaceBenchmark(const uint32_t iterations)
 {
 	return m_sceneMediator.RunUpperSurfaceBenchmark(iterations);
 }
