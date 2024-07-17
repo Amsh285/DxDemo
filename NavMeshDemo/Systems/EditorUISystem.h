@@ -42,6 +42,8 @@ public:
 	//void Start(const dsr::ecs::EngineStartupContext& context);
 	void Update(const dsr::ecs::EngineContext& context);
 private:
+	bool IsBackgroundThreadRunning() const;
+
 	std::shared_ptr<dsr::input::Input> m_input;
 	std::vector<std::shared_ptr<NavMeshSimulationSceneBase>> m_scenes;
 
@@ -52,8 +54,11 @@ private:
 	size_t m_timeUnitSelectedIdx = 0;
 	std::vector<std::pair<std::string, TimeUnit>> m_timeUnits;
 
-	int32_t m_upperSurfaceBenchmarkIterations;
+	int32_t m_upperSurfaceBenchmarkIterations = 1000;
 	std::atomic<bool> m_isUpperSurfaceBenchmarkRunning = false;
+
+	int32_t m_upperSurfaceSubdivisionBenchmarkIterations = 1000;
+	std::atomic<bool> m_isUpperSurfaceSubdivisionBenchmarkRunning = false;
 
 	void DisplayBenchmarkResult(const NavMeshSimulationSceneBenchmarkResult& benchmarkResult, const TimeUnit unit);
 };

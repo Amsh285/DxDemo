@@ -124,6 +124,16 @@ void NavMeshSimulationSceneBase::RunUpperSurfaceBenchmark(const uint32_t iterati
 	return m_sceneMediator.RunUpperSurfaceBenchmark(iterations);
 }
 
+void NavMeshSimulationSceneBase::RunUpperSurfaceSubDivisionBenchmark(const uint32_t iterations)
+{
+	return m_sceneMediator.RunUpperSurfaceSubDivisionBenchmark(iterations);
+}
+
+void NavMeshSimulationSceneBase::RunUpperSurfaceBarycentricSubDivisionBenchmark(const uint32_t iterations)
+{
+	return m_sceneMediator.RunUpperSurfaceBarycentricSubDivisionBenchmark(iterations);
+}
+
 dsr::DsrResult NavMeshSimulationSceneBase::LoadSceneData()
 {
 	using namespace dsr;

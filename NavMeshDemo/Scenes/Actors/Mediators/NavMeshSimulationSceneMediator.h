@@ -41,6 +41,8 @@ public:
 	void Setup();
 
 	void RunUpperSurfaceBenchmark(const uint32_t iterations);
+	void RunUpperSurfaceSubDivisionBenchmark(const uint32_t iterations);
+	void RunUpperSurfaceBarycentricSubDivisionBenchmark(const uint32_t iterations);
 
 	void SetUpperSurfaceSubDivision(const uint32_t count);
 	void SetUpperSurfaceBarycentricSubDivision(const uint32_t count);

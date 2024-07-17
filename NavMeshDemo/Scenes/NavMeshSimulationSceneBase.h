@@ -62,6 +62,8 @@ public:
 	dsr::DsrResult UpdateUpperSurfaceBarycentricSubDivision(const uint32_t count);
 
 	void RunUpperSurfaceBenchmark(const uint32_t iterations);
+	void RunUpperSurfaceSubDivisionBenchmark(const uint32_t iterations);
+	void RunUpperSurfaceBarycentricSubDivisionBenchmark(const uint32_t iterations);
 protected:
 	uint32_t m_sceneId;
 	std::string m_sceneName;

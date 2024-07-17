@@ -18,6 +18,16 @@ void NavMeshSimulationSceneMediator::RunUpperSurfaceBenchmark(const uint32_t ite
 	m_benchmarks->UpperSurfaceBenchmark = RunBenchmark(*m_pathfinders->GetUpperSurfacePathfinder(), iterations);
 }
 
+void NavMeshSimulationSceneMediator::RunUpperSurfaceSubDivisionBenchmark(const uint32_t iterations)
+{
+	m_benchmarks->UpperSurfaceSubDivisionBenchmark = RunBenchmark(*m_pathfinders->GetUpperSurfaceSubDivisionPathfinder(), iterations);
+}
+
+void NavMeshSimulationSceneMediator::RunUpperSurfaceBarycentricSubDivisionBenchmark(const uint32_t iterations)
+{
+	m_benchmarks->UpperSurfaceBarycentricSubDivisionBenchmark = RunBenchmark(*m_pathfinders->GetUpperSurfaceBarycentricSubDivisionPathfinder(), iterations);
+}
+
 void NavMeshSimulationSceneMediator::SetUpperSurfaceSubDivision(const uint32_t count)
 {
 	using namespace dsr;
@@ -115,10 +125,13 @@ NavMeshSimulationSceneBenchmarkResult NavMeshSimulationSceneMediator::RunBenchma
 	duration<double, std::nano> sum = duration<double, std::nano>::zero();
 	std::vector<duration<double, std::nano>> iterationTimes;
 
+	uint32_t startIndex = indexSearchResult.GetStartIndex();
+	uint32_t finishIndex = indexSearchResult.GetFinishIndex();
+
 	for (size_t i = 0; i < iterations; i++)
 	{
 		time_point<high_resolution_clock> start = high_resolution_clock::now();
-		pathfinder.Search(indexSearchResult.GetStartIndex(), indexSearchResult.GetFinishIndex());
+		pathfinder.Search(startIndex, finishIndex);
 		duration<double, std::nano> elapsed = high_resolution_clock::now() - start;
 		sum += elapsed;
 		iterationTimes.push_back(elapsed);
