@@ -5,6 +5,7 @@
 #include "imgui_impl_dx11.h"
 
 #include "Infrastructure/XMathHelper.h"
+#include <Vendor/implot/implot.h>
 
 std::vector<std::type_index> EditorUISystem::GetRequiredComponents() const
 {
@@ -31,6 +32,7 @@ EditorUISystem::EditorUISystem(
 
 //void EditorUISystem::Start(const dsr::ecs::EngineStartupContext& context)
 //{
+//	
 //}
 
 void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
@@ -54,6 +56,8 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 
 		m_scenes[m_sceneSelectedIdx]->OnScreenClick(screenClickEvent);
 	}
+
+	//ImPlot::ShowDemoWindow();
 
 	ImGui::Begin("Editor", nullptr);
 

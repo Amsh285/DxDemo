@@ -9,6 +9,7 @@
 #include "imgui_impl_dx11.h"
 
 #include "Input/WinInput.h"
+#include "Vendor/implot/implot.h"
 
 namespace dsr
 {
@@ -83,6 +84,8 @@ namespace dsr
 
 			ImGui_ImplDX11_Shutdown();
 			ImGui_ImplWin32_Shutdown();
+
+			ImPlot::DestroyContext();
 			ImGui::DestroyContext();
 		}
 
