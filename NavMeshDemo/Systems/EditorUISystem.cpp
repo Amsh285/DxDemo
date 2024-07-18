@@ -231,12 +231,80 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 		DisplayBenchmarkResult(m_scenes[m_sceneSelectedIdx]->GetBenchmarks()->UpperSurfaceSubDivisionBenchmark, m_timeUnits[m_timeUnitSelectedIdx].second);
 	}
 
+	if (ImGui::CollapsingHeader("Upper Surface barycentric SubDivision"))
+	{
+		NavMeshSimulationSceneBenchmarkStats stats = m_scenes[m_sceneSelectedIdx]->GetBenchmarks()->UpperSurfaceBarycentricSubDivisionStats;
+		bool canExecuteBenchmark = stats.GetVertexIndexSearchResultType() == VertexIndexSearchResultType::PathSearchRequired;
+
+		ImGui::Text("Benchmark Enabled:");
+		ImGui::SameLine();
+		ImGui::ColorButton(
+			"##BenchmarkUpperSurfaceBarycentricSubDivisionEnabledColor",
+			canExecuteBenchmark ? ImVec4(0.0f, 1.0f, 0.0f, 1.0f) : ImVec4(1.0f, 0.0f, 0.0f, 1.0f),
+			ImGuiColorEditFlags_NoTooltip | ImGuiColorEditFlags_NoDragDrop,
+			ImVec2(15, 15)
+		);
+
+		ImGui::Text("Index Search: %s", stats.GetVertexIndexSearchResultTypeText().c_str());
+
+		ImGui::Text("Triangle Count: %d", stats.GetNavMeshTriangleCount());
+		ImGui::Text("Avg Branching Factor: %.4f", stats.GetAverageBranchingFactor());
+		ImGui::Text("Nodes Traveled: %d", stats.GetNodesTraveled());
+
+		ImGui::Separator();
+		ImGui::InputInt("Benchmark Iterations##UpperSurfaceBarycentricSubDivision", &m_upperSurfaceBarycentricSubdivisionBenchmarkIterations);
+
+		m_upperSurfaceBarycentricSubdivisionBenchmarkIterations = std::clamp(m_upperSurfaceBarycentricSubdivisionBenchmarkIterations, 1, 100000);
+
+		ImGui::BeginDisabled(!canExecuteBenchmark || m_isUpperSurfaceBarycentricSubdivisionBenchmarkRunning.load());
+
+		if (ImGui::Button("Run Benchmark##UpperSurfaceBarycentricSubDivision") && canExecuteBenchmark)
+		{
+			m_isUpperSurfaceBarycentricSubdivisionBenchmarkRunning.store(true);
+
+			std::thread([this]() {
+				m_scenes[m_sceneSelectedIdx]->RunUpperSurfaceBarycentricSubDivisionBenchmark(m_upperSurfaceBarycentricSubdivisionBenchmarkIterations);
+				m_isUpperSurfaceBarycentricSubdivisionBenchmarkRunning.store(false);
+				}).detach();
+		}
+
+		ImGui::EndDisabled();
+
+		DisplayBenchmarkResult(m_scenes[m_sceneSelectedIdx]->GetBenchmarks()->UpperSurfaceBarycentricSubDivisionBenchmark, m_timeUnits[m_timeUnitSelectedIdx].second);
+	}
+
+	//if (m_scenes[m_sceneSelectedIdx]->GetBenchmarks()->UpperSurfaceBenchmark.IterationTimes.size() > 0)
+	//{
+	//	std::vector<std::chrono::duration<double, std::nano>>& iterationTimes = m_scenes[m_sceneSelectedIdx]->GetBenchmarks()->UpperSurfaceBenchmark.IterationTimes;
+
+	//	
+
+	//	ImGui::PlotLines("Avg Iteration Time",
+	//		[](void* data, int idx) -> float {
+	//			/*auto& vec = *reinterpret_cast<std::vector<std::chrono::duration<double, std::nano>>*>(data);
+	//			return static_cast<float>(vec[idx].count());*/
+
+
+	//			std::chrono::duration<double, std::nano>* duration = reinterpret_cast<std::chrono::duration<double, std::nano>*>(data);
+	//			return duration[idx].count();
+	//		},
+	//		iterationTimes.data(),
+	//		iterationTimes.size(),
+	//		0,
+	//		nullptr,
+	//		3.402823466e+38f,
+	//		3.402823466e+38f,
+	//		ImVec2(0, 160)
+	//	);
+	//}
+
 	ImGui::End();
 }
 
 bool EditorUISystem::IsBackgroundThreadRunning() const
 {
-	return m_isUpperSurfaceBenchmarkRunning.load() || m_isUpperSurfaceSubdivisionBenchmarkRunning.load();
+	return m_isUpperSurfaceBenchmarkRunning.load() || m_isUpperSurfaceSubdivisionBenchmarkRunning.load() ||
+		m_isUpperSurfaceBarycentricSubdivisionBenchmarkRunning.load();
 }
 
 void EditorUISystem::DisplayBenchmarkResult(const NavMeshSimulationSceneBenchmarkResult& benchmarkResult, const TimeUnit unit)

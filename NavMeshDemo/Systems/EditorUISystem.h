@@ -60,5 +60,8 @@ private:
 	int32_t m_upperSurfaceSubdivisionBenchmarkIterations = 1000;
 	std::atomic<bool> m_isUpperSurfaceSubdivisionBenchmarkRunning = false;
 
+	int32_t m_upperSurfaceBarycentricSubdivisionBenchmarkIterations = 1000;
+	std::atomic<bool> m_isUpperSurfaceBarycentricSubdivisionBenchmarkRunning = false;
+
 	void DisplayBenchmarkResult(const NavMeshSimulationSceneBenchmarkResult& benchmarkResult, const TimeUnit unit);
 };
