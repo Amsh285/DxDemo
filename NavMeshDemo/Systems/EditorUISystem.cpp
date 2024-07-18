@@ -277,30 +277,26 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 		DisplayBenchmarkResult(m_scenes[m_sceneSelectedIdx]->GetBenchmarks()->UpperSurfaceBarycentricSubDivisionBenchmark, m_timeUnits[m_timeUnitSelectedIdx].second);
 	}
 
-	//if (m_scenes[m_sceneSelectedIdx]->GetBenchmarks()->UpperSurfaceBenchmark.IterationTimes.size() > 0)
-	//{
-	//	std::vector<std::chrono::duration<double, std::nano>>& iterationTimes = m_scenes[m_sceneSelectedIdx]->GetBenchmarks()->UpperSurfaceBenchmark.IterationTimes;
+	if(ImPlot::BeginPlot("Avg Iteration times (double click to autofit):"))
+	{
+		ImPlot::SetupAxes("Iteration", "Time (ns)");
 
-	//	
+		std::vector<std::chrono::duration<double, std::nano>>& upperSurfaceIterationTimes = m_scenes[m_sceneSelectedIdx]->GetBenchmarks()->UpperSurfaceBenchmark.IterationTimes;
+		std::vector<double> upperSurfaceIterationTimesDouble;
+		std::vector<double> upperSurfaceIterationTimesXAxis;
+		upperSurfaceIterationTimesDouble.reserve(upperSurfaceIterationTimes.size());
+		upperSurfaceIterationTimesXAxis.reserve(upperSurfaceIterationTimes.size());
 
-	//	ImGui::PlotLines("Avg Iteration Time",
-	//		[](void* data, int idx) -> float {
-	//			/*auto& vec = *reinterpret_cast<std::vector<std::chrono::duration<double, std::nano>>*>(data);
-	//			return static_cast<float>(vec[idx].count());*/
+		for (size_t i = 0; i < upperSurfaceIterationTimes.size(); ++i)
+		{
+			upperSurfaceIterationTimesDouble.push_back(upperSurfaceIterationTimes[i].count());
+			upperSurfaceIterationTimesXAxis.push_back(i + 1);
+		}
 
+		ImPlot::PlotLine("Upper Surface", upperSurfaceIterationTimesXAxis.data(), upperSurfaceIterationTimesDouble.data(), upperSurfaceIterationTimes.size());
 
-	//			std::chrono::duration<double, std::nano>* duration = reinterpret_cast<std::chrono::duration<double, std::nano>*>(data);
-	//			return duration[idx].count();
-	//		},
-	//		iterationTimes.data(),
-	//		iterationTimes.size(),
-	//		0,
-	//		nullptr,
-	//		3.402823466e+38f,
-	//		3.402823466e+38f,
-	//		ImVec2(0, 160)
-	//	);
-	//}
+		ImPlot::EndPlot();
+	}
 
 	ImGui::End();
 }
