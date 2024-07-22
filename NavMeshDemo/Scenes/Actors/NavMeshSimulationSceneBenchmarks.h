@@ -15,10 +15,12 @@ public:
 	NavMeshSimulationSceneBenchmarkStats UpperSurfaceBarycentricSubDivisionStats;
 
 	dsr::SyncAccess<NavMeshSimulationSceneBenchmarkResult> UpperSurfaceBenchmark;
-	NavMeshSimulationSceneBenchmarkResult UpperSurfaceSubDivisionBenchmark;
-	NavMeshSimulationSceneBenchmarkResult UpperSurfaceBarycentricSubDivisionBenchmark;
+	dsr::SyncAccess<NavMeshSimulationSceneBenchmarkResult> UpperSurfaceSubDivisionBenchmark;
+	dsr::SyncAccess<NavMeshSimulationSceneBenchmarkResult> UpperSurfaceBarycentricSubDivisionBenchmark;
 
 	dsr::SyncHandle<NavMeshSimulationSceneBenchmarkResult> UpperSurfaceBenchmarkHandle;
+	dsr::SyncHandle<NavMeshSimulationSceneBenchmarkResult> UpperSurfaceSubDivisionBenchmarkHandle;
+	dsr::SyncHandle<NavMeshSimulationSceneBenchmarkResult> UpperSurfaceBarycentricSubDivisionBenchmarkHandle;
 
 	NavMeshSimulationSceneBenchmarks();
 

@@ -129,9 +129,10 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 
 	ImGui::End();
 
-
 	m_scenes[m_sceneSelectedIdx]->GetBenchmarks()->Update();
 	const dsr::SyncHandle<NavMeshSimulationSceneBenchmarkResult>& upperSurfaceBenchmarkHandle = m_scenes[m_sceneSelectedIdx]->GetBenchmarks()->UpperSurfaceBenchmarkHandle;
+	const dsr::SyncHandle<NavMeshSimulationSceneBenchmarkResult>& upperSurfaceSubDivisionBenchmarkHandle = m_scenes[m_sceneSelectedIdx]->GetBenchmarks()->UpperSurfaceSubDivisionBenchmarkHandle;
+	const dsr::SyncHandle<NavMeshSimulationSceneBenchmarkResult>& upperSurfaceBarycentricSubDivisionBenchmarkHandle = m_scenes[m_sceneSelectedIdx]->GetBenchmarks()->UpperSurfaceBarycentricSubDivisionBenchmarkHandle;
 
 	ImGui::Begin("Benchmark", nullptr);
 
@@ -237,7 +238,7 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 
 		ImGui::EndDisabled();
 
-		DisplayBenchmarkResult(m_scenes[m_sceneSelectedIdx]->GetBenchmarks()->UpperSurfaceSubDivisionBenchmark, m_timeUnits[m_timeUnitSelectedIdx].second);
+		DisplayBenchmarkResult(upperSurfaceSubDivisionBenchmarkHandle.GetData(), m_timeUnits[m_timeUnitSelectedIdx].second);
 	}
 
 	if (ImGui::CollapsingHeader("Upper Surface barycentric SubDivision"))
@@ -279,7 +280,7 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 
 		ImGui::EndDisabled();
 
-		DisplayBenchmarkResult(m_scenes[m_sceneSelectedIdx]->GetBenchmarks()->UpperSurfaceBarycentricSubDivisionBenchmark, m_timeUnits[m_timeUnitSelectedIdx].second);
+		DisplayBenchmarkResult(upperSurfaceBarycentricSubDivisionBenchmarkHandle.GetData(), m_timeUnits[m_timeUnitSelectedIdx].second);
 	}
 
 	if(ImPlot::BeginPlot("Avg Iteration times (double click to autofit):"))
