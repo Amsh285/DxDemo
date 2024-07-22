@@ -16,6 +16,7 @@
 #include <optional>
 #include <queue>
 #include <set>
+#include <shared_mutex>
 #include <stdexcept>
 #include <string>
 #include <typeindex>

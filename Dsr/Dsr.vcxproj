@@ -118,6 +118,7 @@
     <ClInclude Include="src\Data\Structures\StaticMeshTriangle.h" />
     <ClInclude Include="src\Data\Pathfinding\VertexIndexSearchResult.h" />
     <ClInclude Include="src\Data\Manipulation\StaticMeshVertexBufferExtensions.h" />
+    <ClInclude Include="src\Infrastructure\SyncAccess.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Data\Pathfinding\AStarStaticMeshPathfinder.cpp">
@@ -480,6 +481,10 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="src\Data\Manipulation\StaticMeshVertexBufferExtensions.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="src\Infrastructure\SyncAccess.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">dsrpch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">dsrpch.h</PrecompiledHeaderFile>
     </ClCompile>

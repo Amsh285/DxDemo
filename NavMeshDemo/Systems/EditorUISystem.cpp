@@ -28,6 +28,8 @@ EditorUISystem::EditorUISystem(
 		{ "Milliseconds", TimeUnit::Milliseconds },
 		{ "Seconds", TimeUnit::Seconds }
 	};
+
+	//m_upperSurfaceBenchmark = m_scenes[m_sceneSelectedIdx]->GetBenchmarks()->UpperSurfaceBenchmark;
 }
 
 //void EditorUISystem::Start(const dsr::ecs::EngineStartupContext& context)
@@ -128,6 +130,9 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 	ImGui::End();
 
 
+	m_scenes[m_sceneSelectedIdx]->GetBenchmarks()->Update();
+	const dsr::SyncHandle<NavMeshSimulationSceneBenchmarkResult>& upperSurfaceBenchmarkHandle = m_scenes[m_sceneSelectedIdx]->GetBenchmarks()->UpperSurfaceBenchmarkHandle;
+
 	ImGui::Begin("Benchmark", nullptr);
 
 	ImGui::Text("Scene: %s", m_scenes[m_sceneSelectedIdx]->GetSceneName().c_str());
@@ -190,7 +195,7 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 
 		ImGui::EndDisabled();
 
-		DisplayBenchmarkResult(m_scenes[m_sceneSelectedIdx]->GetBenchmarks()->UpperSurfaceBenchmark, m_timeUnits[m_timeUnitSelectedIdx].second);
+		DisplayBenchmarkResult(upperSurfaceBenchmarkHandle.GetData(), m_timeUnits[m_timeUnitSelectedIdx].second);
 	}
 
 	if(ImGui::CollapsingHeader("Upper Surface Subdivision"))
@@ -281,7 +286,7 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 	{
 		ImPlot::SetupAxes("Iteration", "Time (ns)");
 
-		std::vector<std::chrono::duration<double, std::nano>>& upperSurfaceIterationTimes = m_scenes[m_sceneSelectedIdx]->GetBenchmarks()->UpperSurfaceBenchmark.IterationTimes;
+		const std::vector<std::chrono::duration<double, std::nano>>& upperSurfaceIterationTimes = upperSurfaceBenchmarkHandle.GetData().IterationTimes;
 		std::vector<double> upperSurfaceIterationTimesDouble;
 		std::vector<double> upperSurfaceIterationTimesXAxis;
 		upperSurfaceIterationTimesDouble.reserve(upperSurfaceIterationTimes.size());

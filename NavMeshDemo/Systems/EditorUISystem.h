@@ -5,6 +5,8 @@
 
 #include "dsrpch.h"
 
+#include "Components/EditorUIComponent.h"
+
 #include "EngineSubSystems/EntityComponentSystem/Entity.h"
 #include "EngineSubSystems/EntityComponentSystem/System.h"
 #include "EngineSubSystems/EntityComponentSystem/Components/TransformComponent.h"
@@ -14,7 +16,7 @@
 
 #include "EngineSubSystems/SceneSystem/SceneManager.h"
 
-#include "Components/EditorUIComponent.h"
+#include "Infrastructure/SyncAccess.h"
 
 #include "Scenes/RampScene.h"
 #include "Scenes/Data/Events/EditorScreenClickEvent.h"
