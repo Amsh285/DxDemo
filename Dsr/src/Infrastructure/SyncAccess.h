@@ -56,6 +56,13 @@ namespace dsr
 			m_timestamp = std::chrono::steady_clock::now();
 		}
 
+		void SetData(T&& data)
+		{
+			std::unique_lock<std::shared_mutex> lock(m_mutex);
+			m_data = std::move(data);
+			m_timestamp = std::chrono::steady_clock::now();
+		}
+
 		void Update(SyncHandle<T>& handle) const
 		{
 			assert(handle.GetSyncAccessId() == m_id);

@@ -16,19 +16,19 @@ void NavMeshSimulationSceneMediator::Setup()
 void NavMeshSimulationSceneMediator::RunUpperSurfaceBenchmark(const uint32_t iterations)
 {
 	NavMeshSimulationSceneBenchmarkResult result = RunBenchmark(*m_pathfinders->GetUpperSurfacePathfinder(), iterations);
-	m_benchmarks->UpperSurfaceBenchmark.SetData(result);
+	m_benchmarks->UpperSurfaceBenchmark.SetData(std::move(result));
 }
 
 void NavMeshSimulationSceneMediator::RunUpperSurfaceSubDivisionBenchmark(const uint32_t iterations)
 {
 	NavMeshSimulationSceneBenchmarkResult result = RunBenchmark(*m_pathfinders->GetUpperSurfaceSubDivisionPathfinder(), iterations);
-	m_benchmarks->UpperSurfaceSubDivisionBenchmark.SetData(result);
+	m_benchmarks->UpperSurfaceSubDivisionBenchmark.SetData(std::move(result));
 }
 
 void NavMeshSimulationSceneMediator::RunUpperSurfaceBarycentricSubDivisionBenchmark(const uint32_t iterations)
 {
 	NavMeshSimulationSceneBenchmarkResult result = RunBenchmark(*m_pathfinders->GetUpperSurfaceBarycentricSubDivisionPathfinder(), iterations);
-	m_benchmarks->UpperSurfaceBarycentricSubDivisionBenchmark.SetData(result);
+	m_benchmarks->UpperSurfaceBarycentricSubDivisionBenchmark.SetData(std::move(result));
 }
 
 void NavMeshSimulationSceneMediator::SetUpperSurfaceSubDivision(const uint32_t count)
@@ -101,19 +101,19 @@ void NavMeshSimulationSceneMediator::ResetBenchmarks()
 	upperSurfaceBenchmarkDefaults.TotalTime = duration<double, std::nano>::zero();
 	upperSurfaceBenchmarkDefaults.AverageIterationTime = duration<double, std::nano>::zero();
 	upperSurfaceBenchmarkDefaults.StandardDeviationTime = duration<double, std::nano>::zero();
-	m_benchmarks->UpperSurfaceBenchmark.SetData(upperSurfaceBenchmarkDefaults);
+	m_benchmarks->UpperSurfaceBenchmark.SetData(std::move(upperSurfaceBenchmarkDefaults));
 
 	NavMeshSimulationSceneBenchmarkResult upperSurfaceSubDivisionBenchmarkDefaults;
 	upperSurfaceSubDivisionBenchmarkDefaults.TotalTime = duration<double, std::nano>::zero();
 	upperSurfaceSubDivisionBenchmarkDefaults.AverageIterationTime = duration<double, std::nano>::zero();
 	upperSurfaceSubDivisionBenchmarkDefaults.StandardDeviationTime = duration<double, std::nano>::zero();
-	m_benchmarks->UpperSurfaceSubDivisionBenchmark.SetData(upperSurfaceSubDivisionBenchmarkDefaults);
+	m_benchmarks->UpperSurfaceSubDivisionBenchmark.SetData(std::move(upperSurfaceSubDivisionBenchmarkDefaults));
 
 	NavMeshSimulationSceneBenchmarkResult upperSurfaceBarycentricSubDivisionBenchmarkDefaults;
 	upperSurfaceBarycentricSubDivisionBenchmarkDefaults.TotalTime = duration<double, std::nano>::zero();
 	upperSurfaceBarycentricSubDivisionBenchmarkDefaults.AverageIterationTime = duration<double, std::nano>::zero();
 	upperSurfaceBarycentricSubDivisionBenchmarkDefaults.StandardDeviationTime = duration<double, std::nano>::zero();
-	m_benchmarks->UpperSurfaceBarycentricSubDivisionBenchmark.SetData(upperSurfaceBarycentricSubDivisionBenchmarkDefaults);
+	m_benchmarks->UpperSurfaceBarycentricSubDivisionBenchmark.SetData(std::move(upperSurfaceBarycentricSubDivisionBenchmarkDefaults));
 }
 
 NavMeshSimulationSceneBenchmarkResult NavMeshSimulationSceneMediator::RunBenchmark(
