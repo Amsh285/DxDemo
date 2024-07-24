@@ -154,6 +154,26 @@ namespace dsr
 
 				return std::vector<uint32_t>();
 			}
+
+			float AStarPathfinder::GetLegnth(const std::vector<uint32_t>& path) const
+			{
+				using namespace DirectX;
+
+				if(path.size() < 2)
+					return 0.0f;
+
+				float length = 0.0f;
+
+				for (size_t i = 0; i < path.size() - 1; i++)
+				{
+					XMVECTOR v0 = XMLoadFloat3(&m_vertexBuffer[path[i]].Position);
+					XMVECTOR v1 = XMLoadFloat3(&m_vertexBuffer[path[i + 1]].Position);
+
+					length += XMVectorGetX(XMVector3Length(XMVectorSubtract(v0, v1)));
+				}
+
+				return length;
+			}
 		}
 	}
 }

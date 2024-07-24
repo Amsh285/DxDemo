@@ -29,6 +29,6 @@ void NavMeshSimulationSceneBenchmarkStats::SetVertexIndexSearchResultType(const 
 NavMeshSimulationSceneBenchmarkStats::NavMeshSimulationSceneBenchmarkStats()
 	: m_vertexIndexSearchResultType(dsr::data::pathfinding::VertexIndexSearchResultType::Undefined),
 	m_vertexIndexSearchResultTypeText("Undefined"), m_averageBranchingFactor(0), m_nodesTraveled(0),
-	m_navMeshTriangleCount(0)
+	m_pathLength(0.0f), m_navMeshTriangleCount(0)
 {
 }

@@ -18,6 +18,9 @@ public:
 	uint32_t GetNodesTraveled() const { return m_nodesTraveled; }
 	void SetNodesTraveled(const uint32_t nodesTraveled) { m_nodesTraveled = nodesTraveled; }
 
+	float GetPathLength() const { return m_pathLength; }
+	void SetPathLength(const float pathLength) { m_pathLength = pathLength; }
+
 	size_t GetNavMeshTriangleCount() const { return m_navMeshTriangleCount; }
 	void SetNavMeshTriangleCount(const size_t navMeshTriangleCount) { m_navMeshTriangleCount = navMeshTriangleCount; }
 
@@ -28,5 +31,6 @@ private:
 
 	double m_averageBranchingFactor;
 	uint32_t m_nodesTraveled;
+	float m_pathLength;
 	size_t m_navMeshTriangleCount;
 };

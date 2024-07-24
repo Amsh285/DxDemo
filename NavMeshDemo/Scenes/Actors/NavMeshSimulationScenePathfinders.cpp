@@ -64,16 +64,21 @@ std::pair<std::vector<float>, PathSearchStats> NavMeshSimulationScenePathfinders
 	switch (result.GetResultType())
 	{
 	case VertexIndexSearchResultType::CoTriangular:
+	{
+		stats.PathLength = pathfinder.GetLengthCoTriangular(start, finish);
 		return std::pair(BuildVertexBufferCoTriangular(start, finish, color), stats);
+	}
 	case VertexIndexSearchResultType::Concurrent:
 	{
 		stats.NodesTraveled = 1;
+		stats.PathLength = pathfinder.GetLengthConcurrent(start, finish, result.GetStartIndex());
 		return std::pair(BuildVertexBufferConcurrent(start, finish, pathfinder.GetConnectionVertex(result), color), stats);
 	}
 	case VertexIndexSearchResultType::PathSearchRequired:
 	{
 		std::vector<uint32_t> path = pathfinder.Search(result.GetStartIndex(), result.GetFinishIndex());
 		stats.NodesTraveled = path.size();
+		stats.PathLength = pathfinder.GetLegnth(start, finish, path);
 
 		return std::pair(BuildVertexBuffer(start, finish, path, pathfinder.GetNavMesh().GetVertexBuffer(), color), stats);
 	}

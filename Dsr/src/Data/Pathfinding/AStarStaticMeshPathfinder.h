@@ -34,6 +34,24 @@ namespace dsr
 				DirectX::XMVECTOR GetConnectionVertex(const VertexIndexSearchResult& result) const;
 
 				std::vector<uint32_t> Search(const uint32_t& startIndex, const uint32_t& goalIndex);
+				
+				float GetLengthCoTriangular(
+					const DirectX::XMVECTOR& start,
+					const DirectX::XMVECTOR& finish
+				) const;
+
+				float GetLengthConcurrent(
+					const DirectX::XMVECTOR& start,
+					const DirectX::XMVECTOR& finish,
+					const uint32_t& connectionIndex
+				) const;
+
+				float GetLegnth(
+					const DirectX::XMVECTOR& start,
+					const DirectX::XMVECTOR& finish,
+					const std::vector<uint32_t>& path
+				) const;
+
 			private:
 				AStarPathfinder m_pathfinder;
 				StaticMesh<Vertex3F> m_navMesh;

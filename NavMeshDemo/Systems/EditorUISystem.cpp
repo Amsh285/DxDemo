@@ -175,6 +175,7 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 		ImGui::Text("Triangle Count: %d", stats.GetNavMeshTriangleCount());
 		ImGui::Text("Avg Branching Factor: %.4f", stats.GetAverageBranchingFactor());
 		ImGui::Text("Nodes Traveled: %d", stats.GetNodesTraveled());
+		ImGui::Text("Path Length: %.4f", stats.GetPathLength());
 
 		ImGui::Separator();
 		ImGui::InputInt("Benchmark Iterations##UpperSurface", &m_upperSurfaceBenchmarkIterations);
@@ -218,6 +219,7 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 		ImGui::Text("Triangle Count: %d", stats.GetNavMeshTriangleCount());
 		ImGui::Text("Avg Branching Factor: %.4f", stats.GetAverageBranchingFactor());
 		ImGui::Text("Nodes Traveled: %d", stats.GetNodesTraveled());
+		ImGui::Text("Path Length: %.4f", stats.GetPathLength());
 
 		ImGui::Separator();
 		ImGui::InputInt("Benchmark Iterations##UpperSurfaceSubDivision", &m_upperSurfaceSubdivisionBenchmarkIterations);
@@ -260,6 +262,7 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 		ImGui::Text("Triangle Count: %d", stats.GetNavMeshTriangleCount());
 		ImGui::Text("Avg Branching Factor: %.4f", stats.GetAverageBranchingFactor());
 		ImGui::Text("Nodes Traveled: %d", stats.GetNodesTraveled());
+		ImGui::Text("Path Length: %.4f", stats.GetPathLength());
 
 		ImGui::Separator();
 		ImGui::InputInt("Benchmark Iterations##UpperSurfaceBarycentricSubDivision", &m_upperSurfaceBarycentricSubdivisionBenchmarkIterations);

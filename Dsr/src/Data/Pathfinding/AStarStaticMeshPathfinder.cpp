@@ -63,6 +63,45 @@ namespace dsr
 			{
 				return m_pathfinder.Search(startIndex, goalIndex);
 			}
+
+			float AStarStaticMeshPathfinder::GetLengthCoTriangular(const DirectX::XMVECTOR& start, const DirectX::XMVECTOR& finish) const
+			{
+				using namespace DirectX;
+
+				return XMVectorGetX(XMVector3Length(XMVectorSubtract(start, finish)));
+			}
+
+			float AStarStaticMeshPathfinder::GetLengthConcurrent(const DirectX::XMVECTOR& start, const DirectX::XMVECTOR& finish, const uint32_t& connectionIndex) const
+			{
+				using namespace DirectX;
+
+				XMVECTOR connection = XMLoadFloat3(&m_navMesh.GetVertexBuffer()[connectionIndex].Position);
+				float length = XMVectorGetX(XMVector3Length(XMVectorSubtract(start, connection)));
+				length += XMVectorGetX(XMVector3Length(XMVectorSubtract(connection, finish)));
+
+				return length;
+			}
+
+			float AStarStaticMeshPathfinder::GetLegnth(const DirectX::XMVECTOR& start, const DirectX::XMVECTOR& finish, const std::vector<uint32_t>& path) const
+			{
+				using namespace DirectX;
+
+				if(path.size() == 0)
+					return GetLengthCoTriangular(start, finish);
+				else if (path.size() == 1)
+					return GetLengthConcurrent(start, finish, path[0]);
+
+				float length = m_pathfinder.GetLegnth(path);
+
+				// paths returned in reverse order
+				XMVECTOR pathStart = XMLoadFloat3(&m_navMesh.GetVertexBuffer()[path[path.size() - 1]].Position);
+				XMVECTOR pathFinish = XMLoadFloat3(&m_navMesh.GetVertexBuffer()[path[0]].Position);
+
+				length += XMVectorGetX(XMVector3Length(pathStart - start));
+				length += XMVectorGetX(XMVector3Length(pathFinish - finish));
+
+				return length;
+			}
 		}
 	}
 }

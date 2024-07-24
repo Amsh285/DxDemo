@@ -8,6 +8,7 @@ struct PathSearchStats
 {
 	dsr::data::pathfinding::VertexIndexSearchResultType IndexSearchResultType;
 	uint32_t NodesTraveled;
+	float PathLength;
 	uint32_t StartIndex;
 	uint32_t FinishIndex;
 };
