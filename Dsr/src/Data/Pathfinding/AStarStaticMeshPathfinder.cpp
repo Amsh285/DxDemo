@@ -59,13 +59,6 @@ namespace dsr
 				return XMLoadFloat3(&m_navMesh.GetVertexBuffer()[result.GetStartIndex()].Position);
 			}
 
-			std::vector<uint32_t> AStarStaticMeshPathfinder::Search(const uint32_t& startIndex, const uint32_t& goalIndex)
-			{
-				using namespace dsr::data::pathfinding::heuristics;
-
-				return m_pathfinder.Search<EuclideanDistance>(startIndex, goalIndex);
-			}
-
 			float AStarStaticMeshPathfinder::GetLengthCoTriangular(const DirectX::XMVECTOR& start, const DirectX::XMVECTOR& finish) const
 			{
 				using namespace DirectX;

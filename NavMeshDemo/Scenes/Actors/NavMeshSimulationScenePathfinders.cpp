@@ -76,7 +76,7 @@ std::pair<std::vector<float>, PathSearchStats> NavMeshSimulationScenePathfinders
 	}
 	case VertexIndexSearchResultType::PathSearchRequired:
 	{
-		std::vector<uint32_t> path = pathfinder.Search(result.GetStartIndex(), result.GetFinishIndex());
+		std::vector<uint32_t> path = pathfinder.Search<heuristics::EuclideanDistance>(result.GetStartIndex(), result.GetFinishIndex());
 		stats.NodesTraveled = path.size();
 		stats.PathLength = pathfinder.GetLegnth(start, finish, path);
 

@@ -5,6 +5,10 @@ NavMeshSimulationSceneBenchmarks::NavMeshSimulationSceneBenchmarks()
 	UpperSurfaceBenchmarkHandle = UpperSurfaceBenchmark.CreateHandle();
 	UpperSurfaceSubDivisionBenchmarkHandle = UpperSurfaceSubDivisionBenchmark.CreateHandle();
 	UpperSurfaceBarycentricSubDivisionBenchmarkHandle = UpperSurfaceBarycentricSubDivisionBenchmark.CreateHandle();
+
+	UpperSurfaceDijkstraBenchmarkHandle = UpperSurfaceDijkstraBenchmark.CreateHandle();
+	UpperSurfaceSubDivisionDijkstraBenchmarkHandle = UpperSurfaceSubDivisionDijkstraBenchmark.CreateHandle();
+	UpperSurfaceBarycentricSubDivisionDijkstraBenchmarkHandle = UpperSurfaceBarycentricSubDivisionDijkstraBenchmark.CreateHandle();
 }
 
 void NavMeshSimulationSceneBenchmarks::Update()
@@ -12,4 +16,8 @@ void NavMeshSimulationSceneBenchmarks::Update()
 	UpperSurfaceBenchmark.Update(UpperSurfaceBenchmarkHandle);
 	UpperSurfaceSubDivisionBenchmark.Update(UpperSurfaceSubDivisionBenchmarkHandle);
 	UpperSurfaceBarycentricSubDivisionBenchmark.Update(UpperSurfaceBarycentricSubDivisionBenchmarkHandle);
+
+	UpperSurfaceDijkstraBenchmark.Update(UpperSurfaceDijkstraBenchmarkHandle);
+	UpperSurfaceSubDivisionDijkstraBenchmark.Update(UpperSurfaceSubDivisionDijkstraBenchmarkHandle);
+	UpperSurfaceBarycentricSubDivisionDijkstraBenchmark.Update(UpperSurfaceBarycentricSubDivisionDijkstraBenchmarkHandle);
 }

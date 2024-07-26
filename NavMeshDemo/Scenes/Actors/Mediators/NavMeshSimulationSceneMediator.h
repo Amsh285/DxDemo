@@ -59,8 +59,51 @@ private:
 	std::shared_ptr<NavMeshSimulationSceneMeshSubDivision> m_upperSurfaceSubDivision;
 	std::shared_ptr<NavMeshSimulationSceneMeshSubDivision> m_upperSurfaceBarycentricSubDivision;
 
+	template<class THeuristic>
 	NavMeshSimulationSceneBenchmarkResult RunBenchmark(
 		dsr::data::pathfinding::AStarStaticMeshPathfinder& pathfinder,
 		const uint32_t iterations
 	);
 };
+
+template<class THeuristic>
+inline NavMeshSimulationSceneBenchmarkResult NavMeshSimulationSceneMediator::RunBenchmark(dsr::data::pathfinding::AStarStaticMeshPathfinder& pathfinder, const uint32_t iterations)
+{
+	using namespace dsr::data::pathfinding;
+
+	using namespace std::chrono;
+
+	VertexIndexSearchResult indexSearchResult = pathfinder.SearchNearestVertexIndices(m_markers->GetStartPositionLocal(), m_markers->GetFinishPositionLocal());
+	assert(indexSearchResult.GetResultType() == VertexIndexSearchResultType::PathSearchRequired);
+
+	duration<double, std::nano> sum = duration<double, std::nano>::zero();
+	std::vector<duration<double, std::nano>> iterationTimes;
+
+	uint32_t startIndex = indexSearchResult.GetStartIndex();
+	uint32_t finishIndex = indexSearchResult.GetFinishIndex();
+
+	for (size_t i = 0; i < iterations; i++)
+	{
+		time_point<high_resolution_clock> start = high_resolution_clock::now();
+		pathfinder.Search<THeuristic>(startIndex, finishIndex);
+		duration<double, std::nano> elapsed = high_resolution_clock::now() - start;
+		sum += elapsed;
+		iterationTimes.push_back(elapsed);
+	}
+
+	NavMeshSimulationSceneBenchmarkResult result;
+	result.IterationTimes = iterationTimes;
+	result.TotalTime = sum;
+	result.AverageIterationTime = sum / iterations;
+
+	double sumSquared = 0;
+
+	for (size_t i = 0; i < iterationTimes.size(); i++)
+	{
+		double time = iterationTimes[i].count() - result.AverageIterationTime.count();
+		sumSquared += time * time;
+	}
+
+	result.StandardDeviationTime = duration<double, std::nano>(sqrt(sumSquared / iterations));
+	return result;
+}

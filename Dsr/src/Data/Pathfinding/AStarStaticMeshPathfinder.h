@@ -33,6 +33,7 @@ namespace dsr
 
 				DirectX::XMVECTOR GetConnectionVertex(const VertexIndexSearchResult& result) const;
 
+				template<class THeuristic>
 				std::vector<uint32_t> Search(const uint32_t& startIndex, const uint32_t& goalIndex);
 				
 				float GetLengthCoTriangular(
@@ -56,6 +57,14 @@ namespace dsr
 				AStarPathfinder m_pathfinder;
 				StaticMesh<Vertex3F> m_navMesh;
 			};
+
+			template<class THeuristic>
+			inline std::vector<uint32_t> AStarStaticMeshPathfinder::Search(const uint32_t& startIndex, const uint32_t& goalIndex)
+			{
+				using namespace dsr::data::pathfinding::heuristics;
+
+				return m_pathfinder.Search<THeuristic>(startIndex, goalIndex);
+			}
 		}
 	}
 }
