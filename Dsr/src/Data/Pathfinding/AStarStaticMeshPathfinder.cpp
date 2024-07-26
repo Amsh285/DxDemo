@@ -63,7 +63,7 @@ namespace dsr
 			{
 				using namespace dsr::data::pathfinding::heuristics;
 
-				return m_pathfinder.Search<EucledianDistance>(startIndex, goalIndex);
+				return m_pathfinder.Search<EuclideanDistance>(startIndex, goalIndex);
 			}
 
 			float AStarStaticMeshPathfinder::GetLengthCoTriangular(const DirectX::XMVECTOR& start, const DirectX::XMVECTOR& finish) const

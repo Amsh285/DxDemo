@@ -12,11 +12,21 @@ namespace dsr
 		{
 			namespace heuristics
 			{
-				struct EucledianDistance
+				struct EuclideanDistance
 				{
-					float operator()(const DirectX::XMVECTOR& current, const DirectX::XMVECTOR& finish) const
+					inline float operator()(const DirectX::XMVECTOR& current, const DirectX::XMVECTOR& finish) const
 					{
-						return DirectX::XMVectorGetX(DirectX::XMVector3Length(DirectX::XMVectorSubtract(current, finish)));
+						using namespace DirectX;
+
+						return XMVectorGetX(XMVector3Length(XMVectorSubtract(current, finish)));
+					}
+				};
+
+				struct Dijsktra
+				{
+					constexpr float operator()(const DirectX::XMVECTOR& current, const DirectX::XMVECTOR& finish) const
+					{
+						return 0.0f;
 					}
 				};
 			}
@@ -148,10 +158,9 @@ namespace dsr
 						const XMVECTOR qPosition = XMLoadFloat3(&m_vertexBuffer[q.vertexIndex].Position);
 						const XMVECTOR adjacentPosition = XMLoadFloat3(&m_vertexBuffer[adjacentIndex].Position);
 						XMVECTOR deltaQ = XMVectorSubtract(qPosition, adjacentPosition);
-						XMVECTOR deltaGoal = XMVectorSubtract(goalPosition, adjacentPosition);
 
 						float g = q.g + XMVectorGetX(XMVector3Length(deltaQ));
-						float h = XMVectorGetX(XMVector3Length(deltaGoal));
+						float h = heuristic(adjacentPosition, goalPosition);
 						float f = g + h;
 
 						if (openListSearch.find(adjacentIndex) != openListSearch.end() && openListSearch[adjacentIndex] < f)
