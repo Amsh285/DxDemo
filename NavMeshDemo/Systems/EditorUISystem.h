@@ -1,6 +1,5 @@
 #pragma once
 
-#include <future>
 #include <thread>
 
 #include "dsrpch.h"
@@ -18,16 +17,10 @@
 
 #include "Infrastructure/SyncAccess.h"
 
-#include "Scenes/RampScene.h"
+#include "Scenes/NavMeshSimulationSceneBase.h"
+#include "Scenes/NavMeshSimulationSceneBenchmarkView.h"
+#include "Scenes/Data/TimeUnit.h"
 #include "Scenes/Data/Events/EditorScreenClickEvent.h"
-
-enum class TimeUnit
-{
-	Nanoseconds,
-	Microseconds,
-	Milliseconds,
-	Seconds
-};;
 
 class EditorUISystem : public dsr::ecs::System
 {
@@ -56,8 +49,7 @@ private:
 	size_t m_timeUnitSelectedIdx = 0;
 	std::vector<std::pair<std::string, TimeUnit>> m_timeUnits;
 
-	int32_t m_upperSurfaceBenchmarkIterations = 1000;
-	std::atomic<bool> m_isUpperSurfaceBenchmarkRunning = false;
+	std::unique_ptr<NavMeshSimulationSceneBenchmarkView> m_upperSurfaceBenchmarkView;
 
 	int32_t m_upperSurfaceSubdivisionBenchmarkIterations = 1000;
 	std::atomic<bool> m_isUpperSurfaceSubdivisionBenchmarkRunning = false;

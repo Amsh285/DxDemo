@@ -5,7 +5,7 @@
 #include "imgui_impl_dx11.h"
 
 #include "Infrastructure/XMathHelper.h"
-#include <Vendor/implot/implot.h>
+#include "Vendor/implot/implot.h"
 
 std::vector<std::type_index> EditorUISystem::GetRequiredComponents() const
 {
@@ -29,7 +29,7 @@ EditorUISystem::EditorUISystem(
 		{ "Seconds", TimeUnit::Seconds }
 	};
 
-	//m_upperSurfaceBenchmark = m_scenes[m_sceneSelectedIdx]->GetBenchmarks()->UpperSurfaceBenchmark;
+	m_upperSurfaceBenchmarkView = std::make_unique<NavMeshSimulationSceneBenchmarkView>("UpperSurface", BenchmarkViewType::UpperSurface);
 }
 
 //void EditorUISystem::Start(const dsr::ecs::EngineStartupContext& context)
@@ -134,6 +134,10 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 	const dsr::SyncHandle<NavMeshSimulationSceneBenchmarkResult>& upperSurfaceSubDivisionBenchmarkHandle = m_scenes[m_sceneSelectedIdx]->GetBenchmarks()->UpperSurfaceSubDivisionBenchmarkHandle;
 	const dsr::SyncHandle<NavMeshSimulationSceneBenchmarkResult>& upperSurfaceBarycentricSubDivisionBenchmarkHandle = m_scenes[m_sceneSelectedIdx]->GetBenchmarks()->UpperSurfaceBarycentricSubDivisionBenchmarkHandle;
 
+	const dsr::SyncHandle<NavMeshSimulationSceneBenchmarkResult>& upperSurfaceDijkstraBenchmarkHandle = m_scenes[m_sceneSelectedIdx]->GetBenchmarks()->UpperSurfaceDijkstraBenchmarkHandle;
+	const dsr::SyncHandle<NavMeshSimulationSceneBenchmarkResult>& upperSurfaceSubDivisionDijkstraBenchmarkHandle = m_scenes[m_sceneSelectedIdx]->GetBenchmarks()->UpperSurfaceSubDivisionDijkstraBenchmarkHandle;
+	const dsr::SyncHandle<NavMeshSimulationSceneBenchmarkResult>& upperSurfaceBarycentricSubDivisionDijkstraBenchmarkHandle = m_scenes[m_sceneSelectedIdx]->GetBenchmarks()->UpperSurfaceBarycentricSubDivisionDijkstraBenchmarkHandle;
+
 	ImGui::Begin("Benchmark", nullptr);
 
 	ImGui::Text("Scene: %s", m_scenes[m_sceneSelectedIdx]->GetSceneName().c_str());
@@ -158,46 +162,12 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 
 	if (ImGui::CollapsingHeader("Upper Surface"))
 	{
-		NavMeshSimulationSceneBenchmarkStats stats = m_scenes[m_sceneSelectedIdx]->GetBenchmarks()->UpperSurfaceStats;
-		bool canExecuteBenchmark = stats.GetVertexIndexSearchResultType() == VertexIndexSearchResultType::PathSearchRequired;
-
-		ImGui::Text("Benchmark Enabled:");
-		ImGui::SameLine();
-		ImGui::ColorButton(
-			"##BenchmarkUpperSurfaceEnabledColor",
-			canExecuteBenchmark ? ImVec4(0.0f, 1.0f, 0.0f, 1.0f) : ImVec4(1.0f, 0.0f, 0.0f, 1.0f),
-			ImGuiColorEditFlags_NoTooltip | ImGuiColorEditFlags_NoDragDrop,
-			ImVec2(15, 15)
+		m_upperSurfaceBenchmarkView->Update(
+			m_scenes[m_sceneSelectedIdx],
+			m_timeUnits[m_timeUnitSelectedIdx].second,
+			upperSurfaceBenchmarkHandle,
+			upperSurfaceDijkstraBenchmarkHandle
 		);
-
-		ImGui::Text("Index Search: %s", stats.GetVertexIndexSearchResultTypeText().c_str());
-
-		ImGui::Text("Triangle Count: %d", stats.GetNavMeshTriangleCount());
-		ImGui::Text("Avg Branching Factor: %.4f", stats.GetAverageBranchingFactor());
-		ImGui::Text("Nodes Traveled: %d", stats.GetNodesTraveled());
-		ImGui::Text("Path Length: %.4f", stats.GetPathLength());
-
-		ImGui::Separator();
-		ImGui::InputInt("Benchmark Iterations##UpperSurface", &m_upperSurfaceBenchmarkIterations);
-
-		m_upperSurfaceBenchmarkIterations = std::clamp(m_upperSurfaceBenchmarkIterations, 1, 100000);
-
-		ImGui::BeginDisabled(!canExecuteBenchmark || m_isUpperSurfaceBenchmarkRunning.load());
-
-		if (ImGui::Button("Run Benchmark##UpperSurface") && canExecuteBenchmark)
-		{
-			m_isUpperSurfaceBenchmarkRunning.store(true);
-
-
-			std::thread([this]() {
-				m_scenes[m_sceneSelectedIdx]->RunUpperSurfaceBenchmark(m_upperSurfaceBenchmarkIterations);
-				m_isUpperSurfaceBenchmarkRunning.store(false);
-			}).detach();
-		}
-
-		ImGui::EndDisabled();
-
-		DisplayBenchmarkResult(upperSurfaceBenchmarkHandle.GetData(), m_timeUnits[m_timeUnitSelectedIdx].second);
 	}
 
 	if(ImGui::CollapsingHeader("Upper Surface Subdivision"))
@@ -233,7 +203,7 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 			m_isUpperSurfaceSubdivisionBenchmarkRunning.store(true);
 
 			std::thread([this]() {
-				m_scenes[m_sceneSelectedIdx]->RunUpperSurfaceSubDivisionBenchmark(m_upperSurfaceBenchmarkIterations);
+				m_scenes[m_sceneSelectedIdx]->RunUpperSurfaceSubDivisionBenchmark(m_upperSurfaceSubdivisionBenchmarkIterations);
 				m_isUpperSurfaceSubdivisionBenchmarkRunning.store(false);
 				}).detach();
 		}
@@ -353,7 +323,7 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 
 bool EditorUISystem::IsBackgroundThreadRunning() const
 {
-	return m_isUpperSurfaceBenchmarkRunning.load() || m_isUpperSurfaceSubdivisionBenchmarkRunning.load() ||
+	return m_upperSurfaceBenchmarkView->IsBenchmarkRunning() || m_isUpperSurfaceSubdivisionBenchmarkRunning.load() ||
 		m_isUpperSurfaceBarycentricSubdivisionBenchmarkRunning.load();
 }
 

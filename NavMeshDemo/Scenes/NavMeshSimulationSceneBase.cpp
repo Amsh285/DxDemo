@@ -134,6 +134,21 @@ void NavMeshSimulationSceneBase::RunUpperSurfaceBarycentricSubDivisionBenchmark(
 	return m_sceneMediator.RunUpperSurfaceBarycentricSubDivisionBenchmark(iterations);
 }
 
+void NavMeshSimulationSceneBase::RunUpperSurfaceDijkstraBenchmark(const uint32_t iterations)
+{
+	return m_sceneMediator.RunUpperSurfaceDijkstraBenchmark(iterations);
+}
+
+void NavMeshSimulationSceneBase::RunUpperSurfaceSubDivisionDijkstraBenchmark(const uint32_t iterations)
+{
+	return m_sceneMediator.RunUpperSurfaceSubDivisionDijkstraBenchmark(iterations);
+}
+
+void NavMeshSimulationSceneBase::RunUpperSurfaceBarycentricSubDivisionDijkstraBenchmark(const uint32_t iterations)
+{
+	return m_sceneMediator.RunUpperSurfaceBarycentricSubDivisionDijkstraBenchmark(iterations);
+}
+
 dsr::DsrResult NavMeshSimulationSceneBase::LoadSceneData()
 {
 	using namespace dsr;

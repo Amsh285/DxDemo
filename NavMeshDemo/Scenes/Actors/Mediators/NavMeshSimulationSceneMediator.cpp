@@ -37,6 +37,30 @@ void NavMeshSimulationSceneMediator::RunUpperSurfaceBarycentricSubDivisionBenchm
 	m_benchmarks->UpperSurfaceBarycentricSubDivisionBenchmark.SetData(std::move(result));
 }
 
+void NavMeshSimulationSceneMediator::RunUpperSurfaceDijkstraBenchmark(const uint32_t iterations)
+{
+	using namespace dsr::data::pathfinding;
+
+	NavMeshSimulationSceneBenchmarkResult result = RunBenchmark<heuristics::Dijsktra>(*m_pathfinders->GetUpperSurfacePathfinder(), iterations);
+	m_benchmarks->UpperSurfaceDijkstraBenchmark.SetData(std::move(result));
+}
+
+void NavMeshSimulationSceneMediator::RunUpperSurfaceSubDivisionDijkstraBenchmark(const uint32_t iterations)
+{
+	using namespace dsr::data::pathfinding;
+
+	NavMeshSimulationSceneBenchmarkResult result = RunBenchmark<heuristics::Dijsktra>(*m_pathfinders->GetUpperSurfaceSubDivisionPathfinder(), iterations);
+	m_benchmarks->UpperSurfaceSubDivisionDijkstraBenchmark.SetData(std::move(result));
+}
+
+void NavMeshSimulationSceneMediator::RunUpperSurfaceBarycentricSubDivisionDijkstraBenchmark(const uint32_t iterations)
+{
+	using namespace dsr::data::pathfinding;
+
+	NavMeshSimulationSceneBenchmarkResult result = RunBenchmark<heuristics::Dijsktra>(*m_pathfinders->GetUpperSurfaceBarycentricSubDivisionPathfinder(), iterations);
+	m_benchmarks->UpperSurfaceBarycentricSubDivisionDijkstraBenchmark.SetData(std::move(result));
+}
+
 void NavMeshSimulationSceneMediator::SetUpperSurfaceSubDivision(const uint32_t count)
 {
 	using namespace dsr;
