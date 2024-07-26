@@ -6,9 +6,9 @@ void NavMeshSimulationSceneMediator::Setup()
 	m_benchmarks->UpperSurfaceSubDivisionStats.SetNavMeshTriangleCount(m_pathfinders->GetUpperSurfaceSubDivisionPathfinder()->GetNavMesh().GetIndexBuffer().size() / 3);
 	m_benchmarks->UpperSurfaceBarycentricSubDivisionStats.SetNavMeshTriangleCount(m_pathfinders->GetUpperSurfaceBarycentricSubDivisionPathfinder()->GetNavMesh().GetIndexBuffer().size() / 3);
 
-	m_benchmarks->UpperSurfaceStats.SetAverageBranchingFactor(m_pathfinders->GetUpperSurfacePathfinder()->GetAverrageBranchingFactor());
-	m_benchmarks->UpperSurfaceSubDivisionStats.SetAverageBranchingFactor(m_pathfinders->GetUpperSurfaceSubDivisionPathfinder()->GetAverrageBranchingFactor());
-	m_benchmarks->UpperSurfaceBarycentricSubDivisionStats.SetAverageBranchingFactor(m_pathfinders->GetUpperSurfaceBarycentricSubDivisionPathfinder()->GetAverrageBranchingFactor());
+	m_benchmarks->UpperSurfaceStats.SetAverageBranchingFactor(m_pathfinders->GetUpperSurfacePathfinder()->GetAverageBranchingFactor());
+	m_benchmarks->UpperSurfaceSubDivisionStats.SetAverageBranchingFactor(m_pathfinders->GetUpperSurfaceSubDivisionPathfinder()->GetAverageBranchingFactor());
+	m_benchmarks->UpperSurfaceBarycentricSubDivisionStats.SetAverageBranchingFactor(m_pathfinders->GetUpperSurfaceBarycentricSubDivisionPathfinder()->GetAverageBranchingFactor());
 
 	SetPaths(m_markers->GetStartPositionLocal(), m_markers->GetFinishPositionLocal());
 }
@@ -41,7 +41,7 @@ void NavMeshSimulationSceneMediator::SetUpperSurfaceSubDivision(const uint32_t c
 	m_pathfinders->SetUpperSurfaceSubDivisionMesh(FilterDistinct(m_upperSurfaceSubDivision->GetSubDividedMesh()));
 
 	m_benchmarks->UpperSurfaceSubDivisionStats.SetNavMeshTriangleCount(m_pathfinders->GetUpperSurfaceSubDivisionPathfinder()->GetNavMesh().GetIndexBuffer().size() / 3);
-	m_benchmarks->UpperSurfaceSubDivisionStats.SetAverageBranchingFactor(m_pathfinders->GetUpperSurfaceSubDivisionPathfinder()->GetAverrageBranchingFactor());
+	m_benchmarks->UpperSurfaceSubDivisionStats.SetAverageBranchingFactor(m_pathfinders->GetUpperSurfaceSubDivisionPathfinder()->GetAverageBranchingFactor());
 
 	//Todo: Only update necessary paths
 	//m_paths->SetUpperSurfaceSubDivisionPath(m_markers->GetStartPositionLocal(), m_markers->GetFinishPositionLocal());
@@ -58,7 +58,7 @@ void NavMeshSimulationSceneMediator::SetUpperSurfaceBarycentricSubDivision(const
 	m_pathfinders->SetUpperSurfaceBarycentricSubDivisionMesh(FilterDistinct(m_upperSurfaceBarycentricSubDivision->GetSubDividedMesh()));
 
 	m_benchmarks->UpperSurfaceBarycentricSubDivisionStats.SetNavMeshTriangleCount(m_pathfinders->GetUpperSurfaceBarycentricSubDivisionPathfinder()->GetNavMesh().GetIndexBuffer().size() / 3);
-	m_benchmarks->UpperSurfaceBarycentricSubDivisionStats.SetAverageBranchingFactor(m_pathfinders->GetUpperSurfaceBarycentricSubDivisionPathfinder()->GetAverrageBranchingFactor());
+	m_benchmarks->UpperSurfaceBarycentricSubDivisionStats.SetAverageBranchingFactor(m_pathfinders->GetUpperSurfaceBarycentricSubDivisionPathfinder()->GetAverageBranchingFactor());
 
 	//Todo: Same here
 	SetPaths(m_markers->GetStartPositionLocal(), m_markers->GetFinishPositionLocal());

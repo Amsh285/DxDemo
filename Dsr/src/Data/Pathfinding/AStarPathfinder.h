@@ -12,6 +12,17 @@ namespace dsr
 		{
 			namespace heuristics
 			{
+				struct EuclideanDisctanceEst
+				{
+					// Test this later
+					inline float operator()(const DirectX::XMVECTOR& current, const DirectX::XMVECTOR& finish) const
+					{
+						using namespace DirectX;
+
+						return XMVectorGetX(XMVector3LengthEst(XMVectorSubtract(current, finish)));
+					}
+				};
+
 				struct EuclideanDistance
 				{
 					inline float operator()(const DirectX::XMVECTOR& current, const DirectX::XMVECTOR& finish) const
@@ -34,7 +45,7 @@ namespace dsr
 			class AStarPathfinder final
 			{
 			public:
-				double GetAverrageBranchingFactor() const;
+				double GetAverageBranchingFactor() const;
 				const std::unordered_map<uint32_t, std::vector<uint32_t>>& GetAdjacencyList() const { return m_adjacencyList; }
 
 				void SetGraph(

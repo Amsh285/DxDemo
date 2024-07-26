@@ -7,7 +7,7 @@ namespace dsr
 	{
 		namespace pathfinding
 		{
-			double AStarPathfinder::GetAverrageBranchingFactor() const
+			double AStarPathfinder::GetAverageBranchingFactor() const
 			{
 				double sum = 0.0;
 				for (const auto& adjacency : m_adjacencyList)

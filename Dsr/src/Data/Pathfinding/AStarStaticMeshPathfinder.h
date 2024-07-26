@@ -15,7 +15,7 @@ namespace dsr
 			class AStarStaticMeshPathfinder final
 			{
 			public:
-				double GetAverrageBranchingFactor() const { return m_pathfinder.GetAverrageBranchingFactor(); }
+				double GetAverageBranchingFactor() const { return m_pathfinder.GetAverageBranchingFactor(); }
 				const std::unordered_map<uint32_t, std::vector<uint32_t>>& GetAdjacencyList() const { return m_pathfinder.GetAdjacencyList(); }
 				const StaticMesh<Vertex3F>& GetNavMesh() const { return m_navMesh; }
 
