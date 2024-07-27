@@ -77,6 +77,9 @@ inline NavMeshSimulationSceneBenchmarkResult NavMeshSimulationSceneMediator::Run
 
 	using namespace std::chrono;
 
+	if(iterations == 0)
+		return NavMeshSimulationSceneBenchmarkResult();
+
 	VertexIndexSearchResult indexSearchResult = pathfinder.SearchNearestVertexIndices(m_markers->GetStartPositionLocal(), m_markers->GetFinishPositionLocal());
 	assert(indexSearchResult.GetResultType() == VertexIndexSearchResultType::PathSearchRequired);
 
@@ -86,7 +89,13 @@ inline NavMeshSimulationSceneBenchmarkResult NavMeshSimulationSceneMediator::Run
 	uint32_t startIndex = indexSearchResult.GetStartIndex();
 	uint32_t finishIndex = indexSearchResult.GetFinishIndex();
 
-	for (size_t i = 0; i < iterations; i++)
+	time_point<high_resolution_clock> start = high_resolution_clock::now();
+	std::vector<uint32_t> path = pathfinder.Search<THeuristic>(startIndex, finishIndex);
+	duration<double, std::nano> elapsed = high_resolution_clock::now() - start;
+	sum += elapsed;
+	iterationTimes.push_back(elapsed);
+
+	for (size_t i = 0; i < iterations - 1; i++)
 	{
 		time_point<high_resolution_clock> start = high_resolution_clock::now();
 		pathfinder.Search<THeuristic>(startIndex, finishIndex);
@@ -109,5 +118,8 @@ inline NavMeshSimulationSceneBenchmarkResult NavMeshSimulationSceneMediator::Run
 	}
 
 	result.StandardDeviationTime = duration<double, std::nano>(sqrt(sumSquared / iterations));
+	result.NodesTraveled = path.size();
+	result.PathLength = pathfinder.GetLegnth(m_markers->GetStartPositionLocal(), m_markers->GetFinishPositionLocal(), path);
+
 	return result;
 }

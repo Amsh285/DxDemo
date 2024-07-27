@@ -50,7 +50,7 @@ void NavMeshSimulationSceneBenchmarkView::Update(
 
 	ImGui::NewLine();
 
-	ImGui::BeginChild(m_euclideanChildControlId.c_str(), ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 150.0f), true);
+	ImGui::BeginChild(m_euclideanChildControlId.c_str(), ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 180.0f), true);
 	ImGui::Text("Euclidean Heuristic");
 	ImGui::InputInt(m_benchmarkEuclideanIterationTimesLabel.c_str(), &m_euclideanBenchmarkIterations);
 
@@ -68,7 +68,7 @@ void NavMeshSimulationSceneBenchmarkView::Update(
 
 	ImGui::SameLine();
 
-	ImGui::BeginChild(m_dijkstraChildControlId.c_str(), ImVec2(0, 150.0f), true);
+	ImGui::BeginChild(m_dijkstraChildControlId.c_str(), ImVec2(0, 180.0f), true);
 	ImGui::Text("Dijkstra Heuristic");
 	ImGui::InputInt(m_benchmarkDijkstraIterationTimesLabel.c_str(), &m_dijkstraBenchmarkIterations);
 
@@ -80,7 +80,7 @@ void NavMeshSimulationSceneBenchmarkView::Update(
 		RunDijkstraBenchmark(selectedScene);
 
 	ImGui::EndDisabled();
-	
+
 	DisplayBenchmarkResult(dijkstraBenchmarkHandle.GetData(), selectedTimeUnit);
 	ImGui::EndChild();
 }
@@ -89,93 +89,93 @@ NavMeshSimulationSceneBenchmarkStats NavMeshSimulationSceneBenchmarkView::GetSta
 {
 	switch (m_viewType)
 	{
-		case BenchmarkViewType::UpperSurface:
-		{
-			return selectedScene->GetBenchmarks()->UpperSurfaceStats;
-		}
-		case BenchmarkViewType::UpperSurfaceSubDivision:
-		{
-			return selectedScene->GetBenchmarks()->UpperSurfaceSubDivisionStats;
-		}
-		case BenchmarkViewType::UpperSurfaceBarycentricSubDivision:
-		{
-			return selectedScene->GetBenchmarks()->UpperSurfaceBarycentricSubDivisionStats;
-		}
+	case BenchmarkViewType::UpperSurface:
+	{
+		return selectedScene->GetBenchmarks()->UpperSurfaceStats;
+	}
+	case BenchmarkViewType::UpperSurfaceSubDivision:
+	{
+		return selectedScene->GetBenchmarks()->UpperSurfaceSubDivisionStats;
+	}
+	case BenchmarkViewType::UpperSurfaceBarycentricSubDivision:
+	{
+		return selectedScene->GetBenchmarks()->UpperSurfaceBarycentricSubDivisionStats;
+	}
 	}
 }
 
 void NavMeshSimulationSceneBenchmarkView::RunEuclideanBenchmark(std::shared_ptr<NavMeshSimulationSceneBase> selectedScene)
 {
-	switch(m_viewType)
+	switch (m_viewType)
 	{
-		case BenchmarkViewType::UpperSurface:
-		{
-			m_isEuclideanBenchmarkRunning.store(true);
+	case BenchmarkViewType::UpperSurface:
+	{
+		m_isEuclideanBenchmarkRunning.store(true);
 
-			std::thread([&, this, selectedScene]() {
-				selectedScene->RunUpperSurfaceBenchmark(m_euclideanBenchmarkIterations);
-				m_isEuclideanBenchmarkRunning.store(false);
-				}).detach();
-			break;
-		}
-		case BenchmarkViewType::UpperSurfaceSubDivision:
-		{
-			m_isEuclideanBenchmarkRunning.store(true);
+		std::thread([&, this, selectedScene]() {
+			selectedScene->RunUpperSurfaceBenchmark(m_euclideanBenchmarkIterations);
+			m_isEuclideanBenchmarkRunning.store(false);
+			}).detach();
+		break;
+	}
+	case BenchmarkViewType::UpperSurfaceSubDivision:
+	{
+		m_isEuclideanBenchmarkRunning.store(true);
 
-			std::thread([&, this, selectedScene]() {
-				selectedScene->RunUpperSurfaceSubDivisionBenchmark(m_euclideanBenchmarkIterations);
-				m_isEuclideanBenchmarkRunning.store(false);
-				}).detach();
+		std::thread([&, this, selectedScene]() {
+			selectedScene->RunUpperSurfaceSubDivisionBenchmark(m_euclideanBenchmarkIterations);
+			m_isEuclideanBenchmarkRunning.store(false);
+			}).detach();
 
-			break;
-		}
-		case BenchmarkViewType::UpperSurfaceBarycentricSubDivision:
-		{
-			m_isEuclideanBenchmarkRunning.store(true);
+		break;
+	}
+	case BenchmarkViewType::UpperSurfaceBarycentricSubDivision:
+	{
+		m_isEuclideanBenchmarkRunning.store(true);
 
-			std::thread([&, this, selectedScene]() {
-				selectedScene->RunUpperSurfaceBarycentricSubDivisionBenchmark(m_euclideanBenchmarkIterations);
-				m_isEuclideanBenchmarkRunning.store(false);
-				}).detach();
-			break;
-		}
+		std::thread([&, this, selectedScene]() {
+			selectedScene->RunUpperSurfaceBarycentricSubDivisionBenchmark(m_euclideanBenchmarkIterations);
+			m_isEuclideanBenchmarkRunning.store(false);
+			}).detach();
+		break;
+	}
 	}
 }
 
 void NavMeshSimulationSceneBenchmarkView::RunDijkstraBenchmark(std::shared_ptr<NavMeshSimulationSceneBase> selectedScene)
 {
-	switch(m_viewType)
+	switch (m_viewType)
 	{
-		case BenchmarkViewType::UpperSurface:
-		{
-			m_isDijkstraBenchmarkRunning.store(true);
+	case BenchmarkViewType::UpperSurface:
+	{
+		m_isDijkstraBenchmarkRunning.store(true);
 
-			std::thread([&, this, selectedScene]() {
-				selectedScene->RunUpperSurfaceDijkstraBenchmark(m_dijkstraBenchmarkIterations);
-				m_isDijkstraBenchmarkRunning.store(false);
-				}).detach();
-			break;
-		}
-		case BenchmarkViewType::UpperSurfaceSubDivision:
-		{
-			m_isDijkstraBenchmarkRunning.store(true);
+		std::thread([&, this, selectedScene]() {
+			selectedScene->RunUpperSurfaceDijkstraBenchmark(m_dijkstraBenchmarkIterations);
+			m_isDijkstraBenchmarkRunning.store(false);
+			}).detach();
+		break;
+	}
+	case BenchmarkViewType::UpperSurfaceSubDivision:
+	{
+		m_isDijkstraBenchmarkRunning.store(true);
 
-			std::thread([&, this, selectedScene]() {
-				selectedScene->RunUpperSurfaceSubDivisionDijkstraBenchmark(m_dijkstraBenchmarkIterations);
-				m_isDijkstraBenchmarkRunning.store(false);
-				}).detach();
-			break;
-		}
-		case BenchmarkViewType::UpperSurfaceBarycentricSubDivision:
-		{
-			m_isDijkstraBenchmarkRunning.store(true);
+		std::thread([&, this, selectedScene]() {
+			selectedScene->RunUpperSurfaceSubDivisionDijkstraBenchmark(m_dijkstraBenchmarkIterations);
+			m_isDijkstraBenchmarkRunning.store(false);
+			}).detach();
+		break;
+	}
+	case BenchmarkViewType::UpperSurfaceBarycentricSubDivision:
+	{
+		m_isDijkstraBenchmarkRunning.store(true);
 
-			std::thread([&, this, selectedScene]() {
-				selectedScene->RunUpperSurfaceBarycentricSubDivisionDijkstraBenchmark(m_dijkstraBenchmarkIterations);
-				m_isDijkstraBenchmarkRunning.store(false);
-				}).detach();
-			break;
-		}
+		std::thread([&, this, selectedScene]() {
+			selectedScene->RunUpperSurfaceBarycentricSubDivisionDijkstraBenchmark(m_dijkstraBenchmarkIterations);
+			m_isDijkstraBenchmarkRunning.store(false);
+			}).detach();
+		break;
+	}
 	}
 
 }
@@ -213,5 +213,8 @@ void NavMeshSimulationSceneBenchmarkView::DisplayBenchmarkResult(const NavMeshSi
 		break;
 	}
 	}
+
+	ImGui::Text("Nodes Traveled: %d", benchmarkResult.NodesTraveled);
+	ImGui::Text("Path Length: %.4f", benchmarkResult.PathLength);
 }
 
