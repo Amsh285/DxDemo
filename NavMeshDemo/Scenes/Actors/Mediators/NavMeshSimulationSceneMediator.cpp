@@ -148,4 +148,22 @@ void NavMeshSimulationSceneMediator::ResetBenchmarks()
 	upperSurfaceBarycentricSubDivisionBenchmarkDefaults.AverageIterationTime = duration<double, std::nano>::zero();
 	upperSurfaceBarycentricSubDivisionBenchmarkDefaults.StandardDeviationTime = duration<double, std::nano>::zero();
 	m_benchmarks->UpperSurfaceBarycentricSubDivisionBenchmark.SetData(std::move(upperSurfaceBarycentricSubDivisionBenchmarkDefaults));
+
+	NavMeshSimulationSceneBenchmarkResult upperSurfaceDijkstraBenchmarkDefaults;
+	upperSurfaceDijkstraBenchmarkDefaults.TotalTime = duration<double, std::nano>::zero();
+	upperSurfaceDijkstraBenchmarkDefaults.AverageIterationTime = duration<double, std::nano>::zero();
+	upperSurfaceDijkstraBenchmarkDefaults.StandardDeviationTime = duration<double, std::nano>::zero();
+	m_benchmarks->UpperSurfaceDijkstraBenchmark.SetData(std::move(upperSurfaceDijkstraBenchmarkDefaults));
+
+	NavMeshSimulationSceneBenchmarkResult upperSurfaceSubDivisionDijkstraBenchmarkDefaults;
+	upperSurfaceSubDivisionDijkstraBenchmarkDefaults.TotalTime = duration<double, std::nano>::zero();
+	upperSurfaceSubDivisionDijkstraBenchmarkDefaults.AverageIterationTime = duration<double, std::nano>::zero();
+	upperSurfaceSubDivisionDijkstraBenchmarkDefaults.StandardDeviationTime = duration<double, std::nano>::zero();
+	m_benchmarks->UpperSurfaceSubDivisionDijkstraBenchmark.SetData(std::move(upperSurfaceSubDivisionDijkstraBenchmarkDefaults));
+
+	NavMeshSimulationSceneBenchmarkResult upperSurfaceBarycentricSubDivisionDijkstraBenchmarkDefaults;
+	upperSurfaceBarycentricSubDivisionDijkstraBenchmarkDefaults.TotalTime = duration<double, std::nano>::zero();
+	upperSurfaceBarycentricSubDivisionDijkstraBenchmarkDefaults.AverageIterationTime = duration<double, std::nano>::zero();
+	upperSurfaceBarycentricSubDivisionDijkstraBenchmarkDefaults.StandardDeviationTime = duration<double, std::nano>::zero();
+	m_benchmarks->UpperSurfaceBarycentricSubDivisionDijkstraBenchmark.SetData(std::move(upperSurfaceBarycentricSubDivisionDijkstraBenchmarkDefaults));
 }

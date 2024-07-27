@@ -43,6 +43,9 @@ private:
 	std::string m_benchmarkEuclideanRunButtonLabel;
 	std::string m_benchmarkDijkstraRunButtonLabel;
 
+	std::string m_euclideanChildControlId;
+	std::string m_dijkstraChildControlId;
+
 	BenchmarkViewType m_viewType;
 
 	NavMeshSimulationSceneBenchmarkStats GetStats(std::shared_ptr<NavMeshSimulationSceneBase> selectedScene) const;
