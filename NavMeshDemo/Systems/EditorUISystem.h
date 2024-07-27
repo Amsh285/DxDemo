@@ -50,12 +50,8 @@ private:
 	std::vector<std::pair<std::string, TimeUnit>> m_timeUnits;
 
 	std::unique_ptr<NavMeshSimulationSceneBenchmarkView> m_upperSurfaceBenchmarkView;
-
-	int32_t m_upperSurfaceSubdivisionBenchmarkIterations = 1000;
-	std::atomic<bool> m_isUpperSurfaceSubdivisionBenchmarkRunning = false;
-
-	int32_t m_upperSurfaceBarycentricSubdivisionBenchmarkIterations = 1000;
-	std::atomic<bool> m_isUpperSurfaceBarycentricSubdivisionBenchmarkRunning = false;
+	std::unique_ptr<NavMeshSimulationSceneBenchmarkView> m_upperSurfaceSubDivisionBenchmarkView;
+	std::unique_ptr<NavMeshSimulationSceneBenchmarkView> m_upperSurfaceBarycentricSubDivisionBenchmarkView;
 
 	void DisplayBenchmarkResult(const NavMeshSimulationSceneBenchmarkResult& benchmarkResult, const TimeUnit unit);
 };
