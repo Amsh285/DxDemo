@@ -195,8 +195,9 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 	if (ImGui::CollapsingHeader("Plot"))
 	{
 		ImGui::NewLine();
+		ImGui::Text("Euclidean Distance Heuristic:");
 
-		if (ImPlot::BeginPlot("Avg Iteration times (double click to autofit):"))
+		if (ImPlot::BeginPlot("Avg Iteration times (double click to autofit):##Euclidean"))
 		{
 			//Not optimal only convert once. Fix that later.
 			ImPlot::SetupAxes("Iteration", "Time (ns)");
@@ -248,6 +249,64 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 			}
 
 			ImPlot::PlotLine("Upper Surface Barycentric SubDivision", upperSurfaceBarycentricSubDivisionIterationTimesXAxis.data(), upperSurfaceBarycentricSubDivisionIterationTimesDouble.data(), upperSurfaceBarycentricSubDivisionIterationTimes.size());
+
+			ImPlot::EndPlot();
+		}
+
+		ImGui::NewLine();
+		ImGui::Text("Dijkstra Heuristic:");
+
+		if (ImPlot::BeginPlot("Avg Iteration times (double click to autofit):##Dijkstra"))
+		{
+			ImPlot::SetupAxes("Iteration", "Time (ns)");
+
+			const std::vector<std::chrono::duration<double, std::nano>>& upperSurfaceDijkstraIterationTimes = upperSurfaceDijkstraBenchmarkHandle.GetData().IterationTimes;
+			std::vector<double> upperSurfaceDijkstraIterationTimesDouble;
+			std::vector<double> upperSurfaceDijkstraIterationTimesXAxis;
+			upperSurfaceDijkstraIterationTimesDouble.reserve(upperSurfaceDijkstraIterationTimes.size());
+			upperSurfaceDijkstraIterationTimesXAxis.reserve(upperSurfaceDijkstraIterationTimes.size());
+
+			for (size_t i = 0; i < upperSurfaceDijkstraIterationTimes.size(); ++i)
+			{
+				upperSurfaceDijkstraIterationTimesDouble.push_back(upperSurfaceDijkstraIterationTimes[i].count());
+				upperSurfaceDijkstraIterationTimesXAxis.push_back(i + 1);
+			}
+
+			ImPlot::PlotLine("Upper Surface", upperSurfaceDijkstraIterationTimesXAxis.data(), upperSurfaceDijkstraIterationTimesDouble.data(), upperSurfaceDijkstraIterationTimes.size());
+
+			const std::vector<std::chrono::duration<double, std::nano>>& upperSurfaceSubDivisionDijkstraIterationTimes = upperSurfaceSubDivisionDijkstraBenchmarkHandle
+				.GetData().IterationTimes;
+
+			std::vector<double> upperSurfaceSubDivisionDijkstraIterationTimesDouble;
+			std::vector<double> upperSurfaceSubDivisionDijkstraIterationTimesXAxis;
+
+			upperSurfaceSubDivisionDijkstraIterationTimesDouble.reserve(upperSurfaceSubDivisionDijkstraIterationTimes.size());
+			upperSurfaceSubDivisionDijkstraIterationTimesXAxis.reserve(upperSurfaceSubDivisionDijkstraIterationTimes.size());
+
+			for (size_t i = 0; i < upperSurfaceSubDivisionDijkstraIterationTimes.size(); ++i)
+			{
+				upperSurfaceSubDivisionDijkstraIterationTimesDouble.push_back(upperSurfaceSubDivisionDijkstraIterationTimes[i].count());
+				upperSurfaceSubDivisionDijkstraIterationTimesXAxis.push_back(i + 1);
+			}
+
+			ImPlot::PlotLine("Upper Surface SubDivision", upperSurfaceSubDivisionDijkstraIterationTimesXAxis.data(), upperSurfaceSubDivisionDijkstraIterationTimesDouble.data(), upperSurfaceSubDivisionDijkstraIterationTimes.size());
+
+			const std::vector<std::chrono::duration<double, std::nano>>& upperSurfaceBarycentricSubDivisionDijkstraIterationTimes = upperSurfaceBarycentricSubDivisionDijkstraBenchmarkHandle
+				.GetData().IterationTimes;
+
+			std::vector<double> upperSurfaceBarycentricSubDivisionDijkstraIterationTimesDouble;
+			std::vector<double> upperSurfaceBarycentricSubDivisionDijkstraIterationTimesXAxis;
+
+			upperSurfaceBarycentricSubDivisionDijkstraIterationTimesDouble.reserve(upperSurfaceBarycentricSubDivisionDijkstraIterationTimes.size());
+			upperSurfaceBarycentricSubDivisionDijkstraIterationTimesXAxis.reserve(upperSurfaceBarycentricSubDivisionDijkstraIterationTimes.size());
+
+			for (size_t i = 0; i < upperSurfaceBarycentricSubDivisionDijkstraIterationTimes.size(); ++i)
+			{
+				upperSurfaceBarycentricSubDivisionDijkstraIterationTimesDouble.push_back(upperSurfaceBarycentricSubDivisionDijkstraIterationTimes[i].count());
+				upperSurfaceBarycentricSubDivisionDijkstraIterationTimesXAxis.push_back(i + 1);
+			}
+
+			ImPlot::PlotLine("Upper Surface Barycentric SubDivision", upperSurfaceBarycentricSubDivisionDijkstraIterationTimesXAxis.data(), upperSurfaceBarycentricSubDivisionDijkstraIterationTimesDouble.data(), upperSurfaceBarycentricSubDivisionDijkstraIterationTimes.size());
 
 			ImPlot::EndPlot();
 		}
