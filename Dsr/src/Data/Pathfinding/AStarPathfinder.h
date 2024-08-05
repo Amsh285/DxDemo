@@ -45,7 +45,7 @@ namespace dsr
 			class AStarPathfinder final
 			{
 			public:
-				double GetAverageBranchingFactor() const;
+				double GetAvgConnectivity() const;
 				const std::unordered_map<uint32_t, std::vector<uint32_t>>& GetAdjacencyList() const { return m_adjacencyList; }
 
 				void SetGraph(

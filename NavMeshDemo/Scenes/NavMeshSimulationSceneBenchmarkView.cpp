@@ -44,7 +44,7 @@ void NavMeshSimulationSceneBenchmarkView::Update(
 	ImGui::Text("Index Search: %s", stats.GetVertexIndexSearchResultTypeText().c_str());
 
 	ImGui::Text("Triangle Count: %d", stats.GetNavMeshTriangleCount());
-	ImGui::Text("Avg Branching Factor: %.4f", stats.GetAverageBranchingFactor());
+	ImGui::Text("Avg Connectivity: %.4f", stats.GetAvgConnectivity());
 	ImGui::Text("Nodes Traveled: %d", stats.GetNodesTraveled());
 	ImGui::Text("Path Length: %.4f", stats.GetPathLength());
 

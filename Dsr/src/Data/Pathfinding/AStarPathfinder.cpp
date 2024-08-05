@@ -7,13 +7,21 @@ namespace dsr
 	{
 		namespace pathfinding
 		{
-			double AStarPathfinder::GetAverageBranchingFactor() const
+			double AStarPathfinder::GetAvgConnectivity() const
 			{
 				double sum = 0.0;
 				for (const auto& adjacency : m_adjacencyList)
 					sum += adjacency.second.size();
 
-				return sum / m_adjacencyList.size();
+				double numberOfNodes = m_adjacencyList.size();
+
+				// Prevent division by zero
+				if (numberOfNodes == 0)
+				{
+					return 0.0;
+				}
+
+				return sum / numberOfNodes;
 			}
 
 			void AStarPathfinder::SetGraph(
