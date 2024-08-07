@@ -48,7 +48,7 @@ namespace dsr
 
 					XMVECTOR edge1 = XMVectorSubtract(v1, v0);
 					XMVECTOR edge2 = XMVectorSubtract(v2, v0);
-					float area = denom * XMVectorGetX(XMVector3LengthSq(XMVector3Cross(edge1, edge2)));
+					float area = denom * XMVectorGetX(XMVector3Length(XMVector3Cross(edge1, edge2)));
 
 					if (area > epsilon)
 					{
