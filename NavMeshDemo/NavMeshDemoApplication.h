@@ -9,6 +9,7 @@
 
 #include "Scenes/RampScene.h"
 #include "Scenes/BridgeScene.h"
+#include "Scenes/LabyrinthScene.h"
 
 #include "Systems/CameraControllerSystem.h"
 #include "Systems/EditorUISystem.h"
@@ -32,4 +33,5 @@ private:
 
 	std::shared_ptr<RampScene> m_rampScene;
 	std::shared_ptr<BridgeScene> m_bridgeScene;
+	std::shared_ptr<LabyrinthScene> m_labyrinthScene;
 };

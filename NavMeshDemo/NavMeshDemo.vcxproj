@@ -133,6 +133,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Scenes\LabyrinthScene.cpp" />
     <ClCompile Include="Scenes\NavMeshSimulationSceneBenchmarkView.cpp" />
     <ClCompile Include="Scenes\Data\NavMeshSimulationSceneBenchmarkResult.cpp" />
     <ClCompile Include="Scenes\Data\NavMeshSimulationSceneBenchmarkStats.cpp" />
@@ -156,6 +157,7 @@
     <ClCompile Include="Systems\CameraControllerSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Scenes\LabyrinthScene.h" />
     <ClInclude Include="Scenes\Data\TimeUnit.h" />
     <ClInclude Include="Scenes\NavMeshSimulationSceneBenchmarkView.h" />
     <ClInclude Include="Scenes\Data\NavMeshSimulationSceneBenchmarkResult.h" />
