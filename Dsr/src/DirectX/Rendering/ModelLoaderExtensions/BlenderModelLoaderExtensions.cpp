@@ -56,9 +56,9 @@ namespace dsr
 
 				for (const dsr::data::Vertex3FP2FTx3FN& vertex : srcVertexBuffer)
 				{
-					vertexBuffer.push_back(vertex.Position.x);
-					vertexBuffer.push_back(vertex.Position.y);
-					vertexBuffer.push_back(vertex.Position.z);
+					vertexBuffer.push_back(DirectX::XMVectorGetX(vertex.Position));
+					vertexBuffer.push_back(DirectX::XMVectorGetY(vertex.Position));
+					vertexBuffer.push_back(DirectX::XMVectorGetZ(vertex.Position));
 
 					vertexBuffer.push_back(vertex.texCoords.x);
 					vertexBuffer.push_back(vertex.texCoords.y);
@@ -79,6 +79,8 @@ namespace dsr
 
 			std::vector<dsr::data::Face> GetFaceData(const std::shared_ptr<WavefrontModel> model)
 			{
+				constexpr float denom = 1.0f / 3.0f;
+
 				using namespace dsr::data;
 
 				using namespace DirectX;
@@ -101,17 +103,14 @@ namespace dsr
 					const Vertex3FP2FTx3FN& v2 = vertexBuffer[indexBuffer[i + 1]];
 					const Vertex3FP2FTx3FN& v3 = vertexBuffer[indexBuffer[i + 2]];
 
-					XMVECTOR u = XMVectorSubtract(XMLoadFloat3(&v3.Position), XMLoadFloat3(&v2.Position));
-					XMVECTOR v = XMVectorSubtract(XMLoadFloat3(&v1.Position), XMLoadFloat3(&v2.Position));
+					XMVECTOR u = XMVectorSubtract(v3.Position, v2.Position);
+					XMVECTOR v = XMVectorSubtract(v1.Position, v2.Position);
 
 					Face f;
 					XMStoreFloat3(&f.Normal, XMVector3Normalize(XMVector3Cross(u, v)));
 
-					f.Centroid = XMFLOAT3(
-						(v1.Position.x + v2.Position.x + v3.Position.x) / 3.0f,
-						(v1.Position.y + v2.Position.y + v3.Position.y) / 3.0f,
-						(v1.Position.z + v2.Position.z + v3.Position.z) / 3.0f
-					);
+					XMVECTOR cent = XMVectorScale(XMVectorAdd(XMVectorAdd(v1.Position, v2.Position), v3.Position), denom);
+					XMStoreFloat3(&f.Centroid, cent);
 
 					faces.push_back(f);
 				}

@@ -7,9 +7,9 @@ std::vector<float> dsr::data::manipulation::GetVertexBufferF(const StaticMesh<Ve
 
 	for (const auto& vertex : mesh.GetVertexBuffer())
 	{
-		vertexBuffer.push_back(vertex.Position.x);
-		vertexBuffer.push_back(vertex.Position.y);
-		vertexBuffer.push_back(vertex.Position.z);
+		vertexBuffer.push_back(DirectX::XMVectorGetX(vertex.Position));
+		vertexBuffer.push_back(DirectX::XMVectorGetY(vertex.Position));
+		vertexBuffer.push_back(DirectX::XMVectorGetZ(vertex.Position));
 
 		vertexBuffer.push_back(vertex.texCoords.x);
 		vertexBuffer.push_back(vertex.texCoords.y);

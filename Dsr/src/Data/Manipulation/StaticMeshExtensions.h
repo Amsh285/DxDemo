@@ -42,9 +42,9 @@ namespace dsr
 					const TVertex& vertex1 = sourceVertexBuffer[sourceIndexBuffer[i + 1]];
 					const TVertex& vertex2 = sourceVertexBuffer[sourceIndexBuffer[i + 2]];
 
-					XMVECTOR v0 = XMLoadFloat3(&vertex0.Position);
-					XMVECTOR v1 = XMLoadFloat3(&vertex1.Position);
-					XMVECTOR v2 = XMLoadFloat3(&vertex2.Position);
+					XMVECTOR v0 = vertex0.Position;
+					XMVECTOR v1 = vertex1.Position;
+					XMVECTOR v2 = vertex2.Position;
 
 					XMVECTOR edge1 = XMVectorSubtract(v1, v0);
 					XMVECTOR edge2 = XMVectorSubtract(v2, v0);
@@ -103,8 +103,8 @@ namespace dsr
 					const TVertex& v1 = sourceVertexBuffer[sourceIndexBuffer[i + 1]];
 					const TVertex& v2 = sourceVertexBuffer[sourceIndexBuffer[i + 2]];
 
-					XMVECTOR u = XMVectorSubtract(XMLoadFloat3(&v2.Position), XMLoadFloat3(&v1.Position));
-					XMVECTOR v = XMVectorSubtract(XMLoadFloat3(&v0.Position), XMLoadFloat3(&v1.Position));
+					XMVECTOR u = XMVectorSubtract(v2.Position, v1.Position);
+					XMVECTOR v = XMVectorSubtract(v0.Position, v1.Position);
 
 					XMVECTOR faceNormal = XMVector3Normalize(XMVector3Cross(u, v));
 
@@ -155,9 +155,9 @@ namespace dsr
 
 				for (size_t i = 0; i < sourceIndexBuffer.size(); i += 3)
 				{
-					XMVECTOR v0 = XMLoadFloat3(&sourceVertexBuffer[sourceIndexBuffer[i]].Position);
-					XMVECTOR v1 = XMLoadFloat3(&sourceVertexBuffer[sourceIndexBuffer[i + 1]].Position);
-					XMVECTOR v2 = XMLoadFloat3(&sourceVertexBuffer[sourceIndexBuffer[i + 2]].Position);
+					XMVECTOR v0 = sourceVertexBuffer[sourceIndexBuffer[i]].Position;
+					XMVECTOR v1 = sourceVertexBuffer[sourceIndexBuffer[i + 1]].Position;
+					XMVECTOR v2 = sourceVertexBuffer[sourceIndexBuffer[i + 2]].Position;
 
 					XMVECTOR planeNormal = XMVector3Normalize(XMVector3Cross(XMVectorSubtract(v1, v0), XMVectorSubtract(v2, v0)));
 					RaycastPlaneHit planeHit = Vector3PlaneIntersection(rayOrigin, rayDirectionNormalized, planeNormal, v0);
@@ -219,9 +219,9 @@ namespace dsr
 				{
 					bool insideTriangle = true;
 
-					XMVECTOR v0 = XMLoadFloat3(&vertexBuffer[indexBuffer[i]].Position);
-					XMVECTOR v1 = XMLoadFloat3(&vertexBuffer[indexBuffer[i + 1]].Position);
-					XMVECTOR v2 = XMLoadFloat3(&vertexBuffer[indexBuffer[i + 2]].Position);
+					XMVECTOR v0 = vertexBuffer[indexBuffer[i]].Position;
+					XMVECTOR v1 = vertexBuffer[indexBuffer[i + 1]].Position;
+					XMVECTOR v2 = vertexBuffer[indexBuffer[i + 2]].Position;
 					XMVECTOR planeNormal = XMVector3Normalize(XMVector3Cross(XMVectorSubtract(v1, v0), XMVectorSubtract(v2, v0)));
 
 					// Check if the point is on the plane

@@ -56,7 +56,7 @@ namespace dsr
 						continue;
 
 					uint32_t currentIndex = indices[i];
-					XMVECTOR v0 = XMLoadFloat3(&vertexBuffer[currentIndex].Position);
+					XMVECTOR v0 = vertexBuffer[currentIndex].Position;
 
 					for (size_t j = 0; j < indices.size(); j++)
 					{
@@ -64,7 +64,7 @@ namespace dsr
 							continue;
 
 						uint32_t nextIndex = indices[j];
-						XMVECTOR v1 = XMLoadFloat3(&vertexBuffer[nextIndex].Position);
+						XMVECTOR v1 = vertexBuffer[nextIndex].Position;
 
 						if (comparer.operator()(v0, v1) && currentIndex != nextIndex)
 						{
@@ -113,9 +113,9 @@ namespace dsr
 					const Vertex3FP2FTx3FN& vertex1 = sourceVertexBuffer[sourceIndexBuffer[i + 1]];
 					const Vertex3FP2FTx3FN& vertex2 = sourceVertexBuffer[sourceIndexBuffer[i + 2]];
 
-					XMVECTOR v0 = XMLoadFloat3(&vertex0.Position);
-					XMVECTOR v1 = XMLoadFloat3(&vertex1.Position);
-					XMVECTOR v2 = XMLoadFloat3(&vertex2.Position);
+					XMVECTOR v0 = vertex0.Position;
+					XMVECTOR v1 = vertex1.Position;
+					XMVECTOR v2 = vertex2.Position;
 
 					XMVECTOR u = XMVectorSubtract(v1, v0);
 					XMVECTOR v = XMVectorSubtract(v2, v0);
@@ -170,7 +170,7 @@ namespace dsr
 					);
 
 					Vertex3FP2FTx3FN splitVertex;
-					XMStoreFloat3(&splitVertex.Position, edgeSplitPoint);
+					splitVertex.Position = edgeSplitPoint;
 					XMStoreFloat3(&splitVertex.Normal, interpolatedNormal);
 					XMStoreFloat2(&splitVertex.texCoords, interpolatedTx);
 
@@ -218,16 +218,12 @@ namespace dsr
 					const Vertex3FP2FTx3FN& vertex1 = sourceVertexBuffer[sourceIndexBuffer[i + 1]];
 					const Vertex3FP2FTx3FN& vertex2 = sourceVertexBuffer[sourceIndexBuffer[i + 2]];
 
-					XMVECTOR v0 = XMLoadFloat3(&vertex0.Position);
-					XMVECTOR v1 = XMLoadFloat3(&vertex1.Position);
-					XMVECTOR v2 = XMLoadFloat3(&vertex2.Position);
+					XMVECTOR v0 = vertex0.Position;
+					XMVECTOR v1 = vertex1.Position;
+					XMVECTOR v2 = vertex2.Position;
 
 					Vertex3FP2FTx3FN centroidVertex;
-					centroidVertex.Position = XMFLOAT3(
-						(vertex0.Position.x + vertex1.Position.x + vertex2.Position.x) * c,
-						(vertex0.Position.y + vertex1.Position.y + vertex2.Position.y) * c,
-						(vertex0.Position.z + vertex1.Position.z + vertex2.Position.z) * c
-					);
+					centroidVertex.Position = XMVectorScale(XMVectorAdd(XMVectorAdd(v0, v1), v2), c);
 					
 					//interpolation nochmal ansehen
 					//okay solange flat shading später fixen
@@ -308,8 +304,8 @@ namespace dsr
 					uint32_t currentIndex = indexPath[i];
 					uint32_t nextIndex = indexPath[i + 1];
 
-					XMVECTOR v0 = XMLoadFloat3(&vertexBuffer[currentIndex].Position);
-					XMVECTOR v1 = XMLoadFloat3(&vertexBuffer[nextIndex].Position);
+					XMVECTOR v0 = vertexBuffer[currentIndex].Position;
+					XMVECTOR v1 = vertexBuffer[nextIndex].Position;
 
 					vertexData.push_back(XMVectorGetX(v0));
 					vertexData.push_back(XMVectorGetY(v0));

@@ -6,14 +6,19 @@ namespace dsr
 	{
 		struct Vertex3F
 		{
-			DirectX::XMFLOAT3 Position;
+			DirectX::XMVECTOR Position;
 
 			Vertex3F()
-				: Position(0.0f, 0.0f, 0.0f)
+				: Position(DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f))
 			{
 			}
 
-			Vertex3F(const DirectX::XMFLOAT3& position)
+			explicit Vertex3F(const DirectX::XMFLOAT3& position)
+				: Position(DirectX::XMLoadFloat3(&position))
+			{
+			}
+
+			explicit Vertex3F(const DirectX::XMVECTOR& position)
 				: Position(position)
 			{
 			}
@@ -45,7 +50,7 @@ namespace dsr
 
 				constexpr float epsilon = 1e-6f;
 
-				return XMVector3NearEqual(XMLoadFloat3(&Position), XMLoadFloat3(&other.Position), XMVectorReplicate(epsilon))
+				return XMVector3NearEqual(Position, other.Position, XMVectorReplicate(epsilon))
 					&& XMVector2NearEqual(XMLoadFloat2(&texCoords), XMLoadFloat2(&other.texCoords), XMVectorReplicate(epsilon))
 					&& XMVector3NearEqual(XMLoadFloat3(&Normal), XMLoadFloat3(&other.Normal), XMVectorReplicate(epsilon));
 			}
@@ -53,9 +58,9 @@ namespace dsr
 			size_t GetHashCode() const
 			{
 				size_t hash = 0;
-				hash ^= std::hash<float>{}(Position.x) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
-				hash ^= std::hash<float>{}(Position.y) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
-				hash ^= std::hash<float>{}(Position.z) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+				hash ^= std::hash<float>{}(DirectX::XMVectorGetX(Position) + 0x9e3779b9 + (hash << 6) + (hash >> 2));
+				hash ^= std::hash<float>{}(DirectX::XMVectorGetY(Position) + 0x9e3779b9 + (hash << 6) + (hash >> 2));
+				hash ^= std::hash<float>{}(DirectX::XMVectorGetZ(Position) + 0x9e3779b9 + (hash << 6) + (hash >> 2));
 				hash ^= std::hash<float>{}(texCoords.x) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
 				hash ^= std::hash<float>{}(texCoords.y) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
 				hash ^= std::hash<float>{}(Normal.x) + 0x9e3779b9 + (hash << 6) + (hash >> 2);

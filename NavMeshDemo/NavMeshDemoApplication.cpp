@@ -32,9 +32,9 @@ void NavMeshDemoApplication::RegisterLineEntity()
 
 	for (const Vertex3FP4FC& vertex : lineList)
 	{
-		vertexData.push_back(vertex.Position.x);
-		vertexData.push_back(vertex.Position.y);
-		vertexData.push_back(vertex.Position.z);
+		vertexData.push_back(DirectX::XMVectorGetX(vertex.Position));
+		vertexData.push_back(DirectX::XMVectorGetY(vertex.Position));
+		vertexData.push_back(DirectX::XMVectorGetZ(vertex.Position));
 
 		vertexData.push_back(vertex.Color.x);
 		vertexData.push_back(vertex.Color.y);

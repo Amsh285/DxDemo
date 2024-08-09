@@ -125,7 +125,7 @@ namespace dsr
 				if (startIndex == goalIndex)
 					return std::vector<uint32_t>();
 
-				const XMVECTOR goalPosition = XMLoadFloat3(&m_vertexBuffer[goalIndex].Position);
+				const XMVECTOR goalPosition = m_vertexBuffer[goalIndex].Position;
 
 				uint32_t currentId = 1;
 				ska::flat_hash_map<uint32_t, NodeHistoryEntry> nodeIdHistories;
@@ -166,8 +166,8 @@ namespace dsr
 							return path;
 						}
 
-						const XMVECTOR qPosition = XMLoadFloat3(&m_vertexBuffer[q.vertexIndex].Position);
-						const XMVECTOR adjacentPosition = XMLoadFloat3(&m_vertexBuffer[adjacentIndex].Position);
+						const XMVECTOR qPosition = m_vertexBuffer[q.vertexIndex].Position;
+						const XMVECTOR adjacentPosition = m_vertexBuffer[adjacentIndex].Position;
 						XMVECTOR deltaQ = XMVectorSubtract(qPosition, adjacentPosition);
 
 						float g = q.g + XMVectorGetX(XMVector3Length(deltaQ));

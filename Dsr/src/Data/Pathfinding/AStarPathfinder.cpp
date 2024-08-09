@@ -55,8 +55,8 @@ namespace dsr
 
 				for (size_t i = 0; i < path.size() - 1; i++)
 				{
-					XMVECTOR v0 = XMLoadFloat3(&m_vertexBuffer[path[i]].Position);
-					XMVECTOR v1 = XMLoadFloat3(&m_vertexBuffer[path[i + 1]].Position);
+					XMVECTOR v0 = m_vertexBuffer[path[i]].Position;
+					XMVECTOR v1 = m_vertexBuffer[path[i + 1]].Position;
 
 					length += XMVectorGetX(XMVector3Length(XMVectorSubtract(v0, v1)));
 				}

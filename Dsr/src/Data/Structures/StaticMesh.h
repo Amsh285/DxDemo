@@ -84,10 +84,10 @@ namespace dsr
 
 			static dsr::XMVectorEqualComparer<1e-6f> comparer;
 
-			XMVECTOR currentVertex = XMLoadFloat3(&m_vertexBuffer[m_indexBuffer[currentTrianlgeIndex]].Position);
-			XMVECTOR v0 = XMLoadFloat3(&m_vertexBuffer[m_indexBuffer[nextTriangleIndex]].Position);
-			XMVECTOR v1 = XMLoadFloat3(&m_vertexBuffer[m_indexBuffer[nextTriangleIndex + 1]].Position);
-			XMVECTOR v2 = XMLoadFloat3(&m_vertexBuffer[m_indexBuffer[nextTriangleIndex + 2]].Position);
+			XMVECTOR currentVertex = m_vertexBuffer[m_indexBuffer[currentTrianlgeIndex]].Position;
+			XMVECTOR v0 = m_vertexBuffer[m_indexBuffer[nextTriangleIndex]].Position;
+			XMVECTOR v1 = m_vertexBuffer[m_indexBuffer[nextTriangleIndex + 1]].Position;
+			XMVECTOR v2 = m_vertexBuffer[m_indexBuffer[nextTriangleIndex + 2]].Position;
 
 			if (comparer.operator()(currentVertex, v0))
 			{

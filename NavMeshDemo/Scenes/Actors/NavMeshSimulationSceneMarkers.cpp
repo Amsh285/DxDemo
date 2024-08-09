@@ -37,15 +37,15 @@ dsr::DsrResult NavMeshSimulationSceneMarkers::SetupMarkers(
 	const std::vector<uint32_t>& indexBuffer = baseMesh->Mesh->GetIndexBuffer();
 
 	m_startPositionLocal = Barycenter(
-		XMLoadFloat3(&vertexBuffer[indexBuffer[0]].Position),
-		XMLoadFloat3(&vertexBuffer[indexBuffer[1]].Position),
-		XMLoadFloat3(&vertexBuffer[indexBuffer[2]].Position)
+		vertexBuffer[indexBuffer[0]].Position,
+		vertexBuffer[indexBuffer[1]].Position,
+		vertexBuffer[indexBuffer[2]].Position
 	);
 
 	m_finishPositionLocal = Barycenter(
-		XMLoadFloat3(&vertexBuffer[indexBuffer[indexBuffer.size() - 3]].Position),
-		XMLoadFloat3(&vertexBuffer[indexBuffer[indexBuffer.size() - 2]].Position),
-		XMLoadFloat3(&vertexBuffer[indexBuffer[indexBuffer.size() - 1]].Position)
+		vertexBuffer[indexBuffer[indexBuffer.size() - 3]].Position,
+		vertexBuffer[indexBuffer[indexBuffer.size() - 2]].Position,
+		vertexBuffer[indexBuffer[indexBuffer.size() - 1]].Position
 	);
 
 	std::vector<float> vertexData = BuildMarkerVertexBuffer(m_startPositionLocal, m_finishPositionLocal);

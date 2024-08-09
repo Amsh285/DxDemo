@@ -47,7 +47,7 @@ namespace dsr
 				buffer.push_back(XMVectorGetZ(color));
 				buffer.push_back(XMVectorGetW(color));
 
-				const XMVECTOR startnode = XMLoadFloat3(&vertexData[path[path.size() - 1]].Position);
+				const XMVECTOR startnode = vertexData[path[path.size() - 1]].Position;
 
 				buffer.push_back(XMVectorGetX(startnode));
 				buffer.push_back(XMVectorGetY(startnode));
@@ -63,8 +63,8 @@ namespace dsr
 					const uint32_t currentIndex = path[i];
 					const uint32_t nextIndex = path[i - 1];
 
-					const XMVECTOR v0 = XMLoadFloat3(&vertexData[currentIndex].Position);
-					const XMVECTOR v1 = XMLoadFloat3(&vertexData[nextIndex].Position);
+					const XMVECTOR v0 = vertexData[currentIndex].Position;
+					const XMVECTOR v1 = vertexData[nextIndex].Position;
 
 					buffer.push_back(XMVectorGetX(v0));
 					buffer.push_back(XMVectorGetY(v0));
@@ -85,7 +85,7 @@ namespace dsr
 					buffer.push_back(XMVectorGetW(color));
 				}
 
-				const XMVECTOR finishNode = XMLoadFloat3(&vertexData[path[0]].Position);
+				const XMVECTOR finishNode = vertexData[path[0]].Position;
 
 				buffer.push_back(XMVectorGetX(finishNode));
 				buffer.push_back(XMVectorGetY(finishNode));
