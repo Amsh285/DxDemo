@@ -155,6 +155,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NavMeshDemoApplication.cpp" />
     <ClCompile Include="Systems\CameraControllerSystem.cpp" />
+    <ClCompile Include="Scenes\TerrainScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Scenes\LabyrinthScene.h" />
@@ -179,6 +180,7 @@
     <ClInclude Include="Systems\EditorUISystem.h" />
     <ClInclude Include="NavMeshDemoApplication.h" />
     <ClInclude Include="Systems\CameraControllerSystem.h" />
+    <ClInclude Include="Scenes\TerrainScene.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Dsr\Dsr.vcxproj">

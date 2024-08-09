@@ -50,7 +50,10 @@ namespace dsr
 		{
 			std::unordered_map<uint32_t, std::vector<uint32_t>> adjacencyList;
 
-			for (size_t i = 0; i < m_indexBuffer.size(); i += 3)
+			std::mutex mutex;
+
+#pragma omp parallel for
+			for (int i = 0; i < m_indexBuffer.size(); i += 3)
 			{
 				std::set<uint32_t> neighboursV0, neighboursV1, neighboursV2;
 
@@ -61,6 +64,7 @@ namespace dsr
 					InsertAdjacentIndices(i + 2, j, neighboursV2);
 				}
 
+				std::lock_guard<std::mutex> lock(mutex);
 				adjacencyList[m_indexBuffer[i]] = std::vector<uint32_t>(neighboursV0.begin(), neighboursV0.end());
 				adjacencyList[m_indexBuffer[i + 1]] = std::vector<uint32_t>(neighboursV1.begin(), neighboursV1.end());
 				adjacencyList[m_indexBuffer[i + 2]] = std::vector<uint32_t>(neighboursV2.begin(), neighboursV2.end());

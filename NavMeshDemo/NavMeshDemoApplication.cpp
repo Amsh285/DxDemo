@@ -69,7 +69,7 @@ void NavMeshDemoApplication::RegisterCameraController()
 
 void NavMeshDemoApplication::RegisterEditorUI()
 {
-	std::vector<std::shared_ptr<NavMeshSimulationSceneBase>> scenes = { m_rampScene, m_bridgeScene, m_labyrinthScene };
+	std::vector<std::shared_ptr<NavMeshSimulationSceneBase>> scenes = { m_rampScene, m_bridgeScene, m_labyrinthScene, m_terrainScene };
 	m_editorUISystem = std::make_shared<EditorUISystem>(GetInput(), scenes);
 	m_ecsManager->RegisterSystem(m_editorUISystem);
 
@@ -102,6 +102,12 @@ dsr::DsrResult NavMeshDemoApplication::Setup()
 
 	if (labyrinthSceneResult.GetResultStatusCode() != RESULT_SUCCESS)
 		return labyrinthSceneResult;
+
+	m_terrainScene = std::make_shared<TerrainScene>(m_sceneManager, m_device, m_blenderModelLoader);
+	DsrResult terrainSceneResult = m_terrainScene->BuildScene();
+
+	if (terrainSceneResult.GetResultStatusCode() != RESULT_SUCCESS)
+		return terrainSceneResult;
 
 	RegisterLineEntity();
 	RegisterCameraController();
