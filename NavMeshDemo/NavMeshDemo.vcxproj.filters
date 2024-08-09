@@ -84,6 +84,9 @@
     <ClCompile Include="Scenes\TerrainScene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Scenes\FloorplanScene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NavMeshDemoApplication.h">
@@ -153,6 +156,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Scenes\TerrainScene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\FloorplanScene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
