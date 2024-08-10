@@ -47,6 +47,7 @@ void NavMeshSimulationSceneBenchmarkView::Update(
 	ImGui::Text("Avg Connectivity: %.4f", stats.GetAvgConnectivity());
 	ImGui::Text("Nodes Traveled: %d", stats.GetNodesTraveled());
 	ImGui::Text("Path Length: %.4f", stats.GetPathLength());
+	ImGui::Text("Total Path Length: %.4f", stats.GetTotalPathLength());
 
 	ImGui::NewLine();
 
@@ -216,5 +217,5 @@ void NavMeshSimulationSceneBenchmarkView::DisplayBenchmarkResult(const NavMeshSi
 
 	ImGui::Text("Nodes Traveled: %d", benchmarkResult.NodesTraveled);
 	ImGui::Text("Path Length: %.4f", benchmarkResult.PathLength);
+	ImGui::Text("Total Path Length: %.4f", benchmarkResult.TotalPathLength);
 }
-

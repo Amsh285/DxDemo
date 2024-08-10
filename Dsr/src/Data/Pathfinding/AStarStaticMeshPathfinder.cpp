@@ -77,7 +77,13 @@ namespace dsr
 				return length;
 			}
 
-			float AStarStaticMeshPathfinder::GetLegnth(const DirectX::XMVECTOR& start, const DirectX::XMVECTOR& finish, const std::vector<uint32_t>& path) const
+			float AStarStaticMeshPathfinder::GetLength(const std::vector<uint32_t>& path)
+			{
+				return m_pathfinder.GetLegnth(path);
+			}
+
+			//Todo: distinguish between total length and pathlength
+			float AStarStaticMeshPathfinder::GetTotalLength(const DirectX::XMVECTOR& start, const DirectX::XMVECTOR& finish, const std::vector<uint32_t>& path) const
 			{
 				using namespace DirectX;
 

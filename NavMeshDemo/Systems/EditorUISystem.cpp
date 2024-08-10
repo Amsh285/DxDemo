@@ -203,7 +203,7 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 		ImGui::NewLine();
 		ImGui::Text("Euclidean Distance Heuristic:");
 
-		if (ImPlot::BeginPlot("Avg Iteration times (double click to autofit):##Euclidean"))
+		if (ImPlot::BeginPlot("Iteration times:##Euclidean"))
 		{
 			//Not optimal only convert once. Fix that later.
 			ImPlot::SetupAxes("Iteration", "Time (ns)");
@@ -262,7 +262,7 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 		ImGui::NewLine();
 		ImGui::Text("Dijkstra Heuristic:");
 
-		if (ImPlot::BeginPlot("Avg Iteration times (double click to autofit):##Dijkstra"))
+		if (ImPlot::BeginPlot("Iteration times:##Dijkstra"))
 		{
 			ImPlot::SetupAxes("Iteration", "Time (ns)");
 

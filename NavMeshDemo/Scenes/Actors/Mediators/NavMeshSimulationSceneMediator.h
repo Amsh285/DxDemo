@@ -156,7 +156,8 @@ inline NavMeshSimulationSceneBenchmarkResult NavMeshSimulationSceneMediator::Run
 
 	result.StandardDeviationTime = duration<double, std::nano>(sqrt(sumSquared / iterations));
 	result.NodesTraveled = path.size();
-	result.PathLength = pathfinder.GetLegnth(m_markers->GetStartPositionLocal(), m_markers->GetFinishPositionLocal(), path);
+	result.PathLength = pathfinder.GetLength(path);
+	result.TotalPathLength = pathfinder.GetTotalLength(m_markers->GetStartPositionLocal(), m_markers->GetFinishPositionLocal(), path);
 
 	return result;
 }

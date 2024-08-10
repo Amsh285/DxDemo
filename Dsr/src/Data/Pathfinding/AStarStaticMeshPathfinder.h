@@ -47,7 +47,9 @@ namespace dsr
 					const uint32_t& connectionIndex
 				) const;
 
-				float GetLegnth(
+				float GetLength(const std::vector<uint32_t>& path);
+
+				float GetTotalLength(
 					const DirectX::XMVECTOR& start,
 					const DirectX::XMVECTOR& finish,
 					const std::vector<uint32_t>& path

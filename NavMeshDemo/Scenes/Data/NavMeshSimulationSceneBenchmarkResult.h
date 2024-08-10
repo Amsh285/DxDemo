@@ -11,6 +11,7 @@ struct NavMeshSimulationSceneBenchmarkResult
 
 	uint32_t NodesTraveled;
 	float PathLength;
+	float TotalPathLength;
 
 	NavMeshSimulationSceneBenchmarkResult();
 };
