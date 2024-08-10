@@ -32,6 +32,7 @@ EditorUISystem::EditorUISystem(
 	m_upperSurfaceBenchmarkView = std::make_unique<NavMeshSimulationSceneBenchmarkView>("UpperSurface", BenchmarkViewType::UpperSurface);
 	m_upperSurfaceSubDivisionBenchmarkView = std::make_unique<NavMeshSimulationSceneBenchmarkView>("UpperSurfaceSubDivision", BenchmarkViewType::UpperSurfaceSubDivision);
 	m_upperSurfaceBarycentricSubDivisionBenchmarkView = std::make_unique<NavMeshSimulationSceneBenchmarkView>("UpperSurfaceBarycentricSubDivision", BenchmarkViewType::UpperSurfaceBarycentricSubDivision);
+	m_overallBenchmarkView = std::make_unique<NavMeshSimulationSceneOverallBenchmarkView>();
 }
 
 //void EditorUISystem::Start(const dsr::ecs::EngineStartupContext& context)
@@ -192,6 +193,11 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 		);
 	}
 
+	if(ImGui::CollapsingHeader("Overall"))
+	{
+		m_overallBenchmarkView->Update(m_scenes[m_sceneSelectedIdx]);
+	}
+
 	if (ImGui::CollapsingHeader("Plot"))
 	{
 		ImGui::NewLine();
@@ -318,7 +324,7 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 bool EditorUISystem::IsBackgroundThreadRunning() const
 {
 	return m_upperSurfaceBenchmarkView->IsBenchmarkRunning() || m_upperSurfaceSubDivisionBenchmarkView->IsBenchmarkRunning() ||
-		m_upperSurfaceBarycentricSubDivisionBenchmarkView->IsBenchmarkRunning();
+		m_upperSurfaceBarycentricSubDivisionBenchmarkView->IsBenchmarkRunning() || m_overallBenchmarkView->IsBenchmarkRunning();
 }
 
 void EditorUISystem::DisplayBenchmarkResult(const NavMeshSimulationSceneBenchmarkResult& benchmarkResult, const TimeUnit unit)

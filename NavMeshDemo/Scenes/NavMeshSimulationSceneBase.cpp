@@ -121,32 +121,42 @@ dsr::DsrResult NavMeshSimulationSceneBase::UpdateUpperSurfaceBarycentricSubDivis
 
 void NavMeshSimulationSceneBase::RunUpperSurfaceBenchmark(const uint32_t iterations)
 {
-	return m_sceneMediator.RunUpperSurfaceBenchmark(iterations);
+	m_sceneMediator.RunUpperSurfaceBenchmark(iterations);
 }
 
 void NavMeshSimulationSceneBase::RunUpperSurfaceSubDivisionBenchmark(const uint32_t iterations)
 {
-	return m_sceneMediator.RunUpperSurfaceSubDivisionBenchmark(iterations);
+	m_sceneMediator.RunUpperSurfaceSubDivisionBenchmark(iterations);
 }
 
 void NavMeshSimulationSceneBase::RunUpperSurfaceBarycentricSubDivisionBenchmark(const uint32_t iterations)
 {
-	return m_sceneMediator.RunUpperSurfaceBarycentricSubDivisionBenchmark(iterations);
+	m_sceneMediator.RunUpperSurfaceBarycentricSubDivisionBenchmark(iterations);
 }
 
 void NavMeshSimulationSceneBase::RunUpperSurfaceDijkstraBenchmark(const uint32_t iterations)
 {
-	return m_sceneMediator.RunUpperSurfaceDijkstraBenchmark(iterations);
+	m_sceneMediator.RunUpperSurfaceDijkstraBenchmark(iterations);
 }
 
 void NavMeshSimulationSceneBase::RunUpperSurfaceSubDivisionDijkstraBenchmark(const uint32_t iterations)
 {
-	return m_sceneMediator.RunUpperSurfaceSubDivisionDijkstraBenchmark(iterations);
+	m_sceneMediator.RunUpperSurfaceSubDivisionDijkstraBenchmark(iterations);
 }
 
 void NavMeshSimulationSceneBase::RunUpperSurfaceBarycentricSubDivisionDijkstraBenchmark(const uint32_t iterations)
 {
-	return m_sceneMediator.RunUpperSurfaceBarycentricSubDivisionDijkstraBenchmark(iterations);
+	m_sceneMediator.RunUpperSurfaceBarycentricSubDivisionDijkstraBenchmark(iterations);
+}
+
+void NavMeshSimulationSceneBase::RunAllBenchmarks(const uint32_t iterations)
+{
+	m_sceneMediator.RunAllBenchmarks(iterations);
+}
+
+void NavMeshSimulationSceneBase::RunAllBenchmarksParallel(const uint32_t iterations)
+{
+	m_sceneMediator.RunALlBenchmarksParallel(iterations);
 }
 
 dsr::DsrResult NavMeshSimulationSceneBase::LoadSceneData()

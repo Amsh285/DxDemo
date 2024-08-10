@@ -19,6 +19,7 @@
 
 #include "Scenes/NavMeshSimulationSceneBase.h"
 #include "Scenes/NavMeshSimulationSceneBenchmarkView.h"
+#include "Scenes/NavMeshSimulationSceneOverallBenchmarkView.h"
 #include "Scenes/Data/TimeUnit.h"
 #include "Scenes/Data/Events/EditorScreenClickEvent.h"
 
@@ -52,6 +53,7 @@ private:
 	std::unique_ptr<NavMeshSimulationSceneBenchmarkView> m_upperSurfaceBenchmarkView;
 	std::unique_ptr<NavMeshSimulationSceneBenchmarkView> m_upperSurfaceSubDivisionBenchmarkView;
 	std::unique_ptr<NavMeshSimulationSceneBenchmarkView> m_upperSurfaceBarycentricSubDivisionBenchmarkView;
+	std::unique_ptr<NavMeshSimulationSceneOverallBenchmarkView> m_overallBenchmarkView;
 
 	void DisplayBenchmarkResult(const NavMeshSimulationSceneBenchmarkResult& benchmarkResult, const TimeUnit unit);
 };

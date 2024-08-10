@@ -61,6 +61,55 @@ void NavMeshSimulationSceneMediator::RunUpperSurfaceBarycentricSubDivisionDijkst
 	m_benchmarks->UpperSurfaceBarycentricSubDivisionDijkstraBenchmark.SetData(std::move(result));
 }
 
+void NavMeshSimulationSceneMediator::RunAllBenchmarks(const uint32_t iterations)
+{
+	RunUpperSurfaceBenchmark(iterations);
+	RunUpperSurfaceSubDivisionBenchmark(iterations);
+	RunUpperSurfaceBarycentricSubDivisionBenchmark(iterations);
+	RunUpperSurfaceDijkstraBenchmark(iterations);
+	RunUpperSurfaceSubDivisionDijkstraBenchmark(iterations);
+	RunUpperSurfaceBarycentricSubDivisionDijkstraBenchmark(iterations);
+}
+
+void NavMeshSimulationSceneMediator::RunALlBenchmarksParallel(const uint32_t iterations)
+{
+#pragma omp parallel
+	{
+#pragma omp sections
+		{
+#pragma omp section
+			{
+				RunUpperSurfaceBenchmark(iterations);
+			}
+
+#pragma omp section
+			{
+				RunUpperSurfaceSubDivisionBenchmark(iterations);
+			}
+
+#pragma omp section
+			{
+				RunUpperSurfaceBarycentricSubDivisionBenchmark(iterations);
+			}
+
+#pragma omp section
+			{
+				RunUpperSurfaceDijkstraBenchmark(iterations);
+			}
+
+#pragma omp section
+			{
+				RunUpperSurfaceSubDivisionDijkstraBenchmark(iterations);
+			}
+
+#pragma omp section
+			{
+				RunUpperSurfaceBarycentricSubDivisionDijkstraBenchmark(iterations);
+			}
+		}
+	}
+}
+
 void NavMeshSimulationSceneMediator::SetUpperSurfaceSubDivision(const uint32_t count)
 {
 	using namespace dsr;

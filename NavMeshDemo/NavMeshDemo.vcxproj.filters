@@ -90,6 +90,9 @@
     <ClCompile Include="Scenes\RandomMapScene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Scenes\NavMeshSimulationSceneOverallBenchmarkView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NavMeshDemoApplication.h">
@@ -165,6 +168,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Scenes\RandomMapScene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\NavMeshSimulationSceneOverallBenchmarkView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -48,6 +48,9 @@ public:
 	void RunUpperSurfaceSubDivisionDijkstraBenchmark(const uint32_t iterations);
 	void RunUpperSurfaceBarycentricSubDivisionDijkstraBenchmark(const uint32_t iterations);
 
+	void RunAllBenchmarks(const uint32_t iterations);
+	void RunALlBenchmarksParallel(const uint32_t iterations);
+
 	void SetUpperSurfaceSubDivision(const uint32_t count);
 	void SetUpperSurfaceBarycentricSubDivision(const uint32_t count);
 

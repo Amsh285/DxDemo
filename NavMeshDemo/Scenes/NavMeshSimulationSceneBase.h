@@ -68,6 +68,8 @@ public:
 	void RunUpperSurfaceDijkstraBenchmark(const uint32_t iterations);
 	void RunUpperSurfaceSubDivisionDijkstraBenchmark(const uint32_t iterations);
 	void RunUpperSurfaceBarycentricSubDivisionDijkstraBenchmark(const uint32_t iterations);
+	void RunAllBenchmarks(const uint32_t iterations);
+	void RunAllBenchmarksParallel(const uint32_t iterations);
 protected:
 	uint32_t m_sceneId;
 	std::string m_sceneName;
