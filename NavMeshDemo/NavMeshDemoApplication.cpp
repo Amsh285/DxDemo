@@ -71,7 +71,7 @@ void NavMeshDemoApplication::RegisterEditorUI()
 {
 	std::vector<std::shared_ptr<NavMeshSimulationSceneBase>> scenes = { 
 		m_rampScene, m_bridgeScene, m_labyrinthScene, m_terrainScene,
-		m_floorplanScene
+		m_floorplanScene, m_randomMapScene
 	};
 
 	m_editorUISystem = std::make_shared<EditorUISystem>(GetInput(), scenes);
@@ -118,6 +118,12 @@ dsr::DsrResult NavMeshDemoApplication::Setup()
 
 	if (floorplanSceneResult.GetResultStatusCode() != RESULT_SUCCESS)
 		return floorplanSceneResult;
+
+	m_randomMapScene = std::make_shared<RandomMapScene>(m_sceneManager, m_device, m_blenderModelLoader);
+	DsrResult randomMapSceneResult = m_randomMapScene->BuildScene();
+
+	if (randomMapSceneResult.GetResultStatusCode() != RESULT_SUCCESS)
+		return randomMapSceneResult;
 
 	RegisterLineEntity();
 	RegisterCameraController();

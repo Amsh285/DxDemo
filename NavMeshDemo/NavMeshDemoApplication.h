@@ -12,9 +12,11 @@
 #include "Scenes/LabyrinthScene.h"
 #include "Scenes/TerrainScene.h"
 #include "Scenes/FloorplanScene.h"
+#include "Scenes/RandomMapScene.h"
 
 #include "Systems/CameraControllerSystem.h"
 #include "Systems/EditorUISystem.h"
+
 
 class NavMeshDemoApplication : public dsr::DsrApplication
 {
@@ -38,4 +40,5 @@ private:
 	std::shared_ptr<LabyrinthScene> m_labyrinthScene;
 	std::shared_ptr<TerrainScene> m_terrainScene;
 	std::shared_ptr<FloorplanScene> m_floorplanScene;
+	std::shared_ptr<RandomMapScene> m_randomMapScene;
 };

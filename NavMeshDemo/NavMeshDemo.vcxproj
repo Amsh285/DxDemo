@@ -133,6 +133,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Scenes\RandomMapScene.cpp" />
     <ClCompile Include="Scenes\FloorplanScene.cpp" />
     <ClCompile Include="Scenes\LabyrinthScene.cpp" />
     <ClCompile Include="Scenes\NavMeshSimulationSceneBenchmarkView.cpp" />
@@ -159,6 +160,7 @@
     <ClCompile Include="Scenes\TerrainScene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Scenes\RandomMapScene.h" />
     <ClInclude Include="Scenes\FloorplanScene.h" />
     <ClInclude Include="Scenes\LabyrinthScene.h" />
     <ClInclude Include="Scenes\Data\TimeUnit.h" />
