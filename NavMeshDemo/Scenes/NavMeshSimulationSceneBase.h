@@ -70,6 +70,8 @@ public:
 	void RunUpperSurfaceBarycentricSubDivisionDijkstraBenchmark(const uint32_t iterations);
 	void RunAllBenchmarks(const uint32_t iterations);
 	void RunAllBenchmarksParallel(const uint32_t iterations);
+
+	void SaveBenchmarkResults();
 protected:
 	uint32_t m_sceneId;
 	std::string m_sceneName;

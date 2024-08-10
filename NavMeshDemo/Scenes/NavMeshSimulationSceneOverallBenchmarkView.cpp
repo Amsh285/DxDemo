@@ -17,11 +17,11 @@ void NavMeshSimulationSceneOverallBenchmarkView::Update(
 		&& benchmarks->UpperSurfaceSubDivisionStats.GetVertexIndexSearchResultType() == VertexIndexSearchResultType::PathSearchRequired
 		&& benchmarks->UpperSurfaceBarycentricSubDivisionStats.GetVertexIndexSearchResultType() == VertexIndexSearchResultType::PathSearchRequired;
 
-	ImGui::SliderInt("Benchmark Iterations", &m_benchmarkIterations, 1, 100000);
+	ImGui::SliderInt("Benchmark Iterations##overallBenchmark", &m_benchmarkIterations, 1, 100000);
 
 	ImGui::BeginDisabled(!canRunBenchmarks || m_benchmarksRunning.load());
 
-	if (ImGui::Button("Run All Benchmarks"))
+	if (ImGui::Button("Run All Benchmarks##overallBenchmark"))
 	{
 		m_benchmarksRunning.store(true);
 
@@ -35,8 +35,12 @@ void NavMeshSimulationSceneOverallBenchmarkView::Update(
 
 	ImGui::BeginDisabled(m_benchmarksRunning.load());
 
-	ImGui::EndDisabled();
+	if (ImGui::Button("Save Benchmark Results##overallBenchmark"))
+	{
+		selectedScene->SaveBenchmarkResults();
+	}
 
+	ImGui::EndDisabled();
 
 	std::string sceneName = selectedScene->GetSceneName();
 }

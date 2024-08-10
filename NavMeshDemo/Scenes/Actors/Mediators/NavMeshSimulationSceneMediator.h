@@ -54,6 +54,8 @@ public:
 	void SetUpperSurfaceSubDivision(const uint32_t count);
 	void SetUpperSurfaceBarycentricSubDivision(const uint32_t count);
 
+	void SaveBenchmarkResults(const std::string& sceneName);
+
 	void SetPaths(const DirectX::XMVECTOR& start, const DirectX::XMVECTOR& finish);
 	void ResetBenchmarks();
 private:
@@ -70,6 +72,38 @@ private:
 	NavMeshSimulationSceneBenchmarkResult RunBenchmark(
 		dsr::data::pathfinding::AStarStaticMeshPathfinder& pathfinder,
 		const uint32_t iterations
+	);
+
+	void SaveBenchmark(
+		const NavMeshSimulationSceneBenchmarkStats& stats,
+		const dsr::SyncHandle<NavMeshSimulationSceneBenchmarkResult>& euclideanResultHandle,
+		const dsr::SyncHandle<NavMeshSimulationSceneBenchmarkResult>& dijkstraResultHandle,
+		const std::string& baseDirectory,
+		const std::string benchmarkName
+	);
+
+	void WriteLabelStatFile(const std::string& baseDirectory);
+
+	void WriteStatFile(
+		const std::string& baseDirectory,
+		const std::string& benchmarkName,
+		const NavMeshSimulationSceneBenchmarkStats& stats
+	);
+
+	void WriteResultLabelFile(const std::string& baseDirectory);
+
+	void WriteResultFile(
+		const std::string& baseDirectory,
+		const std::string& benchmarkName,
+		const std::string& heuristicName,
+		const NavMeshSimulationSceneBenchmarkResult& result
+	);
+
+	void WriteIterationTimesFile(
+		const std::string& baseDirectory,
+		const std::string& benchmarkName,
+		const std::string& heuristicName,
+		const std::vector<std::chrono::duration<double, std::nano>>& iterationTimes
 	);
 };
 

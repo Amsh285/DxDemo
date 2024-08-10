@@ -159,6 +159,11 @@ void NavMeshSimulationSceneBase::RunAllBenchmarksParallel(const uint32_t iterati
 	m_sceneMediator.RunALlBenchmarksParallel(iterations);
 }
 
+void NavMeshSimulationSceneBase::SaveBenchmarkResults()
+{
+	m_sceneMediator.SaveBenchmarkResults(m_sceneName);
+}
+
 dsr::DsrResult NavMeshSimulationSceneBase::LoadSceneData()
 {
 	using namespace dsr;

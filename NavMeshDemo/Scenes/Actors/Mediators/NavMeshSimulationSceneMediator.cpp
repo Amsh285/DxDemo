@@ -143,6 +143,41 @@ void NavMeshSimulationSceneMediator::SetUpperSurfaceBarycentricSubDivision(const
 	SetPaths(m_markers->GetStartPositionLocal(), m_markers->GetFinishPositionLocal());
 }
 
+void NavMeshSimulationSceneMediator::SaveBenchmarkResults(const std::string& sceneName)
+{
+	std::string baseDirectory = "BenchmarkResults/" + sceneName;
+
+	std::filesystem::create_directory("BenchmarkResults");
+	std::filesystem::create_directory(baseDirectory);
+
+	WriteLabelStatFile(baseDirectory);
+	WriteResultLabelFile(baseDirectory);
+
+	SaveBenchmark(
+		m_benchmarks->UpperSurfaceStats,
+		m_benchmarks->UpperSurfaceBenchmarkHandle,
+		m_benchmarks->UpperSurfaceDijkstraBenchmarkHandle,
+		baseDirectory,
+		"UpperSurface"
+	);
+
+	SaveBenchmark(
+		m_benchmarks->UpperSurfaceSubDivisionStats,
+		m_benchmarks->UpperSurfaceSubDivisionBenchmarkHandle,
+		m_benchmarks->UpperSurfaceSubDivisionDijkstraBenchmarkHandle,
+		baseDirectory,
+		"UpperSurfaceSubDivision"
+	);
+
+	SaveBenchmark(
+		m_benchmarks->UpperSurfaceBarycentricSubDivisionStats,
+		m_benchmarks->UpperSurfaceBarycentricSubDivisionBenchmarkHandle,
+		m_benchmarks->UpperSurfaceBarycentricSubDivisionDijkstraBenchmarkHandle,
+		baseDirectory,
+		"UpperSurfaceBarycentricSubDivision"
+	);
+}
+
 void NavMeshSimulationSceneMediator::SetPaths(const DirectX::XMVECTOR& start, const DirectX::XMVECTOR& finish)
 {
 	using namespace dsr;
@@ -227,4 +262,109 @@ void NavMeshSimulationSceneMediator::ResetBenchmarks()
 	upperSurfaceBarycentricSubDivisionDijkstraBenchmarkDefaults.NodesTraveled = 0;
 	upperSurfaceBarycentricSubDivisionDijkstraBenchmarkDefaults.PathLength = 0.0f;
 	m_benchmarks->UpperSurfaceBarycentricSubDivisionDijkstraBenchmark.SetData(std::move(upperSurfaceBarycentricSubDivisionDijkstraBenchmarkDefaults));
+}
+
+void NavMeshSimulationSceneMediator::SaveBenchmark(
+	const NavMeshSimulationSceneBenchmarkStats& stats,
+	const dsr::SyncHandle<NavMeshSimulationSceneBenchmarkResult>& euclideanResultHandle,
+	const dsr::SyncHandle<NavMeshSimulationSceneBenchmarkResult>& dijkstraResultHandle,
+	const std::string& baseDirectory,
+	const std::string benchmarkName
+)
+{
+	
+	WriteStatFile(baseDirectory, benchmarkName, stats);
+	WriteResultFile(baseDirectory, benchmarkName, "Euclidean", euclideanResultHandle.GetData());
+	WriteResultFile(baseDirectory, benchmarkName, "Dijkstra", dijkstraResultHandle.GetData());
+
+	WriteIterationTimesFile(baseDirectory, benchmarkName, "Euclidean", euclideanResultHandle.GetData().IterationTimes);
+	WriteIterationTimesFile(baseDirectory, benchmarkName, "Dijkstra", dijkstraResultHandle.GetData().IterationTimes);
+}
+
+void NavMeshSimulationSceneMediator::WriteLabelStatFile(const std::string& baseDirectory)
+{
+	std::string fileName = baseDirectory + "/" + "_StatLabels.txt";
+
+	std::ofstream file(fileName);
+
+	if (!file.is_open())
+	{
+		return;
+	}
+
+	file << "Avg Node Connectivity, Navmesh Triangle Count, Nodes Traveled";
+
+	file.close();
+}
+
+void NavMeshSimulationSceneMediator::WriteStatFile(const std::string& baseDirectory, const std::string& benchmarkName, const NavMeshSimulationSceneBenchmarkStats& stats)
+{
+	std::string fileName = baseDirectory + "/" + benchmarkName + "_Stats.txt";
+
+	std::ofstream file(fileName);
+
+	if (!file.is_open())
+	{
+		return;
+	}
+
+	file << stats.GetAvgConnectivity() << ", " << stats.GetNavMeshTriangleCount() << ", " << stats.GetNodesTraveled();
+
+	file.close();
+}
+
+void NavMeshSimulationSceneMediator::WriteResultLabelFile(const std::string& baseDirectory)
+{
+	std::string fileName = baseDirectory + "/" + "_ResultLabels.txt";
+
+	std::ofstream file(fileName);
+
+	if (!file.is_open())
+	{
+		return;
+	}
+
+	file << "Total Time, Average Iteration Time, Standard Deviation Time, Nodes Traveled, Path Length";
+
+	file.close();
+}
+
+void NavMeshSimulationSceneMediator::WriteResultFile(
+	const std::string& baseDirectory,
+	const std::string& benchmarkName,
+	const std::string& heuristicName,
+	const NavMeshSimulationSceneBenchmarkResult& result
+)
+{
+	std::string fileName = baseDirectory + "/" + benchmarkName + "_" + heuristicName + "_Result.txt";
+
+	std::ofstream file(fileName);
+
+	if (!file.is_open())
+	{
+		return;
+	}
+
+	file << result.TotalTime.count() << ", " << result.AverageIterationTime.count() << ", " << result.StandardDeviationTime.count() << ", " << result.NodesTraveled << ", " << result.PathLength;
+
+	file.close();
+}
+
+void NavMeshSimulationSceneMediator::WriteIterationTimesFile(const std::string& baseDirectory, const std::string& benchmarkName, const std::string& heuristicName, const std::vector<std::chrono::duration<double, std::nano>>& iterationTimes)
+{
+	std::string fileName = baseDirectory + "/" + benchmarkName + "_" + heuristicName + "_IterationTimes.txt";
+
+	std::ofstream file(fileName);
+
+	if (!file.is_open())
+	{
+		return;
+	}
+
+	for (const auto& iterationTime : iterationTimes)
+	{
+		file << iterationTime.count() << "\n";
+	}
+
+	file.close();
 }
