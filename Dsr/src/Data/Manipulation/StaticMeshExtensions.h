@@ -327,6 +327,11 @@ namespace dsr
 				const std::vector<uint32_t>& indexPath,
 				const std::array<float, 4>& color
 			);
+
+			void LogAdjacencyList(
+				const std::string& prefix,
+				const std::unordered_map<uint32_t, std::vector<uint32_t>>& adjacencyList
+			);
 		}
 	}
 }

@@ -17,6 +17,7 @@ public:
 		const std::shared_ptr<dsr::BlenderModelLoader>& blenderModelLoader
 	);
 
+	void LogTest() const;
 private:
 	//void RegisterMapFaceNormalsEntity();
 };

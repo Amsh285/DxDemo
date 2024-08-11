@@ -19,6 +19,7 @@ namespace dsr
 			const std::vector<uint32_t>& GetIndexBuffer() const { return m_indexBuffer; }
 			void SetIndexBuffer(const std::vector<uint32_t>& indexBuffer) { m_indexBuffer = indexBuffer; }
 
+			std::unordered_map<uint32_t, std::vector<uint32_t>> GetAdjacencyListSequential() const;	
 			std::unordered_map<uint32_t, std::vector<uint32_t>> GetAdjacencyList() const;
 
 			WindingOrder GetWindingOrder() const { return m_order; }
@@ -44,6 +45,30 @@ namespace dsr
 
 			WindingOrder m_order;
 		};
+
+		template<class TVertex>
+		inline std::unordered_map<uint32_t, std::vector<uint32_t>> StaticMesh<TVertex>::GetAdjacencyListSequential() const
+		{
+			std::unordered_map<uint32_t, std::vector<uint32_t>> adjacencyList;
+
+			for (size_t i = 0; i < m_indexBuffer.size(); i += 3)
+			{
+				std::set<uint32_t> neighboursV0, neighboursV1, neighboursV2;
+
+				for (size_t j = 0; j < m_indexBuffer.size(); j += 3)
+				{
+					InsertAdjacentIndices(i, j, neighboursV0);
+					InsertAdjacentIndices(i + 1, j, neighboursV1);
+					InsertAdjacentIndices(i + 2, j, neighboursV2);
+				}
+
+				adjacencyList[m_indexBuffer[i]] = std::vector<uint32_t>(neighboursV0.begin(), neighboursV0.end());
+				adjacencyList[m_indexBuffer[i + 1]] = std::vector<uint32_t>(neighboursV1.begin(), neighboursV1.end());
+				adjacencyList[m_indexBuffer[i + 2]] = std::vector<uint32_t>(neighboursV2.begin(), neighboursV2.end());
+			}
+
+			return adjacencyList;
+		}
 
 		template<class TVertex>
 		inline std::unordered_map<uint32_t, std::vector<uint32_t>> StaticMesh<TVertex>::GetAdjacencyList() const

@@ -224,7 +224,7 @@ namespace dsr
 
 					Vertex3FP2FTx3FN centroidVertex;
 					centroidVertex.Position = XMVectorScale(XMVectorAdd(XMVectorAdd(v0, v1), v2), c);
-					
+
 					//interpolation nochmal ansehen
 					//okay solange flat shading später fixen
 					centroidVertex.Normal = XMFLOAT3(
@@ -327,6 +327,37 @@ namespace dsr
 				}
 
 				return vertexData;
+			}
+
+			void LogAdjacencyList(
+				const std::string& prefix,
+				const std::unordered_map<uint32_t, std::vector<uint32_t>>& adjacencyList
+			)
+			{
+				std::string path = "DataLogs/" + prefix + "_AdjacencyList.txt";
+
+				std::filesystem::create_directory("DataLogs");
+
+				std::ofstream file(path);
+
+				if(!file.is_open())
+				{
+					return;
+				}
+
+				for (const auto& [key, value] : adjacencyList)
+				{
+					file << key << ": ";
+
+					for (const uint32_t& v : value)
+					{
+						file << v << ", ";
+					}
+
+					file << std::endl;
+				}
+
+				file.close();
 			}
 
 			void SetSubdivisionData(

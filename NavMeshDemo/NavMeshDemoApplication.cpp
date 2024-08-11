@@ -95,6 +95,8 @@ dsr::DsrResult NavMeshDemoApplication::Setup()
 	if (rampSceneResult.GetResultStatusCode() != RESULT_SUCCESS)
 		return rampSceneResult;
 
+	// m_rampScene->LogTest();
+
 	m_bridgeScene = std::make_shared<BridgeScene>(m_sceneManager, m_device, m_blenderModelLoader);
 	DsrResult bridgeSceneResult = m_bridgeScene->BuildScene();
 

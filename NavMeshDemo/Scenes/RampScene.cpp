@@ -1,5 +1,7 @@
 #include "RampScene.h"
 
+#include "Data/Manipulation/StaticMeshExtensions.h"
+
 RampScene::RampScene(
 	const std::shared_ptr<dsr::scene::SceneManager>& sceneManager,
 	const std::shared_ptr<dsr::directX::Direct3dDevice>& device,
@@ -11,6 +13,18 @@ RampScene::RampScene(
 	m_sceneSettings.UpperSurfaceModel = XMMatrixTranslation(0.0f, 40.0f, 0.0f);
 	m_sceneSettings.UpperSurfaceSubDivisonModel = XMMatrixTranslation(-80.0f, 0.0f, 0.0f);
 	m_sceneSettings.UpperSurfaceBarycentricSubDivisionModel = XMMatrixTranslation(80.0f, 0.0f, 0.0f);
+}
+
+void RampScene::LogTest() const
+{
+	using namespace dsr::data::manipulation;
+
+	m_baseMesh->Mesh->GetAdjacencyListSequential();
+
+	auto adjacencyList = m_pathfinders->GetUpperSurfacePathfinder()->GetAdjacencyList();
+
+	LogAdjacencyList("upperSurface sequential", adjacencyList);
+	LogAdjacencyList("upperSurface parallel", adjacencyList);
 }
 
 //void RampScene::RegisterMapFaceNormalsEntity()

@@ -117,6 +117,81 @@ namespace dsr
 				return Search(startIndex, goalIndex, THeuristic());
 			}
 
+			template<>
+			inline std::vector<uint32_t> AStarPathfinder::Search<heuristics::Dijsktra>(const uint32_t& startIndex, const uint32_t& goalIndex)
+			{
+				using namespace DirectX;
+
+				if (startIndex == goalIndex)
+					return std::vector<uint32_t>();
+
+				heuristics::Dijsktra heuristic;
+
+				const XMVECTOR goalPosition = m_vertexBuffer[goalIndex].Position;
+
+				uint32_t currentId = 1;
+				ska::flat_hash_map<uint32_t, NodeHistoryEntry> nodeIdHistories;
+
+				node_priority_queue openList;
+				openList.push(Node(currentId, startIndex, 0.0f, 0.0f, 0.0f));
+
+				ska::flat_hash_map<uint32_t, float> openListSearch, closeList;
+
+				openListSearch[startIndex] = 0.0f;
+				nodeIdHistories[currentId] = NodeHistoryEntry(0, startIndex);
+
+				while (!openList.empty())
+				{
+					const Node q = openList.top();
+					openList.pop();
+
+					if (q.vertexIndex == goalIndex)
+					{
+						std::vector<uint32_t> path;
+						NodeHistoryEntry* next = &nodeIdHistories[q.id];
+
+						while (next->parentId != 0)
+						{
+							path.push_back(next->vertexBufferIndex);
+							next = &nodeIdHistories[next->parentId];
+						}
+
+						path.push_back(next->vertexBufferIndex);
+
+						//std::reverse(path.begin(), path.end());
+						return path;
+					}
+
+					const std::vector<uint32_t>& adjacentIndicies = m_adjacencyList[q.vertexIndex];
+
+					for (const uint32_t& adjacentIndex : adjacentIndicies)
+					{
+						const XMVECTOR qPosition = m_vertexBuffer[q.vertexIndex].Position;
+						const XMVECTOR adjacentPosition = m_vertexBuffer[adjacentIndex].Position;
+						XMVECTOR deltaQ = XMVectorSubtract(qPosition, adjacentPosition);
+
+						float g = q.g + XMVectorGetX(XMVector3Length(deltaQ));
+						float h = heuristic(adjacentPosition, goalPosition);
+						float f = g + h;
+
+						if (openListSearch.find(adjacentIndex) != openListSearch.end() && openListSearch[adjacentIndex] < f)
+							continue;
+
+						if (closeList.find(adjacentIndex) != closeList.end() && closeList[adjacentIndex] < f)
+							continue;
+
+						openListSearch[adjacentIndex] = f;
+						++currentId;
+						nodeIdHistories[currentId] = NodeHistoryEntry(q.id, adjacentIndex);
+						openList.push(Node(currentId, adjacentIndex, g, h, f));
+					}
+
+					closeList[q.vertexIndex] = q.f;
+				}
+
+				return std::vector<uint32_t>();
+			}
+
 			template<class THeuristic>
 			inline std::vector<uint32_t> AStarPathfinder::Search(const uint32_t& startIndex, const uint32_t& goalIndex, THeuristic heuristic)
 			{
@@ -147,6 +222,8 @@ namespace dsr
 
 					for (const uint32_t& adjacentIndex : adjacentIndicies)
 					{
+						// for dijkstra i have to probably enqueue all adjacent nodes
+						// and check before expanding if q is the goal node
 						if (adjacentIndex == goalIndex)
 						{
 							std::vector<uint32_t> path;
