@@ -97,11 +97,6 @@ void EditorUISystem::Update(const dsr::ecs::EngineContext& context)
 
 	ImGui::NewLine();
 
-	if (ImGui::CollapsingHeader("Debug"))
-	{
-		ImGui::Checkbox("Show Colliders", &uiData->ShowColliders);
-	}
-
 	if (ImGui::CollapsingHeader("Mesh Subdivision"))
 	{
 		ImGui::BeginDisabled(IsBackgroundThreadRunning());
