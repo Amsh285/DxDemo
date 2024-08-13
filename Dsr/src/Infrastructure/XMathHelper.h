@@ -12,7 +12,7 @@ namespace dsr
 		{
 		}
 
-		RaycastPlaneHit(const bool& isOrthogonal, const float& distance)
+		RaycastPlaneHit(const bool isOrthogonal, const float distance)
 			: IsOrthogonal(isOrthogonal), Distance(distance)
 		{
 		}

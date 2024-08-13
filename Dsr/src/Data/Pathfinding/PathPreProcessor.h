@@ -26,19 +26,6 @@ namespace dsr
 				std::optional<StaticMeshTriangle> startTriangle = FindIntersectionTriangle(start, mesh);
 				std::optional<StaticMeshTriangle> finishTriangle = FindIntersectionTriangle(finish, mesh);
 
-				/*possible fix:
-				1.) check if the vertex start/finish intersects with an edge
-				2.) if it intersects with the edge search all triangles containing that edge with an epsilon tolerance
-				3.) use these triangles to compute the shortest possible distance1
-
-				Also Todo: Test Subdivision the indexbuffer is not optimal for barycentric indices are only reused in the
-				triangle to be subdivided they should be reused for any vertix matching the index
-				*/
-
-
-				/*std::vector<StaticMeshTriangle> startTriangles = FindIntersectionTriangles(start, mesh);
-				std::vector<StaticMeshTriangle> finishTriangles = FindIntersectionTriangles(finish, mesh);*/
-
 				// If either triangle is not found, return an error
 				if (!startTriangle.has_value() || !finishTriangle.has_value()) {
 					return VertexIndexSearchResult(0, 0, VertexIndexSearchResultType::NoIntersection);
