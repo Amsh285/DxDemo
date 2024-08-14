@@ -63,8 +63,6 @@ namespace dsr
 			template<class THeuristic>
 			inline std::vector<uint32_t> AStarStaticMeshPathfinder::Search(const uint32_t& startIndex, const uint32_t& goalIndex)
 			{
-				using namespace dsr::data::pathfinding::heuristics;
-
 				return m_pathfinder.Search<THeuristic>(startIndex, goalIndex);
 			}
 		}

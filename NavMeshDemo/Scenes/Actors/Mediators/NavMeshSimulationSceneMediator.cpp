@@ -145,10 +145,19 @@ void NavMeshSimulationSceneMediator::SetUpperSurfaceBarycentricSubDivision(const
 
 void NavMeshSimulationSceneMediator::SaveBenchmarkResults(const std::string& sceneName)
 {
-	std::string baseDirectory = "BenchmarkResults/" + sceneName;
+	std::string build;
 
-	std::filesystem::create_directory("BenchmarkResults");
-	std::filesystem::create_directory(baseDirectory);
+#ifdef _DEBUG
+	build = "Debug";
+#elif NDEBUG
+	build = "Release";
+#else
+	build = "Unknown";
+#endif // RELEASE
+
+	std::string baseDirectory = "BenchmarkResults/" + build + "/" + sceneName;
+
+	std::filesystem::create_directories(baseDirectory);
 
 	WriteLabelStatFile(baseDirectory);
 	WriteResultLabelFile(baseDirectory);
