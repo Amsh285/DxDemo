@@ -112,14 +112,14 @@ namespace dsr
 			D3D11_RASTERIZER_DESC rasterizerDescription;
 			ZeroMemory(&rasterizerDescription, sizeof(D3D11_RASTERIZER_DESC));
 
-			rasterizerDescription.AntialiasedLineEnable = FALSE;
+			rasterizerDescription.AntialiasedLineEnable = TRUE;
 			rasterizerDescription.CullMode = D3D11_CULL_BACK;
 			rasterizerDescription.DepthBias = 0;
 			rasterizerDescription.DepthBiasClamp = 0.0f;
 			rasterizerDescription.DepthClipEnable = TRUE;
 			rasterizerDescription.FillMode = D3D11_FILL_SOLID;
 			rasterizerDescription.FrontCounterClockwise = FALSE;
-			rasterizerDescription.MultisampleEnable = FALSE;
+			rasterizerDescription.MultisampleEnable = TRUE;
 			rasterizerDescription.ScissorEnable = FALSE;
 			rasterizerDescription.SlopeScaledDepthBias = 0.0f;
 
