@@ -79,10 +79,18 @@ void NavMeshSimulationSceneBase::OnScreenClick(const EditorScreenClickEvent& scr
 	XMVECTOR determinant = XMMatrixDeterminant(model);
 	XMMATRIX inverseModel = XMMatrixInverse(&determinant, model);
 
+
+	// Todo test that further XMVector4Transform(rayDirection, inverseModel) this should not be necessary
+	//std::vector<RaycastMeshHit> hits = GetMeshIntersections(
+	//	m_upperSurface->Mesh,
+	//	XMVector4Transform(rayOrigin, inverseModel),
+	//	XMVector4Transform(rayDirection, inverseModel)
+	//);
+
 	std::vector<RaycastMeshHit> hits = GetMeshIntersections(
 		m_upperSurface->Mesh,
 		XMVector4Transform(rayOrigin, inverseModel),
-		XMVector4Transform(rayDirection, inverseModel)
+		rayDirection
 	);
 
 	//Debug::DrawRay(rayOrigin, rayDirection, XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f), 0.2f, 100.0f, std::chrono::seconds(5));
