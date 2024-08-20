@@ -9,6 +9,6 @@ RandomMapScene::RandomMapScene(
 	using namespace DirectX;
 
 	m_sceneSettings.UpperSurfaceModel = XMMatrixTranslation(0.0f, 30.0f, 0.0f);
-	m_sceneSettings.UpperSurfaceSubDivisonModel = XMMatrixTranslation(-100.0f, 0.0f, 0.0f);
-	m_sceneSettings.UpperSurfaceBarycentricSubDivisionModel = XMMatrixTranslation(100.0f, 0.0f, 0.0f);
+	m_sceneSettings.UpperSurfaceSubDivisonModel = XMMatrixTranslation(-30.0f, 0.0f, 0.0f);
+	m_sceneSettings.UpperSurfaceBarycentricSubDivisionModel = XMMatrixTranslation(30.0f, 0.0f, 0.0f);
 }
