@@ -17,7 +17,7 @@ void NavMeshSimulationSceneOverallBenchmarkView::Update(
 		&& benchmarks->UpperSurfaceSubDivisionStats.GetVertexIndexSearchResultType() == VertexIndexSearchResultType::PathSearchRequired
 		&& benchmarks->UpperSurfaceBarycentricSubDivisionStats.GetVertexIndexSearchResultType() == VertexIndexSearchResultType::PathSearchRequired;
 
-	ImGui::SliderInt("Benchmark Iterations##overallBenchmark", &m_benchmarkIterations, 1, 100000);
+	ImGui::InputInt("Benchmark Iterations##overallBenchmark", &m_benchmarkIterations, 1, 100000);
 
 	ImGui::BeginDisabled(!canRunBenchmarks || m_benchmarksRunning.load());
 
