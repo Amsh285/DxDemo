@@ -127,7 +127,7 @@ dsr::DsrResult NavMeshDemoApplication::Setup()
 	if (randomMapSceneResult.GetResultStatusCode() != RESULT_SUCCESS)
 		return randomMapSceneResult;
 
-	RegisterLineEntity();
+	// RegisterLineEntity();
 	RegisterCameraController();
 	RegisterEditorUI();
 
