@@ -51,9 +51,14 @@ void NavMeshSimulationSceneBenchmarkView::Update(
 
 	ImGui::NewLine();
 
-	ImGui::BeginChild(m_euclideanChildControlId.c_str(), ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 180.0f), true);
+	std::string inputintLabelEuclidean = "##" + m_controlId + "Euclidean";
+
+	ImGui::BeginChild(m_euclideanChildControlId.c_str(), ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 220.0f), true);
 	ImGui::Text("Euclidean Heuristic");
-	ImGui::InputInt(m_benchmarkEuclideanIterationTimesLabel.c_str(), &m_euclideanBenchmarkIterations);
+
+	ImGui::NewLine();
+	ImGui::Text("Benchmark Iterations:");
+	ImGui::InputInt(inputintLabelEuclidean.c_str(), &m_euclideanBenchmarkIterations);
 
 	m_euclideanBenchmarkIterations = std::clamp(m_euclideanBenchmarkIterations, 1, 100000);
 
@@ -69,9 +74,14 @@ void NavMeshSimulationSceneBenchmarkView::Update(
 
 	ImGui::SameLine();
 
-	ImGui::BeginChild(m_dijkstraChildControlId.c_str(), ImVec2(0, 180.0f), true);
+	std::string inputintLabelDijkstra = "##" + m_controlId + "Dijkstra";
+
+	ImGui::BeginChild(m_dijkstraChildControlId.c_str(), ImVec2(0, 220.0f), true);
 	ImGui::Text("Dijkstra Heuristic");
-	ImGui::InputInt(m_benchmarkDijkstraIterationTimesLabel.c_str(), &m_dijkstraBenchmarkIterations);
+
+	ImGui::NewLine();
+	ImGui::Text("Benchmark Iterations:");
+	ImGui::InputInt(inputintLabelDijkstra.c_str(), &m_dijkstraBenchmarkIterations);
 
 	m_dijkstraBenchmarkIterations = std::clamp(m_dijkstraBenchmarkIterations, 1, 100000);
 

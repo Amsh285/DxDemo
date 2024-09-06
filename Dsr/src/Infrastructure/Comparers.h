@@ -8,10 +8,8 @@ namespace dsr
         {
             using namespace DirectX;
 
-            // Extract components and scale them to integers for hashing
-            XMVECTOR scaledVec = XMVectorScale(vec, 1000.0f); // Adjust scale factor as needed
+            XMVECTOR scaledVec = XMVectorScale(vec, 1000.0f);
 
-            // Combine hash values of individual components
             size_t hash = 0;
             hash_combine(hash, std::hash<int>()(XMVectorGetIntX(scaledVec)));
             hash_combine(hash, std::hash<int>()(XMVectorGetIntY(scaledVec)));
@@ -21,7 +19,6 @@ namespace dsr
             return hash;
         }
 
-        // Utility function for combining hash values
         static void hash_combine(size_t& seed, size_t hash)
         {
             seed ^= hash + 0x9e3779b9 + (seed << 6) + (seed >> 2);
