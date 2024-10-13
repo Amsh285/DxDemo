@@ -13,6 +13,10 @@ RampScene::RampScene(
 	m_sceneSettings.UpperSurfaceModel = XMMatrixTranslation(0.0f, 40.0f, 0.0f);
 	m_sceneSettings.UpperSurfaceSubDivisonModel = XMMatrixTranslation(-80.0f, 0.0f, 0.0f);
 	m_sceneSettings.UpperSurfaceBarycentricSubDivisionModel = XMMatrixTranslation(80.0f, 0.0f, 0.0f);
+
+	/*m_sceneSettings.UpperSurfaceModel = XMMatrixTranslation(0.0f, 0.0f, -200.0f);
+	m_sceneSettings.UpperSurfaceSubDivisonModel = XMMatrixTranslation(-200.0f, 0.0f, 0.0f);
+	m_sceneSettings.UpperSurfaceBarycentricSubDivisionModel = XMMatrixTranslation(200.0f, 0.0f, 0.0f);*/
 }
 
 void RampScene::LogTest() const
