@@ -7,10 +7,11 @@ date: 2025-09-13
 
 # Dorian's Game Engine (WinAPI + DirectX 11)
 
-My name is **Dorian Bach**.  
-I am a software developer with professional experience in **C# and the .NET framework**, and a deep enthusiasm for **C++ and graphics programming**.  
-My work spans from building reliable applications in .NET to exploring low-level performance optimization and rendering in C++.  
-This website/repository is where I share some of my personal <a href="./projects">projects</a>.
+This repository contains an **early attempt at building a small game engine** using **WinAPI** and **DirectX 11**.  
+The main focus of this version was on experimenting with graphics programming and implementing **navigation mesh pathfinding (A*)**.  
+It includes a basic rendering setup, a custom window and input framework, and experiments with engine structure and low-level systems.  
+The engine is primarily a learning project, showcasing early approaches to performance optimization, rendering, and AI pathfinding.
+
 
 ---
 
