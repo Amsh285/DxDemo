@@ -1,11 +1,11 @@
 ---
-title: "Dorian's Game Engine"
+title: "PathFinder Engine"
 description: "First attempt at a game engine using WinAPI, DirectX 11, and pathfinding experiments"
 author: "Dorian Bach"
 date: 2025-09-13
 ---
 
-# Dorian's Game Engine (WinAPI + DirectX 11)
+# PathFinder Engine (WinAPI + DirectX 11)
 
 This repository contains an **early attempt at building a small game engine** using **WinAPI** and **DirectX 11**.  
 The main focus of this version was on experimenting with graphics programming and implementing **navigation mesh pathfinding (A*)**.  
